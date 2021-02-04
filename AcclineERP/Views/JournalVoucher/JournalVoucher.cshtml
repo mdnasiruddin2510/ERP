@@ -1,0 +1,365 @@
+﻿@model IEnumerable<App.Domain.ViewModel.JarnalVoucher>
+
+@{
+    ViewBag.Title = "JarnalVoucher";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    decimal TotDrAmt = 0;
+    decimal TotCrAmt = 0;
+    string PrintDate = DateTime.Today.ToShortDateString();
+    // string glDate = ViewBag.glDate.ToShortDateString();
+    //int VoucCount = Model.Select(x => new { x.VchrNo, x.VDate, x.Posted }).Distinct().ToList().Count();
+    string BranchCode = ViewBag.branchCode;
+}
+
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/select2/select2.css" rel="stylesheet" type="text/css" />
+<link href="~/Css/FormDesign.css" rel="stylesheet" />
+
+<style>
+    table.dataTable.select tbody tr,
+    table.dataTable thead th:first-child {
+        cursor: pointer;
+    }
+
+    .form-control {
+        border: 1px solid #00ffff;
+    }
+
+    .required:after {
+        content: " *";
+        font-weight: bold;
+        color: red;
+    }
+
+    .largeSpace {
+        margin-right: 13px;
+        margin-left: 9px;
+    }
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+    input[type=number] {
+        -moz-appearance: textfield;
+    }
+</style>
+
+@using (Html.BeginForm())
+{
+    <div class="column">
+        <div class="col-md-11">
+            <div class="panel panel-color panel-primary" style="padding-bottom: 0 !important">
+                <div class="panel-heading">
+                    <div class="panel-title">
+                        <text style="text-align:left !important; text-decoration: none;">GL Entries</text>
+                        <text style="text-align:right !important; text-decoration: none; font-weight:bold; color:antiquewhite; font-size:medium; margin-left:500px">@BranchCode</text>
+
+                        @*<text id="@Html.IdFor(x => x.BranchCode)" style="text-align:right !important; text-decoration: none; font-weight:bold; color:antiquewhite; font-size:medium; margin-left:560px">@ViewBag.branchCode</text>*@
+                        @* <input type="text" class="fa-pull-right" name="fDate" data-valmsg-replace="true" style="color:#7E3B2D; background-color:bisque; font-size:12px; width:170px" value="@BranchCode">*@
+                        @*<label class="fa-pull-right" style="color:#7E3B2D; text-align:center; padding-top:5px; font-size:12px; width:70px">Date:(@ViewBag.branchCode)</label>*@
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="column">
+            <div class="col-md-11">
+                <div class="panel panel-color panel-primary">
+                    <div class="panel-body">
+                        <div class="col-md-12">
+                            <div class="col-md-6" style="margin-left: 25px;">
+                                <input type="button" value="Post" class="btn btn-primary" id="PostGl" />
+                            </div>
+                            <div class="col-md-5">
+                                <label class="col-md-3 control-label">Source:</label>
+                                <label class="col-md-5 control-label"></label>
+                            </div>
+                        </div>
+                        <div class="row col-md-12" style="text-align:center; margin-left:40px">
+                            <div class="row">
+                                <div class="col-md-11">
+                                    <table class="table table-bordered table-responsive" id="datatable-buttons" style="width:100%;">
+                                        <thead>
+                                            <tr>
+                                                <th>
+                                                    @*<div class="checkbox checkbox-primary" style="margin-top:0 !important">*@
+                                                    <input id="select_all" type="checkbox" name="select_all" /><label>All</label>
+                                                    @*  </div>*@
+                                                </th>
+                                            </tr>
+                                        </thead>
+
+                                        @foreach (var itemv in Model.Select(x => new { x.VchrNo, x.VDate, x.Posted }).Distinct().ToList())
+                                        {
+                                            TotDrAmt = 0;
+                                            TotCrAmt = 0;
+                                            <tr>
+                                                <td colspan="6">
+                                                    <table id="dtDemo" class="table table-bordered table-responsive">
+                                                        <tr class="col-md-12">
+                                                            <td><input id="PostOne" type="checkbox" name="PostOne" /><label></label></td>
+                                                            <td style="border: 0 white !important; font-size: 12px;"><label class="col-md-12 control-label">Voucher No : </label></td>
+                                                            <td>
+                                                                @Html.ActionLink(@itemv.VchrNo, "GetVchrView", "Receive", new { itemv.VchrNo, Status = "P" }, new { target = "_blank" })
+                                                            </td>
+                                                            <td style="border: 0 white !important; font-size: 12px;"><label class="col-md-12 control-label">Date : </label></td>
+                                                            <td><label class="col-md-12 control-label">@itemv.VDate.ToString("dd/MM/yyyy") </label></td>
+                                                            <td style="border: 0 white !important; font-size: 12px;"><label class="col-md-12 control-label">Posted : </label></td>
+                                                            <td>
+                                                                @if (itemv.Posted == true)
+                                                                {
+                                                                    <label class="col-md-12 control-label">Yes</label>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <label class="col-md-12 control-label">No</label>
+                                                                }
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+
+                                                    <table class="table table-bordered table-responsive" id="tabledataInner" cellspacing="0" style="width: 100%;">
+
+                                                        <thead>
+                                                            <tr style="border-bottom: 1px solid; background: #78b9f1">
+                                                                <th style="font-size: 13px; text-align: center">A/C Code</th>
+                                                                <th style="font-size: 13px; text-align: center">A/C Name</th>
+                                                                <th style="font-size: 13px; text-align: center">Narration</th>
+                                                                <th style="font-size: 13px; text-align: center">SubSidiary</th>
+                                                                <th style="font-size: 13px; text-align: center">Debit</th>
+                                                                <th style="font-size: 13px; text-align: center">Credit</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody id="tbodyId">
+
+                                                            @foreach (var item in Model.Where(x => x.VchrNo == itemv.VchrNo))
+                                                            {
+                                                                <tr>
+                                                                    <td style="text-align: left; font-size: 12px;">
+                                                                        @Html.DisplayFor(modelItem => item.ACCode)
+                                                                    </td>
+                                                                    <td style="text-align: left; font-size: 12px">
+                                                                        @Html.DisplayFor(modelItem => item.AcName)
+                                                                    </td>
+                                                                    <td style="text-align: left; font-size: 12px">
+                                                                        @Html.DisplayFor(modelItem => item.Narration)
+                                                                    </td>
+                                                                    <td style="text-align: left; font-size: 12px">
+                                                                        @Html.DisplayFor(modelItem => item.SubSidiary)
+                                                                    </td>
+
+
+
+                                                                    <td style="text-align: right; font-size: 12px">
+                                                                        @Html.DisplayFor(modelItem => item.DrAmount)
+                                                                    </td>
+                                                                    <td style="text-align: right; font-size: 12px">
+                                                                        @Html.DisplayFor(modelItem => item.CrAmount)
+                                                                    </td>
+                                                                </tr>
+                                                                TotDrAmt += Convert.ToDecimal(item.DrAmount);
+                                                                TotCrAmt += Convert.ToDecimal(item.CrAmount);
+                                                            }
+                                                            <tr>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td style="text-align: right; font-size: 12px; border-top: 1px solid;"><b>@TotCrAmt</b><hr style="margin-bottom: 1px !important; margin-top: 0 !important" /><hr style="margin-bottom: 0 !important; margin-top: 0 !important" /></td>
+                                                                <td style="text-align: right; font-size: 12px; border-top: 1px solid;"><b>@TotDrAmt</b><hr style="margin-bottom: 1px !important; margin-top: 0 !important" /><hr style="margin-bottom: 0 !important; margin-top: 0 !important" /></td>
+                                                            </tr>
+
+                                                        </tbody>
+
+                                                    </table>
+                                                    <div class="col-md-12">
+                                                        <div class="col-md-7">
+                                                            <label class="col-md-3 control-label">Remarks :</label>
+                                                            <label class="col-md-9 control-label"></label>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+
+                                        }
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-10">
+        <br />
+        <br /><br />
+    </div>
+    <div class="panel-footer" style="text-align:right; width:850px">
+        <label style="font-size:13px">Print Date : @PrintDate</label>
+    </div>
+
+}
+
+
+
+@section Scripts{
+    <script src="~/App_Themes/Theme1/plugins/select2/select2.min.js" type="text/javascript"></script>
+    <script src="~/App_Themes/Theme1/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.bootstrap.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.buttons.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/buttons.bootstrap.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/pdfmake.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/vfs_fonts.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/buttons.html5.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/buttons.print.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.fixedHeader.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.keyTable.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.responsive.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/responsive.bootstrap.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.scroller.min.js"></script>
+    <script type="text/javascript" src="../App_Themes/Theme1/plugins/parsleyjs/dist/parsley.min.js"></script>
+    <!-- Datatable init js -->
+    <script src="../App_Themes/Theme1/blue/assets/pages/datatables.init.js"></script>
+
+
+    <script>
+        $(document).ready(function () {
+
+
+            $("table#tabledataInner tr:odd").css({
+                "background-color": "#e1e4e4"
+            });
+
+            $('#datatable-buttons').dataTable({
+                "iDisplayLength": 4,
+                "lengthMenu": [1, 2, 4, 10, 25, 50, 100]
+            });
+            var rows_selected = [];
+            var table = $('#datatable-buttons').DataTable();
+
+            $(document).on("click", "#PostGl", function () {
+
+                if (rows_selected != "") {
+                    $.ajax({
+                        url: '@Url.Action("GlPostedByVoucherNo", "CashOperation")',
+                        contentType: "application/json;charset=utf-8",
+                        data: JSON.stringify({ 'vochreNo': rows_selected }),
+                        type: 'Post',
+                        dataType: 'json',
+                        success: function (datas) {
+
+                            if (datas.OrderNo == "undefined") {
+                                alert("error");
+                            }
+                            else {
+                                swal({
+                                    title: "Ok",
+                                    text: "Selected Item Successfully Posted!",
+                                    type: "success"
+                                }, function () {
+                                    location.reload();
+                                });
+                            }
+                        },
+                        error: function () {
+                            swal("Sorry!! An error occurred during the post.", "fail");
+                        }
+                    });
+                } else {
+                    swal(
+                         'Sorry!',
+                         'Please Select The Voucher. These Fields can not be empty!!!',
+                         'warning'
+                     );
+                }
+            });
+
+
+
+            $('#datatable-buttons tbody').on('click', 'input[type="checkbox"]', function (e) {
+                var $row = $(this).closest('tr');
+                //var rows = rows_selected;
+                // Get row data
+                //var InTxt = $row[0].cells[1].innerText;
+                //alert(InTxt);
+                //var data = table.row($row).data();
+
+
+                // Get row ID
+                var rowId = $row[0].cells[2].innerText.trim();// data[0];
+
+                // Determine whether row ID is in the list of selected row IDs
+                var index = $.inArray(rowId, rows_selected);
+
+                // If checkbox is checked and row ID is not in list of selected row IDs
+                if (this.checked && index === -1) {
+                    rows_selected.push(rowId);
+                    // Otherwise, if checkbox is not checked and row ID is in list of selected row IDs
+                } else if (!this.checked && index !== -1) {
+                    rows_selected.splice(index, 1);
+                }
+
+                if (this.checked) {
+                    $row.addClass('selected');
+
+                } else {
+                    $row.removeClass('selected');
+                }
+
+                // Update state of "Select all" control
+                //updateDataTableSelectAllCtrl();
+                e.stopPropagation();
+            });
+
+            $('#datatable-buttons').on('click', 'tbody td, thead th:first-child', function (e) {
+                $(this).parent().find('input[type="checkbox"]').trigger('click');
+            });
+            $('thead input[name="select_all"]', table.table().container()).on('click', function (e) {
+                if (this.checked) {
+                    $('#datatable-buttons tbody input[type="checkbox"]:not(:checked)').trigger('click');
+                } else {
+                    $('#datatable-buttons tbody input[type="checkbox"]:checked').trigger('click');
+                }
+                e.stopPropagation();
+            });
+            table.on('draw', function () {
+                updateDataTableSelectAllCtrl(table);
+            });
+            function updateDataTableSelectAllCtrl(table) {
+                var $table = table.table().node();
+                var $chkbox_all = $('tbody input[type="checkbox"]', $table);
+                var $chkbox_checked = $('tbody input[type="checkbox"]:checked', $table);
+                var chkbox_select_all = $('thead input[name="select_all"]', $table).get(0);
+
+                // If none of the checkboxes are checked
+                if ($chkbox_checked.length === 0) {
+                    chkbox_select_all.checked = false;
+                    if ('indeterminate' in chkbox_select_all) {
+                        chkbox_select_all.indeterminate = false;
+                    }
+
+                    // If all of the checkboxes are checked
+                } else if ($chkbox_checked.length === $chkbox_all.length) {
+                    chkbox_select_all.checked = true;
+                    if ('indeterminate' in chkbox_select_all) {
+                        chkbox_select_all.indeterminate = false;
+                    }
+
+                    // If some of the checkboxes are checked
+                } else {
+                    chkbox_select_all.checked = true;
+                    if ('indeterminate' in chkbox_select_all) {
+                        chkbox_select_all.indeterminate = true;
+                    }
+                }
+            }
+
+
+        });
+    </script>
+}

@@ -1,0 +1,49 @@
+﻿@model App.Domain.ViewModel.VMLogin
+
+@{
+    Layout = "~/Views/Shared/_LoginLayout.cshtml";
+}
+<link href="~/Css/FormDesign.css" rel="stylesheet" type="text/css" />
+<div class="wrapper-page" style="margin-top:30px">
+    <div class="text-center">
+        @*<img src="~/Images/NTC_logo.png" />*@
+        <img src="~/Images/NTC_logo.jpg" />
+    </div>
+    @using (Html.BeginForm("LogInWithGarden", "Accounts", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal m-t-20", role = "form" }))
+    {
+        @Html.ValidationSummary(true)
+        
+        <div class="form-group">
+            <div class="col-xs-12">
+                <div class="input-group">
+                    <div class="input-group-addon">
+                        <i class="md md-av-timer 1-h-32"></i>
+                    </div>
+                    @Html.DropDownListFor(x => x.BranchCode, null, new { @class = "form-control select2 ", required = "required" })
+                    @Html.ValidationMessageFor(x => x.BranchCode)
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-xs-12">
+                <div class="input-group">
+
+                    <p style="color:red">
+                        @ViewBag.Message
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group text-right m-t-20">
+            <div class="col-xs-12">
+                <button class="btn btn-primary btn-custom w-md waves-effect waves-light" type="submit">
+                    Submit
+                </button>
+
+            </div>
+        </div>
+
+
+    }
+</div>

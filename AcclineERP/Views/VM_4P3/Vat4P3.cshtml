@@ -1,0 +1,828 @@
+﻿@model App.Domain.ViewModel.Vat4P3
+@{
+    ViewBag.Title = "CostSheet";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    input#vat4p3 {
+        width: 25px;
+        height: 15px;
+        margin-top: 0px;
+    }
+    .required:after {
+        content: " *";
+        font-weight: bold;
+        color: red;
+    }
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    input[type=number] {
+        -moz-appearance: textfield;
+    }
+</style>
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-color panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    <text style="text-align:left !important; text-decoration: none">Cost Sheet</text>
+                </h3>
+            </div>
+            <div class="panel-body">
+                <div class="col-md-12">
+                    <div class="col-md-6">
+                        <div class="col-md-12">
+                            <label class="col-md-4 required" for="DeclarationNo">Declaration No</label>
+                            <div class="form-group input-group col-md-8">
+                                <input type="text" id="DeclarationNo" class="col-md-6" value="@ViewBag.DeclarationNo" />
+                                <input type="hidden" name="PreDeclarationNo" id="PreDeclarationNo" />
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="col-md-4 required">Output Item</label>
+                            <div class="input-group form-group col-md-8">
+                                @Html.DropDownListFor(x => x.OutItemCode, null, "---- Select ----", new { @class = "form-control select2", @Value = ViewBag.OutItemCode })
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="col-md-4 required" for="ProductQty">Product Qty</label>
+                            <div class="form-group input-group col-md-8">
+                                <input type="text" name="ProductQty" id="ProductQty" class="col-md-8" />
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <label class="col-md-4 required">Date Of Submission</label>
+                            <div class="input-group form-group col-md-8">
+                                <input type="text" class="form-control datePage" id="@Html.IdFor(x => x.SubDate)">
+                                <span class="input-group-addon bg-primary b-0 text-white"><i class="ion-calendar"></i></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="col-md-12">
+                            <label class="col-md-4" for=""></label>
+                            <div class="form-group col-md-8">
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="col-md-4" for=""></label>
+                            <div class="form-group col-md-8">
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="col-md-4" for="ProductUnit">Product Unit</label>
+                            <div class="form-group col-md-8">
+                                <input type="text" name="ProductUnit" id="ProductUnit" class="col-md-8" />
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="col-md-4" for="DetailQty">Detail Qty</label>
+                            <div class="form-group col-md-8">
+                                <input type="text" name="DetailQty" id="DetailQty" class="col-md-8" />
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="col-md-4" for="DetailUnit">Detail Unit</label>
+                            <div class="form-group col-md-8">
+                                <input type="text" name="DetailUnit" id="DetailUnit" class="col-md-8" />
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12">
+                            <label class="col-md-4 required">Date Of 1st Sale</label>
+                            <div class="input-group form-group col-md-8">
+                                <input type="text" class="form-control datePage col-md-8" id="@Html.IdFor(x => x.FirstDate)">
+                                <span class="input-group-addon bg-primary b-0 text-white"><i class="ion-calendar"></i></span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+
+
+                <div class="col-md-12">
+                    <fieldset>
+                        <legend> </legend>
+                        <div class="col-md-6">
+
+                            <div class="col-md-12" style="margin-top:5px;">
+                                <label class="col-md-4 required" for="RPMtemCode">Item</label>
+                                <div class="form-group col-md-8">
+                                    @Html.DropDownListFor(x => x.RPMItemCode, null, "----Select----", new { @class = "form-control select2" })
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-md-4" for="Unit">Unit</label>
+                                <div class="form-group col-md-8">
+                                    <input type="text" name="Unit" id="unit" class="col-md-8" />
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-md-4 required" for="qtyWW">Qty With Wastage</label>
+                                <div class="form-group col-md-8">
+                                    <input type="number" name="qtyWW" id="qtyWW" class="col-md-8" />
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-md-4" for="WastageQty">Wastage Qty</label>
+                                <div class="form-group col-md-8">
+                                    <input type="number" name="WastageQty" id="WastageQty" class="col-md-8" />
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-md-4 required" for="UnitPrice">Unit Price</label>
+                                <div class="form-group col-md-8">
+                                    <input type="number" name="UnitPrice" id="UnitPrice" class="col-md-8" />
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-md-4" for="Waste_Perc">Wastage %</label>
+                                <div class="form-group col-md-8">
+                                    <input type="number" name="Waste_Perc" id="Waste_Perc" class="col-md-8" />
+                                </div>
+                            </div>
+                            <div class="col-md-6" style="text-align:right">
+                                <input type="button" class="btn btn-primary" value="Add" id="add" />
+                            </div>
+
+
+
+
+                        </div>
+                        <div class="col-md-6">
+
+
+                            <div class="col-md-12 col-md-12" style="margin-top: 10px; margin-bottom: 10px;">
+                                <div class="row col-md-12 col-md-12" style="border:1px solid; border-color:#adcceb; width:100%">
+                                    <div class="row">
+                                        <div class="col-md-12 col-md-12" style="padding:1px 18px 1px 18px">
+                                            <br />
+                                            <table class="table table-bordered table-responsive" id="Add-datatable" style="width:100%">
+                                                <thead>
+                                                    <tr>
+                                                        <th>SL</th>
+                                                        <th>Item&nbsp;Name</th>
+                                                        <th>Unit</th>
+                                                        <th>Qty&nbsp;With&nbsp;Wastage</th>
+                                                        <th>Wastage&nbsp;Qty</th>
+                                                        <th>Unit&nbsp;Price</th>
+                                                        <th>Wastage&nbsp;%</th>
+                                                        <th>Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="tbodyId"></tbody>
+
+                                            </table>
+                                            <br />
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="col-md-12" style="text-align:right">
+                                <label class="col-md-6" for="Total" style="text-align:right">Total</label>
+                                <div class="form-group col-md-6">
+                                    <input type="text" name="totalRPM" id="totalRPM" />
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+
+
+
+                <div class="col-md-12">
+                    <div class="col-md-6">
+
+                        <div class="col-md-12" style="margin-top:5px;">
+                            <label class="col-md-4 required" for="CostId">Cost Factor</label>
+                            <div class="form-group col-md-8">
+                                @Html.DropDownListFor(x => x.CostId, null, "----Select----", new { @class = "form-control select2", @id = "CostId" })
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="col-md-4 required" for="CostAmt">Amount</label>
+                            <div class="form-group col-md-6">
+                                <input type="number" name="CostAmt" id="CostAmt" class="col-md-8" />
+                            </div>
+                            <div class="col-md-2" style="text-align:right">
+                                <input type="button" class="btn btn-primary" value="Add" id="addFactor" />
+                            </div>
+                        </div>
+
+
+                        <div class="col-sm-12" style="margin-top: 10px; margin-bottom: 10px;">
+                            <div class="row col-sm-12" style="border:1px solid; border-color:#adcceb; width:100%;margin-left: 2px;">
+                                <div class="row">
+                                    <div class="col-sm-12" style="padding:1px 10px 1px 10px">
+                                        <br />
+                                        <table class="table table-bordered table-responsive" id="AddOntmpCostFdatatable" style="width:100%">
+                                            <thead>
+                                                <tr>
+                                                    <th width="5%">SL</th>
+                                                    <th width="5%">Code</th>
+                                                    <th width="10%">CostFactor&nbsp;Name</th>
+                                                    <th width="5%">Amount</th>
+                                                    <th width="5%">Action</th>
+                                                </tr>
+
+                                            </thead>
+                                            <tbody id="tbodyIdCost"></tbody>
+
+                                        </table>
+                                        <br />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12" style="text-align:right">
+                            <label class="col-md-8" for="Total" style="text-align:right">Total</label>
+                            <div class="form-group col-md-4">
+                                <input type="text" name="totalCostFactor" id="totalCostFactor" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+
+
+
+                        <div class="col-md-12" style="margin-top:5px;">
+                            <label class="col-md-4 required" for="Profit">Profit(Approx)</label>
+                            <div class="form-group col-md-8">
+                                <input type="number" name="Profit" id="Profit" class="col-md-8" />
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="col-md-4 required" for="SellingPrice">Selling Price</label>
+                            <div class="form-group col-md-8">
+                                <input type="text" name="SellingPrice" disabled="disabled" id="SellingPrice" class="col-md-8" />
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="col-md-4"></label>
+                            <span class="checkbox-button">
+                                <input type="checkbox" name="vat4p3" class="checkbox-primary" required="required" id="vat4p3" />
+                                <input type="button" class="btn-primary" value="VAT 4.3" id="btnVAT4p3" />
+                            </span>
+                        </div>
+                        <div class="col-md-12" style="text-align:center; margin-top:5px;">
+                            <input type="hidden" id="sNo" name="sNo" />
+                            <input type="button" value="Save" class="btn btn-primary" id="btnSave" style="width:100px;" />
+                            <input type="button" value="Clear" class="btn btn-primary" id="btnClear" style="width:100px;" />
+                        </div>
+
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts{
+
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script src="~/App_Themes/Theme1/plugins/select2/select2.min.js" type="text/javascript"></script>
+    <script src="~/App_Themes/Theme1/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.bootstrap.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.buttons.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/buttons.bootstrap.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/pdfmake.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/vfs_fonts.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/buttons.html5.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/buttons.print.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.fixedHeader.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.keyTable.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.responsive.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/responsive.bootstrap.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.scroller.min.js"></script>
+    <script type="text/javascript" src="../App_Themes/Theme1/plugins/parsleyjs/dist/parsley.min.js"></script>
+    <script src="../App_Themes/Theme1/blue/assets/pages/datatables.init.js"></script>
+}
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        $("#OutItemCode").select2();
+        $("#RPMItemCode").select2();
+        $("#CostId").select2();
+        $("#totalCostFactor").val(0);
+        $("#totalRPM").val(0);
+        var loadInfo = {
+            DeclarationNo: "",
+            OutItemCode: "",
+            ProductQty: "",
+            ProductUnit: "",
+            DetailQty: "",
+            DetailUnit: "",
+            SubDate: "",
+            FirstDate: "",
+            Profit: "",
+            SellingPrice: ""
+        };
+
+        function SetOrder(){
+            loadInfo.DeclarationNo = $("#DeclarationNo").val();
+            loadInfo.ProductQty = $("#ProductQty").val();
+            loadInfo.SubDate = $("#SubDate").val();
+            loadInfo.FirstDate = $("#FirstDate").val();
+            loadInfo.OutItemCode=$("#OutItemCode").val();
+            loadInfo.Profit=parseFloat($("#Profit").val()).toFixed(2).replace(".", ",");
+            loadInfo.SellingPrice=$("#SellingPrice").val();
+        }
+
+        $(document).on("click", "#btnSave", function () {
+            $("#btnSave").prop("disabled", false);
+            SetOrder();
+            var validate = validateOnSave(loadInfo);
+            if (validate != undefined) {
+                alert(validate);
+                return;
+            }
+            $.ajax({
+                url: '@Url.Action("SaveVat4P3", "VM_4P3")',
+                contentType: "application/json;charset=utf-8",
+                data: JSON.stringify({ Vat4P3: loadInfo, CMIngredient:orders1,  CMCostExp:orders }),
+                type: 'POST',
+                dataType: 'json',
+                success: function (datas) {
+                    if (datas.Msg == "1") {
+                        $("#btnSave").prop("disabled", false);
+                        swal({
+                            title: "Ok",
+                            text: "Save Successfully!",
+                            type: "success"
+                        },
+                        function () {
+                            $("#PreDeclarationNo").val($("#DeclarationNo").val());
+                            var strMsg = datas.returnValue;
+                            if (strMsg.split(';')[0] == '4.3') {
+                                $("#vat4p3").prop("checked", true);
+                            }
+                            clear4P3Info();
+                        });
+                    }
+                    else if (datas == "X") {
+                        swal({
+                            title: "Sorry",
+                            text: "No Save Permission for this User",
+                            type: "warning"
+                        });
+                    }
+                    else if (datas == 0) {
+                        swal(
+                            'Sorry!',
+                            'Something went wrong during the process!',
+                            'warning'
+                        );
+                        $("#btnSave").prop("disabled", false);
+                    }
+                    else {
+                        swal({
+                            title: "Sorry!",
+                            text: datas,
+                            type: "warning"
+                        });
+                    }
+
+                }
+            });
+        });
+
+        $(document).on("click", "#btnVAT4p3", function (e) {
+            var TransNo = $('#DeclarationNo').val();
+            if ($("#vat4p3").prop("checked") == true) {
+                window.open('@Url.Action("Vat4P3RptPdf", "VATRpt", null)?DeclarationNo=' + TransNo);
+            }
+        })
+
+        function validateOnSave(validOrder) {
+            if (validOrder.DeclarationNo == "") {
+                return "Declaration No is required.";
+            }
+            if (validOrder.OutItemCode.trim() == "") {
+                return "Output Item is required.";
+            }
+            if (validOrder.ProductQty == "" || ProductQty <= 0) {
+                return "Product Qty is required.";
+            }
+            if (validOrder.SubDate.trim() == "") {
+                return "Date Of Submission is required.";
+            }
+            if (validOrder.FirstDate.trim() == "") {
+                return "Date Of 1st Sale is required.";
+            }
+            if (orders1.length == 0) {
+                return "Please add the ingredients item.";
+            }
+            if (orders.length == 0) {
+                return "Please add the cost factor item.";
+            }
+            if (validOrder.Profit == "" || Profit <= 0) {
+                return "Profit is required.";
+            }
+            if (validOrder.SellingPrice == "" || SellingPrice <= 0) {
+                return "Selling Price is required.";
+            }
+        }
+
+        $("#btnClear").on("click", function () {
+            clear4P3Info();
+        });
+
+        function clear4P3Info() {
+            clearCostInfo();
+            clearItemInfo();
+            $("#OutItemCode").val($('#OutItemCode option:first-child').val()).trigger('change.select2');
+            $("#ProductQty").val("");
+            $("#ProductUnit").val("");
+            $("#DetailQty").val("");
+            $("#DetailUnit").val("");
+            $("#FirstDate").val("");
+            $("#SubDate").val("");
+            $("#Profit").val("");
+            $("#SellingPrice").val("");
+            $("#totalCostFactor").val(0);
+            $("#totalRPM").val(0);
+            orders = [];
+            orders1 = [];
+            $('#tbodyId').empty();
+            $('#tbodyIdCost').empty();
+            $.ajax({
+                url: '@Url.Action("GetDeclarationNoView", "VM_4P3")',
+                contentType: "application/json;charset=utf-8",
+                data: { VType: 'AP' },
+                type: 'GET',
+                dataType: 'json',
+                success: function (datas) {
+                    $("#DeclarationNo").val(datas);
+                }
+            });
+        }
+
+
+
+        $('#AddOntmpCostFdatatable').dataTable({
+            "scrollY": 200,
+            "scrollX": true,
+            "paging": false,
+            "ordering": false,
+            "info": false,
+            "searching": false
+        });
+        var orders = [];
+        var delQtyOrder = [];
+        $("#addFactor").click(function () {
+            addOnList();
+            $("tbody#tbodyId tr:even").css({
+                "background-color": "#e6e8e8"
+
+            });
+        });
+        function clearCostInfo() {
+            $("#CostId").val($('#CostId option:first-child').val()).trigger('change.select2');
+            $("#CostAmt").val("");
+        }
+
+        function addOnList() {
+            var newAddList = [];
+            var newAddListSl = 0;
+            var CostId = $('#CostId option:selected').val();
+            if (CostId == "") {
+                alert("Cost Factor is required.");
+                return;
+            }
+            var CostName = $("#CostId option:selected").text();
+            var CostAmt = parseFloat($("#CostAmt").val()).toFixed(2).replace(".", ",");
+            if (CostAmt == "" || CostAmt <= 0) {
+                alert("Cost Amount is required.");
+                return;
+            }
+            var item = {
+                CostId:CostId,CostName:CostName,CostAmt:CostAmt,Sl:0
+            }
+            const i = orders.findIndex(x=>x.CostName===CostName);
+            if (i > -1)
+            {
+                item.CostId=CostId;
+                item.CostName =CostName;
+                item.CostAmt =CostAmt;
+                orders[i] = item;
+            }
+            else
+            {
+                item.Sl = orders.length + 1;
+                orders.push(item);
+            }
+            addOnTable();
+        }
+
+        function addOnTable()
+        {
+            $('#tbodyIdCost').empty();
+            var sl = 0;
+            var pAmt = 0;
+            $.each(orders, function (index, data) {
+                sl = sl + 1;
+                data.Sl = sl;
+                $("#tbodyIdCost").append("<tr><td>" + sl + "</td><td>"
+                                                    +data.CostId+ "</td><td>"
+                                                   + data.CostName + "</td><td>"
+                                                   + data.CostAmt.replace(",", ".") + "</td><td>"
+                                                  + '<a href="#" class="on-default remove-row deleteSup" data-id="' + sl + '" id="delete" value="' + sl + '"><i class="glyphicon glyphicon-trash"></i></a>' + "</td></tr>");
+
+                pAmt = parseFloat(pAmt) + parseFloat(data.CostAmt.replace(",","."));
+            });
+            $("#totalCostFactor").val(pAmt.toFixed(3));
+            clearCostInfo();
+        }
+
+        //delete  datatable data
+        $(document).on('click', '#delete', function () {
+            var id = $(this).attr("value");
+
+            swal({
+                title: "Are you sure?",
+                text: "You will not be able to recover this order data!",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Yes, delete it!",
+                closeOnConfirm: true
+            },
+             function () {
+
+                 var delQtySl = 0;
+                 var ItemCode;
+                 var CostName;
+                 var CostAmt;
+                 var delQtyItem = {
+                     ItemCode:ItemCode,
+                     CostName:CostName,
+                     CostAmt:CostAmt
+                 }
+                 const i = orders.findIndex(_x => _x.Sl === parseInt(id));
+                 if (i > -1)
+                 {
+                     delQtySl++;
+                     delQtyItem.ItemCode = orders[i].ItemCode;
+                     delQtyItem.CostName = orders[i].CostName;
+                     delQtyItem.CostAmt =orders[i].CostAmt;
+                     delQtyOrder.push(delQtyItem)
+                 }
+
+                 deleteRow(id);
+                 addOnTable();
+
+             });
+        });
+        function deleteRow(sl) {
+            var newOrder = [];
+            var newSl = 0;
+
+            $.each(orders, function (index, data) {
+
+                if (data.Sl != sl) {
+                    newSl++;
+                    data.Sl = newSl;
+                    data.Id = 0;
+                    newOrder.push(data);
+                }
+            });
+            orders = new Array();
+            orders = newOrder;
+
+        }
+
+        $(document).on("change", "#RPMItemCode, #OutItemCode", function (e) {
+            var value = $(this).attr("id");
+            var item;
+            if (value == "RPMItemCode") {
+                item = $("#RPMItemCode").val();
+            }else{
+                item = $("#OutItemCode").val();
+            }
+
+            $.ajax({
+                type: "Get",
+                contentType: "application/json;charset=utf-8",
+                url: '@Url.Action("GetItemByItemCode", "VM_4P3")',
+                data: { Item: item },
+                dataType: 'json',
+                success: function (item) {
+                    if (item == 0) {
+                        clearItemInfo();
+                    }
+                    else {
+                        if (value == "RPMItemCode") {
+                            $("#unit").val(item.UnitName);
+                        }
+                        if (value == "OutItemCode") {
+                            $("#ProductUnit").val(item.UnitName);
+                            $("#DetailQty").val(item.PackSize);
+                            $("#DetailUnit").val(item.DUnitName);
+                        }
+                    }
+                }
+            });
+        });
+
+
+        $(document).on("change", "#WastageQty", function (e) {
+            var WPercent;
+            var QW=parseFloat($("#qtyWW").val());
+            var W=parseFloat($("#WastageQty").val());
+            WPercent=(W/QW*100);
+            $("#Waste_Perc").val(WPercent.toFixed(3));
+        });
+
+        $(document).on("change", "#Waste_Perc", function (e) {
+            var W;
+            var QW=parseFloat($("#qtyWW").val());
+            var WPercent=parseFloat($("#Waste_Perc").val());
+            W=(QW/100*WPercent);
+            $("#WastageQty").val(W.toFixed(3));
+        });
+
+        $(document).on("change", "#Profit, #totalRPM, #totalCostFactor", function (e) {
+            var totalRPM=parseFloat($("#totalRPM").val());
+            var totCFac=parseFloat($("#totalCostFactor").val());
+            var Profit=parseFloat($("#Profit").val());
+            $("#SellingPrice").val((isNaN(totCFac)? 0 : totCFac) + (isNaN(totalRPM)? 0: totalRPM)  + (isNaN(Profit)? 0: Profit));
+        });
+
+
+        $('#Add-datatable').dataTable({
+            "scrollY": 200,
+            "scrollX": true,
+            "paging": false,
+            "ordering": false,
+            "info": false,
+            "searching": false
+        });
+
+
+        var orders1 = [];
+        var delQtyOrder1 = [];
+        $("#add").click(function () {
+            addOnList1();
+            $("tbody#tbodyId tr:even").css({
+                "background-color": "#e6e8e8"
+
+            });
+        });
+        function clearItemInfo() {
+            $("#RPMItemCode").val($('#RPMItemCode option:first-child').val()).trigger('change.select2');
+            $("#unit").val("");
+            $("#qtyWW").val("");
+            $("#WastageQty").val("");
+            $("#UnitPrice").val("");
+            $("#Waste_Perc").val("");
+        }
+
+        function addOnList1() {
+            var newAddList1 = [];
+            var newAddListSl = 0;
+            var ItemName = $("#RPMItemCode option:selected").text();
+            var ItemCode = $("#RPMItemCode option:selected").val();
+            if (ItemCode == "") {
+                alert("Item is required.");
+                return;
+            }
+            var UnitIn=$("#unit").val();
+            var qtyWW=$("#qtyWW").val();
+            if (qtyWW == "" || qtyWW <=0) {
+                alert("Qty With Wastage is required.");
+                return;
+            }
+            var WastageQty=parseFloat($("#WastageQty").val()).toFixed(2).replace(".", ",");
+            var UnitPrice=parseFloat($("#UnitPrice").val()).toFixed(2).replace(".", ",");
+            if (UnitPrice == "" || UnitPrice <=0) {
+                alert("Unit Price is required.");
+                return;
+            }
+            var Waste_Perc=$("#Waste_Perc").val();
+            var item = {
+                ItemCode:ItemCode, ItemName:ItemName,UnitIn:UnitIn,qtyWW:qtyWW,WastageQty:WastageQty,UnitPrice:UnitPrice,
+                Waste_Perc:Waste_Perc ,Sl:0
+            }
+            const i = orders1.findIndex(x=>x.ItemName===ItemName);
+            if (i > -1)
+            {
+                item.ItemCode=ItemCode;
+                item.ItemName=ItemName;
+                item.UnitIn =UnitIn;
+                item.qtyWW =qtyWW;
+                item.WastageQty=WastageQty;
+                item.UnitPrice=UnitPrice;
+                item.Waste_Perc=Waste_Perc;
+                orders1[i] = item;
+                //$("#totalRPM").val(isNaN(item.qtyWW * item.UnitPrice) ? 0 : parseFloat(currTotRPM + ( item.qtyWW * item.UnitPrice).toFixed(3)));
+            }
+            else
+            {
+                item.Sl = orders.length + 1;
+                orders1.push(item);
+
+            }
+            addOnTable1();
+        }
+
+        function addOnTable1()
+        {
+            $('#tbodyId').empty();
+            var sl = 0;
+            var pAmt = 0;
+            $.each(orders1, function (index, data) {
+                sl = sl + 1;
+                data.Sl = sl;
+                $("#tbodyId").append("<tr><td>" + sl + "</td><td>"
+                                                    +data.ItemName+ "</td><td>"
+                                                   + data.UnitIn + "</td><td>"
+                                                   + data.qtyWW + "</td><td>"
+                                                   + data.WastageQty.replace(",", ".") + "</td><td>"
+                                                   + data.UnitPrice.replace(",", ".") + "</td><td>"
+                                                   + data.Waste_Perc + "</td><td>"
+                                                  + '<a href="#" class="on-default remove-row deleteSup" data-id="' + sl + '" id="delete1" value="' + sl + '"><i class="glyphicon glyphicon-trash"></i></a>' + "</td></tr>");
+                pAmt = parseFloat(pAmt) + parseFloat(data.qtyWW * data.UnitPrice.replace(",","."));
+            });
+            $("#totalRPM").val(pAmt.toFixed(3));
+            clearItemInfo();
+        }
+
+        $(document).on('click', '#delete1', function () {
+            var id = $(this).attr("value");
+
+            swal({
+                title: "Are you sure?",
+                text: "You will not be able to recover this order data!",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Yes, delete it!",
+                closeOnConfirm: true
+            },
+             function () {
+
+                 var delQtySl1 = 0;
+                 var ItemName;
+                 var Unit;
+                 var qtyWW;
+                 var WastageQty;
+                 var Waste_Perc;
+                 var delQtyItem1 = {
+                     ItemName:ItemName,
+                     Unit:Unit,
+                     qtyWW:qtyWW,
+                     WastageQty:WastageQty,
+                     Waste_Perc:Waste_Perc
+                 }
+                 const i = orders1.findIndex(_x => _x.Sl === parseInt(id));
+                 if (i > -1)
+                 {
+                     delQtySl1++;
+                     delQtyItem1.ItemName = orders1[i].ItemName;
+                     delQtyItem1.Unit = orders1[i].Unit;
+                     delQtyItem1.qtyWW =orders1[i].qtyWW;
+                     delQtyItem1.WastageQty =orders1[i].WastageQty;
+                     delQtyItem1.Waste_Perc =orders1[i].Waste_Perc;
+                     delQtyOrder.push(delQtyItem1)
+                 }
+
+                 deleteRow1(id);
+                 addOnTable1();
+                 //swal("Deleted!", "Your imaginary file has been deleted.", "success");
+
+             });
+        });
+        function deleteRow1(sl) {
+            var newOrder = [];
+            var newSl = 0;
+
+            $.each(orders1, function (index, data) {
+
+                if (data.Sl != sl) {
+                    newSl++;
+                    data.Sl = newSl;
+                    data.Id = 0;
+                    newOrder.push(data);
+                }
+            });
+            orders1 = new Array();
+            orders1 = newOrder;
+
+        }
+
+    });
+
+
+
+</script>

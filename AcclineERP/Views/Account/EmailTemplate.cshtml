@@ -1,0 +1,220 @@
+﻿@model App.Domain.ViewModel.EmailVModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;">
+<!-- Mirrored from coderthemes.com/minton_2.0/blue/email-templates/action.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 27 Nov 2016 14:51:34 GMT -->
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Minton - Responsive Admin Dashboard Template</title>
+
+    <style type="text/css">
+        img {
+            max-width: 100%;
+        }
+
+        body {
+            -webkit-font-smoothing: antialiased;
+            -webkit-text-size-adjust: none;
+            width: 100% !important;
+            height: 100%;
+            line-height: 1.6em;
+        }
+
+        body {
+            background-color: #f6f6f6;
+        }
+
+        body {
+            padding: 0 !important;
+        }
+
+        h1 {
+            font-weight: 800 !important;
+            margin: 20px 0 5px !important;
+        }
+
+        h2 {
+            font-weight: 800 !important;
+            margin: 20px 0 5px !important;
+        }
+
+        h3 {
+            font-weight: 800 !important;
+            margin: 20px 0 5px !important;
+        }
+
+        h4 {
+            font-weight: 800 !important;
+            margin: 20px 0 5px !important;
+        }
+
+        h1 {
+            font-size: 22px !important;
+        }
+
+        h2 {
+            font-size: 18px !important;
+        }
+
+        h3 {
+            font-size: 16px !important;
+        }
+
+        .container {
+            padding: 0 !important;
+            width: 100% !important;
+        }
+
+        .content {
+            padding: 0 !important;
+        }
+
+        .content-wrap {
+            padding: 10px !important;
+        }
+
+        .invoice {
+            width: 100% !important;
+        }
+    </style>
+</head>
+<body id="body" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; -webkit-font-smoothing: antialiased; -webkit-text-size-adjust: none; width: 100% !important; height: 100%; line-height: 1.6em; background-color: #f6f6f6; margin: 0;" bgcolor="#f6f6f6">
+    <table class="body-wrap" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; width: 100%; background-color: #f6f6f6; margin: 0;" bgcolor="#f6f6f6">
+        <tr style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;">
+            <td style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0;" valign="top"></td>
+            <td class="container" width="600" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; display: block !important; max-width: 600px !important; clear: both !important; margin: 0 auto;" valign="top">
+                <div class="content" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; max-width: 600px; display: block; margin: 0 auto; padding: 20px;">
+                    <h2 style="text-align:center; color:darkgreen">@Model.TemplateHeader</h2>
+                    <hr />
+                    <br />
+                    <table class="main" width="100%" cellpadding="0" cellspacing="0" itemprop="action" itemscope=itemscope itemtype="http://schema.org/ConfirmAction" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; border-radius: 3px; background-color: #fff; margin: 0; border: 1px solid #e9e9e9;" bgcolor="#fff">
+                        <tr style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;">
+                            <td class="content-wrap" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 20px;" valign="top">
+                                <meta itemprop="name" content="Confirm Email" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;" /><table width="100%" cellpadding="0" cellspacing="0" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;">
+                                    <tr style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;">
+                                        <td class="content-block" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0 0 20px;" valign="top">
+                                            @Model.TempFixedTopDes
+                                            <br />
+                                            <hr />
+                                        </td>
+                                    </tr>
+                                    @if (Model.Link != null)
+                                    {
+                                        <tr style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;">
+                                            <td height="35" class="content-block" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0 0 20px;" valign="top">
+                                                We may need to send you critical information about our service and it is important that we have an accurate email address.
+                                            </td>
+                                        </tr>
+                                    }
+                                    @if (Model.Link != null)
+                                    {
+                                        <tr style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;">
+                                            <td height="35" class="content-block" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0 0 20px;" valign="top">
+                                                Dear Concern,<br /> Please click following link to activate your Bangladesh Post Office E-Commerce account. <br /><br />
+                                                <a href="@Model.Link" class="btn-primary" itemprop="url" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; color: #FFF; text-decoration: none; line-height: 2em; font-weight: bold; text-align: center; cursor: pointer; display: inline-block; border-radius: 5px; text-transform: capitalize; background-color: #3bafda; margin: 0; border-color: #3bafda; border-style: solid; border-width: 10px 20px;">Confirm email address</a>
+                                                @*<a href="@Model.Link">Account Activation Link</a>*@
+                                            </td>
+                                        </tr>
+                                    }
+                                    @if (Model.DocNo != null)
+                                    {
+                                        <tr style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;">
+                                            <td height="35" class="content-block" itemprop="handler" itemscope=itemscope itemtype="http://schema.org/HttpActionHandler" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0 0 20px;" valign="top">
+                                                Dear Concern,<br /> Items @Model.Title with Transaction No is : @Model.TransactionNo <br /> Items @Model.Title with Document Numbers are: @Model.DocNo
+                                            </td>
+                                        </tr>
+                                    }
+
+
+                                    @if (Model.PassWord != null)
+                                    {
+                                        <tr style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;">
+                                            <td height="35" class="content-block" itemprop="handler" itemscope=itemscope itemtype="http://schema.org/HttpActionHandler" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0 0 20px;" valign="top">
+                                                Dear Concern,<br /> Your UserName : @Model.Email <br /> Password :  @Model.PassWord
+                                            </td>
+                                        </tr>
+                                    }
+                                    @if (Model.TempoRaryId != null)
+                                    {
+                                        <tr style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;">
+                                            <td height="35" class="content-block" itemprop="handler" itemscope=itemscope itemtype="http://schema.org/HttpActionHandler" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0 0 20px;" valign="top">
+                                                Dear Concern,<br /> Your Temporary Transaction No for the order is : @Model.TempoRaryId <br />. You have to provide this Transaction No and Your parcels at Post Office.<br />
+
+                                            </td>
+                                        </tr>
+                                    }
+                                    @if (Model.OrderPreviewLink != null)
+                                    {
+                                        <tr style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;">
+                                            <td height="35" class="content-block" itemprop="handler" itemscope=itemscope itemtype="http://schema.org/HttpActionHandler" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0 0 20px;" valign="top">
+                                                <br />
+                                                <hr />
+                                                <b>Please click on the link for deatils</b> <br />
+                                                <a href="@Model.OrderPreviewLink" class="btn-primary" itemprop="url" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; color: #FFF; text-decoration: none; line-height: 2em; font-weight: bold; text-align: center; cursor: pointer; display: inline-block; border-radius: 5px; text-transform: capitalize; background-color: #3bafda; margin: 0; border-color: #3bafda; border-style: solid; border-width: 10px 20px;">Your Order</a><br />
+                                            </td>
+                                        </tr>
+                                    }
+                                    @if (Model.RecoverPasswordEmail != null)
+                                    {
+                                        <tr style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;">
+                                            <td height="35" class="content-block" itemprop="handler" itemscope=itemscope itemtype="http://schema.org/HttpActionHandler" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0 0 20px;" valign="top">
+                                                <br />
+                                                <hr />
+                                                <b>Please click on the link for recover password</b> <br />
+                                                <a href="@Model.RecoverPasswordEmail" class="btn-primary" itemprop="url" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; color: #FFF; text-decoration: none; line-height: 2em; font-weight: bold; text-align: center; cursor: pointer; display: inline-block; border-radius: 5px; text-transform: capitalize; background-color: #3bafda; margin: 0; border-color: #3bafda; border-style: solid; border-width: 10px 20px;">Recover Password</a><br />
+                                            </td>
+                                        </tr>
+                                    }
+                                    @if (Model.custOrderDeails != null)
+                                    {
+                                        <tr style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;">
+                                            <td height="35" class="content-block" itemprop="handler" itemscope=itemscope itemtype="http://schema.org/HttpActionHandler" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0 0 20px;" valign="top">
+                                                <p style="line-height:130%">
+                                                    Dear Concern,<br /> We deleted your order with the following descriptions:<br /><br />
+                                                    Temporary Transaction No : @Model.TransactionNo<br />
+                                                    Item Descriptoin         : @Model.custOrderDeails.ItemDes<br />
+                                                    Weight                   : @Model.custOrderDeails.Width<br />
+                                                    Width                    : @Model.custOrderDeails.Width<br />
+                                                    Length                   : @Model.custOrderDeails.Length<br />
+                                                    Height                   : @Model.custOrderDeails.Height<br />
+                                                    Shipping From Address   : @Model.custOrderDeails.ShippingFrom.GetFullShippingFromAddress()<br />
+                                                    Shipping To Address     : @Model.custOrderDeails.ShippingTo.GetFullShippingToAddress()<br />
+                                                </p>
+                                            </td>
+                                        </tr>
+                                    }
+
+
+                                    <tr style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;">
+                                        <td height="35" class="content-block" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0 0 20px;" valign="top">
+                                            &mdash; @Model.ThanksGiving
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                    <div class="footer" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 9px; width: 100%; clear: both; color: #999; margin: 0; padding: 4px;">
+                        <p style="line-height:140%">
+                            @Model.FooterThanks<br />
+                            @Model.Department<br />
+                            @Model.FooterConcern<br />
+                            Phone: @Model.FooterPhone<br />
+                            Fax : @Model.FooterFax<br />
+                            Email : @Model.FooterEmail<br />
+                            Web : @Model.FooterWeb<br />
+                        </p>
+                    </div>
+                </div>
+            </td>
+            <td style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0;" valign="top"></td>
+        </tr>
+    </table>
+
+</body>
+
+</html>

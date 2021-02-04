@@ -1,0 +1,163 @@
+﻿@{
+    Layout = null;
+}
+
+@model IEnumerable<App.Domain.ViewModel.PendingNotEncashRptVM>
+@{
+    ViewBag.Title = "PENDING CHEQUES/DD/TT/PO NOT ENCASHED ";
+    Layout = null;
+    var fDate = Convert.ToDateTime(@ViewBag.fDate).ToString();
+    var CompInfo = AcclineERP.Models.GetCompanyInfo.GetComInfo();
+    string CompanyAddress = ((CompInfo.Addr1 == null ? string.Empty : CompInfo.Addr1) + (CompInfo.Addr2 == null ? string.Empty : CompInfo.Addr2));
+}
+
+<script src="~/Scripts/jquery-1.9.1.min.js"></script>
+<script src="~/Scripts/Export.js"></script>
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/select2/select2.css" rel="stylesheet" type="text/css" />
+<link href="~/Css/FormDesign.css" rel="stylesheet" />
+
+<style>
+    tr {
+        page-break-inside: avoid;
+        height: auto;
+    }
+
+    body {
+        padding-right: 0px;
+        font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+    }
+
+    .border {
+        color: #335; /* Lighten up font color */
+        font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+        font-weight: 300;
+        border-collapse: collapse;
+        border-spacing: 0;
+    }
+
+    .tds {
+        /*border: 1px solid black;*/
+        font-weight: 500;
+        font-family: Arial;
+        border-right: hidden !important;
+    }
+    /* Make cells a bit taller */
+    .ths {
+        /*border: 1px solid black;*/
+        font-weight: 500;
+        font-family: Arial;
+    }
+
+    .th {
+        background: #F3F3F3; /* Light grey background */
+        font-weight: bold; /* Make sure they're bold */
+    }
+
+    .td {
+
+
+        white-space:nowrap;
+        background: #FAFAFA; /* Lighter grey background */
+        text-align: center; /* Center our text */
+    }
+
+    .breakhere {
+        page-break-after: always;
+    }
+</style>
+
+<div id="toReport" class="panel-body" style="margin: auto; text-align:center !important;padding:10px">
+    <div class="panel-heading" style="text-align:center">
+        <div class="panel-title">
+            <label style="text-align:center !important; text-decoration: none; font-size:25px; font-weight:bold">@CompInfo.CompName</label><br>
+            <label style="text-align:center !important; text-decoration: none; font-size:23px; font-weight:normal"> @CompanyAddress</label><br>
+            @*<label style="text-align:center !important; text-decoration: none; font-size:23px; font-weight:normal">Phone: @CompInfo.Tel</label><br>*@
+        </div>
+        <div class="panel-title">
+            <text style="text-align:center !important; text-decoration: none; font-size:20px;font-family:'Arial Narrow'; font-weight:bold">@ViewBag.Title</text>
+        </div>
+        <div class="cashDate">
+            <text style="text-align:center !important; text-decoration: none; font-size:15px;font-family:'Arial Narrow';">From : @ViewBag.fDate &nbsp;&nbsp; To: @ViewBag.tDate</text>
+        </div>
+        <div class="panel-title">
+            <text style="text-align:center !important; text-decoration: none; font-size:20px;font-family:'Arial Narrow'; font-weight:bold">@ViewBag.Criteria</text>
+        </div>
+    </div>
+    <hr style="border-bottom: 1px solid" />
+    <br />
+
+    <div class="panel-body" style="text-align:center">
+        <table cellpadding="5" cellspacing="5" border=1 frame=box rules=all style="width:100%">
+            <thead style="height:300px ; width:300px;overflow: visible !important;">
+                
+                <tr>
+                    <th style=" font-size:14px; font-family:'Arial Narrow'; text-align:center">Accline No</th>
+                    <th colspan="2"; style=" font-size: 14px; font-family: 'Arial Narrow'; text-align: center">M/R No</th>
+                    <th style=" width: 70px;font-size: 14px; font-family: 'Arial Narrow'; text-align: center">M/R Date</th>
+                    <th style=" font-size: 14px; font-family: 'Arial Narrow'; text-align: center">Customer </th>
+                    <th style=" font-size: 14px; font-family: 'Arial Narrow'; text-align: center">Cheque Amount</th>
+                    <th style=" font-size: 14px; font-family: 'Arial Narrow'; text-align: center">PO/DD/LC Etc. Amount</th>
+                    <th style=" font-size: 14px; font-family: 'Arial Narrow'; text-align: center">Remarks</th>
+                </tr>
+
+            </thead>
+
+            <tbody id="tbodyId">
+                @{
+                    decimal ChkAmount = 0;
+                    decimal MRAmount = 0;
+
+                    foreach (var item in Model)
+                    {
+                        ChkAmount = ChkAmount + item.ChkAmount;
+                        MRAmount = MRAmount + item.MRAmount;
+
+                        <tr>
+                            <td style=" text-align:left; font-size:12px">
+                                @item.MRSL
+                            </td>
+                            <td style=" text-align:left; font-size:12px">
+                                @item.MRNo
+                            </td>
+
+                            <td colspan="2" style=" text-align:right; font-size:12px">
+                                @item.MRDate.Value.ToString("dd-MMM-yyyy")
+                            </td>
+
+                            <td style="text-align:right; font-size:12px">
+                                @item.CustCode
+                            </td>
+                            <td style=" text-align:right; font-size:12px;">
+                                @item.ChkAmount
+                            </td>
+                            <td style=" text-align:right; font-size:12px;">
+                                @item.MRAmount
+                            </td>
+                            <td style=" text-align:right; font-size:12px;">
+                                @item.Remarks
+                            </td>
+
+                        </tr>
+                    }
+
+
+                }
+
+
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td style=" text-align:right">Total = @ChkAmount</td>
+                    <td style="text-align:right">Total = @MRAmount</td>
+                    <td></td>
+            </tbody>
+        </table>
+
+    </div>
+
+</div>

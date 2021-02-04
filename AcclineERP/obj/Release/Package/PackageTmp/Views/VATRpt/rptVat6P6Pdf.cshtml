@@ -1,0 +1,226 @@
+﻿@model IEnumerable<App.Domain. VM_6P6>
+@{
+    ViewBag.Title = "rptVat6P6Pdf";
+    Layout = null;
+  
+    
+    var CompInfo = AcclineERP.Models.GetCompanyInfo.GetComInfo();
+    string CompanyAddress = ((CompInfo.Addr1 == null ? string.Empty : CompInfo.Addr1) + (CompInfo.Addr2 == null ? string.Empty : CompInfo.Addr2));
+}
+
+<script src="~/Scripts/jquery-1.9.1.min.js"></script>
+<script src="~/Scripts/Export.js"></script>
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/select2/select2.css" rel="stylesheet" type="text/css" />
+<link href="~/Css/FormDesign.css" rel="stylesheet" />
+
+<style >
+    
+
+    tr {
+        page-break-inside: avoid;
+    }
+
+    body {
+        padding-right: 0px;
+        font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+    }
+
+    .border {
+        color: #335; /* Lighten up font color */
+        font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+        font-weight: 300;
+        border-collapse: collapse;
+        border-spacing: 0;
+    }
+
+    .tds {
+        /*border: 1px solid black;*/
+        font-weight: 500;
+        font-family: Arial;
+        border-right: hidden !important;
+    }
+    /* Make cells a bit taller */
+    .ths {
+        /*border: 1px solid black;*/
+        font-weight: 500;
+        font-family: Arial;
+    }
+
+    .th {
+        background: #F3F3F3; /* Light grey background */
+        font-weight: bold; /* Make sure they're bold */
+    }
+
+    .td {
+        background: #FAFAFA; /* Lighter grey background */
+        text-align: center; /* Center our text */
+    }
+
+    .breakhere {
+        page-break-after: always;
+    }
+</style>
+
+
+    <div id="toReport" class="panel-body" style=" text-align: center !important;margin:initial; width: 100%;padding:10px; height: 100%;  ">
+        <div class="panel-body">
+            <table border="1" cellpadding="0" cellspacing="0" rules=all style="margin: 0px; padding: 0">
+                <thead style=" overflow: visible !important;">
+                    <tr>
+                        <th style="font-size: 13px; border-bottom: 0; border-top: 0; text-align: center; " colspan="27">গণপ্রজাতন্ত্রী বাংলাদেশ সরকার <br>জাতীয় রাজস্ব বোর্ড </th>
+                    </tr>
+                   
+                    <tr>
+                        <th style="font-size: 13px; border-bottom: 0; border-top: 1px; text-align: right; " colspan="27"><level style="padding:2px;border: 1px solid">মূসক-৬.৬</level>   </th>
+                    </tr>
+                    <tr>
+                        <th style="font-size: 14px; border-bottom: 0; border-top: 0; text-align: center; " colspan="27">উৎসে কর কর্তন সনদপত্র  <br />[বিধি ৪০ এর উপ-বিধি (১) এর দফা (চ) দৃষ্টব্য]<br /><br /> </th>
+                    </tr>
+
+                    <tr>
+                        <th style="font-size: 14px; border-bottom: 0; border-top: 0; text-align: left; " colspan="27">উৎসে কর কর্তনকারী সত্তার নাম :@CompInfo.CompNameBN<br />উৎসে কর কর্তনকারী সত্তার ঠিকানা : @CompInfo.AddrBN<br />উৎসে কর কর্তনকারী সত্তার বিআইএন(প্রযোজ্য ক্ষেত্রে ):@CompInfo.BINBN </th>
+                    </tr>
+
+
+                    <tr>
+                        <th style="font-size: 14px; border-bottom: 0; border-top: 0; border-right: 0; text-align:left;" colspan="6">উৎসে কর কর্তন সনদপত্র নং : ১ </th>
+
+                        <th style="font-size: 14px; border-bottom: 0; border-top: 0; border-left: 0; text-align: left; " colspan="6"> জারির তারিখ :@Model.Select(s => s.CertificateDate.ToString("dd-MMM-yyyy")).FirstOrDefault(); <br /><br /> </th>
+
+                    </tr>
+                    <tr>
+                        <th style="font-size: 14px; border-bottom: 0; border-top: 0; border-left: 0; text-align: left; " colspan="27">
+                            এই মর্মে প্রত্যয়ন করা যাইতেছে যে,
+                            আইনের ধারা ৪৯ অনুযায়ী উৎসে কর কর্তনযোগ্য সরবরাহ হইতে প্রযোজ্য মূল্য সংযোজন কর বাবদ উৎসে কর
+                            কর্তন করা হইল। কর্তনকৃত মূল্য সংযোজন করের অর্থ বুক ট্রান্সফার / ট্রেজারি চালান /
+                            দাখিলপত্রে বৃদ্ধিকারী সমন্বয়ের মাধ্যমে সরকারি কোষাগারে জমা প্রদান করা হইয়াছে । কপি এতদসংগে সংযুক্ত করা হইল (প্রযোজ্য ক্ষেত্রে)।<br /><br />
+                        </th>
+                    </tr>
+
+                    <tr>
+                        <th style="  font-size: 14px; vertical-align: top; text-align: center">ক্রমিক নং </th>
+                        <th style=" font-size: 14px; vertical-align: top; text-align: center">সরবরাহকারীর নাম </th>
+                        <th style=" font-size: 14px; vertical-align: top; text-align: center">সরবরাহকারীর বিআইএন </th>
+                        <th style=" font-size: 14px; vertical-align: top; text-align: center">সংশ্লিষ্ট কর চালানপত্র নম্বর </th>
+                        <th style=" font-size: 14px; vertical-align: top; text-align: center">সংশ্লিষ্ট কর চালানপত্র ইস্যুর তারিখ </th>
+                        <th style=" font-size: 14px; vertical-align: top; text-align: center">মোট সরবরাহ মূল্য (টাকা) </th>
+                        <th style=" font-size: 14px; vertical-align: top; text-align: center">মূসকের পরিমান (টাকা)  </th>
+                        <th style=" font-size: 14px; vertical-align: top; text-align: center">উৎসে কর্তনকৃত মূসকের পরিমান </th>
+                    </tr>
+                </thead>
+                <tbody id="tbodyId">
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td style=" text-align:left; font-size:12px">
+                                @Html.DisplayFor(modelItem => item.SerialNo)
+                            </td>
+                            <td style=" text-align:left; font-size:12px">
+                                @*@Html.DisplayFor(modelItem => item.PurDate)*@
+                                @*@item.PurDate.ToString("dd-MMM-yyyy")*@
+                                @Html.DisplayFor(modelItem => item.SupplierName)
+                            </td>
+                            <td style=" text-align:left; font-size:12px;">
+                                @Html.DisplayFor(modelItem => item.SupplierBIN)
+                            </td>
+                            <td style=" text-align:right; font-size:12px">
+                                @Html.DisplayFor(modelItem => item.TaxChallanNo)
+                            </td>
+                            <td style="text-align:center; font-size:12px">
+                                @item.IssueDate.ToString("dd-MMM-yyyy")
+
+                            </td>
+                            <td style=" text-align:right; font-size:12px;">
+                                @Html.DisplayFor(modelItem => item.TotalValue)
+                            </td>
+                            <td style=" text-align:right; font-size:12px;">
+                                @Html.DisplayFor(modelItem => item.VATAmount)
+                            </td>
+                            <td style=" text-align:right; font-size:12px;">
+                                @Html.DisplayFor(modelItem => item.VDSAmount)
+                            </td>
+
+                        </tr>
+
+
+                    }
+                    @*<tr>
+                            <th style=""></th>
+                            <th style=""></th>
+                            <th style=""></th>
+                            <th style=""></th>
+                            <th style=" text-align:Center">সর্বমোট</th>
+                            <th style=" text-align:right"></th>
+                            <th style=" text-align:right"></th>
+                            <th style=" text-align:right"></th>
+
+                        </tr>*@
+                </tbody>
+                <tr>
+                    <th style="font-size: 14px; border-bottom: 0; border-top: 0; text-align: left; " colspan="27"><br /><br />ক্ষমতাপ্রাপ্ত ব্যাক্তির নাম:</th>
+                </tr>
+                <tr>
+                    <th style="font-size: 14px; border-bottom: 0; border-top: 0; text-align: left; " colspan="27">নাম:</th>
+                </tr>
+                <tr>
+                    <th style="font-size: 14px; border-bottom: 0; border-top: 0; text-align: left; " colspan="27">স্বাক্ষর:</th>
+                </tr>
+
+            </table>
+        </div>
+        <p></p>
+    </div>
+
+
+
+
+
+
+
+
+
+<script language="JavaScript">
+    function disableCtrlKeyCombination(e) {
+        //list all CTRL + key combinations you want to disable
+        var forbiddenKeys = new Array("a", "s", "c");
+        var key;
+        var isCtrl;
+
+        if (window.event) {
+            key = window.event.keyCode;     //IE
+            if (window.event.ctrlKey)
+                isCtrl = true;
+            else
+                isCtrl = false;
+        }
+        else {
+            key = e.which;     //firefox
+            if (e.ctrlKey)
+                isCtrl = true;
+            else
+                isCtrl = false;
+        }
+
+        //if ctrl is pressed check if other key is in forbidenKeys array
+        if (isCtrl) {
+            for (i = 0; i < forbiddenKeys.length; i++) {
+                //case-insensitive comparation
+                if (forbiddenKeys[i].toLowerCase() == String.fromCharCode(key).toLowerCase()) {
+                    //                                    alert(“Key combination CTRL + "
+                    //                                                + String.fromCharCode(key)
+                    //                                                + " has been disabled.");
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+</script>
+
+
+
+
+

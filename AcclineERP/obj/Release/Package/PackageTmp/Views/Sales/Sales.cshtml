@@ -1,0 +1,2232 @@
+﻿@model App.Domain.ViewModel.SalesVM
+@{
+    ViewBag.Title = "Sales";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.IM = Session["IM"].ToString();
+}
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/select2/select2.css" rel="stylesheet" type="text/css" />
+<link href="~/Css/FormDesign.css" rel="stylesheet" />
+
+<style>
+    table.dataTable.select tbody tr,
+    table.dataTable thead th:first-child {
+        cursor: pointer;
+    }
+
+    .dataTables_scrollBody > table > thead > tr > th[class*="sort"]::after {
+        display: none;
+    }
+
+    input#NetAmount, input#PrevDue, input#AdditionalAmt, input#DiscAmt, input#VATAmt, input#TotSaleAmt, input#NetSaleAmt {
+        text-align: right;
+    }
+
+    input#vat6p2, input#vat6p2p1, input#vat6p3, input#vat6p10, input#vat9p1SFKa, input#vat9p1SFKha {
+        width: 25px;
+        height: 15px;
+        margin-top: 0px;
+    }
+
+    .form-control {
+        border: 1px solid #00ffff;
+    }
+
+    .required:after {
+        content: " *";
+        font-weight: bold;
+        color: red;
+    }
+
+    a#glPro {
+        color: darkblue;
+    }
+
+    a#GLEntries {
+        color: darkblue;
+    }
+
+    label.col-md-4 {
+        padding: 0px !important;
+    }
+
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    input[type=number] {
+        -moz-appearance: textfield;
+    }
+
+    .modal-custom {
+        width: 1000px !important;
+    }
+</style>
+@using (Html.BeginForm())
+{
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="panel panel-color panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <text style="text-align:left !important; text-decoration: none;">Sales</text>
+                    </h3>
+                </div>
+                <div class="panel-body">
+                    <div class="modal fade in" id="pView" role="dialog" aria-hidden="true">
+                        @Html.Partial("CommonPV")
+
+                    </div>
+                    @if (ViewBag.OnlyVAT == false)
+                    {
+                        <div class="input-group form-group col-md-12">
+                            <div class="col-md-4" style="text-align:right">
+
+                                <label class="control-label">
+                                    @Html.ActionLink(
+                            "Sales waiting for Posting",
+                            "GetJournalVoucher",
+                            "Sales",
+                            new { Date = "blankDate" },
+                            new { id = "glPro", }
+                            )
+                                </label>
+                                <label id="CountNo">(@ViewBag.GLProvition)</label>
+                            </div>
+                            <div class="col-md-4" style="text-align:center">
+                                <label class="control-label" target="_blank">
+                                    @Html.ActionLink(
+                            "List of Sales Voucher",
+                            "GetGLEntries",
+                            "Sales",
+                            new { Date = "blankDate" },
+                            new { id = "GLEntries", }
+                            )
+                                </label>
+                                <label>(@ViewBag.GLEntries)</label>
+                            </div>
+                        </div>
+                    }
+                    <div class="col-sm-12">
+                        <div class="col-sm-6">
+                            @if (ViewBag.IM == "True")
+                            {
+                                <div class="col-sm-12">
+                                    <label class="col-sm-3 required">Location</label>
+                                    <div class="input-group form-group col-sm-9">
+                                        @Html.DropDownListFor(x => x.LocCode, null, new { @class = "form-control select2", @Value = ViewBag.LocCode })
+                                        @Html.ValidationMessageFor(x => x.LocCode)
+                                    </div>
+                                </div>
+                            }
+                            <div class="col-md-12">
+                                <div class="col-md-6">
+                                    <label class="col-md-6" style="padding:5px !important;padding-left: 0px !important;">Invoice No</label>
+                                    <div class="input-group form-group col-md-6" style="padding-left:1px;">
+                                        <input type="text" class="form-control" id="SaleNo" name="SaleNo" value="@ViewBag.InvNo" required="required" />
+                                        <input type="hidden" name="tSaleNo" id="tSaleNo" />
+                                        <input type="hidden" name="PreSaleNo" id="PreSaleNo" />
+                                        <input type="hidden" name="PreChallanNo" id="PreChallanNo" />
+                                        <input type="hidden" name="PreSaleDate" id="PreSaleDate" />
+                                        <input type="hidden" name="isEdit" id="isEdit" />
+                                        <input type="hidden" name="Location" id="Location" />
+                                        @Html.HiddenFor(x => x.SalesMainID)
+                                        @Html.HiddenFor(x => x.Vat)
+                                        @Html.HiddenFor(x => x.Discount)
+                                        @Html.HiddenFor(x => x.ProdSer)
+
+                                    </div>
+                                </div>
+                                <div class="col-md-6" style="padding-right:0px !important">
+                                    <label class="col-md-4 required" style="padding:5px !important">Invoice Date</label>
+                                    <div class="input-group form-group col-md-8">
+                                        <input type="text" class="form-control datePage" id="@Html.IdFor(x => x.SaleDate)" value="@DateTime.Today.ToShortDateString()">
+                                        <span class="input-group-addon bg-primary b-0 text-white"><i class="ion-calendar"></i></span>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-md-3 required">Customer</label>
+                                <div class="input-group form-group col-md-9">
+                                    @Html.DropDownListFor(x => x.CustCode, null, "---- Select ----", new { @class = "form-control select2", @Value = ViewBag.CustCode })
+                                    @Html.ValidationMessageFor(x => x.CustCode)
+                                </div>
+                            </div>
+                            @if (ViewBag.MaintVAT == true)
+                            {
+                                <div class="col-sm-12">
+                                    <div class="col-sm-6">
+                                        <label class="col-md-6 required" style="padding-left: 0px !important;">Registration No</label>
+                                        <div class="input-group form-group col-md-6">
+                                            @Html.TextBoxFor(x => x.RegNo, new { @class = "form-control col-md-12 select2", placeholder = "BIN/TIN/NID No" })
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="col-md-12 hidden" id="pnlRegType" style="padding-right:0px !important">
+                                            <label class="col-md-4">Reg Type</label>
+                                            <div class="input-group form-group col-md-8">
+                                                @Html.TextBoxFor(x => x.RegType, new { @class = "form-control col-md-12 select2", placeholder = "BIN/TIN/NID", @style = "margin-left: 5px;" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+
+                            <div class="col-md-12">
+                                <label class="col-md-3">Item Type</label>
+                                <div class="input-group form-group col-md-9">
+                                    @Html.DropDownListFor(x => x.ItemType, null, "---- Select ----", new { @class = "form-control select2", @Value = ViewBag.ItemType })
+                                    @Html.ValidationMessageFor(x => x.ItemType)
+                                </div>
+                            </div>
+                            @*<div class="col-md-12">
+
+                                </div>*@
+                            <div class="col-md-12">
+                                <label class="col-md-3 required">Item</label>
+                                <div class="input-group form-group col-md-9">
+                                    @Html.DropDownListFor(x => x.ItemCode, null, new { @class = "form-control select2", @Value = ViewBag.ItemCode })
+                                    @Html.ValidationMessageFor(x => x.ItemCode)
+                                </div>
+                            </div>
+                            @if (ViewBag.MaintVAT == true)
+                            {
+                                <div class="col-md-12">
+                                    <label class="col-md-3">HS Code</label>
+                                    <div class="input-group form-group col-md-5">
+                                        @Html.TextBoxFor(x => x.HSCode, new { @class = "form-control col-md-8 select2", required = "required" })
+                                    </div>
+                                </div>
+                            }
+                            @if (ViewBag.IM == "True")
+                            {
+                                <div class="col-md-12">
+                                    <div class="col-md-6">
+                                        <label class="col-md-6 required" style="padding-left: 0px !important;">Ext Qty</label>
+                                        <div class="input-group form-group col-md-6">
+                                            @Html.TextBoxFor(x => x.ExtQty, new { @type = "number", @class = "form-control col-md-8 select2", required = "required", disabled = "true" })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6" style="padding-right:0px !important">
+                                        <label class="col-md-6 required">Ext UPrice</label>
+                                        <div class="input-group form-group col-md-6">
+                                            @Html.TextBoxFor(x => x.ExtUPrice, new { @type = "number", @class = "form-control col-md-8 select2", required = "required", disabled = "true" })
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            <div class="col-md-12">
+                                <div class="col-md-6">
+                                    <label class="col-md-6 required" style="padding-left: 0px !important;">Sold Qty</label>
+                                    <div class="input-group form-group col-md-6">
+                                        @Html.TextBoxFor(x => x.SaleQty, new { @type = "number", @class = "form-control col-md-8 select2", required = "required" })
+                                        @Html.ValidationMessageFor(x => x.SaleQty)
+                                    </div>
+                                </div>
+                                <div class="col-md-6" style="padding-right:0px !important">
+                                    <label class="col-md-6 required">Sold UPrice</label>
+                                    <div class="input-group form-group col-md-6">
+                                        @Html.TextBoxFor(x => x.UnitPrice, new { @type = "number", @class = "form-control col-md-8 select2", required = "required" })
+                                        @Html.ValidationMessageFor(x => x.UnitPrice)
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-md-3">Description</label>
+                                <div class="input-group form-group col-md-9">
+                                    @Html.TextBoxFor(x => x.Description, new { @class = "form-control col-md-8 select2" })
+
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                @if (ViewBag.MaintLot == true)
+                                {
+                                    <div class="col-sm-6">
+                                        <label class="col-md-6" style="padding-left: 0px !important;">Lot No.</label>
+                                        <div class="input-group form-group col-md-6">
+                                            @Html.TextBoxFor(x => x.LotNo, new { @class = "form-control col-md-8 select2", required = "required" })
+                                        </div>
+                                    </div>
+                                }
+                                <div class="col-md-6" style="padding-right:0px !important; float:right">
+                                    <input type="button" class="btn btn-primary" value="Add" id="btnAdd" style="float:right;margin-bottom: 10px;" />
+                                    @*<input type="button" class="btn btn-primary" value="update" id="update" style="float:right;margin-bottom: 10px;" />*@
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="col-md-6">
+                                    <label class="col-md-6" style="padding-left: 0px !important;">Labour</label>
+                                    <div class="input-group form-group col-md-6">
+                                        @Html.TextBoxFor(x => x.Labour, new { @type = "number", @class = "form-control col-md-8 select2", required = "required" })
+                                        @Html.ValidationMessageFor(x => x.Labour)
+                                    </div>
+                                </div>
+                                <div class="col-md-6" style="padding-right:0px !important">
+                                    <label class="col-md-6">Transport</label>
+                                    <div class="input-group form-group col-md-6">
+                                        @Html.TextBoxFor(x => x.Transport, new { @type = "number", @class = "form-control col-md-8 select2", required = "required" })
+                                        @Html.ValidationMessageFor(x => x.Transport)
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-md-3">Remarks</label>
+                                <div class="input-group form-group col-md-9">
+                                    @Html.TextAreaFor(x => x.Remarks, new { @class = "form-control col-md-8 select2" })
+                                    @Html.ValidationMessageFor(x => x.Remarks)
+                                </div>
+                            </div>
+                            @using (Html.BeginForm("SalePreviewPdf", "Sales", FormMethod.Post, new { target = "_blank" }))
+                            {
+                                <div class="col-md-12">
+                                    <label class="col-md-3 required">Copy</label>
+                                    <div class="input-group form-group  col-md-9">
+                                        <div class=" col-md-3" style="padding-left:0px !important">
+                                            @Html.TextBoxFor(x => x.CopyQty, new { @type = "number", @class = "form-control col-md-12 select2", required = "required" })
+                                        </div>
+                                        @if (ViewBag.IM == "True")
+                                        {
+                                            <div class="col-md-6">
+                                                <select name="CopyType" id="CopyType" class="form-control col-md-12" style="float:right">
+                                                    <option value="1">Invoice & Challan</option>
+                                                    <option value="2">Invoice</option>
+                                                    <option value="3">Challan</option>
+                                                    <option value="4">Gate Pass</option>
+                                                </select>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="col-md-6">
+                                                <select name="CopyType" id="CopyType" class="form-control col-md-12" style="float:right">
+                                                    <option value="2">Invoice</option>
+                                                </select>
+                                            </div>
+                                        }
+
+                                    </div>
+                                </div>
+                                <div class="row col-md-12" style="text-align:end">
+
+                                    <input type="hidden" id="sNo" name="sNo" />
+                                    @if (ViewBag.MaintPacking == true)
+                                    {
+                                        <a href="@Url.Action("SalePreviewPdfPrint", "Sales")" target="_blank" class="btn btn-primary">Print</a>
+                                    }
+                                    <input type="submit" value="Preview" class="btn btn-primary" id="btnPreview" style="width:100px; margin-right:0px" />
+                                    <input type="button" value="Save" class="btn btn-primary" id="btnSave" style="width:100px;" />
+                                    <input type="button" value="Update" class="btn btn-primary" id="btnUpdate" style="width:100px;" />
+                                    @{
+                                    string UserName = Session["UserName"].ToString();
+                                    AcclineERP.Models.RBACUser rUser = new AcclineERP.Models.RBACUser(UserName);
+                                    }
+                                    @if (rUser.HasPermissionToMenu("InvoiceCancel"))
+                                    {
+                                    <input type="button" value="Cancel" class="btn btn-primary" id="btnCancel" style="width:100px;" />
+                                    }
+                                    <input type="button" value="Clear" class="btn btn-primary" id="btnClear" style="width:100px;" />
+
+
+                                </div>
+                            }
+                        </div>
+                        <div class="col-md-6">
+
+                            <div class="col-md-12">
+                                @if (ViewBag.MaintJob == true)
+                                {
+                                    <div class="col-md-6">
+                                        <label class="col-md-4">Job No</label>
+                                        <div class="col-md-8 input-group form-group">
+                                            @Html.DropDownListFor(x => x.JobNo, null, "---- Select ----", new { @class = "form-control select2", @Value = ViewBag.JobNo })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <input type="button" class="btn" value="Add Job" id="btnJob" />
+                                    </div>
+                                }
+                                @if (ViewBag.MakeChallanAuto == true)
+                                {
+                                    <div class="col-md-4" style="text-align:center">
+                                        <div class="checkbox checkbox-primary">
+                                            <input type="checkbox" name="MakeChallanAuto" checked="checked" value="MakeChallanAuto" id="MakeChallanAuto" /><label style="color:darkblue; font-weight:bold">Make Challan Auto</label>
+                                        </div>
+                                    </div>
+                                }
+
+                            </div>
+
+
+                            <div class="col-md-12">
+                                <div class="col-md-6">
+                                    <label class="col-md-4">Ref No</label>
+                                    <div class="input-group form-group col-md-8">
+                                        @Html.TextBoxFor(x => x.RefNo, new { @class = "form-control col-md-8 select2", required = "required" })
+                                        @Html.ValidationMessageFor(x => x.RefNo)
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="col-md-4">Ref Date</label>
+                                    <div class="input-group form-group col-md-8">
+                                        <input type="text" class="form-control datePage" id="@Html.IdFor(x => x.RefDate)" value="">
+                                        <span class="input-group-addon bg-primary b-0 text-white"><i class="ion-calendar"></i></span>
+
+                                    </div>
+                                </div>
+                            </div>
+                            @if (ViewBag.MaintJob == true)
+                            {
+                                <div class="col-md-12">
+                                    <div class="col-md-6">
+                                        <label class="col-md-4 required" style="padding:0 !important">Cust Wise Inv No</label>
+                                        <div class="input-group form-group col-md-8">
+                                            <input type="text" class="form-control" id="CustInvNo" name="CustInvNo" disabled="disabled" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+
+                                    </div>
+                                </div>
+                            }
+                            @if (ViewBag.IM == "True")
+                            {
+                                <div class="col-md-12">
+                                    <div class="col-md-6">
+                                        <label class="col-md-4 required" style="padding:0 !important">Challan No</label>
+                                        <div class="input-group form-group col-md-8">
+                                            <input type="text" class="form-control" id="IssueNo" name="IssueNo" value="@ViewBag.IssueNo" required="required" disabled="disabled" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="col-md-4 required" style="padding:5px !important;padding-left: 0px !important;">Challan Date</label>
+                                        <div class="input-group form-group col-md-8">
+                                            <input type="text" class="form-control datePage" id="@Html.IdFor(x => x.IssueDate)" value="@DateTime.Today.ToShortDateString()">
+                                            <span class="input-group-addon bg-primary b-0 text-white"><i class="ion-calendar"></i></span>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            <div class="col-md-12">
+                                <div class="col-md-6">
+                                    <label class="col-md-4">Voucher No1</label>
+                                    <div class="col-md-8" style="padding: 0px !important;">
+                                        <input class="form-control" id="VchrNo" name="VchrNo" type="text" value="@ViewBag.VchrNo" disabled="disabled">
+                                        <span class="field-validation-valid" data-valmsg-for="VchrNo" data-valmsg-replace="true"></span>
+                                    </div>
+                                </div>
+                                @if (ViewBag.IM == "True")
+                                {
+                                    <div class="col-md-6">
+                                        <label class="col-md-4">Voucher No2</label>
+                                        <div class="col-md-8">
+                                            <input class="form-control" id="IssVchrNo" name="IssVchrNo" type="text" value="@ViewBag.IssVchrNo" disabled="disabled">
+                                            <span class="field-validation-valid" data-valmsg-for="IssVchrNo" data-valmsg-replace="true"></span>
+                                        </div>
+                                    </div>
+                                }
+
+                            </div>
+                            <div class="col-sm-12 col-md-12" style="margin-top: 10px; margin-bottom: 10px;">
+                                <div class="row col-sm-12 col-md-12" style="border:1px solid; border-color:#adcceb; width:100%">
+                                    <div class="row">
+                                        <div class="col-sm-12 col-md-12" style="padding:1px 18px 1px 18px">
+                                            <br />
+                                            <table class="table table-bordered table-responsive" id="Add-datatable" style="width:100%">
+                                                <thead>
+                                                    <tr>
+                                                        <th width="5%">SL</th>
+                                                        <th width="10%">Invoice&nbsp;No</th>
+                                                        <th width="5%">Code</th>
+                                                        <th width="40%">Item&nbsp;Name</th>
+                                                        <th width="5%">Description</th>
+                                                        <th width="5%">Qty</th>
+                                                        <th width="5%">Unit&nbsp;Price</th>
+                                                        <th width="5%">VAT</th>
+                                                        <th width="5%">Discount</th>
+                                                        <th width="5%">Amount</th>
+                                                        <th width="5%">Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="tbodyId"></tbody>
+
+                                            </table>
+                                            <br />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12" style="margin-bottom:10px">
+                                @if (ViewBag.MaintPacking == true)
+                                {
+                                    <input type="button" id="btnPackingListModal" data-toggle="modal" value="Packing List" class="btn btn-primary" />
+
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="col-md-2">
+                            <label>Total Amount</label>
+                            <div class="input-group form-group col-md-12">
+                                @Html.TextBoxFor(x => x.TotSaleAmt, new { @class = "form-control col-md-8 select2", required = "required" })
+                            </div>
+                        </div>                       
+                        <div class="col-md-2">
+                            <label>Discount Amount</label>
+                            <div class="input-group form-group col-md-12">
+                                @Html.TextBoxFor(x => x.DiscAmt, new { @class = "form-control col-md-8 select2", required = "required" })
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <label>VAT Amount</label>
+                            <div class="input-group form-group col-md-12">
+                                @Html.TextBoxFor(x => x.VATAmt, new { @class = "form-control col-md-8 select2", required = "required" })
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <label>Additional Amount</label>
+                            <div class="input-group form-group col-md-12">
+                                @Html.TextBoxFor(x => x.AdditionalAmt, new { @class = "form-control col-md-8 select2", required = "required" })
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <label>Net Sale Amount</label>
+                            <div class="input-group form-group col-md-12">
+                                <input type="text" id="NetSaleAmt" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <label>Previous Due</label>
+                            <div class="input-group form-group col-md-12">
+                                @Html.TextBoxFor(x => x.PrevDue, new { @class = "form-control col-md-8 select2", required = "required" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="col-md-10"></div>
+                        <div class="col-md-2">
+                            <label>Net Payable</label>
+                            <div class="input-group form-group col-md-12">
+                                @Html.TextBoxFor(x => x.NetAmount, new { @class = "form-control col-md-8 select2", required = "required" })
+                            </div>
+                        </div>
+                    </div>
+                    @if (ViewBag.MaintVAT == true)
+                    {
+                        <div class="col-sm-12" id="pnlVAT">
+                            @*<label class="col-md-1"></label>*@
+                            <div class="col-sm-12">
+                                <div class="col-md-2">
+                                    <span class="checkbox-button">
+                                        <input type="checkbox" name="vat6p2" class="checkbox-primary" required="required" id="vat6p2" />
+                                        <input type="button" class="btn-primary" value="VAT 6.2" id="btnVAT6p2" />
+                                    </span>
+                                </div>
+                                <div class="col-md-2">
+                                    <span class="checkbox-button">
+                                        <input type="checkbox" name="vat6p2p1" class="checkbox-primary" required="required" id="vat6p2p1" />
+                                        <input type="button" class="btn-primary" value="VAT 6.2.1" id="btnVAT6p2p1" />
+                                    </span>
+                                </div>
+                                <div class="col-md-2">
+                                    <span class="checkbox-button">
+                                        <input type="checkbox" name="vat6p3" class="checkbox-primary" required="required" id="vat6p3" />
+                                        <input type="button" class="btn-primary" value="VAT 6.3" id="btnVAT6p3" />
+                                    </span>
+                                </div>
+                                <div class="col-md-2">
+                                    <span class="checkbox-button">
+                                        <input type="checkbox" name="vat6p10" class="checkbox-primary" required="required" id="vat6p10" />
+                                        <input type="button" class="btn-primary" value="VAT 6.10" id="btnVAT6p10" />
+                                    </span>
+                                </div>
+                                <div class="col-md-2">
+                                    <span class="checkbox-button">
+                                        <input type="checkbox" name="vat9p1SFKa" class="checkbox-primary" required="required" id="vat9p1SFKa" />
+                                        <input type="button" class="btn-primary" value="VAT 9.1 (SF KA)" id="btnvat9p1SFKa" />
+                                    </span>
+                                </div>
+                                <div class="col-md-2">
+                                    <span class="checkbox-button">
+                                        <input type="checkbox" name="vat9p1SFKha" class="checkbox-primary" required="required" id="vat9p1SFKha" />
+                                        <input type="button" class="btn-primary" value="VAT 9.1 (SF KHA)" id="btnvat9p1SFKha" />
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" id="JobModal" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="panel panel-color panel-primary">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">Job Information</h3>
+
+                            </div>
+                            <div class="panel-body">
+                                <div class="clearfix">
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="col-md-3">Job No</label>
+                                    <div class="input-group form-group col-md-7">
+                                        <input type="text" class="form-control" id="nJobNo" name="nJobNo" />
+                                    </div>
+                                </div>
+                                <div class="col-md-10">
+                                    <div>
+                                        <div class="pull-right">
+                                            <input type="button" id="btnJobOk" value="Save" class="btn btn-primary" />
+                                            <input type="button" id="closeJob" value="Close" class="btn btn-primary" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade in" id="idPackingListModal" role="dialog" aria-hidden="true" width="500px!important">
+        @Html.Partial("PackingListPV")
+
+    </div>
+
+}
+
+
+@section scripts{
+    <script src="~/App_Themes/Theme1/plugins/select2/select2.min.js" type="text/javascript"></script>
+    <script src="~/App_Themes/Theme1/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.bootstrap.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.buttons.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/buttons.bootstrap.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/pdfmake.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/vfs_fonts.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/buttons.html5.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/buttons.print.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.fixedHeader.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.keyTable.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.responsive.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/responsive.bootstrap.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.scroller.min.js"></script>
+    <script type="text/javascript" src="../App_Themes/Theme1/plugins/parsleyjs/dist/parsley.min.js"></script>
+    <script src="../App_Themes/Theme1/blue/assets/pages/datatables.init.js"></script>
+
+
+    <script>
+    var editor;
+    var isEdit_Pack = 0;
+    $(document).ready(function () {
+
+        function select2Focus() {
+            var select2 = $(this).data('select2');
+            setTimeout(function () {
+                if (!select2.opened()) {
+                    select2.open();
+                }
+            }, 0);
+        }
+
+        $("input:text:visible:first").focus();
+        $("#LocCode").select2().one('select2-focus', select2Focus).on("select2-blur", function () { $(this).one('select2-focus', select2Focus) });
+        $("#CustCode").select2().one('select2-focus', select2Focus).on("select2-blur", function () { $(this).one('select2-focus', select2Focus) });
+        $("#ItemType").select2().one('select2-focus', select2Focus).on("select2-blur", function () { $(this).one('select2-focus', select2Focus) });
+        $("#GroupID").select2().one('select2-focus', select2Focus).on("select2-blur", function () { $(this).one('select2-focus', select2Focus) });
+        $("#SGroupID").select2().one('select2-focus', select2Focus).on("select2-blur", function () { $(this).one('select2-focus', select2Focus) });
+        $("#ItemCode").select2().one('select2-focus', select2Focus).on("select2-blur", function () { $(this).one('select2-focus', select2Focus) });
+        $("#SSGroupID").select2().one('select2-focus', select2Focus).on("select2-blur", function () { $(this).one('select2-focus', select2Focus) });
+
+        $("#NetAmount, #HSCode, #PrevDue, #AdditionalAmt, #TotSaleAmt, #NetSaleAmt, #vat6p2, #vat6p2p1, #vat6p3, #vat6p10, #vat9p1SFKa").prop("disabled", true); //#DiscAmt,#VATAmt,
+
+        $("#Adjment").val(0);
+        $("#Labour").val(0);
+        $("#Transport").val(0);
+        $("#PrevDue").val(0);
+        $("#AdditionalAmt").val(0);
+        $("#NetSaleAmt").val(0);
+        $("#NetAmount").val(0);
+        $("#SaleQty").val(0);
+        $("#UnitPrice").val(0);
+        $("#CopyQty").val(1);
+
+        $('#btnUpdate').hide();
+        $('#btnCancel').hide();
+        $("#btnAdd").show();
+
+
+
+
+        //*****************    PackingList (Start_Area==> first event : second function ==> End  Area)   ***************************************************************
+
+        $(document).on('click', '#btnPackingListModal', function () {
+
+            //1--for load PL_Item dropdown.......
+            $.ajax({
+                url: '@Url.Action("LoadDropdownItem", "Sales")',
+                contentType: "application/json;charset=utf-8",
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    $('#PL_Item').empty();
+                    $.each(data, function (index, value) {
+                        $('#PL_Item').append($('<option>',
+                            {
+                                value: value.Value,
+                                text: value.Text
+                            })).select2();
+                    });
+                }
+            });
+
+            //1--for load PackItemCode dropdown.......
+
+            $.ajax({
+                url: '@Url.Action("LoadDropdownItem_Pack", "Sales")',
+                contentType: "application/json;charset=utf-8",
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    $('#PackItemCode').empty();
+                    $.each(data, function (index, value) {
+                        $('#PackItemCode').append($('<option>',
+                           {
+                               value: value.Value,
+                               text: value.Text
+                           })).select2();
+                    });
+                }
+            });
+            $('#idPackingListModal').modal('show');
+            $('#btnPL_Update').hide();
+            $('#btnPL_Add').hide();
+
+            //Execute During Edit
+            if (isEdit_Pack == 1) {
+                $('#btnPL_Add').hide();
+                $('#btnPackListLoad').hide();
+                ForPacketListDatatblLoad("initial", "1", "1");
+                isEdit_Pack = 0;
+            }
+
+
+
+
+        });
+        $(document).on('change', "#PackItemCode", function () {
+
+            $.ajax({
+                url: '@Url.Action("GetPackSizebyPackItemCode", "Sales")',
+                contentType: "application/json;charset=utf-8",
+                data: JSON.stringify({ PackItemCode: $("#PackItemCode :selected").val() }),
+                type: 'POST',
+                dataType: 'json',
+                success: function (PackSize) {
+                    $("#PL_PackSize").val(PackSize);
+
+
+                }
+            });
+
+        });
+
+
+        $(document).on('click', '#btnPackListLoad', function () {
+
+            $('#btnPL_Update').hide();
+            $('#btnPL_Add').show();
+            ForPacketListDatatblLoad("initial", "1", "1");  //( stage, deleteCode, AddPackItem)
+
+        });
+
+
+        $(document).on('click', '#btnPackListclose', function () {
+            $('#idPackingListModal').modal('hide');
+        });
+
+
+        $(document).on("click", "#PL_delete", function () {
+            var value = $(this).attr("value");
+            swal({
+                title: "Are you sure?",
+                text: "You will not be able to recover this order data!",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Yes, delete it!",
+                closeOnConfirm: true,
+                closeOnCancel: true
+            },
+             function () {
+                 $('#btnPL_Update').hide();
+                 $('#btnPL_Add').show();
+                 ForPacketListDatatblLoad("delete", value, "1");
+             });
+        });
+
+
+        $(document).on('click', "#PL_edit", function () {
+            var id = $(this).attr("value");
+            $('#btnPL_Update').show();
+            $('#btnPL_Add').hide();
+            $.ajax({
+                url: '@Url.Action("Edit_PakageList", "Sales")',
+                contentType: "application/json;charset=utf-8",
+                data: JSON.stringify({ id: id }),
+                type: 'POST',
+                dataType: 'json',
+                success: function (datas) {
+
+                    $("#PL_ID").val(id);
+                    $("#PL_Item").val(datas.ItemCode).trigger('change.select2');
+                    $("#PackItemCode").val(datas.PackItemCode).trigger('change.select2');
+                    $("#PL_PackSize").val(datas.PackSize);
+                    $("#PL_PackPcs").val(datas.PackPcs);
+                    $("#PL_TotalQty").val(datas.Qty);
+
+                }
+            });
+
+        });
+
+        var addOnPackateList = {
+            ID: "",
+            ItemName: "",
+            ItemCode: "",
+            PackItem: "",
+            PackItemCode: "",
+            PackSize: "",
+            PackPcs: "",
+            Qty: "",
+            PacketLot: "",
+            PL_Item: ""
+        }
+        $(document).on('click', "#btnPL_Update", function () {
+
+            $('#btnPL_Update').hide();
+            $('#btnPL_Add').show();
+            addOnPackateList.ID = $("#PL_ID").val();
+            addOnPackateList.ItemName = $("#PL_Item :selected").text();
+            addOnPackateList.ItemCode = $("#PL_Item :selected").val();
+            addOnPackateList.PackItem = $("#PackItemCode :selected").text();
+            addOnPackateList.PackItemCode = $("#PackItemCode :selected").val();
+            addOnPackateList.PackSize = $("#PL_PackSize").val();
+            addOnPackateList.PackPcs = $("#PL_PackPcs").val();
+            addOnPackateList.Qty = $("#PL_TotalQty").val();
+            $.ajax({
+                url: '@Url.Action("Update_PakageList", "Sales")',
+                contentType: "application/json;charset=utf-8",
+                data: JSON.stringify({ PackItem: addOnPackateList }),
+                type: 'POST',
+                dataType: 'json',
+                success: function (datas) {
+                    if (datas == "1") {
+                        $('#PL_Dtable').DataTable().clear();
+                        $('#PL_Dtable').DataTable().destroy();
+                        ForPacketListDatatblLoad("update", "1", "1");
+                    }
+                }
+            });
+        });
+        $(document).on('click', "#btnPL_Add", function () {
+
+            addOnPackateList.ID = $("#PL_ID").val();
+            addOnPackateList.ItemName = $("#PL_Item :selected").text();
+            addOnPackateList.ItemCode = $("#PL_Item :selected").val();
+            addOnPackateList.PackItem = $("#PackItemCode :selected").text();
+            addOnPackateList.PackItemCode = $("#PackItemCode :selected").val();
+            addOnPackateList.PackSize = $("#PL_PackSize").val();
+            addOnPackateList.PackPcs = $("#PL_PackPcs").val();
+            addOnPackateList.Qty = $("#PL_TotalQty").val();
+            $.ajax({
+                url: '@Url.Action("Add_PakageList", "Sales")',
+                contentType: "application/json;charset=utf-8",
+                data: JSON.stringify({ PackItem: addOnPackateList }),
+                type: 'POST',
+                dataType: 'json',
+                success: function (datas) {
+                    if (datas == "1") {
+
+                        $('#PL_Dtable').DataTable().clear();
+                        $('#PL_Dtable').DataTable().destroy();
+                        ForPacketListDatatblLoad("update", "1", "1");
+                    }
+                }
+            });
+        });
+
+        //  ------------------------------------------------------------------
+
+
+        $(document).on("click", "#btnVAT6p2, #btnVAT6p2p1, #btnVAT6p3, #btnVAT6p10, #btnvat9p1SFKa , #btnvat9p1SFKha", function (e) {
+            var fDate = moment($('#PreSaleDate').val(), 'DD/MM/YYYY').format('MM/DD/YYYY').toString();
+            var TransNo = $('#PreSaleNo').val();
+            var PreChallanNo = $('#PreChallanNo').val();
+            var value = $(this).attr("id");
+            if ($("#vat6p2").prop("checked") == true && value == "btnVAT6p2") {
+                window.open('@Url.Action("TransWiseVat6P2RptPdf", "VATRpt", null)?fDate=' + fDate + '&tDate=' + fDate + '&TransNo=' + TransNo);
+            }
+            if ($("#vat6p2p1").prop("checked") == true && value == "btnVAT6p2p1") {
+                window.open('@Url.Action("TransWiseVat6P2P1RptPdf", "VATRpt", null)?fDate=' + fDate + '&tDate=' + fDate + '&TransNo=' + TransNo);
+            }
+            if ($("#vat6p3").prop("checked") == true && value == "btnVAT6p3") {
+                window.open('@Url.Action("TransWiseVat6P3RptPdf", "VATRpt", null)?fDate=' + fDate + '&tDate=' + fDate + '&TransNo=' + PreChallanNo);
+            }
+            if ($("#vat6p10").prop("checked") == true && value == "btnVAT6p10") {
+                window.open('@Url.Action("TransWiseVat6P10RptPdf", "VATRpt", null)?fDate=' + fDate + '&tDate=' + fDate + '&TransNo=' + PreChallanNo);
+            }
+            if ($("#vat9p1SFKa").prop("checked") == true && value == "btnvat9p1SFKa") {
+                window.open('@Url.Action("TransWiseVat9P1_SF_KaRptPdf", "VATRpt", null)?fDate=' + fDate + '&tDate=' + fDate + '&TransNo=' + TransNo);
+            }
+            if ($("#vat9p1SFKha").prop("checked") == true && value == "btnvat9p1SFKha") {
+                window.open('@Url.Action("TransWiseVat9P1_SF_Ka_2_RptPdf", "VATRpt", null)?fDate=' + fDate + '&tDate=' + fDate + '&TransNo=' + TransNo);
+            }
+        })
+
+        $("#btnClear").on("click", function () {
+            location.reload();
+            //clearSalesForm();
+        });
+
+        $('#Add-datatable').dataTable({
+            "scrollY": 200,
+            "scrollX": true,
+        });
+
+        //For GL Permission By Farhad
+        var ispType = '@ViewBag.errMsg';
+        if (ispType == "NP") {
+            alert("This invoice no not found !!!");
+        }
+        if (ispType == "VWP") {
+            alert("No Voucher waiting for posting Permission for this User");
+        } else if (ispType == "VL") {
+            alert("No List Of vouchers Permission for this User");
+        }
+
+
+        ForDatatblLoad();
+        function GetSaleNo() {
+            var SaleNo = $("#tSaleNo").val();
+            return SaleNo;
+        }
+        function ForDatatblLoad() {
+            $('#Add-datatable').dataTable({
+                "scrollY": 200,
+                "scrollX": true,
+                "destroy": true,
+                "crossDomain": true,
+                "ajax": {
+                    "url": "../Sales/GetDatatableOnly",
+                    "type": "GET",
+                    "datatype": "json",
+                    "data": function (d) {
+                        d.SaleNo = GetSaleNo();
+                    }
+                },
+
+                "columns": [
+                           { "data": null, "bSortable": false },
+                           { "data": "SaleNo" },
+                           { "data": "ItemCode" },
+                           { "data": "ItemName" },
+                           { "data": "Description" },
+                           { "data": "Qty" },
+                           { "data": "UnitPrice" },
+                           { "data": "Vat" },
+                           { "data": "Discount" },
+                           { "data": "Amount" },
+                           {
+                               mRender: function (data, type, row) {
+                                   return '<a href="#" class="on-default remove-row deleteSup" data-id="1" id="edit" value="' + row.ID + '"><i class="glyphicon glyphicon-edit"></i></a>&emsp;<a href="#" class="on-default remove-row deleteSup largeSpace" data-id="1" id="delete" value="' + row.ID + '">'
+                                           + ' <i class="glyphicon glyphicon-trash"></i> </a> '
+                               }
+                           }
+                ],
+                order: [0, 'asc'],
+                select: {
+                    style: 'os',
+                    //selector: 'td:first-child'
+                },
+                "columnDefs": [
+                            {
+                                "targets": 1,
+                                "visible": false,
+                                "searchable": false
+                            },
+                            {
+                                "targets": 2, // your case first column
+                                "className": "text-left",
+                                "searchable": false
+                            },
+                            {
+                                "targets": 3,
+                                "autoWidth": false,
+                                "className": "text-left",
+                                "width": "500px"
+                            },
+                            {
+                                "targets": 4,
+                                "className": "text-left",
+                            },
+                            {
+                                "targets": 6,
+                                "className": "text-right",
+                            },
+                            {
+                                "targets": 7,
+                                "className": "text-right",
+                            },
+                            {
+                                "targets": 8,
+                                "className": "text-right",
+                            }, {
+                                "targets": 5,
+                                "className": "text-right",
+                            }], fixedColumns: true,
+
+                "fnCreatedRow": function (row, data, index) {
+                    $('td', row).eq(0).html(index + 1);
+                }
+            });
+        }
+
+        $(document).on('click', '#addModalButton3', function () {
+            $('#Addmodal3').modal('show');
+        });
+
+        //For GLEntries
+        $("#GLEntries").click(function () {
+            //Get the id of the selected item in dropdown
+            var SaleDate = moment($('#SaleDate').val(), 'DD/MM/YYYY').format('MM/DD/YYYY').toString();
+
+            var id = SaleDate + '&pageType=AR';
+
+            //Replace the predifined QueryString param "xxx" with the "id"
+            this.href = this.href.replace("blankDate", id);
+        });
+
+
+        $("#glPro").click(function () {
+            //Get the id of the selected item in dropdown
+            var SaleDate = moment($('#SaleDate').val(), 'DD/MM/YYYY').format('MM/DD/YYYY').toString();
+
+            var id = SaleDate + '&pageType=AR';
+
+            //Replace the predifined QueryString param "xxx" with the "id"
+            this.href = this.href.replace("blankDate", id);
+        });
+
+        $(document).on("click", "#btnJob", function () {
+            $("#JobModal").modal("show");
+        });
+        $(document).on("click", "#closeJob", function (e) {
+            e.preventDefault();
+            $('#JobModal').modal('hide');
+        });
+
+        $(document).on("click", "#btnJobOk", function (e) {
+            if ($("#nJobNo").val() != "") {
+                $.ajax({
+                    url: '@Url.Action("LoadandSaveJob", "Sales")',
+                    contentType: "application/json;charset=utf-8",
+                    data: {
+                        nJobNo: $("#nJobNo").val()
+                    },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        $('#JobNo').empty();
+                        //data.insertBefore('<option>', { Value: "", text: "--- Select ---" });
+                        $.each(data, function (index, value) {
+                            $('#JobNo').append($('<option>',
+                                {
+                                    value: value.Value,
+                                    text: value.Text
+                                })).select2();
+                        });
+                        $('#JobModal').modal('hide');
+                        $("#nJobNo").val("");
+                    }
+                });
+            }
+            else {
+                alert("Job No is required.");
+                return;
+            }
+
+        })
+
+
+        GettSaleNo();
+        function GettSaleNo() {
+            $.ajax({
+                url: '@Url.Action("GettSaleNo", "Sales")',
+                contentType: "application/json;charset=utf-8",
+                data: { SaleDate: moment($('#SaleDate').val(), 'DD/MM/YYYY').format('MM/DD/YYYY').toString() },
+                type: 'GET',
+                dataType: 'json',
+                success: function (datas) {
+                    $("#tSaleNo").val(datas);
+                    ForDatatblLoad();
+                    GetTotalAmtVatDisc();
+                }
+            });
+        }
+
+        $("#SaleDate").on("changeDate", function () {
+            if ($("#isEdit").val() == "") {
+                GettSaleNo();
+                $("#isEdit").val("");
+            }
+        });
+
+        $(document).on('click', "#edit", function () {
+            var id = $(this).attr("value");
+            $("#update").show();
+            $.ajax({
+                url: '@Url.Action("GetItemById", "Sales")',
+                contentType: "application/json;charset=utf-8",
+                data: JSON.stringify({ ItemCode: id }),
+                type: 'POST',
+                dataType: 'json',
+                success: function (datas) {
+                    $("#SalesMainID").val(datas.ID);
+                    $("#ItemCode").val(datas.ItemCode).trigger('change.select2');
+                    $("#Description").val(datas.Description);
+                    $("#LotNo").val(datas.LotNo);
+                    $("#SaleQty").val(datas.Qty);
+                    $("#ExtQty").val(datas.ExtQty);
+                    $("#UnitPrice").val(datas.UnitPrice);
+                    $("#Discount").val((datas.Discount / datas.Amount) * 100);
+                    $("#Vat").val((datas.Vat / datas.Amount) * 100);
+                    //$("#btnAdd").hide();
+                }
+            });
+
+        });
+
+
+        $(document).on("change", "#CustCode", function (e) {
+            $("#Address").val("");
+            $("#RegNo").val("");
+            $.ajax({
+                type: "Get",
+                contentType: "application/json;charset=utf-8",
+                url: '@Url.Action("GetCustCodeByAddReg", "Sales")',
+                data: { CustCode: $("#CustCode").val() },
+                dataType: 'json',
+                success: function (item) {
+                    //$("#Address").val(item.SubAddress);
+                    $("#RegNo").val(item.BIN);
+                    //$("#SubCategory").html(item.SubCategory);
+                    if (item.BIN == null || item.BIN == "") {
+                        $('#pnlRegType').attr("class", "col-md-12");
+                    } else {
+                        $('#pnlRegType').attr("class", "col-md-12 hidden");
+                    }
+                }
+            });
+        });
+
+        $("#sNo").val($("#SaleNo").val());
+        $("#SaleNo").on("keydown keyup", function () {
+            $("#sNo").val($("#SaleNo").val());
+            TotCalNetSaleAmt();
+        });
+
+        $("#Transport").on("keydown keyup", function () {
+            $("#AdditionalAmt").val(parseFloat($("#Labour").val()) + parseFloat($("#Transport").val()));
+            TotCalculate();
+        });
+        $("#Labour").on("keydown keyup", function () {
+            $("#AdditionalAmt").val(parseFloat($("#Labour").val()) + parseFloat($("#Transport").val()));
+            TotCalculate();
+            TotCalNetSaleAmt();
+        });
+
+
+        $(document).on("click", "#btnAdd", function () {
+            $("#Location").val($("#LocCode").val() == undefined ? "01" : $("#LocCode").val());
+            if ($("#SaleNo").val() == "") {
+                alert("Invoice No is required.");
+                return;
+            }
+            if ($("#SaleDate").val() == "") {
+                alert("Invoice Date is required.");
+                return;
+            }
+            if ($("#CustCode option:selected").text() == "---- Select ----" || $("#CustCode").val() == "") {
+                alert("Customer is required");
+                return;
+            }
+            if ($("#ItemCode option:selected").text() == "---- Select ----") {
+                alert("Item is required");
+                return;
+            }
+            if ($("#UnitPrice").val() == "") {
+                alert("UnitPrice is required");
+                return;
+            }
+            if ($("#UnitPrice").val() <= 0) {
+                alert("UnitPrice is 0");
+                return;
+            }
+            //if ($("#ProdSer").val() == "P") { //block for smartchem
+            //    if (parseFloat($("#SaleQty").val()) > parseFloat($("#ExtQty").val())) {
+            //        alert("Existing quantity more than sold quantity.");
+            //        return;
+            //    }
+            //}
+
+            var addOnTempTbl = {
+                SaleNo: "", ItemCode: "", LotNo: "", ItemName: "", Description: "", Qty: "",
+                ExtQty: "", ExtUPrice: "", UnitPrice: "", Amount: "", EntrySl: "", ID: "", Discount: "", Vat: "", DiscPerc: "", VatPerc: ""
+            }
+
+            //addOnTempTbl.Accode = $("#Accode :selected").text();
+            addOnTempTbl.ID = $("#SalesMainID").val();
+            addOnTempTbl.SaleNo = $("#tSaleNo").val();
+            addOnTempTbl.ItemCode = $("#ItemCode").val();
+            if ($("#LotNo").val() == "" || $("#LotNo").val() == undefined) {
+                addOnTempTbl.LotNo = "01";
+            } else {
+                addOnTempTbl.LotNo = $("#LotNo").val();
+            }
+            addOnTempTbl.ItemName = $("#ItemCode :selected").text();
+            addOnTempTbl.Description = $("#Description").val();
+            addOnTempTbl.Qty = parseFloat($("#SaleQty").val()).toFixed(2).replace(".", ",");  //$("#SaleQty").val();
+            addOnTempTbl.ExtQty = parseFloat($("#ExtQty").val()).toFixed(2).replace(".", ","); //$("#ExtQty").val();
+            addOnTempTbl.ExtUPrice = parseFloat($("#ExtUPrice").val()).toFixed(2).replace(".", ",");
+
+            addOnTempTbl.UnitPrice = parseFloat($("#UnitPrice").val()).toFixed(2).replace(".", ",");
+            addOnTempTbl.Amount = parseFloat(addOnTempTbl.Qty.replace(",", ".")) * parseFloat(addOnTempTbl.UnitPrice.replace(",", "."));
+            addOnTempTbl.Vat = (parseFloat(addOnTempTbl.Amount) * $("#Vat").val()) / 100;
+            addOnTempTbl.Discount = (parseFloat(addOnTempTbl.Amount) * $("#Discount").val()) / 100;
+            addOnTempTbl.DiscPerc = $("#Discount").val();
+            addOnTempTbl.VatPerc = $("#Vat").val();
+
+            $.ajax({
+                url: '@Url.Action("SaveTempTbl", "Sales")',
+                    contentType: "application/json;charset=utf-8",
+                    data: JSON.stringify({ addOnTempTbl: addOnTempTbl }),
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function (datas) {
+                        if (datas != 0) {
+                            //var table = $('#Add-datatable').DataTable();
+                            //table.ajax.reload();
+                            ForDatatblLoad();
+                            $("#SalesMainID").val(0);
+                            $("#Vat").val(0);
+                            $("#Discount").val(0);
+                            $("#ExtQty").val(parseFloat($("#ExtQty").val()) - parseFloat($("#SaleQty").val()))
+
+                            GetTotalAmtVatDisc();
+                            TotCalculate();
+                            TotCalNetSaleAmt();
+                            clearItemInfo();
+                        }
+                    }
+                });
+
+            });
+
+            function clearItemInfo() {
+                $("#SaleQty").val(0);
+                $("#ExtQty").val(0);
+                $("#UnitPrice").val(0);
+                $("#Description").val("");
+                jQuery("#ItemCode option").filter(function () {
+                    return $.trim($(this).text()) == '---- Select ----'
+                }).prop('selected', true).trigger('change.select2');
+            }
+
+
+            $(document).on("click", "#btnCancel", function () {
+                var value = $("#SaleNo").val();
+                swal({
+                    title: "Are you sure?",
+                    text: "Cancelling this invoice will remove all data related to it and add issued items in Store Item Ledger as a received!",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "Yes, delete it!",
+                    closeOnConfirm: true,
+                    closeOnCancel: true
+                },
+                 function () {
+                     $.ajax({
+                         url: '@Url.Action("InvoiceCancel", "Sales")',
+                         contentType: "application/json;charset=utf-8",
+                         data: { InvNo: value },
+                         type: 'GET',
+                         dataType: 'json',
+                         success: function (datas) {
+                          if (datas == "C") {
+                             swal({
+                                 title: "Sorry",
+                                 text: "No Cancel Permission for this User",
+                                 type: "warning"
+                             });
+                         }
+                          else {
+                              swal({
+                                  title: "Good job!",
+                                  text: datas,
+                                  type: "info"
+                              }, function () {
+                                  location.reload();
+                              });
+                            }
+                         },
+                         error: function (datas) {
+                             swal("Sorry!! Something went wrong during the cancel.", "fail")
+                         }
+                     });
+                 });
+            });
+
+
+            $(document).on("click", "#delete", function () {
+                var value = $(this).attr("value");
+                swal({
+                    title: "Are you sure?",
+                    text: "You will not be able to recover this order data!",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "Yes, delete it!",
+                    closeOnConfirm: true,
+                    closeOnCancel: true
+                },
+                 function () {
+                     $.ajax({
+                         url: '@Url.Action("DelTempTbl", "Sales")',
+                     contentType: "application/json;charset=utf-8",
+                     data: { Id: value },
+                     type: 'GET',
+                     dataType: 'json',
+                     success: function (datas) {
+
+                         if (datas == 0 && datas.length != 0) {
+                             swal("Sorry!! Failed to delete this order data.", "fail");
+                         }
+                         else if (datas == 1) {
+                             //var table = $('#Add-datatable').DataTable();
+                             //table.ajax.reload();
+                             ForDatatblLoad();
+                             GetTotalAmtVatDisc();
+                         }
+                     },
+                     error: function (datas) {
+                         swal("Sorry!! Failed to delete this order data.", "fail")
+                     }
+                 });
+             });
+        });
+
+
+        //***************************** For Common Item Filtering option start *******************************
+        $(document).on("change", "#ItemType", function (e) {
+            if ('@ViewBag.NoGrp' == 'False') {
+
+                if ($("#ItemType option:selected").text() != "---- Select ----") {
+                    $("#pView").modal("show");
+                }
+                //for group load by itemtype.......
+                $.ajax({
+                    url: '@Url.Action("LoadGroupInfoByItemType", "Sales")',
+                    contentType: "application/json;charset=utf-8",
+                    data: {
+                        ItemType: $("#ItemType").val()
+                    },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        $('#GroupID').empty();
+                        //data.insertBefore('<option>', { Value: "", text: "--- Select ---" });
+                        $.each(data, function (index, value) {
+                            $('#GroupID').append($('<option>',
+                                {
+                                    value: value.Value,
+                                    text: value.Text
+                                })).select2();
+                        });
+                        //$("#GroupID").val(order.Purpose).trigger('change');
+                        //order.Purpose = "0";
+                    }
+                });
+            } else {
+                //for Item load by itemtype.......
+                $.ajax({
+                    url: '@Url.Action("LoadItemByItemType", "Sales")',
+                    contentType: "application/json;charset=utf-8",
+                    data: {
+                        ItemType: $("#ItemType").val()
+                    },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        $('#ItemCode').empty();
+                        $.each(data, function (index, value) {
+                            $('#ItemCode').append($('<option>',
+                                {
+                                    value: value.Value,
+                                    text: value.Text
+                                })).select2();
+                        });
+                    }
+                });
+            }
+        })
+
+        //for sgroupinfo load by GroupID.......
+        $(document).on("change", "#GroupID", function (e) {
+            if ('@ViewBag.OnlyGrp' == 'False') {
+
+                $.ajax({
+                    url: '@Url.Action("LoadSGroupByGroupId", "Sales")',
+                    contentType: "application/json;charset=utf-8",
+                    data: {
+                        ItemType: $("#ItemType").val(), GroupID: $("#GroupID").val()
+                    },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        $('#SGroupID').empty();
+                        $.each(data, function (index, value) {
+                            $('#SGroupID').append($('<option>',
+                                {
+                                    value: value.Value,
+                                    text: value.Text
+                                })).select2();
+                        });
+                    }
+                });
+            }
+        })
+
+
+        //for ssgroupinfo load by sGroupID.......
+        $(document).on("change", "#SGroupID", function (e) {
+            if ('@ViewBag.SubSubGrp' == 'True') {
+                $.ajax({
+                    url: '@Url.Action("LoadSSGroupInfo", "Sales")',
+                    contentType: "application/json;charset=utf-8",
+                    data: {
+                        ItemType: $("#ItemType").val(), GroupID: $("#GroupID").val(), SGroupID: $("#SGroupID").val()
+                    },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        $('#SSGroupID').empty();
+                        $.each(data, function (index, value) {
+                            $('#SSGroupID').append($('<option>',
+                                {
+                                    value: value.Value,
+                                    text: value.Text
+                                })).select2();
+                        });
+                    }
+                });
+            }
+        })
+
+        //for ItmeInfo load by ssGroupID....... ItemType, GroupId, SGroupId, SSGroupId
+        $(document).on("click", "#btnOk", function (e) {
+            $("#pView").modal("hide");
+
+            if ('@ViewBag.OnlyGrp' == 'True') {
+                //for Item load by GroupID.......
+                $.ajax({
+                    url: '@Url.Action("LoadItemByGroupId", "Sales")',
+                    contentType: "application/json;charset=utf-8",
+                    data: {
+                        ItemType: $("#ItemType").val(), GroupID: $("#GroupID").val()
+                    },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        $('#ItemCode').empty();
+                        $.each(data, function (index, value) {
+                            $('#ItemCode').append($('<option>',
+                                {
+                                    value: value.Value,
+                                    text: value.Text
+                                })).select2();
+                        });
+                    }
+                });
+            }
+
+            if ('@ViewBag.GrpAndSubGrp' == 'True') {
+                $.ajax({
+                    url: '@Url.Action("LoadItemBySGroupID", "Sales")',
+                    contentType: "application/json;charset=utf-8",
+                    data: {
+                        ItemType: $("#ItemType").val(), GroupID: $("#GroupID").val(), SGroupID: $("#SGroupID").val()
+                    },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        $('#ItemCode').empty();
+                        $.each(data, function (index, value) {
+                            $('#ItemCode').append($('<option>',
+                                {
+                                    value: value.Value,
+                                    text: value.Text
+                                })).select2();
+                        });
+                        ClearComView();
+                    }
+                });
+            }
+
+            if ('@ViewBag.SubSubGrp' == 'True') {
+                $.ajax({
+                    url: '@Url.Action("LoadItemBySSGroupID", "Sales")',
+                    contentType: "application/json;charset=utf-8",
+                    data: {
+                        ItemType: $("#ItemType").val(), GroupID: $("#GroupID").val(), SGroupID: $("#SGroupID").val(), SSGroupID: $("#SSGroupID").val()
+                    },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        $('#ItemCode').empty();
+                        $.each(data, function (index, value) {
+                            $('#ItemCode').append($('<option>',
+                                {
+                                    value: value.Value,
+                                    text: value.Text
+                                })).select2();
+                        });
+                        ClearComView();
+                    }
+                });
+            }
+        })
+
+        $(document).on("click", "#closePopOver", function (e) {
+            e.preventDefault();
+            jQuery("#ItemType option").filter(function () {
+                return $.trim($(this).text()) == '---- Select ----'
+            }).prop('selected', true).trigger('change.select2');
+
+            $("#pView").modal("hide");
+            ClearComView();
+        });
+
+        function ClearComView() {
+            var Stext = '---- Select ----';
+
+            jQuery("#GroupID option").filter(function () {
+                return $.trim($(this).text()) == Stext
+            }).prop('selected', true).trigger('change.select2');
+
+            jQuery("#SGroupID option").filter(function () {
+                return $.trim($(this).text()) == Stext
+            }).prop('selected', true).trigger('change.select2');
+
+            jQuery("#SSGroupID option").filter(function () {
+                return $.trim($(this).text()) == Stext
+            }).prop('selected', true).trigger('change.select2');
+        }
+        //***************************** For Common Item Filtering option start *******************************
+
+
+        $(document).on("change", "#ItemCode", function (e) {
+            var Location = $("#LocCode").val() == undefined ? "01" : $("#LocCode").val();
+            var SaleDate = moment($('#SaleDate').val(), 'DD/MM/YYYY').format('MM/DD/YYYY').toString();
+            if ($("#SaleNo").val() == "") {
+                $("#ItemCode").val($('#ItemCode option:first-child').val()).trigger('change.select2');
+                alert("Invoice No is required.");
+                return;
+            }
+            if ($("#SaleDate").val() == "") {
+                $("#ItemCode").val($('#ItemCode option:first-child').val()).trigger('change.select2');
+                alert("Invoice Date is required.");
+                return;
+            }
+            if ($("#CustCode option:selected").text() == "---- Select ----" || $("#CustCode").val() == "") {
+                $("#ItemCode").val($('#ItemCode option:first-child').val()).trigger('change.select2');
+                alert("Customer is required");
+                return;
+            }
+
+            $.ajax({
+                type: "Get",
+                contentType: "application/json;charset=utf-8",
+                url: '@Url.Action("GetItemByQtyPrice", "Sales")',
+                data: { Item: $("#ItemCode").val(), Location: Location, SaleDate: SaleDate, SubCode: $("#CustCode").val() },
+                dataType: 'json',
+                success: function (item) {
+                    if (item == 0) {
+                        clearItemInfo();
+                    }
+                    else {
+                        $("#ExtUPrice").val(item.UnitPrice);
+                        if (item.items == null) {
+                            $("#ExtQty").val("0");
+                        } else {
+                            $("#ExtQty").val(item.items.CurrQty);
+                        }
+                        $("#Discount").val(item.ItemWDiscPerc);
+                        $("#Vat").val(0);
+                        $("#HSCode").val(item.HSCode);
+                        $("#ProdSer").val(item.ProdSer);
+                    }
+                }
+            });
+
+        });
+
+    });
+
+    $(document).on("click", "#btnSave", function () {
+        setOrder();
+        var validate = validateOnSave(loadInfo);
+        if (validate != "") {
+            alert(validate);
+            return;
+        }
+        var SalesMain = {
+            LocCode: "", tSaleNo: "", SaleNo: "", SaleDate: "", CustCode: "", RegNo: "", RegType: "", Labour: "", Transport: "", Remarks: "",
+            TotSaleAmt: "", VATAmt: "", Discount: "", AdditionalAmt: "", PrevDue: "", NetAmount: "", IssueNo: "",
+            IssueDate: "", JobNo: "", RefNo: "", RefDate: "", VchrNo: "", CustInvSl: ""
+        }
+
+        var IssueMain = {
+            IssueNo: "", IssueDate: "", JobNo: "", RefNo: "", RefDate: "", FromLocCode: "", IssVchrNo: "", MakeChallanAuto: ""
+        }
+
+        SalesMain.LocCode = $("#LocCode").val() == undefined ? "01" : $("#LocCode").val();
+        SalesMain.tSaleNo = $("#tSaleNo").val();
+        SalesMain.SaleNo = $("#SaleNo").val();
+        SalesMain.SaleDate = $("#SaleDate").val();
+        SalesMain.CustCode = $("#CustCode").val();
+        SalesMain.RegNo = $("#RegNo").val();
+        SalesMain.RegType = $("#RegType").val();
+        SalesMain.Labour = parseFloat($("#Labour").val()).toFixed(2).replace(".", ",");
+        SalesMain.Transport = parseFloat($("#Transport").val()).toFixed(2).replace(".", ",");
+        SalesMain.Remarks = $("#Remarks").val();
+        SalesMain.TotSaleAmt = parseFloat($("#TotSaleAmt").val()).toFixed(2).replace(".", ",");
+        SalesMain.VATAmt = parseFloat($("#VATAmt").val()).toFixed(2).replace(".", ",");
+        SalesMain.Discount = parseFloat($("#DiscAmt").val()).toFixed(2).replace(".", ",");
+        SalesMain.AdditionalAmt = parseFloat($("#AdditionalAmt").val()).toFixed(2).replace(".", ",");
+        SalesMain.PrevDue = parseFloat($("#PrevDue").val()).toFixed(2).replace(".", ",");
+        SalesMain.NetAmount = parseFloat($("#NetAmount").val()).toFixed(2).replace(".", ",");
+        SalesMain.IssueNo = $("#IssueNo").val();
+        SalesMain.IssueDate = $("#IssueDate").val();
+        SalesMain.JobNo = $("#JobNo").val();
+        SalesMain.RefNo = $("#RefNo").val();
+        SalesMain.RefDate = $("#RefDate").val();
+        SalesMain.VchrNo = $("#VchrNo").val();
+        SalesMain.CustInvSl = $("#CustInvNo").val();
+
+        IssueMain.IssueNo = $("#IssueNo").val();
+        IssueMain.FromLocCode = $("#LocCode").val() == undefined ? "01" : $("#LocCode").val();
+        IssueMain.IssueDate = $("#IssueDate").val();
+        IssueMain.JobNo = $("#JobNo").val();
+        IssueMain.RefNo = $("#RefNo").val();
+        IssueMain.RefDate = $("#RefDate").val();
+        IssueMain.VchrNo = $("#IssVchrNo").val();
+
+        if ($("#MakeChallanAuto").prop("checked") == true) {
+            IssueMain.MakeChallanAuto = $("#MakeChallanAuto").val();
+        } else {
+            IssueMain.MakeChallanAuto = "";
+        }
+
+
+        $.ajax({
+            url: '@Url.Action("SaveSale", "Sales")',
+            contentType: "application/json;charset=utf-8",
+            data: JSON.stringify({ SalesMain: SalesMain, IssueMain: IssueMain }),
+            type: 'POST',
+            dataType: 'json',
+            success: function (datas) {
+                if (datas.status == 1) {
+                    swal({
+                        title: "Ok",
+                        text: datas.savedNo,
+                        type: "success"
+                    }, function () {
+                        $("#PreSaleNo").val($("#SaleNo").val());
+                        $("#PreChallanNo").val($("#IssueNo").val());
+                        $("#PreSaleDate").val($("#SaleDate").val());
+
+                        var strMsg = datas.returnValue;
+                        if (strMsg.split(';')[0] == '6.2') {
+                            $("#vat6p2").prop("checked", true);
+                        }
+                        if (strMsg.split(';')[1] == '6.2.1') {
+                            $("#vat6p2p1").prop("checked", true);
+                        }
+                        if (strMsg.split(';')[2] == '6.3') {
+                            $("#vat6p3").prop("checked", true);
+                        }
+                        if (strMsg.split(';')[2] == '6.10' || strMsg.split(';')[3] == '6.10') {
+                            $("#vat6p10").prop("checked", true);
+                        }
+                        if (strMsg.split(';')[2] == '9.1_SF_ka' || strMsg.split(';')[3] == '9.1_SF_ka' || strMsg.split(';')[4] == '9.1_SF_ka') {
+                            $("#vat9p1SFKa").prop("checked", true);
+                        }
+                        if (strMsg.split(';')[2] == '9.1_SF_kha' || strMsg.split(';')[3] == '9.1_SF_kha' || strMsg.split(';')[4] == '9.1_SF_kha') {
+                            $("#vat9p1SFKha").prop("checked", true);
+                        }
+                        $.ajax({
+                            url: '@Url.Action("GetNewInvNoandIsseueNo", "Sales")',
+                            contentType: "application/json;charset=utf-8",
+                            data: { LocCode: $("#LocCode").val() == undefined ? "01" : $("#LocCode").val() },
+                            type: 'GET',
+                            dataType: 'json',
+                            success: function (datas) {
+                                $("#SaleNo").val(datas.InvNo);
+                                $("#IssueNo").val(datas.IsseueNo);
+                            }
+                        });
+                        $.ajax({
+                            url: '@Url.Action("GetGlECount", "Sales")',
+                            contentType: "application/json;charset=utf-8",
+                            data: { VType: 'AR', TrDate: new Date() },
+                            type: 'GET',
+                            dataType: 'json',
+                            success: function (datas) {
+                                $("#CountNo").html('(' + datas + ')');
+                            }
+                        });
+                        clearSalesForm();
+                    });
+                    var table = $('#Add-datatable').DataTable();
+                    table.ajax.reload();
+                    //ForDatatblLoad();
+                }
+                else if (datas == "X") {
+                    swal({
+                        title: "Sorry",
+                        text: "No Save Permission for this User",
+                        type: "warning"
+                    });
+                }
+                else {
+                    swal({
+                        title: "Sorry!",
+                        text: datas,
+                        type: "warning"
+                    });
+                }
+            }
+        });
+
+    });
+
+
+    $(document).on("click", "#btnUpdate", function () {
+        setOrder();
+        var validate = validateOnSave(loadInfo);
+        if (validate != "") {
+            alert(validate);
+            return;
+        }
+        var SalesMain = {
+            LocCode: "", SaleNo: "", SaleDate: "", CustCode: "", RegNo: "", RegType: "", Labour: "", Transport: "", Remarks: "",
+            TotSaleAmt: "", VATAmt: "", Discount: "", AdditionalAmt: "", PrevDue: "", NetAmount: "", IssueNo: "",
+            IssueDate: "", JobNo: "", RefNo: "", RefDate: "", VchrNo: "", CustInvSl: ""
+        }
+
+        var IssueMain = {
+            IssueNo: "", IssueDate: "", JobNo: "", RefNo: "", RefDate: "", FromLocCode: "", IssVchrNo: "", MakeChallanAuto: ""
+        }
+
+
+        SalesMain.LocCode = $("#LocCode").val() == undefined ? "01" : $("#LocCode").val();
+        SalesMain.SaleNo = $("#SaleNo").val();
+        SalesMain.SaleDate = $("#SaleDate").val();
+        SalesMain.CustCode = $("#CustCode").val();
+        SalesMain.RegNo = $("#RegNo").val();
+        SalesMain.RegType = $("#RegType").val();
+        SalesMain.Labour = parseFloat($("#Labour").val()).toFixed(2).replace(".", ",");
+        SalesMain.Transport = parseFloat($("#Transport").val()).toFixed(2).replace(".", ",");
+        SalesMain.Remarks = $("#Remarks").val();
+        SalesMain.TotSaleAmt = parseFloat($("#TotSaleAmt").val()).toFixed(2).replace(".", ",");
+        SalesMain.VATAmt = parseFloat($("#VATAmt").val()).toFixed(2).replace(".", ",");
+        SalesMain.Discount = parseFloat($("#DiscAmt").val()).toFixed(2).replace(".", ",");
+        SalesMain.AdditionalAmt = parseFloat($("#AdditionalAmt").val()).toFixed(2).replace(".", ",");
+        SalesMain.PrevDue = parseFloat($("#PrevDue").val()).toFixed(2).replace(".", ",");
+        SalesMain.NetAmount = parseFloat($("#NetAmount").val()).toFixed(2).replace(".", ",");
+        SalesMain.IssueNo = $("#IssueNo").val();
+        SalesMain.IssueDate = $("#IssueDate").val();
+        SalesMain.JobNo = $("#JobNo").val();
+        SalesMain.RefNo = $("#RefNo").val();
+        SalesMain.RefDate = $("#RefDate").val();
+        SalesMain.VchrNo = $("#VchrNo").val();
+
+
+
+        IssueMain.IssueNo = $("#IssueNo").val();
+        IssueMain.FromLocCode = $("#LocCode").val() == undefined ? "01" : $("#LocCode").val();
+        IssueMain.IssueDate = $("#IssueDate").val();
+        IssueMain.JobNo = $("#JobNo").val();
+        IssueMain.RefNo = $("#RefNo").val();
+        IssueMain.RefDate = $("#RefDate").val();
+        IssueMain.VchrNo = $("#IssVchrNo").val();
+        if ($("#MakeChallanAuto").prop("checked") == true) {
+            IssueMain.MakeChallanAuto = $("#MakeChallanAuto").val();
+        } else {
+            IssueMain.MakeChallanAuto = "";
+        }
+
+        $.ajax({
+            url: '@Url.Action("UpdateSale", "Sales")',
+            contentType: "application/json;charset=utf-8",
+            data: JSON.stringify({ SalesMain: SalesMain, IssueMain: IssueMain }),
+            type: 'POST',
+            dataType: 'json',
+            success: function (datas) {
+                if (datas == 1) {
+                    swal({
+                        title: "Ok",
+                        text: "Update Successfully!",
+                        type: "success"
+                    }, function () {
+                        location.reload();
+                    });
+                } else if (datas == "U") {
+                    swal({
+                        title: "Sorry",
+                        text: "No Update Permission for this User",
+                        type: "warning"
+                    });
+                }
+                else if (datas == 2) {
+                    swal(
+                        'Sorry!',
+                        'This Voucher already posted!',
+                        'warning'
+                    );
+                    //$("#update").prop("disabled", true);
+                }
+                else {
+                    swal({
+                        title: "Sorry!",
+                        text: datas,
+                        type: "warning"
+                    });
+                }
+            }
+        });
+
+    });
+
+    function clearSalesForm() {
+        $("#Location").val("");
+        $("#SaleDate").val("@DateTime.Today.ToShortDateString()");
+        $("#LocCode").val($('#LocCode option:first-child').val()).trigger('change.select2');
+        $("#CustCode").val("").trigger('change.select2');
+        $("#Description").val("");
+        $("#RegNo").val("");
+        $("#RegType").val("");
+        $("#JobNo").val("").trigger('change.select2');
+        $("#RefNo").val("");
+        $("#Labour").val(0);
+        $("#Transport").val(0);
+        $("#RefDate").datepicker('setDate', new Date());
+        $("#IssueDate").datepicker('setDate', new Date());
+
+        var Stext = '---- Select ----';
+        jQuery("#GroupID option").filter(function () {
+            return $.trim($(this).text()) == Stext
+        }).prop('selected', true).trigger('change.select2');
+
+        jQuery("#SGroupID option").filter(function () {
+            return $.trim($(this).text()) == Stext
+        }).prop('selected', true).trigger('change.select2');
+
+        jQuery("#SSGroupID option").filter(function () {
+            return $.trim($(this).text()) == Stext
+        }).prop('selected', true).trigger('change.select2');
+
+        $("#Remarks").val("");
+        $("#VATAmt").val(0);
+        $("#TotSaleAmt").val(0);
+        $("#PrevDue").val(0);
+        $("#AdditionalAmt").val(0);
+        $("#NetAmount").val(0);
+        $("#NetSaleAmt").val(0);
+        $("#DiscAmt").val(0);
+        $.ajax({
+            url: '@Url.Action("GetVoucherNo", "Receive")',
+            contentType: "application/json;charset=utf-8",
+            data: { VType: 'AR', TrDate: $("#RcvDate").val() },
+            type: 'GET',
+            dataType: 'json',
+            success: function (datas) {
+                $("#VchrNo").val(datas);
+            }
+        });
+        $("#btnUpdate").hide();
+        $("#btnSave").show();
+    }
+
+    $.ajax({
+        url: '@Url.Action("GetVoucherNo", "Receive")',
+        contentType: "application/json;charset=utf-8",
+        data: { VType: 'AR', TrDate: $("#RcvDate").val() },
+        type: 'GET',
+        dataType: 'json',
+        success: function (datas) {
+            $("#VchrNo").val(datas);
+        }
+    });
+    if ('@ViewBag.IM' == 'True') {
+        $.ajax({
+            url: '@Url.Action("GetNewVoucherNo", "Issue")',
+            contentType: "application/json;charset=utf-8",
+            data: { VType: 'II' },
+            type: 'GET',
+            dataType: 'json',
+            success: function (datas) {
+                $("#IssVchrNo").val(datas);
+            }
+        });
+    }
+
+    $("#SaleNo").on('keydown', function (e) {
+
+        if (e.which == 13 || e.which == 9) {
+            $.ajax({
+                url: '@Url.Action("GetAllBySaleNo", "Sales")',
+                contentType: "application/json;charset=utf-8",
+                data: { SaleNo: $("#SaleNo").val() },
+                type: 'GET',
+                dataType: 'json',
+                success: function (datas) {
+                    if (datas.Source == "undefined") {
+                        alert("error")
+                    }
+                    else if (datas.data != null) {
+                        $("#isEdit").val("isedit");
+                        $("#IssueNo").prop("disabled", true);
+                        $("#SaleNo").prop("disabled", true);
+                        $("#tSaleNo").val(datas.data.SaleNo);
+                        $("#LocCode").val(datas.data.LocCode.trim()).trigger('change');
+                        $("#CustCode").val(datas.data.CustCode).trigger('change');
+                        $("#Description").val(datas.data.Description);
+                        $("#RegNo").val(datas.data.RegNo);
+                        $("#JobNo").val(datas.data.JobNo).trigger('change');
+                        $("#RefNo").val(datas.data.RefNo);
+                        $("#IssueNo").val(datas.data.IssueNo);
+                        $("#Labour").val(datas.data.Labour);
+                        $("#Transport").val(datas.data.Transport);
+                        if (moment(datas.data.SaleDate).format('MM/DD/YYYY') != moment('01/01/1900').format('MM/DD/YYYY')) {
+                            $("#SaleDate").datepicker("setDate", DateInDMYformat(datas.data.SaleDate));
+                        }
+                        if (moment(datas.data.RefDate).format('MM/DD/YYYY') != moment('01/01/1900').format('MM/DD/YYYY')) {
+                            $("#RefDate").datepicker("setDate", DateInDMYformat(datas.data.RefDate));
+                        }
+                        if (moment(datas.data.IssueDate).format('MM/DD/YYYY') != moment('01/01/1900').format('MM/DD/YYYY')) {
+                            $("#IssueDate").datepicker("setDate", DateInDMYformat(datas.data.IssueDate));
+                        }
+                        $("#Remarks").val(datas.data.Remarks);
+                        $("#VATAmt").val(datas.data.VATAmt == null ? 0 : datas.data.VATAmt.toFixed(2));
+                        $("#TotSaleAmt").val(datas.data.TotSaleAmt == null ? 0 : datas.data.TotSaleAmt.toFixed(2));
+                        $("#PrevDue").val(datas.data.PrevDue == null ? 0 : datas.data.PrevDue.toFixed(2));
+                        $("#AdditionalAmt").val(parseFloat(datas.data.Labour) + parseFloat(datas.data.Transport));
+                        $("#NetAmount").val(datas.data.NetAmount == null ? 0 : datas.data.NetAmount.toFixed(2));
+                        $("#DiscAmt").val(datas.data.Discount == null ? 0 : datas.data.Discount.toFixed(2));
+                        $("#IssVchrNo").val(datas.data.VchrNo);
+                        $("#VchrNo").val(datas.data.VchrNo);
+                        $("#CustInvNo").val(datas.data.CustInvSl);
+                        //isSave = 0;
+                        $("#btnSave").hide();
+                        $('#btnUpdate').show();
+                        $('#btnCancel').show();
+                        ////////// packlist
+                        isEdit_Pack = 1;
+                        var table = $('#Add-datatable').DataTable();
+                        table.ajax.reload();
+                        //GetTotalAmtVatDisc();
+                        //TotCalculate();
+                        TotCalNetSaleAmt();
+
+                        if (datas.returnValue != "") {
+                            var strMsg = datas.returnValue;
+                            if (strMsg.split(';')[0] == '6.2') {
+                                $("#vat6p2").prop("checked", true);
+                            }
+                            if (strMsg.split(';')[1] == '6.2.1') {
+                                $("#vat6p2p1").prop("checked", true);
+                            }
+                            if (strMsg.split(';')[2] == '6.3') {
+                                $("#vat6p3").prop("checked", true);
+                            }
+                            if (strMsg.split(';')[2] == '6.10' || strMsg.split(';')[3] == '6.10') {
+                                $("#vat6p10").prop("checked", true);
+                            }
+                            if (strMsg.split(';')[2] == '9.1_SF_ka' || strMsg.split(';')[3] == '9.1_SF_ka' || strMsg.split(';')[4] == '9.1_SF_ka') {
+                                $("#vat9p1SFKa").prop("checked", true);
+                            }
+                            if (strMsg.split(';')[2] == '9.1_SF_kha' || strMsg.split(';')[3] == '9.1_SF_kha' || strMsg.split(';')[4] == '9.1_SF_kha') {
+                                $("#vat9p1SFKha").prop("checked", true);
+                            }
+                            $("#PreSaleNo").val($("#SaleNo").val());
+                            $("#PreChallanNo").val($("#IssueNo").val());
+                            $("#PreSaleDate").val($("#SaleDate").val());
+                        }
+                    }
+                },
+                error: function () {
+                    swal("Sorry!! This order no does not exist.", "fail")
+                }
+            });
+        }
+    });
+
+
+    //********* for auto Invoice generate ***********************************
+
+    $(document).on("change", "#CustCode", function (e) {
+
+        if (true) {
+            $.ajax({
+                url: '@Url.Action("LoadCustSelfInvoiceNo", "Sales")',
+                contentType: "application/json;charset=utf-8",
+                data: {
+                    CustCode: $("#CustCode").val()
+                },
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    $("#CustInvNo").val(data);
+                    // CustInvNo
+                    //set Value
+                }
+            });
+        }
+    })
+
+    function ForPacketListDatatblLoad(stage, deleteCode, AddPackItem) {
+        $('#PL_Dtable').dataTable({
+            "scrollY": 400,
+            "scrollX": 400,
+            "destroy": true,
+            "crossDomain": true,
+            "ajax": {
+                "url": "../Sales/GetDataForPackListPV",
+                "type": "GET",
+                "datatype": "json",
+                "data": { stage: stage, deleteCode: deleteCode, AddPackItem: AddPackItem, SaleNo: $("#tSaleNo").val() }
+
+            },
+
+            "columns": [
+                       { "data": null, "bSortable": false },
+                       { "data": "ItemName" },
+                       { "data": "PackItem" },
+                       { "data": "PackSize" },
+                       { "data": "PackPcs" },
+                       { "data": "Qty" },
+                       { "data": "PacketLot" },
+                       {
+                           mRender: function (data, type, row) {
+                               return '<a href="#" class="on-default remove-row deleteSup" data-id="1" id="PL_edit" value="' + row.ID + '"><i class="glyphicon glyphicon-edit"></i></a>&emsp;<a href="#" class="on-default remove-row deleteSup largeSpace" data-id="1" id="PL_delete" value="' + row.ID + '">'
+                                       + ' <i class="glyphicon glyphicon-trash"></i> </a> '
+                           }
+                       }
+            ],
+            order: [0, 'asc'],
+            select: {
+                style: 'os',
+                //selector: 'td:first-child'
+            },
+            "columnDefs": [
+                        {
+                            "targets": 1,
+                            "autoWidth": false,
+                            "className": "text-left",
+                            // "width": "500px"
+                        },
+                        {
+                            "targets": 2,
+                            "className": "text-left",
+                            "searchable": false
+                        },
+                        {
+                            "targets": 3,
+                            "autoWidth": false,
+                            "className": "text-left",
+                            // "width": "500px"
+                        },
+                        {
+                            "targets": 4,
+                            "className": "text-left",
+                        },
+                        {
+                            "targets": 6,
+                            "className": "text-right",
+                        },
+                        {
+                            "targets": 7,
+                            "className": "text-right",
+                        },
+                        {
+                            "targets": 5,
+                            "className": "text-right",
+                        }], fixedColumns: true,
+
+            "fnCreatedRow": function (row, data, index) {
+                $('td', row).eq(0).html(index + 1);
+            }
+        });
+    }
+
+
+    function TotCalNetSaleAmt() { //+ parseFloat($("#VATAmt").val())
+        var netSaleAmt = (parseFloat($("#TotSaleAmt").val()) + parseFloat($("#AdditionalAmt").val()) + parseFloat($("#PrevDue").val())) - parseFloat($("#DiscAmt").val());
+        $("#NetSaleAmt").val(isNaN(netSaleAmt) ? 0 : netSaleAmt.toFixed(2));
+    }
+
+    function GetTotalAmtVatDisc() {
+        $.ajax({
+            type: "Get",
+            contentType: "application/json;charset=utf-8",
+            url: '@Url.Action("GetTotalAmtVatDisc", "Sales")',
+            data: { SaleNo: $("#tSaleNo").val() },
+            dataType: 'json',
+            crossDomain: true,
+            success: function (item) {
+                if (item == "/SecUserLogin/LogOff") {
+                    clearItemInfo();
+                    window.location.href = item;
+                }
+                else {
+                    $("#TotSaleAmt").val(isNaN(item.totAmt) ? 0 : item.totAmt.toFixed(2));
+                    $("#VATAmt").val(isNaN(item.totVat) ? 0 : item.totVat.toFixed(2));
+                    $("#DiscAmt").val(isNaN(item.totDiscount) ? 0 : item.totDiscount.toFixed(2));
+                    TotCalculate();
+                }
+            }
+        });
+    }
+
+    $(document).on("input", "#DiscAmt", function (e) {
+        TotCalculate();
+    })
+
+
+    function TotCalculate() { //+ parseFloat($("#VATAmt").val())
+        var netAmt = (parseFloat($("#TotSaleAmt").val()) + parseFloat($("#AdditionalAmt").val()) + parseFloat($("#PrevDue").val())) - parseFloat($("#DiscAmt").val());
+        $("#NetAmount").val(isNaN(netAmt) ? 0 : netAmt.toFixed(2));
+        TotCalNetSaleAmt();
+    }
+    //Code Done By Mostafa Zaman 28-08-2018
+
+
+    var loadInfo = {
+        SaleNo: "",
+        tSaleNo: "",
+        SaleDate: "",
+        RefNo: "",
+        JobNo: "",
+        CustCode: "",
+        RegNo: "",
+        RegType: "",
+        Transport: "",
+        Labour: "",
+        IssueNo: "",
+
+        RefDate: "",
+        IssueDate: "",
+        LocCode: "",
+        BranchCode: "",
+        VATAmt: "",
+        Discount: "",
+        TotSaleAmt: "",
+        NetAmount: "",
+        PrevDue: "",
+        Remarks: "",
+        VchrNo: "",
+        AppBy: "",
+        IssueBy: "",
+        LocCode: "",
+        CustInvSl: ""
+    };
+
+    function setOrder() {
+        loadInfo.JobNo = $("#JobNo").val();
+        loadInfo.SaleNo = $("#SaleNo").val();
+        loadInfo.tSaleNo = $("#tSaleNo").val();
+        loadInfo.IssueNo = $("#IssueNo").val();
+        loadInfo.CustCode = $("#CustCode").val();
+        loadInfo.RegNo = $("#RegNo").val();
+        loadInfo.RegType = $("#RegType").val();
+        loadInfo.Transport = $("#Transport").val();
+        loadInfo.Labour = $("#Labour").val();
+        loadInfo.SaleDate = $("#SaleDate").val();
+        loadInfo.IssueDate = $("#IssueDate").val();
+        loadInfo.LocCode = $("#LocCode").val() == undefined ? "01" : $("#LocCode").val();
+    }
+
+
+
+    function validateOnSave(validOrder) {
+        if (validOrder.LocCode != $("#Location").val() && $("#Location").val() != "") {
+            return "Location is unexpected.";
+        }
+        if (!validOrder.SaleNo.trim().length) {
+            return "Invoice No is required.";
+        }
+
+        if ('@ViewBag.IM' == 'True') {
+            if (!validOrder.IssueNo.trim().length) {
+                return "Challan No is required.";
+            }
+            if (validOrder.IssueDate.trim() == "") {
+                return "Challan Date is required.";
+            }
+        }
+
+        if (validOrder.SaleDate.trim() == "") {
+            return "Invoice Date is required.";
+        }
+
+        if (!validOrder.CustCode.trim().length) {
+            return "Customer is required.";
+        }
+        if ('@ViewBag.MaintVAT' == 'True') {
+            if (validOrder.RegNo.trim() == "") {
+                return "Registration No is required.";
+            }
+        }
+        if (!validOrder.Transport.trim().length) {
+            return "Transport is required.";
+        }
+        if (!validOrder.Labour.trim().length) {
+            return "Labour is required.";
+        }
+        return "";
+    }
+
+
+
+    //End Of Code
+    </script>
+}

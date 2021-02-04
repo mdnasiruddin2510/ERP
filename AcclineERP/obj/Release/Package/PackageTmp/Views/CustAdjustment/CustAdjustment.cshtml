@@ -1,0 +1,896 @@
+﻿@model App.Domain.ViewModel.CustAdjustmentVM
+@{
+    ViewBag.Title = "CustAdjustment";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/select2/select2.css" rel="stylesheet" type="text/css" />
+<link href="~/Css/FormDesign.css" rel="stylesheet" />
+
+<style>
+    table.dataTable.select tbody tr,
+    table.dataTable thead th:first-child {
+        cursor: pointer;
+        text-align: center;
+    }
+
+    .dataTables_scrollBody > table > thead > tr > th[class*="sort"]::after {
+        display: none;
+    }
+
+    /*.col-md-12> .col-md-6 > .col-md-12 > .form-group.col-md-8 {
+        padding:0px !important;
+    }*/
+
+    .form-control {
+        border: 1px solid #00ffff;
+    }
+
+    .required:after {
+        content: " *";
+        font-weight: bold;
+        color: red;
+    }
+
+    fieldset {
+        border: solid 1px #b9b4b4 !important;
+        padding: 5px 0px 5px 0px;
+        margin: 5px 0px 5px 0px;
+        border-bottom: none;
+        width: inherit;
+    }
+
+    legend {
+        width: auto !important;
+        border: none;
+        font-size: 14px;
+    }
+
+    input#TotalAmt, input#RecvAmt, input#ReceivableAmt {
+        text-align: right;
+    }
+</style>
+@using (Html.BeginForm())
+{
+    <div class="row">
+        <div class="col-md-11">
+            <div class="panel panel-color panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <text style="text-align:left !important; text-decoration: none;">Customer Adjustment</text>
+                    </h3>
+                </div>
+               @*/* style="margin-top:20px*/*@
+                <div class="panel-body">
+                    <div class="input-group form-group col-md-12">
+                        <div class="col-md-4" style="text-align:center">
+                            <label class="control-label" target="_blank">
+                                @Html.ActionLink(
+                            "Customer Adjustment Voucher waiting for Posting",
+                            "GetJournalVoucher",
+                             "CustAdjustment",
+                            new { Date = "blankDate" },
+                            new { id = "GLProvition", }
+                            )
+                            </label>
+                            <label id="lblgl">(@ViewBag.GLProvition)</label>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="control-label" target="_blank">
+                                @Html.ActionLink(
+                             "List of Customer Adjustment Voucher",
+                            "GetGLEntries",
+                            "CustAdjustment",
+                            new { Date = "blankDate" },
+                            new { id = "GLEntries", }
+                            )
+                            </label>
+                            <label id="lblglE">(@ViewBag.GLEntries)</label>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="col-md-6">
+                            <div class="col-md-12">
+                                <label class="col-md-4 required" for="AdjNo">Adjustment No</label>
+                                <div class="input-group form-group col-md-8">
+                                    @Html.TextBoxFor(x => x.AdjNo, new { @class = "form-control", required = "required", @Value = ViewBag.AdjNo })
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <label class="col-md-4 required" for="AdjType">Adjustment Type</label>
+                                <div class="input-group form-group col-md-8">
+                                    @Html.DropDownListFor(x => x.AdjType, new SelectList(new List<SelectListItem> {
+                                new SelectListItem { Text = "--- Select ---", Value = "" },
+                                new SelectListItem { Text = "Debit", Value = "Debit" },
+                                new SelectListItem { Text = "Credit", Value = "Credit" } }, "Value", "Text", "--- Select ---"), new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-md-4 required" for="VchrType">Type</label>
+                                <div class="input-group form-group col-md-8">
+                                    @Html.DropDownListFor(x => x.VchrType, new SelectList(new List<SelectListItem> {
+                                new SelectListItem { Text = "--- Select ---", Value = "" },
+                                new SelectListItem { Text = "Invoice", Value = "Invoice" },
+                                new SelectListItem { Text = "General", Value = "General" }}, "Value", "Text", "--- Select ---"), new { @class = "form-control" })
+                                @*new SelectListItem { Text = "Money Receipt", Value = "Money Receipt" } }, "Value", "Text", "--- Select ---"), new { @class = "form-control" })*@
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-md-6">
+
+                            <div class="col-md-12">
+                                <label class="col-md-4 required">Adjustment Date</label>
+                                <div class="input-group form-group col-md-8">
+                                    <input type="text" class="form-control datePage" id="@Html.IdFor(x => x.AdjDate)" value="@DateTime.Today.ToShortDateString()">
+                                    <span class="input-group-addon bg-primary b-0 text-white"><i class="ion-calendar"></i></span>
+                                </div>
+                            </div>
+                            @if (ViewBag.MaintJob == true)
+                            {
+                                <div class="col-md-10">
+                                    <label class="col-md-3">Job No</label>
+                                    <div class="col-md-9 input-group form-group">
+                                        @Html.DropDownListFor(x => x.JobNo, null, "---- Select ----", new { @class = "form-control select2", @Value = ViewBag.JobNo })
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <input type="button" class="btn" value="Add Job" id="btnJob" />
+                                </div>
+                            }
+
+                        </div>
+                        <div class="col-md-12">
+                            <fieldset>
+                                <legend style="background-color:#c7c7c7"></legend>
+                                <div class="col-md-6" style="padding-left:0px !important">
+                                    <div class="col-md-12">
+                                        <label class="col-md-4 required" for="CustCode">Customer</label>
+                                        <div class="form-group col-md-8">
+                                            @Html.DropDownListFor(x => x.CustCode, null, "--- Select ---", new { @class = "form-control select2", required = "required" })
+                                        </div>
+                                    </div>
+                                    <div id="pnlInvMR">
+                                        <div class="col-md-12">
+                                            <label class="col-md-4 required" for="InvNo" id="lblInvNo">Invoice No</label>
+                                            <div class="form-group col-md-8">
+                                                @Html.DropDownListFor(x => x.InvNo, null, new { @class = "form-control select2", required = "required" })
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <label class="col-md-4" id="lblTotalAmt">Total Amount</label>
+                                            <div class="form-group col-md-8">
+                                                @Html.TextBoxFor(x => x.TotalAmt, new { @class = "form-control", required = "required" })
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <label class="col-md-4" id="lblRecvAmt">Receive Amount</label>
+                                            <div class="form-group col-md-8">
+                                                @Html.TextBoxFor(x => x.RecvAmt, new { @class = "form-control", required = "required" })
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <label class="col-md-4" id="lblReceivableAmt">Receivable Amount</label>
+                                            <div class="form-group col-md-8">
+                                                @Html.TextBoxFor(x => x.ReceivableAmt, new { @class = "form-control", required = "required" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <label class="col-md-4 required">Adjust Amount</label>
+                                        <div class="form-group col-md-8">
+                                            @Html.TextBoxFor(x => x.AdjAmt, new { @class = "form-control", required = "required" })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <label class="col-md-4 required">Reason</label>
+                                        <div class="form-group col-md-8">
+                                            @Html.DropDownListFor(x => x.AdjReason, null, new { @class = "form-control select2", @Value = ViewBag.AdjReason })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12" style="text-align:right; padding-bottom:10px;">
+                                        <input type="button" class="btn btn-primary" value="Add" id="btnAdd" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-12 col-md-6" id="pnlDT">
+                                    <div class="row col-sm-12 col-md-12" style="border:1px solid; border-color:#adcceb; width:100%">
+                                        <div class="row">
+                                            <div class="col-sm-12 col-md-12" style="padding:1px 18px 1px 18px">
+                                                <br />
+                                                <table class="table table-bordered table-responsive" id="Add-datatable" style="width:100%">
+                                                    <thead>
+                                                        <tr>
+                                                            <th width="5%">SL</th>
+                                                            <th width="20%">Invoice/MR No</th>
+                                                            <th width="10%">Adjustment Amount</th>
+                                                            <th width="10%">Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="CustAdjTbodyId"></tbody>
+
+                                                </table>
+                                                <br />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="col-md-12">
+                                <label class="col-md-4" for="RefNo">Ref No</label>
+                                <div class="input-group form-group col-md-8">
+                                    @Html.TextBoxFor(x => x.RefNo, new { @class = "form-control", required = "required" })
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <label class="col-md-4 required" for="AdjType">Approve By</label>
+                                <div class="input-group form-group col-md-8">
+                                    @Html.DropDownListFor(x => x.ApprBy, null, "--- Select ---", new { @class = "form-control select2", required = "required" })
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-md-4" for="Remarks">Remarks</label>
+                                <div class="input-group form-group col-md-8">
+                                    @Html.TextBoxFor(x => x.Remarks, new { @class = "form-control", required = "required" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+
+                            <div class="col-md-12">
+                                <label class="col-md-4">Ref Date</label>
+                                <div class="input-group form-group col-md-8">
+                                    <input type="text" class="form-control datePage" id="@Html.IdFor(x => x.RefDate)" value="@DateTime.Today.ToShortDateString()">
+                                    <span class="input-group-addon bg-primary b-0 text-white"><i class="ion-calendar"></i></span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <label class="col-md-4 required">Approve Date</label>
+                                <div class="input-group form-group col-md-8">
+                                    <input type="text" class="form-control datePage" id="@Html.IdFor(x => x.ApprDate)" value="@DateTime.Today.ToShortDateString()">
+                                    <span class="input-group-addon bg-primary b-0 text-white"><i class="ion-calendar"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-8" style=" text-align:center;overflow:hidden; margin-top:20px;">
+                            <input type="button" value="Save" class="btn btn-primary" id="btnSave" style="width:100px;" />
+                            <input type="button" value="Update" class="btn btn-primary hidden" id="btnUpdate" style="width:100px;" />
+                            <input type="button" value="Clear" class="btn btn-primary" id="clear" style="width:100px;" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" id="JobModal" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="panel panel-color panel-primary">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">Job Information</h3>
+
+                            </div>
+                            <div class="panel-body">
+                                <div class="clearfix">
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="col-md-3">Job No</label>
+                                    <div class="input-group form-group col-md-7">
+                                        <input type="text" class="form-control" id="nJobNo" name="nJobNo" />
+                                    </div>
+                                </div>
+                                <div class="col-md-10">
+                                    <div>
+                                        <div class="pull-right">
+                                            <input type="button" id="btnJobOk" value="Save" class="btn btn-primary" />
+                                            <input type="button" id="closeJob" value="Close" class="btn btn-primary" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+}
+@section scripts{
+    <script src="~/App_Themes/Theme1/plugins/select2/select2.min.js" type="text/javascript"></script>
+    <script src="~/App_Themes/Theme1/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.bootstrap.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.buttons.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/buttons.bootstrap.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/pdfmake.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/vfs_fonts.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/buttons.html5.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/buttons.print.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.fixedHeader.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.keyTable.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.responsive.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/responsive.bootstrap.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.scroller.min.js"></script>
+    <script type="text/javascript" src="../App_Themes/Theme1/plugins/parsleyjs/dist/parsley.min.js"></script>
+    <script src="../App_Themes/Theme1/blue/assets/pages/datatables.init.js"></script>
+
+
+    <script>
+
+        $(document).ready(function () {
+
+            function select2Focus() {
+                var select2 = $(this).data('select2');
+                setTimeout(function () {
+                    if (!select2.opened()) {
+                        select2.open();
+                    }
+                }, 0);
+            }
+            var isEdit = 0;
+            $("input:text:visible:first").focus();
+            $("#AdjType").select2().one('select2-focus', select2Focus).on("select2-blur", function () { $(this).one('select2-focus', select2Focus) });
+            $("#VchrType").select2().one('select2-focus', select2Focus).on("select2-blur", function () { $(this).one('select2-focus', select2Focus) });
+            $("#CustCode").select2().one('select2-focus', select2Focus).on("select2-blur", function () { $(this).one('select2-focus', select2Focus) });
+            $("#InvNo").select2().one('select2-focus', select2Focus).on("select2-blur", function () { $(this).one('select2-focus', select2Focus) });
+            $("#ApprBy").select2().one('select2-focus', select2Focus).on("select2-blur", function () { $(this).one('select2-focus', select2Focus) });
+            $("#AdjReason").select2().one('select2-focus', select2Focus).on("select2-blur", function () { $(this).one('select2-focus', select2Focus) });
+            $("#JobNo").select2().one('select2-focus', select2Focus).on("select2-blur", function () { $(this).one('select2-focus', select2Focus) });
+
+            $("#TotalAmt").prop("disabled", true);
+            $("#RecvAmt").prop("disabled", true);
+            $("#ReceivableAmt").prop("disabled", true);
+            $("#TotalAmt").val(0);
+            $("#RecvAmt").val(0);
+            $("#ReceivableAmt").val(0);
+            $("#AdjAmt").val("0");
+
+
+            //For GLEntries
+            $("#GLEntries").click(function () {
+                //Get the id of the selected item in dropdown
+                var AdjDate = moment($('#AdjDate').val(), 'DD/MM/YYYY').format('MM/DD/YYYY').toString();
+
+                var id = AdjDate + '&pageType=JB';
+
+                //Replace the predifined QueryString param "xxx" with the "id"
+                this.href = this.href.replace("blankDate", id);
+            });
+            //For GLprovition
+            $("#GLProvition").click(function () {
+                //Get the id of the selected item in dropdown
+                var AdjDate = "";
+
+                var id = AdjDate + '&pageType=JB';
+
+                //Replace the predifined QueryString param "xxx" with the "id"
+                this.href = this.href.replace("blankDate", id);
+            });
+
+            @*$.ajax({
+                url: '@Url.Action("GetVoucherNo", "CustAdjustment")',
+                contentType: "application/json;charset=utf-8",
+                data: { VType: 'CA' },
+                type: 'GET',
+                dataType: 'json',
+                success: function (datas) {
+                    $("#VchrNo").val(datas);
+                }
+            });*@
+
+            var table = $('#Add-datatable').dataTable({
+                "scrollY": 200,
+                "scrollX": true,
+                "paging": false,
+                "ordering": false,
+                "info": false,
+                "searching": false
+            });
+
+            $(document).on("change", "#VchrType", function (e) {
+                if ($(this).val() == 'Money Receipt') {
+                    $('#lblInvNo').html("MR No");
+                    $('#lblTotalAmt').html("MR Amount");
+                    $('#lblRecvAmt').html("Adjust Amount");
+                    $('#lblReceivableAmt').html("Not Adjusted Amount");
+                } else {
+                    $('#lblInvNo').html("Invoice No");
+                    $('#lblTotalAmt').html("Total Amount");
+                    $('#lblRecvAmt').html("Receive Amount");
+                    $('#lblReceivableAmt').html("Receivable Amount");
+                }
+            });
+            $(document).on("change", "#AdjType", function (e) {
+                $("#AdjType").prop("disabled", true);
+            });
+            //********************* For Add Datatable ************************
+
+            var orders = [];
+            var delQtyOrder = [];
+            $('#btnAdd').click(function () {
+                if ($("#VchrType").val() == "" || $("#VchrType option:selected").text() == "--- Select ---") {
+                    alert("Type is required.");
+                    return;
+                }
+                if ($("#CustCode").val() == "" || $("#CustCode option:selected").text() == "--- Select ---") {
+                    alert("Customer is required.");
+                    return;
+                }
+                if ($("#InvNo").val() == "" || $("#InvNo option:selected").text() == "--- Select ---") {
+                    alert("Invoice no is required.");
+                    return;
+                }
+                if ($("#AdjAmt").val() == "" || $("#AdjAmt").val() == "0") {
+                    alert("Adjust Amount is required.");
+                    return;
+                }
+                if ($("#AdjReason").val() == "" || $("#AdjReason option:selected").text() == "--- Select ---") {
+                    alert("Reason is required.");
+                    return;
+                }
+                addOnList();
+                $("tbody#CustAdjTbodyId tr:even").css({
+                    "background-color": "#e6e8e8"
+                });
+                clearItemInfo();
+            });
+            function clearItemInfo() {
+                $("#CustCode").val($('#CustCode option:first-child').val()).trigger('change.select2');
+                $("#InvNo").val($('#InvNo option:first-child').val()).trigger('change.select2');
+                $("#AdjReason").val($('#AdjReason option:first-child').val()).trigger('change.select2');
+                $("#RecvAmt").val("0");
+                $("#TotalAmt").val("0");
+                $("#ReceivableAmt").val("0");
+                $("#AdjAmt").val("0");
+            }
+
+
+
+            function addOnList() {
+                var newAddList = [];
+                var newAddListSl = 0;
+
+                var CustCode = $("#CustCode option:selected").val();
+                var AdjOn = $("#InvNo option:selected").val();
+                var AdjReason = $("#AdjReason option:selected").val();
+                var AdjAmt = $("#AdjAmt").val();
+                var TotalAmt = $("#TotalAmt").val();
+                var CustName = $('#CustCode option:selected').text();
+                var AdjNo = $('#AdjNo').val();
+                var InvNo = $('#InvNo').val();
+
+                var item = {
+                    CustCode: CustCode, CustName: CustName, AdjNo: AdjNo,
+                    AdjAmt: AdjAmt, TotalAmt: TotalAmt, Sl: 0, AdjReason: AdjReason, AdjOn: AdjOn, InvNo: InvNo
+                }
+
+                item.Sl = orders.length + 1;
+                orders.push(item);
+
+                addOnTable();
+
+            }
+
+            $(document).on('click', '#delete', function () {
+                var id = $(this).attr("value");
+
+                swal({
+                    title: "Are you sure?",
+                    text: "You will not be able to recover this order data!",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "Yes, delete it!",
+                    closeOnConfirm: true
+                },
+                 function () {
+                     deleteRow(id);
+                     addOnTable();
+                     swal("Deleted!", "Your imaginary file has been deleted.", "success");
+
+                 });
+            });
+            function deleteRow(sl) {
+                var newOrder = [];
+                var newSl = 0;
+
+                $.each(orders, function (index, data) {
+
+                    if (data.Sl != sl) {
+                        newSl++;
+                        data.Sl = newSl;
+                        data.Id = 0;
+                        newOrder.push(data);
+                    }
+                });
+                orders = new Array();
+                orders = newOrder;
+
+            }
+
+            function addOnTable() {
+                $('#CustAdjTbodyId').empty();
+                var sl = 0;
+                $.each(orders, function (index, data) {
+                    sl = sl + 1;
+                    data.Sl = sl;
+                    $("#CustAdjTbodyId").append("<tr><td>" + sl + "</td><td>"
+                                                       + data.AdjOn + "</td><td>"
+                                                       + data.AdjAmt + "</td><td>"
+                                                      + '<a href="#" class="on-default remove-row deleteSup" data-id="' + sl + '" id="delete" value="' + sl + '"><i class="glyphicon glyphicon-trash"></i></a>' + "</td></tr>");
+
+                });
+            }
+
+            var loadInfo = {
+                AdjNo: "",
+                AdjDate: "",
+                AdjType: "",
+                RefNo: "",
+                RefDate: "",
+                Remarks: "",
+                ApprBy: "",
+                ApprDate: "",
+                JobNo: "",
+                DrCr: "",
+                AdjReason: ""
+            };
+            function setOrder() {
+                loadInfo.AdjNo = $("#AdjNo").val();
+                loadInfo.AdjDate = $("#AdjDate").val();
+                loadInfo.DrCr = $("#AdjType").val();
+                loadInfo.AdjType = $("#VchrType").val();
+                loadInfo.RefNo = $("#RefNo").val();
+                loadInfo.RefDate = $("#RefDate").val();
+                loadInfo.Remarks = $("#Remarks").val();
+                loadInfo.ApprBy = $("#ApprBy").val();
+                loadInfo.ApprDate = $("#ApprDate").val();
+                loadInfo.JobNo = $("#JobNo").val();
+                if ($("#VchrType").val() == "General") {
+                    loadInfo.CustCode = $("#CustCode").val();
+                    loadInfo.AdjAmt = $("#AdjAmt").val();
+                    loadInfo.AdjReason = $("#AdjReason").val();
+                }
+            }
+
+            $(document).on("click", "#clear", function () {
+                clearCustAdj();
+            });
+            ////For Save and Update
+            $(document).on("click", "#btnSave, #btnUpdate", function () {
+                setOrder();
+                var validate = validateOnSave(loadInfo);
+                if (validate != "") {
+                    alert(validate);
+                    return;
+                }
+
+                if ((orders != 0) || $("#VchrType").val() == "General" ){// || $("#VchrType").val() == "General"
+                    $.ajax({
+                        url: '@Url.Action("SaveUpdateCustAdj", "CustAdjustment")',
+                        contentType: "application/json;charset=utf-8",
+                        data: JSON.stringify({ custAdj: loadInfo, CustAdjExt: orders, IsSave: isEdit }),
+                        type: 'POST',
+                        dataType: 'json',
+                        success: function (datas) {
+                            if (datas == "1") {
+                                swal({
+                                    title: "Ok",
+                                    text: "Successfully Saved!",
+                                    type: "success"
+                                },
+                                function () {
+                                    clearCustAdj();
+                                });
+                                $("#btnSave").prop("disabled", false);
+                                orders = [];
+                            }
+                            else if (datas == "2") {
+                                swal({
+                                    title: "Ok",
+                                    text: "Successfully Updated!",
+                                    type: "success"
+                                },
+                                function () {
+                                    clearCustAdj();
+                                });
+                                $("#btnSave").prop("disabled", false);
+                                orders = [];
+                            }
+                            else if (datas == "U") {
+                                swal({
+                                    title: "Sorry",
+                                    text: "No Update Permission for this User",
+                                    type: "warning"
+                                });
+                            }
+                            else if (datas == "X") {
+                                swal({
+                                    title: "Sorry",
+                                    text: "No Save Permission for this User",
+                                    type: "warning"
+                                });
+                            }
+                            else {
+                                swal(
+                                    'Sorry!',
+                                    datas,
+                                    'warning'
+                                );
+                                $("#btnSave").prop("disabled", false);
+                            }
+                        }
+                    });
+                } else {
+                    swal(
+                        'Sorry!',
+                        'Please Add item in the Table.!!!',
+                        'warning'
+                        );
+                }
+
+            });
+
+
+            $("#AdjNo").on('keydown', function (e) {
+                if (e.which == 13 || e.which == 9) {
+                    $.ajax({
+                        url: '@Url.Action("GetAllByAdjNo", "CustAdjustment")',
+                        contentType: "application/json;charset=utf-8",
+                        data: { AdjNo: $("#AdjNo").val() },
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function (datas) {
+
+                            if (datas.custAdj != null) {
+                                $("#AdjNo").prop("disabled", true);
+                                isEdit = 1;
+                                if (datas.custAdj.AdjType == 'General') {
+                                    $("#pnlInvMR").hide();
+                                    $("#pnlDT").hide();
+                                    $("#btnAdd").hide();
+
+                                    $("#CustCode").val(datas.custAdj.CustCode).trigger('change.select2');
+                                    $("#AdjAmt").val(datas.custAdj.AdjAmt);
+                                    $("#AdjReason").val(datas.custAdj.AdjReason).trigger('change.select2');
+                                } else {
+                                    $("#pnlInvMR").show();
+                                    $("#pnlDT").show();
+                                    $("#btnAdd").show();
+                                }
+                                if (moment(datas.custAdj.AdjDate).format('MM/DD/YYYY') != moment('01/01/1900').format('MM/DD/YYYY')) {
+                                    $("#AdjDate").datepicker("setDate", DateInDMYformat(datas.custAdj.AdjDate));
+                                }
+                                $("#VchrType").val(datas.custAdj.AdjType).trigger('change.select2');
+                                $("#JobNo").val(datas.custAdj.JobNo).trigger('change.select2');
+                                $("#AdjType").val(datas.custAdj.DrCr).trigger('change.select2');
+                                $("#RefNo").val(datas.custAdj.RefNo);
+                                if (moment(datas.custAdj.RefDate).format('MM/DD/YYYY') != moment('01/01/1900').format('MM/DD/YYYY')) {
+                                    $("#RefDate").datepicker("setDate", DateInDMYformat(datas.custAdj.RefDate));
+                                }
+                                $("#ApprBy").val(datas.custAdj.ApprBy).trigger('change.select2');
+                                if (moment(datas.custAdj.ApprDate).format('MM/DD/YYYY') != moment('01/01/1900').format('MM/DD/YYYY')) {
+                                    $("#ApprDate").datepicker("setDate", DateInDMYformat(datas.custAdj.ApprDate));
+                                }
+                                $("#Remarks").val(datas.custAdj.Remarks);
+
+                                orders = [];
+                                if (datas.cAExt != null) {
+                                    var j = 0;
+                                    $.each(datas.cAExt, function (index, data) {
+                                        j++;
+                                        data.Sl = j;
+                                        orders.push(data);
+
+                                    });
+                                    addOnTable();
+                                }
+                                $("#btnSave").hide();
+                                $('#btnUpdate').attr("class", "btn btn-primary");
+                            }
+                            else {
+
+                            }
+
+                        },
+                        error: function () {
+                            swal("Sorry!! This Voucher no does not exist.", "fail")
+                        }
+                    });
+                }
+            });
+
+            function clearCustAdj() {
+                clearItemInfo();
+                $("#AdjNo").prop("disabled", false);
+                $("#AdjType").prop("disabled", false);
+                $("#AdjType").val($('#AdjType option:first-child').val()).trigger('change.select2');
+                $("#VchrType").val($('#VchrType option:first-child').val()).trigger('change.select2');
+                $("#ApprBy").val($('#ApprBy option:first-child').val()).trigger('change.select2');
+                $("#JobNo").val($('#JobNo option:first-child').val()).trigger('change.select2');
+                $("#RefNo").val("");
+                $("#Remarks").val("");
+                $("#btnSave").show();
+                $('#btnUpdate').attr("class", "btn btn-primary hidden");
+                isEdit == 0;
+
+                table.fnClearTable();
+                orders = new Array();
+                $.ajax({
+                    url: '@Url.Action("GenerateAdjustmentNo", "CustAdjustment")',
+                    contentType: "application/json;charset=utf-8",
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (datas) {
+                        $("#AdjNo").val(datas);
+                    }
+                });
+            }
+
+            function validateOnSave(validOrder) {
+                if (validOrder.AdjType == "") {
+                    return "Adjustment Type is required";
+                }
+                if (validOrder.VchrType == "General") {
+                    if (validOrder.CustCode == "0") {
+                        return "Customer is required.";
+                    }
+                    if (validOrder.AdjAmt == 0) {
+                        return "Adjust Amount is required.";
+                    }
+                    if (validOrder.AdjReason == "0") {
+                        return "Reason is required.";
+                    }
+                }
+
+                if (validOrder.AdjNo == "") {
+                    return "Adjustment No is required";
+                }
+                if (validOrder.AdjDate == "") {
+                    return "Adjustment Date is required";
+                }
+                if (validOrder.ApprBy == "") {
+                    return "Approve By is required";
+                }
+                if (validOrder.ApprDate == "") {
+                    return "Approve Date is required";
+                }
+                return "";
+
+            }
+
+            ///for InvNo load by CustCode.......
+            $(document).on("change", "#CustCode", function () {
+
+                if (isEdit == 0) {
+                $.ajax({
+                    url: '@Url.Action("GetInvMrNoByVchrType", "CustAdjustment")',
+                    contentType: "application/json;charset=utf-8",
+                    data: {
+                        VchrType: $("#VchrType").val(), CustCode: $("#CustCode").val()
+                    },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        $('#InvNo').empty();
+                        $.each(data, function (index, value) {
+                            $('#InvNo').append($('<option>',
+                                {
+                                    value: value.Value,
+                                    text: value.Text
+                                }));
+                        });
+                    }
+                });
+                }
+            });
+
+
+            ///for InvNo load by CustCode.......
+            $(document).on("change", "#InvNo,#VchrType", function () {
+                
+                //var VType;
+                ////var value = $(this).attr("id");
+                //if ($(this).val() == "Money Receipt") {
+                //    VType = $("#VchrType").val();
+                //} else {
+                //    VType = $("#VchrType").val();
+                //}
+                if ($("#VchrType").val() != "General") {
+                    $("#pnlInvMR").show();
+                    $("#pnlDT").show();
+                    $("#btnAdd").show();
+
+                    if ($("#InvNo").val() != "" && $("#VchrType").val() != "General") {
+                        $.ajax({
+                            url: '@Url.Action("GetInvNoByAmount", "CustAdjustment")',
+                            contentType: "application/json;charset=utf-8",
+                            data: {
+                                VchrType: $("#VchrType").val(), InvNo: $("#InvNo").val()
+                            },
+                            type: 'GET',
+                            dataType: 'json',
+                            success: function (data) {
+                                //if ($("#VchrType").val() == "Money Receipt") {
+                                //    $("#TotalAmt").val(data.MRs.MRAmount);
+                                //    $("#lblRecvAmt").val();
+                                //    $("#lblReceivableAmt").val();
+                                // }
+                                 //else {
+                                $("#TotalAmt").val(data.Sales.NetAmount);
+                                $("#RecvAmt").val(data.Sales.ReceiptAmt);
+                                $("#ReceivableAmt").val(parseFloat($("#TotalAmt").val()) - parseFloat($("#RecvAmt").val()));
+                            //}
+                               
+                            }
+                        });
+                    }
+
+                } else {
+                    $("#pnlInvMR").hide();
+                    $("#pnlDT").hide();
+                    $("#btnAdd").hide();
+                }
+            });
+
+
+            //********************** For Job ***********************************
+            $(document).on("click", "#btnJob", function () {
+                $("#JobModal").modal("show");
+            });
+            $(document).on("click", "#closeJob", function (e) {
+                e.preventDefault();
+                $('#JobModal').modal('hide');
+            });
+
+            $(document).on("click", "#btnJobOk", function (e) {
+                if ($("#nJobNo").val() != "") {
+                    $.ajax({
+                        url: '@Url.Action("LoadandSaveJob", "Sales")',
+                        contentType: "application/json;charset=utf-8",
+                        data: {
+                            nJobNo: $("#nJobNo").val()
+                        },
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function (data) {
+                            $('#JobNo').empty();
+                            //data.insertBefore('<option>', { Value: "", text: "--- Select ---" });
+                            $.each(data, function (index, value) {
+                                $('#JobNo').append($('<option>',
+                                    {
+                                        value: value.Value,
+                                        text: value.Text
+                                    })).select2();
+                            });
+                            $('#JobModal').modal('hide');
+                            $("#nJobNo").val("");
+                        }
+                    });
+                }
+                else {
+                    alert("Job No is required.");
+                    return;
+                }
+
+            })
+
+
+        });
+    </script>
+}
+
+
+

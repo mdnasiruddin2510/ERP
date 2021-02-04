@@ -1,0 +1,721 @@
+﻿@model App.Domain.ItemInfo
+@{
+    ViewBag.Title = "Item";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/select2/select2.css" rel="stylesheet" type="text/css" />
+<link href="~/Css/FormDesign.css" rel="stylesheet" />
+
+<style>
+    table.dataTable.select tbody tr,
+    table.dataTable thead th:first-child {
+        cursor: pointer;
+        text-align: center;
+    }
+
+    .form-control {
+        border: 1px solid #00ffff;
+    }
+
+    .required:after {
+        content: " *";
+        font-weight: bold;
+        color: red;
+    }
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    input[type=number] {
+        -moz-appearance: textfield;
+    }
+</style>
+
+<div class="row">
+    <div class="col-md-10">
+        <div class="panel panel-color panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    <text style="text-align:left !important; text-decoration: none;">Item Information</text>
+                    <text style="color:#1E3B2D;font-size:12px;margin-right:100px;" class="pull-right">@ViewBag.Status</text>
+                </h3>
+            </div>
+            <div class="panel-body">
+                <div class="col-md-12">
+                    <div class="col-md-6">
+                        <div class="col-md-12">
+                            <label class="col-md-4"></label>
+                            <div class="col-md-8">
+                                <div class="radio radio-inline">
+                                    <input type="radio" name="typ" required="required" value="P" id="Product" checked="checked" /><label for="P">Product</label>
+                                </div>
+                                <div class="radio radio-inline">
+                                    <input type="radio" name="typ" required="required" value="S" id="Service" /><label for="S">Service</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            @Html.LabelFor(x => x.ItemCode, new { @class = "col-md-4" })
+                            <div class="form-group col-md-4">
+                                <input type="text" class="form-control" id="@Html.IdFor(x => x.ItemCode)" required="required" value="@ViewBag.ItemCode">
+                                @Html.HiddenFor(s => s.Id)
+                                @Html.ValidationMessageFor(x => x.ItemCode)
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            @Html.LabelFor(x => x.ItemType, new { @class = "col-md-4 required" })
+                            <div class="form-group col-md-8">
+                                @Html.DropDownListFor(x => x.ItemType, null, "Select Type", new { @class = "form-control select2", required = "required" })
+                                @Html.ValidationMessageFor(x => x.ItemType)
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="col-md-4">Part No/Description</label>                            
+                            <div class="form-group col-md-8">
+                                @Html.TextBoxFor(x => x.PartNo, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(x => x.PartNo)
+                            </div>
+                        </div>
+                        @if (@ViewBag.OnlyGrp == true)
+                        {
+                            <div class="col-md-12">
+                                @*@Html.HiddenFor(model => model.AcSyscode);*@
+                                <label class="col-md-4">Group</label>
+                                <div class="form-group col-md-8">
+                                    @Html.DropDownListFor(x => x.GroupID, (IEnumerable<SelectListItem>)ViewBag.Group, new { @class = "form-control select2" })
+                                </div>
+                            </div>
+                        }
+                        @if (@ViewBag.GrpAndSubGrp == true)
+                        {
+                            <div class="col-md-12">
+                                <label class="col-md-4">Group</label>
+                                <div class="form-group col-md-8">
+                                    @Html.DropDownListFor(x => x.GroupID, (IEnumerable<SelectListItem>)ViewBag.Group, new { @class = "form-control select2" })
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-md-4">Sub Group</label>
+                                <div class="form-group col-md-8">
+                                    @Html.DropDownListFor(x => x.SGroupID, (IEnumerable<SelectListItem>)ViewBag.SubGroup, new { @class = "form-control select2" })
+                                </div>
+                            </div>
+                        }
+                        @if (@ViewBag.SubSubGrp == true)
+                        {
+                            <div class="col-md-12">
+                                <label class="col-md-4">Group</label>
+                                <div class="form-group col-md-8">
+                                    @Html.DropDownListFor(x => x.GroupID, (IEnumerable<SelectListItem>)ViewBag.Group, new { @class = "form-control select2" })
+
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-md-4">Sub Group</label>
+                                <div class="form-group col-md-8">
+                                    @Html.DropDownListFor(x => x.SGroupID, (IEnumerable<SelectListItem>)ViewBag.SubGroup, new { @class = "form-control select2" })
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-md-4">Sub Sub Group</label>
+                                <div class="form-group col-md-8">
+                                    @Html.DropDownListFor(x => x.SSGroupID, (IEnumerable<SelectListItem>)ViewBag.SubSubGroup, new { @class = "form-control select2" })
+                                </div>
+                            </div>
+                        }
+                        <div class="col-md-12">
+                            @Html.LabelFor(x => x.ItemName, new { @class = "col-md-4 required" })
+                            <div class="form-group col-md-8">
+                                @Html.TextBoxFor(x => x.ItemName, new { @class = "form-control", required = "required" })
+                                @Html.ValidationMessageFor(x => x.ItemName)
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="col-md-4">Tax Heading No</label>
+                            <div class="form-group col-md-8">
+                                @Html.TextBoxFor(x => x.TaxHeadingNo, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            @Html.LabelFor(x => x.HSCode, new { @class = "col-md-4" })
+                            <div class="form-group col-md-8">
+                                @Html.TextBoxFor(x => x.HSCode, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            @Html.LabelFor(x => x.ROLevel, new { @class = "col-md-4" })
+                            <div class="form-group col-md-8">
+                                @Html.TextBoxFor(x => x.ROLevel, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(x => x.ROLevel)
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-md-6">
+                        <div class="col-md-12">
+                            @Html.LabelFor(x => x.UnitCode, new { @class = "col-md-4 required" })
+                            <div class="form-group col-md-8">
+                                @Html.DropDownListFor(x => x.UnitCode, null, "Select Unit", new { @class = "form-control select2", required = "required" })
+                                @Html.ValidationMessageFor(x => x.UnitCode)
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            @Html.LabelFor(x => x.DetUnitCode, new { @class = "col-md-4" })
+                            <div class="form-group col-md-8">
+                                @Html.DropDownListFor(x => x.DetUnitCode, null, "Select DetUnit Code", new { @class = "form-control select2" })
+                                @Html.ValidationMessageFor(x => x.DetUnitCode)
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            @Html.LabelFor(x => x.Price, new { @class = "col-md-4" })
+                            <div class="form-group col-md-8">
+                                @Html.TextBoxFor(x => x.Price, new { @class = "form-control", type = "number", @min = "0", @step = "0.01" })
+                                @Html.ValidationMessageFor(x => x.Price)
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            @Html.LabelFor(x => x.Ratio, new { @class = "col-md-4" })
+                            <div class="form-group col-md-8">
+                                @Html.TextBoxFor(x => x.Ratio, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(x => x.Ratio)
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            @Html.LabelFor(x => x.RetailPrice, new { @class = "col-md-4" })
+                            <div class="form-group col-md-8">
+                                @Html.TextBoxFor(x => x.RetailPrice, new { @class = "form-control", type = "number", @min = "0", @step = "0.01" })
+                                @Html.ValidationMessageFor(x => x.RetailPrice)
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            @Html.LabelFor(x => x.PackSize, new { @class = "col-md-4" })
+                            <div class="form-group col-md-8">
+                                @Html.TextBoxFor(x => x.PackSize, new { @class = "form-control", type = "number", @min = "0", @step = "0.01" })
+                                @Html.ValidationMessageFor(x => x.PackSize)
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            @Html.LabelFor(x => x.PackItemCode, new { @class = "col-md-4" })
+                            <div class="form-group col-md-8">
+                                @Html.DropDownListFor(x => x.PackItemCode, null, "Select PackItem", new { @class = "form-control select2" })
+                                @Html.ValidationMessageFor(x => x.PackItemCode)
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            @Html.LabelFor(x => x.AltItemCode, new { @class = "col-md-4" })
+                            <div class="form-group col-md-8">
+                                @Html.DropDownListFor(x => x.AltItemCode, null, "Select AltItem", new { @class = "form-control select2" })
+                                @Html.ValidationMessageFor(x => x.AltItemCode)
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-10"><br /><br /></div>
+                    <div class="col-md-8" style=" text-align:center;overflow:hidden;">
+                        <input type="button" value="Save" class="btn btn-primary" id="save" style="width:100px;" />
+                        <input type="button" value="Update" class="btn btn-primary" id="update" style="width:100px;" />
+                        <input type="button" value="Clear" class="btn btn-primary" id="clear" style="width:100px;" />
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel panel-color panel-primary">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Item List</h3>
+
+
+                    </div>
+                    <div class="panel-body">
+                        <div class="row col-md-12">
+                            <br />
+                            @using (Html.BeginForm("GetAllItems", "Item", FormMethod.Post, new { target = "_blank" }))
+                            {
+                                <div class="row col-md-12" style="text-align:center">
+                                    <input type="submit" value="Preview" class="btn btn-primary" id="preview" style="width:150px;" />
+                                    <input type="button" value="Refresh" class="btn btn-primary" id="btnRefrash" />
+                                </div>
+                            }
+                            <div class="col-md-12">
+                                <br />
+                                <br />
+                                <table class="table table-bordered table-responsive" id="datatable">
+                                    <thead>
+                                        <tr>
+                                            <th>Sl.</th>
+                                            <th>Item Code</th>
+                                            @*<th style="text-align:center;">Part</th>*@
+                                            <th>Item Name</th>
+                                            <th>Item Type</th>
+                                            <th>UOM</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody style="text-align:center;">
+
+                                        @if (ViewBag.Items != null)
+                                        {
+                                            int i = 0;
+                                            foreach (var item in ViewBag.Items)
+                                            {
+                                                <tr>
+                                                    @{
+                                                i++;
+                                                    }
+                                                    <td>@i</td>
+                                                    <td>@item.ItemCode</td>
+                                                    @*<td>@item.PartNo</td>*@
+                                                    <td style="text-align:left;">@item.ItemName</td>
+                                                    <td style="text-align:left;">@item.ItemTypeName</td>
+                                                    <td>@item.UnitCode</td>
+                                                    <td>
+                                                        <a href="#" value="@item.ItemCode" id="edit"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></a>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        }
+                                    </tbody>
+
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+@section Scripts{
+    <script src="/App_Themes/Theme1/plugins/select2/select2.min.js"></script>
+    <script src="~/App_Themes/Theme1/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            var ispType = '@ViewBag.errMsg';
+            if (ispType != '') {
+                ispType = '@ViewBag.errMsg';
+            }
+            if (ispType == "P") {
+                alert("No view Permission for this User");
+            }
+
+            $('#datatable').DataTable();
+            var loadInfo = { ItemType: "", ItemName: "", UnitCode: "" }
+            function setOrder() {
+                loadInfo.ItemType = $("#ItemType").val();
+                loadInfo.UnitCode = $("#UnitCode").val();
+                loadInfo.ItemName = $("#ItemName").val();
+            }
+            $('#ItemType').select2();
+            $('#UnitCode').select2();
+            $('#DetUnitCode').select2();
+            $('#PackItemCode').select2();
+            $('#AltItemCode').select2();
+            $("#update").hide();
+
+            $(document).on("click", "#save", function () {
+                $("#save").prop("disabled", false);
+                var item = {
+                    ItemType: "", ItemCode: "", ItemName: "", UnitCode: "", PartNo: "",
+                    UnitCode: "", DeUnitCode: "", Price: "", Ratio: "", PackSize: "", PackItemCode: "",
+                    AltItemCode: "", RetailPrice: "", GroupID: "", SGroupID: "", SSGroupID: "",
+                    HSCode: "", ROLevel: "", Prod_Ser: "", TaxHeadingNo:""
+                };
+                setOrder();
+                var validate = validateOnSave(loadInfo);
+                if (validate != undefined) {
+                    alert(validate);
+                    return;
+                }
+
+
+                item.ItemType = $("#ItemType").val()
+                item.ItemCode = $("#ItemCode").val();
+                item.ItemName = $("#ItemName").val();
+
+                if ($("#PartNo").val() == "") {
+                    item.PartNo = $("#ItemCode").val();
+                }
+
+                else {
+                    item.PartNo = $("#PartNo").val();
+
+                }
+
+                item.GroupID = $("#GroupID").val();
+                item.SGroupID = $("#SGroupID").val();
+                item.SSGroupID = $("#SSGroupID").val();
+
+                item.UnitCode = $("#UnitCode").val();
+                item.DetUnitCode = $("#UnitCode").val();
+                item.Price = $("#Price").val();
+                item.RetailPrice = $("#RetailPrice").val();
+                item.Ratio = $("#Ratio").val();
+                item.PackSize = $("#PackSize").val();
+                item.PackItemCode = $("#PackItemCode").val();
+                item.AltItemCode = $("#AltItemCode").val();
+
+                var Product = $("#Product").prop("checked");
+                if (Product == true) {
+                    item.Prod_Ser = $("#Product").val();
+                }
+                var Service = $("#Service").prop("checked");
+                if (Service == true) {
+                    item.Prod_Ser = $("#Service").val();
+                }
+                item.HSCode = $("#HSCode").val();
+                item.TaxHeadingNo = $("#TaxHeadingNo").val();
+                item.ROLevel = $("#ROLevel").val();
+                $.ajax({
+                    url: '@Url.Action("SaveItem", "Item")',
+                    contentType: "application/json;charset=utf-8",
+                    data: JSON.stringify({ item: item }),
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function (datas) {
+                        if (datas == 1) {
+                            $("#save").prop("disabled", false);
+                            swal({
+                                title: "Ok",
+                                text: "Save Successfully!",
+                                type: "success"
+                            }, function () {
+                                clearItemForm();
+                            });
+
+                        }
+                        else if (datas == "X") {
+                            swal({
+                                title: "Sorry",
+                                text: "No Save Permission for this User",
+                                type: "warning"
+                            });
+                        }
+                        else if (datas == 0) {
+                            swal(
+                                'Sorry!',
+                                'Something went wrong please try again!',
+                                'warning'
+                            );
+                            $("#save").prop("disabled", false);
+                        }
+                        else {
+                            swal("This item already exists!!! Please enter another item!!!", "fail")
+                        }
+
+                    }
+                });
+            });
+
+            function validateOnSave(validOrder) {
+
+                if (!validOrder.ItemType.trim().length) {
+                    return "Please select Item Type.";
+                }
+                if (!validOrder.UnitCode.trim().length) {
+                    return "Please select Unit Code.";
+                }
+                if (!validOrder.ItemName.trim().length) {
+                    return "Item Name is Required";
+                }
+            }
+
+
+            $(document).on("change", "#ItemType", function (e) {
+                $("#pView").modal("show");
+            })
+
+
+            $(document).on("click", "#closePopOver", function (e) {
+                e.preventDefault();
+                $("#pView").modal("hide");
+                ClearComView();
+            });
+            $(document).on("click", "#btnOk", function (e) {
+                e.preventDefault();
+                $("#pView").modal("hide");
+            });
+
+            function ClearComView() {
+                var Stext = '---- Select ----';
+
+                jQuery("#GroupID option").filter(function () {
+                    return $.trim($(this).text()) == Stext
+                }).prop('selected', true).trigger('change.select2');
+
+                jQuery("#SGroupID option").filter(function () {
+                    return $.trim($(this).text()) == Stext
+                }).prop('selected', true).trigger('change.select2');
+
+                jQuery("#SSGroupID option").filter(function () {
+                    return $.trim($(this).text()) == Stext
+                }).prop('selected', true).trigger('change.select2');
+            }
+
+            $("#ItemCode").keypress(function (e) {
+                if (e.which == 13) {
+                    $("#update").show();
+                    $.ajax({
+                        url: '@Url.Action("GetAllByItemCode", "Item")',
+                        contentType: "application/json;charset=utf-8",
+                        data: { itemCode: $("#ItemCode").val() },
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function (datas) {
+                            if (datas.ItemCode == "undefined") {
+                                alert("error")
+                            }
+                            else {
+                                $("#ItemType").val(datas.ItemType).trigger('change.select2');
+                                $("#ItemName").val(datas.ItemName);
+                                $("#PartNo").val(datas.PartNo);
+                                $("#ItemCode").val(datas.ItemCode);
+                                $("#UnitCode").val(datas.UnitCode).trigger('change.select2');
+                                $("#DetUnitCode").val(datas.UnitCode).trigger('change.select2');
+                                $("#Price").val(datas.Price);
+                                $("#Id").val(datas.Id);
+                                $("#GroupID").val(datas.GroupID).trigger('change.select2');
+                                $("#SGroupID").val(datas.SGroupID).trigger('change.select2');
+                                $("#SSGroupID").val(datas.SSGroupID).trigger('change.select2');
+                                $("#RetailPrice").val(datas.RetailPrice);
+                                $("#PackSize").val(datas.PackSize);
+                                $("#Ratio").val(datas.Ratio);
+                                //$("#PackSize").val(datas.PackSize);
+                                $("#PackItemCode").val(datas.PackItemCode).trigger('change.select2');
+                                $("#AltItemCode").val(datas.AltItemCode).trigger('change.select2');
+
+                                var Product = datas.Prod_Ser;
+                                if (Product == "P") {
+                                    $("#Product").prop('checked', true);
+                                }
+                                if (Product == "S") {
+                                    $("#Service").prop('checked', true);
+                                }
+                                $("#HSCode").val(datas.HSCode);
+                                $("#TaxHeadingNo").val(datas.TaxHeadingNo);
+                                $("#ROLevel").val(datas.ROLevel);
+
+                                $("#ItemCode").prop("disabled", true);
+                                $("#save").hide();
+
+
+
+                            }
+                        },
+                        error: function () {
+                            swal("Sorry!! Item does not exists.", "fail")
+                            $("#save").hide();
+                        }
+                    });
+                }
+            });
+
+            $(document).on('click', "#edit", function () {
+                var id = $(this).attr("value");
+                $("#update").show();
+                $.ajax({
+                    url: '@Url.Action("GetItemById", "Item")',
+                    contentType: "application/json;charset=utf-8",
+                    data: JSON.stringify({ ItemCode: id }),
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function (datas) {
+
+                        $("#ItemType").val(datas.ItemType).trigger('change.select2');
+                        $("#ItemName").val(datas.ItemName);
+
+                        if (datas.PartNo == datas.ItemCode) {
+                            $("#PartNo").val(null);
+                        }
+                        else {
+                            $("#PartNo").val(datas.PartNo);
+                        }
+                        $("#ItemCode").val(datas.ItemCode);
+                        $("#UnitCode").val(datas.UnitCode).trigger('change.select2');
+                        $("#DetUnitCode").val(datas.DetUnitCode).trigger('change.select2');
+                        $("#Price").val(datas.Price);
+                        $("#PackSize").val(datas.PackSize);
+                        $("#Ratio").val(datas.Ratio);
+                        $("#RetailPrice").val(datas.RetailPrice);
+                        $("#PackItemCode").val(datas.PackItemCode).trigger('change.select2');
+                        $("#AltItemCode").val(datas.AltItemCode).trigger('change.select2');
+                        var Product = datas.Prod_Ser;
+                        if (Product == "P") {
+                            $("#Product").prop('checked', true);
+                        }
+                        if (Product == "S") {
+                            $("#Service").prop('checked', true);
+                        }
+                        $("#HSCode").val(datas.HSCode);
+                        $("#TaxHeadingNo").val(datas.TaxHeadingNo);
+                        $("#ROLevel").val(datas.ROLevel);
+
+                        $("#ItemCode").prop("disabled", true);
+                        $("#save").hide();
+
+                        $("#Id").val(datas.Id);
+                        $("#GroupID").val(datas.GroupID).trigger('change.select2');
+                        $("#SGroupID").val(datas.SGroupID).trigger('change.select2');
+                        $("#SSGroupID").val(datas.SSGroupID).trigger('change.select2');
+                        $("#pView").modal("show");
+                    }
+                });
+                //$('#editModal').modal('show');
+                $("#save").hide();
+
+            });
+
+            $(document).on("click", "#update", function () {
+                $("#save").prop("disabled", false);
+                var item = { ItemType: "", ItemCode: "", ItemName: "", UnitCode: "", PackSize: "", RetailPrice: "", Id: "", GroupID: "", SGroupID: "", SSGroupID: "" }
+
+                item.Id = $("#Id").val();
+                item.GroupID = $("#GroupID").val();
+                item.SGroupID = $("#SGroupID").val();
+                item.SSGroupID = $("#SSGroupID").val();
+
+                item.ItemType = $("#ItemType").val();
+
+                item.ItemName = $("#ItemName").val();
+                item.ItemCode = $("#ItemCode").val();
+                item.PartNo = $("#PartNo").val();
+                item.UnitCode = $("#UnitCode").val();
+                item.DetUnitCode = $("#UnitCode").val();
+                item.Price = $("#Price").val();
+                item.Ratio = $("#Ratio").val();
+                item.RetailPrice = $("#RetailPrice").val();
+                item.PackSize = $("#PackSize").val();
+                item.PackItemCode = $("#PackItemCode").val();
+                item.AltItemCode = $("#AltItemCode").val();
+                var Product = $("#Product").prop("checked");
+                if (Product == true) {
+                    item.Prod_Ser = $("#Product").val();
+                }
+                var Service = $("#Service").prop("checked");
+                if (Service == true) {
+                    item.Prod_Ser = $("#Service").val();
+                }
+                item.HSCode = $("#HSCode").val();
+                item.TaxHeadingNo = $("#TaxHeadingNo").val();
+                item.ROLevel = $("#ROLevel").val();
+
+                $.ajax({
+                    url: '@Url.Action("UpdateItem", "Item")',
+                    contentType: "application/json;charset=utf-8",
+                    data: JSON.stringify({ item: item }),
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function (datas) {
+                        if (datas == 1) {
+                            swal({
+                                title: "Ok",
+                                text: "Update Successfully!",
+                                type: "success"
+                            }, function () {
+                                clearItemForm();
+                                $("#save").prop("enable", false);
+
+                            });
+                        }
+                        else if (datas == "U") {
+                            swal({
+                                title: "Sorry",
+                                text: "No Update Permission for this User",
+                                type: "warning"
+                            });
+                        }
+                        else if (datas == 0) {
+                            swal(
+                                'Sorry!',
+                                'Something went wrong please try again!',
+                                'warning'
+                            );
+                            $("#save").prop("disabled", false);
+                        }
+
+                    }
+                });
+            });
+
+
+
+
+            $(document).on("click", "#clear", function () {
+                clearItemForm();
+            });
+
+            $(document).on("click", "#btnRefrash", function () {
+                location.reload();
+            });
+
+            function clearItemForm() {
+                $("#Product").prop("checked", true);
+                $("#ItemType").val("").trigger('change.select2');
+                $("#ItemName").val("");
+                $("#PartNo").val("");
+                $("#UnitCode").val("").trigger('change.select2');
+                $("#DetUnitCode").val("").trigger('change.select2');
+                $("#Price").val("");
+                $("#Ratio").val(""); $("#RetailPrice").val("");
+                $("#PackSize").val("");
+                $("#PackItemCode").val("").trigger('change.select2');
+                $("#AltItemCode").val("").trigger('change.select2');
+                $("#HSCode").val("");
+                $("#TaxHeadingNo").val("");
+                $("#ROLevel").val("");
+                //ClearComView();
+                var Stext = '---- Select ----';
+
+                jQuery("#GroupID option").filter(function () {
+                    return $.trim($(this).text()) == Stext
+                }).prop('selected', true).trigger('change.select2');
+
+                jQuery("#SGroupID option").filter(function () {
+                    return $.trim($(this).text()) == Stext
+                }).prop('selected', true).trigger('change.select2');
+
+                jQuery("#SSGroupID option").filter(function () {
+                    return $.trim($(this).text()) == Stext
+                }).prop('selected', true).trigger('change.select2');
+
+                $("#ItemCode").prop("disabled", false);
+                $.ajax({
+                    url: '@Url.Action("GetItemCode", "Item")',
+                    contentType: "application/json;charset=utf-8",
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (datas) {
+
+                        $("#ItemCode").val(datas);
+                    }
+                });
+                $("#update").hide();
+                $("#save").show();
+            }
+
+        });
+
+
+
+    </script>
+}

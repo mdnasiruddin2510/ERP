@@ -1,0 +1,240 @@
+﻿@model IEnumerable<App.Domain.ReportLedger>
+
+@{
+    ViewBag.Title = "Report Ledger";
+    Layout = null;
+    decimal tDebit = 0.0m;
+    decimal tCredit = 0.0m;
+    decimal RB = 0.0m;
+    if (Model.ToList().Count > 0)
+    {
+        RB = @Model.ToList().FirstOrDefault().OpenBal;
+    }
+    decimal OB = 0.0m;
+    if (Model.ToList().Count > 0)
+    {
+        OB = @Model.ToList().FirstOrDefault().OpenBal;
+    }
+    var CompInfo = AcclineERP.Models.GetCompanyInfo.GetComInfo();
+    string CompanyAddress = ((CompInfo.Addr1 == null ? string.Empty : CompInfo.Addr1) + (CompInfo.Addr2 == null ? string.Empty : CompInfo.Addr2));
+}
+
+<script src="~/Scripts/jquery-1.9.1.min.js"></script>
+<script src="~/Scripts/Export.js"></script>
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/select2/select2.css" rel="stylesheet" type="text/css" />
+<link href="~/Css/FormDesign.css" rel="stylesheet" />
+
+<style>
+    hr {
+        background-color: black;
+        height: 0.5px;
+    }
+</style>
+
+<div id="toReport" class="panel-body" style="margin: auto; text-align:center !important; width:800px; height:1150px; padding:60px">
+    <div class="panel-heading" style="text-align:center">
+        <div class="panel-title">
+            <label style="text-align:center !important; text-decoration: none; font-size:25px; font-weight:bold">@CompInfo.CompName</label><br>
+            <label style="text-align:center !important; text-decoration: none; font-size:23px; font-weight:normal"> @CompanyAddress</label><br>
+            @*<label style="text-align:center !important; text-decoration: none; font-size:23px; font-weight:normal">Phone: @CompInfo.Tel</label>*@<br>
+        </div>
+        <div class="panel-title">
+            <text style="text-align:center !important; text-decoration: none; font-size:23px;font-family:'Arial Narrow'; font-weight:bold">@ViewBag.RptCap</text>
+        </div>
+        <div class="panel-title">
+            <text style="text-align:center !important; text-decoration: none; font-size:20px;font-family:'Arial Narrow'; font-weight:bold">@ViewBag.LedgerCap : @ViewBag.Account</text>
+        </div>
+        @if (ViewBag.HasBranch == true)
+        {
+            <div class="panel-title" id="ddfBrCode">
+                <label style="text-align:center !important; text-decoration: none; font-size:20px;font-family:'Arial Narrow'; font-weight:bold" for="BrCode">Branch : @ViewBag.Branch</label>
+                @*<text style="text-align:center !important; text-decoration: none; font-size:20px;font-family:'Arial Narrow'; font-weight:bold" for="BrCode">Branch : @ViewBag.Branch</text>*@
+            </div>
+        }        
+        <div class="cashDate">
+            <text style="text-align:center !important; text-decoration: none; font-size:15px;font-family:'Arial Narrow'; font-weight:bold">From : @ViewBag.fDate &nbsp;&nbsp; To: @ViewBag.tDate</text>
+        </div>
+    </div>
+    <hr />
+
+    <br />
+    <div class="panel-body" style="text-align:center">
+        <table cellpadding="5" cellspacing="1" border=0 style="width:800px">
+            <thead style="height:300px; display:table-row-group">
+                <tr>
+                    <th style="width:120px"></th>
+                    <th style="width:120px"></th>
+                    <th style="width:100px"></th>
+                    <th style="width:100px"></th>
+                    <th style="width:100px"></th>
+                    <th style="width:50px"></th>
+                    <th style="width:150px; text-align:right">@ViewBag.OpeningCap</th>
+                    <th style="width:100px; text-align:right">@OB</th>
+                </tr>
+                <tr>
+                    <th style="width:120px; text-align:center"></th>
+                    <th style="width:70px; text-align:center"></th>
+                    <th style="width:100px; text-align:center"></th>
+                    <th style="width:100px; text-align:right"></th>
+                    <th style="width:100px; text-align:right"></th>
+                    <th style="width:100px; text-align:right"> </th>
+                    <th style="width:100px; text-align:right"> </th>
+                    <th style="width:100px; text-align:right"> </th>
+                </tr>
+            </thead>
+        </table>
+        <table cellpadding="5" cellspacing="1" border=1 frame=box rules=all style="width:800px">
+            <thead style="height:300px; display:table-row-group">
+                <tr>
+                    <th style="width:120px; font-size:13px; text-align:center">@ViewBag.Col1Cap</th>
+                    <th style="width:70px; font-size:13px; text-align:center">@ViewBag.Col2Cap</th>
+                    <th style="width:100px; font-size:13px; text-align:center">@ViewBag.Col3Cap</th>
+                    <th style="width:130px; font-size:13px; text-align:center">@ViewBag.Col4Cap</th>
+                    <th style="width:130px; font-size:13px; text-align:center">@ViewBag.Col5Cap</th>
+                    <th style="width:100px; font-size:13px; text-align:center">@ViewBag.Col6Cap</th>
+                    <th style="width:100px; font-size:13px; text-align:center">@ViewBag.Col7Cap</th>
+                    <th style="width:100px; font-size:13px; text-align:center">@ViewBag.Col8Cap</th>
+                </tr>
+                @*<tr>
+                        <th style="width:120px; text-align:center"></th>
+                        <th style="width:120px; text-align:center"></th>
+                        <th style="width:100px; text-align:center"></th>
+                        <th style="width:100px; text-align:right"></th>
+                        <th style="width:100px; text-align:right"></th>
+                        <th style="width:100px; text-align:right"> </th>
+                        <th style="width:100px; text-align:right"> </th>
+                        <th style="width:100px; text-align:right"> </th>
+                    </tr>*@
+
+            </thead>
+            <tbody id="tbodyId">
+
+                @foreach (var item in Model)
+                {
+                    if (item.Debit > 0)
+                    {
+                        RB = Convert.ToDecimal(RB + item.Debit);
+                    }
+                    else
+                    {
+                        RB = Convert.ToDecimal(RB - item.Credit);
+                    }
+                    tDebit += Convert.ToDecimal(item.Debit);
+                    tCredit += Convert.ToDecimal(item.Credit);
+
+                    <tr>
+                        <td style="width:120px; text-align:left; font-size:12px">
+                            @AcclineERP.Models.InWord.GetAbbrMonthNameDate(item.TrDate);
+                        </td>
+                        <td style="width:90px; text-align:center; font-size:12px">
+                            @Html.DisplayFor(modelItem => item.TrType)
+                        </td>
+                        <td style="width:110px; text-align:center; font-size:12px">
+                            @Html.DisplayFor(modelItem => item.TrNo)
+                        </td>
+                        <td style="width:150px; text-align:center; font-size:12px;font-family:'Arial Narrow'">
+                            @Html.DisplayFor(modelItem => item.Ctrl_Sub)
+                        </td>
+                        <td style="width:150px; text-align:center; font-size:12px;font-family:'Arial Narrow'">
+                            @Html.DisplayFor(modelItem => item.Narration)
+                        </td>
+                        @if (item.Debit > 0)
+                        {
+                            <td style="width:100px; text-align:right; font-size:12px">
+                                @Html.DisplayFor(modelItem => item.Debit)
+                            </td>
+                        }
+                        else
+                        {
+                            <td style="width:100px; text-align:right; font-size:12px">-</td>
+                        }
+
+                        @if (item.Credit > 0)
+                        {
+                            <td style="width:100px; text-align:right; font-size:12px">
+                                @Html.DisplayFor(modelItem => item.Credit)
+                            </td>
+                        }
+                        else
+                        {
+                            <td style="width:100px; text-align:right; font-size:12px">-</td>
+                        }
+
+                        <td style="width:100px; text-align:right; font-size:12px">
+                            @RB
+                        </td>
+                    </tr>
+
+                }
+            </tbody>
+
+
+
+        </table>
+        <table cellpadding="5" cellspacing="1" border=0 style="width:800px">
+            <thead style="height:300px; display:table-row-group">
+                <tr>
+                    <th style="width:120px; text-align:center"></th>
+                    <th style="width:120px; text-align:center"></th>
+                    <th style="width:150px; text-align:center"></th>
+                    <th style="width:150px; text-align:center"></th>
+                    <th style="width:100px; text-align:center"></th>
+                    <th style="width:100px; text-align:right">@tDebit<hr /></th>
+                    <th style="width:100px; text-align:right">@tCredit<hr /></th>
+                    <th style="width:100px; text-align:center"></th>
+                </tr>
+                @*<tr>
+                        <th style="width:120px"></th>
+                        <th style="width:120px"></th>
+                        <th style="width:100px"></th>
+                        <th style="width:100px"></th>
+                        <th style="width:100px"></th>
+                        <th style="width:50px"></th>
+                        <th style="width:150px; text-align:right"></th>
+                        <th style="width:100px; text-align:right"></th>
+                    </tr>
+                    <tr>
+                        <th style="width:120px; text-align:center"></th>
+                        <th style="width:120px; text-align:center"></th>
+                        <th style="width:100px; text-align:center"></th>
+                        <th style="width:100px; text-align:right"></th>
+                        <th style="width:100px; text-align:right"></th>
+                        <th style="width:100px; text-align:right"> </th>
+                        <th style="width:100px; text-align:right"> </th>
+                        <th style="width:100px; text-align:right"> </th>
+                    </tr>
+                    </tbody>*@
+
+
+            </thead>
+        </table>
+
+        @*<div>
+                <label style="font-size:11px; text-align:left; margin-left:70px">In Word : @ViewBag.InWordsAmt</label>
+            </div>
+            <br />
+            <br />
+            <div>
+                <text style="text-align:left !important;  font-size:15px; margin-left:70px; border-top:1px solid">Prepared By</text>
+                <text style="text-align:center !important;  font-size:15px; margin-left:200px;border-top:1px solid">Checked By</text>
+
+                <text style="text-align:right !important; font-size:15px;  margin-left:200px;border-top:1px solid">Approved By</text>
+
+            </div>
+            <div>
+                <span style="text-align:center !important;  font-size:15px; margin-left:70px">Asst. Manager</span>
+            </div>*@
+    </div>
+
+</div>
+@*<div class="col-sm-10">
+        <br />
+        <br /><br />
+    </div>
+    <div class="panel-footer" style="text-align:right; width:850px">
+        <label style="font-size:13px">Print Date : @ViewBag.PrintDate</label>
+    </div>*@
+

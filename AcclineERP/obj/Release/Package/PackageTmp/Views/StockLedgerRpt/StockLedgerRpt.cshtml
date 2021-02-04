@@ -1,0 +1,352 @@
+﻿@model App.Domain.ViewModel.RptSearchVModel
+@{
+    ViewBag.Title = "Stock Ledger Rpt";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="~/Css/FormDesign.css" rel="stylesheet" />
+
+@using (Html.BeginForm("GetReportLedger", "StockLedgerRpt", FormMethod.Post, new { }))
+{
+    <div class="row">
+        <div class="col-md-10">
+            <div class="panel panel-color panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <text style="text-align:left !important; text-decoration: none">Store Ledger</text>
+                    </h3>
+                </div>
+                <div class="panel-body">
+                    <div class="modal fade in" id="pView" role="dialog" aria-hidden="true">
+                        @Html.Partial("~/Views/Sales/CommonPV.cshtml")
+                    </div>
+                    <div class="col-md-12" style="margin-left:110px; margin-top:10px">
+                        <div class="col-md-8" style="margin-right: -115px;">
+
+                            <label class="col-md-3">Item Type</label>
+                            <div class="input-group form-group col-md-6">
+                                @Html.DropDownListFor(x => x.ItemType, null, "---- Select ----", new { @class = "form-control select2", @Value = ViewBag.ItemType })
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <div class="col-md-12" style="margin-left:110px; margin-top:10px">
+                        <div class="col-md-8" style="margin-right: -115px;">
+
+                            <label class="col-md-3" for="AccountCode">Item </label>
+
+                            <div class="input-group form-group col-md-6">
+                                @Html.DropDownListFor(x => x.AccountCode, null, new { @class = "form-control select2", required = "required" })
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <div class="col-md-12" style="margin-left:110px; margin-top:10px" id="ddfBrCode">
+                        <label class="col-md-2" for="BrCode">Branch</label>
+                        <div class="input-group form-group col-md-4">
+                            @Html.DropDownListFor(x => x.BranchCode, null, "All", new { @class = "form-control select2", required = "required" })
+
+                        </div>
+                    </div>
+
+                    <div class="col-md-12" style="margin-left:110px; margin-top:20px">
+                        <label class="col-md-2" for="fDate">From Date</label>
+                        <div class="input-group form-group col-md-4">
+                            <input type="text" class="form-control datePage" id="fDate" name="fDate" value="@ViewBag.FyddFDate.ToShortDateString()">
+                            <span class="input-group-addon bg-primary b-0 text-white"><i class="ion-calendar"></i></span>
+                        </div>
+                    </div>
+                    <div class="col-md-12" style="margin-left:110px; margin-top:20px">
+                        <label class="col-md-2" for="tDate">To Date</label>
+                        <div class="input-group form-group col-md-4">
+                            <input type="text" class="form-control datePage" id="toDate" name="toDate" value="@ViewBag.FyddTDate.ToShortDateString()">
+                            <span class="input-group-addon bg-primary b-0 text-white"><i class="ion-calendar"></i></span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12" style="margin-left:150px; margin-top:20px">
+                        <div class="col-xs-12">
+                            <div class="input-group">
+
+                                <p style="color:red">
+                                    @ViewBag.Message
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-10">
+                        <br />
+                    </div>
+                    <div class="row col-md-12" style="text-align:end">
+                        <div class="col-md-8" style=" text-align:right">
+
+                            <input type="submit" value="Preview" class="btn btn-primary" id="submit" style="width:100px;" />
+                            <input type="button" value="Clear" class="btn btn-primary" id="clear" style="width:100px;" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+
+
+@section Scripts{
+
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script src="~/App_Themes/Theme1/plugins/select2/select2.min.js" type="text/javascript"></script>
+    <script src="~/App_Themes/Theme1/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.bootstrap.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.buttons.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/buttons.bootstrap.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/pdfmake.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/vfs_fonts.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/buttons.html5.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/buttons.print.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.fixedHeader.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.keyTable.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.responsive.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/responsive.bootstrap.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.scroller.min.js"></script>
+    <script type="text/javascript" src="../App_Themes/Theme1/plugins/parsleyjs/dist/parsley.min.js"></script>
+    <!-- Datatable init js -->
+    <script src="../App_Themes/Theme1/blue/assets/pages/datatables.init.js"></script>
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $("#ItemType").select2()
+            $('#AccountCode').select2();
+            $("#BranchCode").select2();
+
+            $(document).on("click", "#clear", function () {
+                location.reload();
+            });
+
+
+
+            //***************************** For Common Item Filtering option start *******************************
+            $(document).on("change", "#ItemType", function (e) {
+                if ('@ViewBag.NoGrp' == 'False') {
+
+                    if ($("#ItemType option:selected").text() != "---- Select ----") {
+                        $("#pView").modal("show");
+                    }
+                    //for group load by itemtype.......
+                    $.ajax({
+                        url: '@Url.Action("LoadGroupInfoByItemType", "Sales")',
+                        contentType: "application/json;charset=utf-8",
+                        data: {
+                            ItemType: $("#ItemType").val()
+                        },
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function (data) {
+                            $('#GroupID').empty();
+                            //data.insertBefore('<option>', { Value: "", text: "--- Select ---" });
+                            $.each(data, function (index, value) {
+                                $('#GroupID').append($('<option>',
+                                    {
+                                        value: value.Value,
+                                        text: value.Text
+                                    })).select2();
+                            });
+                            //$("#GroupID").val(order.Purpose).trigger('change');
+                            //order.Purpose = "0";
+                        }
+                    });
+                } else {
+                    //for Item load by itemtype.......
+                    $.ajax({
+                        url: '@Url.Action("LoadItemByItemType", "Sales")',
+                        contentType: "application/json;charset=utf-8",
+                        data: {
+                            ItemType: $("#ItemType").val()
+                        },
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function (data) {
+                            $('#AccountCode').empty();
+                            $.each(data, function (index, value) {
+                                $('#AccountCode').append($('<option>',
+                                    {
+                                        value: value.Value,
+                                        text: value.Text
+                                    })).select2();
+                            });
+                        }
+                    });
+                }
+            })
+
+            //for sgroupinfo load by GroupID.......
+            $(document).on("change", "#GroupID", function (e) {
+                if ('@ViewBag.OnlyGrp' == 'False') {
+
+                    $.ajax({
+                        url: '@Url.Action("LoadSGroupByGroupId", "Sales")',
+                        contentType: "application/json;charset=utf-8",
+                        data: {
+                            ItemType: $("#ItemType").val(), GroupID: $("#GroupID").val()
+                        },
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function (data) {
+                            $('#SGroupID').empty();
+                            $.each(data, function (index, value) {
+                                $('#SGroupID').append($('<option>',
+                                    {
+                                        value: value.Value,
+                                        text: value.Text
+                                    })).select2();
+                            });
+                        }
+                    });
+                }
+            })
+
+
+            //for ssgroupinfo load by sGroupID.......
+            $(document).on("change", "#SGroupID", function (e) {
+                if ('@ViewBag.SubSubGrp' == 'True') {
+                    $.ajax({
+                        url: '@Url.Action("LoadSSGroupInfo", "Sales")',
+                        contentType: "application/json;charset=utf-8",
+                        data: {
+                            ItemType: $("#ItemType").val(), GroupID: $("#GroupID").val(), SGroupID: $("#SGroupID").val()
+                        },
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function (data) {
+                            $('#SSGroupID').empty();
+                            $.each(data, function (index, value) {
+                                $('#SSGroupID').append($('<option>',
+                                    {
+                                        value: value.Value,
+                                        text: value.Text
+                                    })).select2();
+                            });
+                        }
+                    });
+                }
+            })
+
+            //for ItmeInfo load by ssGroupID....... ItemType, GroupId, SGroupId, SSGroupId
+            $(document).on("click", "#btnOk", function (e) {
+                $("#pView").modal("hide");
+
+                if ('@ViewBag.OnlyGrp' == 'True') {
+                    //for Item load by GroupID.......
+                    $.ajax({
+                        url: '@Url.Action("LoadItemByGroupId", "Sales")',
+                        contentType: "application/json;charset=utf-8",
+                        data: {
+                            ItemType: $("#ItemType").val(), GroupID: $("#GroupID").val()
+                        },
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function (data) {
+                            $('#AccountCode').empty();
+                            $.each(data, function (index, value) {
+                                $('#AccountCode').append($('<option>',
+                                    {
+                                        value: value.Value,
+                                        text: value.Text
+                                    })).select2();
+                            });
+                        }
+                    });
+                }
+
+                if ('@ViewBag.GrpAndSubGrp' == 'True') {
+                    $.ajax({
+                        url: '@Url.Action("LoadItemBySGroupID", "Sales")',
+                        contentType: "application/json;charset=utf-8",
+                        data: {
+                            ItemType: $("#ItemType").val(), GroupID: $("#GroupID").val(), SGroupID: $("#SGroupID").val()
+                        },
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function (data) {
+                            $('#AccountCode').empty();
+                            $.each(data, function (index, value) {
+                                $('#AccountCode').append($('<option>',
+                                    {
+                                        value: value.Value,
+                                        text: value.Text
+                                    })).select2();
+                            });
+                            ClearComView();
+                        }
+                    });
+                }
+
+                if ('@ViewBag.SubSubGrp' == 'True') {
+                    $.ajax({
+                        url: '@Url.Action("LoadItemBySSGroupID", "Sales")',
+                        contentType: "application/json;charset=utf-8",
+                        data: {
+                            ItemType: $("#ItemType").val(), GroupID: $("#GroupID").val(), SGroupID: $("#SGroupID").val(), SSGroupID: $("#SSGroupID").val()
+                        },
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function (data) {
+                            $('#AccountCode').empty();
+                            $.each(data, function (index, value) {
+                                $('#AccountCode').append($('<option>',
+                                    {
+                                        value: value.Value,
+                                        text: value.Text
+                                    })).select2();
+                            });
+                            ClearComView();
+                        }
+                    });
+                }
+            })
+
+            $(document).on("click", "#closePopOver", function (e) {
+                e.preventDefault();
+                jQuery("#ItemType option").filter(function () {
+                    return $.trim($(this).text()) == '---- Select ----'
+                }).prop('selected', true).trigger('change.select2');
+
+                $("#pView").modal("hide");
+                ClearComView();
+            });
+
+            function ClearComView() {
+                var Stext = '---- Select ----';
+
+                jQuery("#GroupID option").filter(function () {
+                    return $.trim($(this).text()) == Stext
+                }).prop('selected', true).trigger('change.select2');
+
+                jQuery("#SGroupID option").filter(function () {
+                    return $.trim($(this).text()) == Stext
+                }).prop('selected', true).trigger('change.select2');
+
+                jQuery("#SSGroupID option").filter(function () {
+                    return $.trim($(this).text()) == Stext
+                }).prop('selected', true).trigger('change.select2');
+            }
+            //***************************** For Common Item Filtering option start *******************************
+
+
+        });
+    </script>
+}
+
+
+
+
+
+
+
+

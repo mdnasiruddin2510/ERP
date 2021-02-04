@@ -1,0 +1,533 @@
+﻿@model IEnumerable<App.Domain.CashBook>
+
+
+@{
+    ViewBag.Title = "Cash Book";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    //decimal tRecCash = 0.0m;
+    //decimal tRecBank = 0.0m;
+    //decimal tPayCash = 0.0m;
+    //decimal tPayBank = 0.0m;
+    //decimal tBank = 0.0m;
+    //decimal tCash = 0.0m;
+
+    decimal tRecCash = 0.0m;
+    decimal tRecBank = 0.0m;
+    decimal cPayCash = 0.0m;
+    decimal cPayBank = 0.0m;
+    decimal cBank = 0.0m;
+    decimal cCash = 0.0m;
+    decimal TcBank = 0.0m;
+    decimal TcCash = 0.0m;
+}
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/select2/select2.css" rel="stylesheet" type="text/css" />
+<link href="~/Css/FormDesign.css" rel="stylesheet" />
+
+<style>
+    table.dataTable.select tbody tr,
+    table.dataTable thead th:first-child {
+        cursor: pointer;
+    }
+
+    .form-control {
+        border: 1px solid #00ffff;
+    }
+
+    .required:after {
+        content: " *";
+        font-weight: bold;
+        color: red;
+    }
+
+    .largeSpace {
+        margin-right: 13px;
+        margin-left: 9px;
+    }
+</style>
+
+@using (Html.BeginForm("CashBookPdf", "CashBook", FormMethod.Post, new { target = "_blank" }))
+{
+    <div class="column">
+        <div class="col-md-12">
+            <div class="panel panel-color panel-primary">
+                <div class="panel-heading">
+                    <div class="panel-title">
+                        <text style="text-align:left !important; text-decoration: none;">Cash Book: @ViewBag.Branch</text>
+
+                        <input type="text" class="fa-pull-right" name="tDate" data-valmsg-for="Search.tDate" data-valmsg-replace="true" style="color:#7E3B2D; background-color:bisque; font-size:12px; width:130px" value="@ViewBag.Datet">
+                        <label class="fa-pull-right" style="color:#7E3B2D; text-align:center; padding-top:5px; font-size:12px; width:80px">To</label>
+                        <input type="text" class="fa-pull-right" name="fDate" data-valmsg-for="Search.fDate" data-valmsg-replace="true" style="color:#7E3B2D; background-color:bisque; font-size:12px; width:130px" value="@ViewBag.Datef">
+                        <label class="fa-pull-right" style="color:#7E3B2D; text-align:center; padding-top:5px; font-size:12px; width:80px">From</label>
+                    </div>
+                </div>
+                <div class="panel-body" style="height:70px">
+                    <div class="col-md-12">
+                        @*<div class="col-md-6">
+                                <label class="col-md-4 control-label">Opening Balance:</label>
+                                <div class="form-group col-md-3">
+                                    <div class="input-group form-group col-md-6">
+                                        <input type="text" class="form-control" id="tRecAmount" style="text-align:right" value="@Model.ToList().FirstOrDefault().Cash" disabled="disabled">
+                                    </div>
+                                    <div class="input-group form-group col-md-6">
+                                        <input type="text" class="form-control" id="tRecAmount" style="text-align:right" value="@Model.ToList().FirstOrDefault().Bank" disabled="disabled">
+                                    </div>
+                                </div>
+                            </div>*@
+
+                        <label class="col-md-2 control-label">Opening Balance</label>
+                        <div class="col-md-5">
+                            <label class="col-md-3 control-label">Cash O/B:</label>
+                            <div class=" col-md-6 input-group form-group">
+                                <input type="text" class="form-control" id="tRecAmount" style="text-align:right" value="@Model.ToList().FirstOrDefault().Cash" disabled="disabled">
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <label class="col-md-3 control-label">Bank O/B:</label>
+                            <div class="col-md-6 input-group form-group">
+                                <input type="text" class="form-control" id="tRecAmount" style="text-align:right" value="@Model.ToList().FirstOrDefault().Bank" disabled="disabled">
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="column">
+            <div class="col-md-12">
+                <div class="panel panel-color panel-primary">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Receipt</h3>
+                    </div>
+                    <div class="panel-body">
+
+                        <div class="row col-md-12" style="margin-left:40px">
+                            <div class="row">
+                                <div class="col-md-11">
+
+                                    <table class="table table-bordered table-responsive" cellspacing="0" border=0 id="datatable-buttons">
+                                        <thead>
+                                            <tr>
+                                                <th style="font-size:13px; text-align:center">Date</th>
+                                                <th style="font-size:13px; text-align:center">Voucher No</th>
+                                                <th style="font-size:13px; text-align:center">Head</th>
+                                                <th style="font-size:13px; text-align:center">Narration</th>
+                                                <th style="font-size:13px; text-align:center">Cash Receipt</th>
+                                                <th style="font-size:13px; text-align:center">Bank Receipt</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tbodyId">
+                                            @foreach (var item in Model)
+                                            {
+                                                if (item.TrGroup == "1")
+                                                {
+                                                    tRecCash += Convert.ToDecimal(item.Cash);
+                                                    tRecBank += Convert.ToDecimal(item.Bank);
+                                                    var trDate = item.TrDate.ToString("dd/MM/yyyy");
+                                                  
+                                                    <tr>
+                                                        <td style="text-align:left; font-size:12px">
+                                                            @Html.DisplayFor(modelItem => trDate)
+                                                        </td>
+                                                        <td style="text-align:left; font-size:12px">
+                                                            @Html.DisplayFor(modelItem => item.TrNo)
+                                                        </td>
+                                                        <td style="text-align:left; font-size:12px">
+                                                            @Html.DisplayFor(modelItem => item.ca_bk_op)
+                                                        </td>
+                                                        <td style="text-align:left; font-size:12px">
+                                                            @Html.DisplayFor(modelItem => item.Narration)
+                                                        </td>
+                                                        <td style="text-align:left; font-size:12px">
+                                                            @Html.DisplayFor(modelItem => item.Cash)
+                                                        </td>
+                                                        <td style="text-align:right; font-size:12px">
+                                                            @Html.DisplayFor(modelItem => item.Bank)
+                                                        </td>
+                                                    </tr>
+
+                                                }
+
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <hr />
+                        <div class="col-md-12" style="margin-left:150px; margin-top:10px">
+                            <div class="col-md-4">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="col-md-7 control-label">Total Receipt: </label>
+                                @*<div class="form-group col-md-7">*@
+                                <div class="input-group form-group col-md-5">
+                                    <input type="text" class="form-control" id="tRecAmount" style="text-align:right" value="@tRecCash" disabled="disabled">
+                                </div>
+                                @*</div>*@
+                            </div>
+                            <div class="col-md-4">
+                                @*<div class="form-group col-md-7">*@
+                                <div class="input-group form-group col-md-5">
+                                    <input type="text" class="form-control" id="tRecAmount" style="text-align:right" value="@tRecBank" disabled="disabled">
+                                </div>
+                                @*</div>*@
+                            </div>
+                        </div>
+
+                        <div class="col-md-12" style="margin-left:150px; margin-top:10px">
+                            <div class="col-md-4">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="col-md-7 control-label">Total Receipt: </label>
+                                @*<div class="form-group col-md-7">*@
+                                <div class="input-group form-group col-md-5">
+                                    <input type="text" class="form-control" id="tAmount" style="text-align:right; font-weight:bold" value="@(@tRecCash + @Model.ToList().FirstOrDefault().Cash)" disabled="disabled">
+                                </div>
+                                @*</div>*@
+                            </div>
+                            <div class="col-md-4">
+                                @*<div class="form-group col-md-7">*@
+                                <div class="input-group form-group col-md-5">
+                                    <input type="text" class="form-control" id="tAmount" style="text-align:right; font-weight:bold" value="@(@tRecBank + @Model.ToList().FirstOrDefault().Bank)" disabled="disabled">
+                                </div>
+                                @*</div>*@
+                            </div>
+                        </div>
+
+
+                        @*<div class="col-md-12" style="margin-left:395px">
+                                <div class="col-md-4">
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="col-md-4 control-label" style="font-weight:bold">Total : </label>
+
+                                    <div class="input-group form-group col-md-5">
+                                        <input type="text" class="form-control" id="tAmount" style="text-align:right; font-weight:bold" value="@(@tRecCash + @Model.ToList().FirstOrDefault().Cash)" disabled="disabled">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="input-group form-group col-md-5">
+                                        <input type="text" class="form-control" id="tAmount" style="text-align:right; font-weight:bold" value="@(@tRecBank + @Model.ToList().FirstOrDefault().Bank)" disabled="disabled">
+                                    </div>
+                                </div>
+
+
+                            </div>*@
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="column">
+            <div class="col-md-12">
+                <div class="panel panel-color panel-primary">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Payment</h3>
+                    </div>
+                    <div class="panel-body">
+
+                        <div class="row col-md-12" style="margin-left:40px">
+                            <div class="row">
+                                <div class="col-md-11">
+                                    <br />
+                                    <br />
+                                    <table class="table table-bordered table-responsive" id="datatable-buttons">
+                                        <thead>
+                                            <tr>
+                                                <th style="font-size:13px; text-align:center">Date</th>
+                                                <th style="font-size:13px; text-align:center">Voucher No</th>
+                                                <th style="font-size:13px; text-align:center">Head</th>
+                                                <th style="font-size:13px; text-align:center">Narration</th>
+                                                <th style="font-size:13px; text-align:center">Cash Payment</th>
+                                                <th style="font-size:13px; text-align:center">Bank Payment</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tbodyId">
+                                            @foreach (var item in Model)
+                                            {
+                                                if (item.TrGroup == "2")
+                                                {
+                                                    cPayCash += Convert.ToDecimal(item.Cash);
+                                                    cPayBank += Convert.ToDecimal(item.Bank);
+                                                    var trDate = item.TrDate.ToString("dd/MM/yyyy");
+                                                    <tr>
+                                                        <td style="text-align:left; font-size:12px">
+                                                            @Html.DisplayFor(modelItem => trDate)
+                                                        </td>
+                                                        <td style="text-align:left; font-size:12px">
+                                                            @Html.DisplayFor(modelItem => item.TrNo)
+                                                        </td>
+                                                        <td style="text-align:left; font-size:12px">
+                                                            @Html.DisplayFor(modelItem => item.ca_bk_op)
+                                                        </td>
+                                                        <td style="text-align:left; font-size:12px">
+                                                            @Html.DisplayFor(modelItem => item.Narration)
+                                                        </td>
+                                                        <td style="text-align:left; font-size:12px">
+                                                            @Html.DisplayFor(modelItem => item.Cash)
+                                                        </td>
+                                                        <td style="text-align:right; font-size:12px">
+                                                            @Html.DisplayFor(modelItem => item.Bank)
+                                                        </td>
+                                                    </tr>
+
+                                                }
+
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <hr />
+                        @*<div class="col-md-12" style="margin-left:395px; margin-top:10px">
+                                <div class="col-md-6">
+                                    <label class="col-md-4 control-label">Total Payment: </label>
+                                    <div class="form-group col-md-7">
+                                        <div class="input-group form-group col-md-7">
+                                            <input type="text" class="form-control" id="tPayAmount" style="text-align:right" value="@tPayCash" disabled="disabled">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>*@
+                        <div class="col-md-12" style="margin-left:150px; margin-top:10px">
+                            <div class="col-md-4">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="col-md-7 control-label">Total Payment: </label>
+                                @*<div class="form-group col-md-7">*@
+                                <div class="input-group form-group col-md-5">
+                                    <input type="text" class="form-control" id="tPayAmount" style="text-align:right" value="@cPayCash" disabled="disabled">
+                                </div>
+                                @*</div>*@
+                            </div>
+                            <div class="col-md-4">
+                                @*<div class="form-group col-md-7">*@
+                                <div class="input-group form-group col-md-5">
+                                    <input type="text" class="form-control" id="tPayAmount" style="text-align:right" value="@cPayBank" disabled="disabled">
+                                </div>
+                                @*</div>*@
+                            </div>
+                        </div>
+
+                        @*bank 3*@
+                        <div class="column">
+                            <div class="col-md-12">
+                                <div class="panel panel-color panel-primary">
+
+                                    <div class="panel-body">
+                                        <div class="row col-md-12" style="margin-left:88px">
+                                            <div class="row">
+                                                <div class="col-md-11">
+                                                    <br />
+                                                    <br />
+
+
+
+
+                                                    @foreach (var item in Model)
+                                                    {
+                                                        if (item.TrGroup == "3")
+                                                        {
+                                                            cCash += Convert.ToDecimal(item.Cash);
+                                                            cBank += Convert.ToDecimal(item.Bank);
+
+                                                            <div class="col-md-12" style="margin-left:130px; margin-top:10px">
+                                                                <div class="col-md-4">
+                                                                </div>
+                                                                <div class="col-md-4">
+                                                                    <label class="col-md-7 control-label">@Html.DisplayFor(modelItem => item.Narration) </label>
+                                                                    @*<div class="form-group col-md-7">*@
+                                                                    @*<div class="input-group form-group col-md-5">
+                                                                            <input type="text" class="form-control" id="tPayAmount" style="text-align:right" value="@Html.DisplayFor(modelItem => item.Cash)" disabled="disabled">
+
+                                                                        </div>*@
+                                                                    @*</div>*@
+                                                                </div>
+                                                                <div class="col-md-4">
+
+                                                                    @*<div class="form-group col-md-7">*@
+                                                                    <div class="input-group form-group col-md-5">
+                                                                        <input type="text" class="form-control" id="tPayAmount" style="text-align:right" value="@Html.DisplayFor(modelItem => item.Bank)" disabled="disabled">
+
+                                                                    </div>
+                                                                    @*</div>*@
+                                                                </div>
+
+                                                            </div>
+
+
+
+
+                                                            <br />
+
+                                                        }
+
+                                                    }
+
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="column">
+                            <div class="col-md-12">
+                                <div class="panel panel-color panel-primary">
+
+                                    <div class="panel-body">
+                                        <div class="row col-md-12" style="margin-left:88px">
+                                            <div class="row">
+                                                <div class="col-md-11">
+                                                    <br />
+                                                    <br />
+
+
+
+
+                                                    @foreach (var item in Model)
+                                                    {
+                                                        if (item.TrGroup == "4")
+                                                        {
+                                                            TcCash += Convert.ToDecimal(item.Cash);
+                                                            TcBank += Convert.ToDecimal(item.Bank);
+
+                                                            <div class="col-md-12" style="margin-left:140px; margin-top:10px">
+                                                                <div class="col-md-4">
+                                                                </div>
+                                                                <div class="col-md-4">
+                                                                    <label class="col-md-7 control-label">@Html.DisplayFor(modelItem => item.Narration) </label>
+                                                                    @*<div class="form-group col-md-7">*@
+                                                                    <div class="input-group form-group col-md-5">
+                                                                        <input type="text" class="form-control" id="tPayAmount" style="text-align:right" value="@Html.DisplayFor(modelItem => item.Cash)" disabled="disabled">
+
+                                                                    </div>
+                                                                    @*</div>*@
+                                                                </div>
+                                                                <div class="col-md-4">
+
+                                                                    @*<div class="form-group col-md-7">*@
+                                                                    <div class="input-group form-group col-md-5">
+                                                                        <input type="text" class="form-control" id="tPayAmount" style="text-align:right" value="@Html.DisplayFor(modelItem => item.Bank)" disabled="disabled">
+
+                                                                    </div>
+                                                                    @*</div>*@
+                                                                </div>
+                                                            </div>
+
+
+
+
+                                                            <br />
+
+                                                        }
+
+                                                    }
+
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12" style="margin-left:150px; margin-top:10px">
+                            <div class="col-md-4">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="col-md-7 control-label">Closing Balance </label>
+
+                                <div class="input-group form-group col-md-5">
+                                    <input type="text" class="form-control" id="tAmount" style="text-align:right; font-weight:bold" value="@(@TcCash + @cPayCash)" disabled="disabled">
+
+                                </div>
+
+                            </div>
+                            <div class="col-md-4">
+
+
+                                <div class="input-group form-group col-md-5">
+                                    <input type="text" class="form-control" id="tAmount" style="text-align:right; font-weight:bold" value="@(@TcBank + @cPayBank)" disabled="disabled">
+
+                                </div>
+
+                            </div>
+                        </div>
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="column">
+            <div class="col-md-12">
+                <div class="panel panel-color panel-primary">
+                    <div class="panel-body">
+                        @*<div class="col-md-12" style="margin-left:400px">
+                                <div class="col-md-6" style="text-align:end">
+                                    <label class="col-md-4 control-label" style="text-align:right">Closed By : </label>
+                                    <div class="form-group col-md-8">
+                                        <div class="input-group form-group col-md-6">
+                                            <input type="text" class="form-control" id="closingTime" value="@Model.ToList().FirstOrDefault().ClosedBy" disabled="disabled">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>*@
+                        @*<div class="col-md-12" style="margin-left:400px">
+                                <div class="col-md-6" style="text-align:end">
+                                    <label class="col-md-4 control-label" style="text-align:right">Closing Time : </label>
+                                    <div class="form-group col-md-8">
+                                        <div class="input-group form-group col-md-6">
+                                            <input type="text" class="form-control" id="closingTime" value="@Model.ToList().FirstOrDefault().ClosingTime" disabled="disabled">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>*@
+                        <div class="row col-md-12" style="text-align:center">
+                            <input type="submit" value="Preview" class="btn btn-primary" id="preview" style="width:150px;" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+
+@section Scripts{
+    <script src="~/App_Themes/Theme1/plugins/select2/select2.min.js" type="text/javascript"></script>
+    <script src="~/App_Themes/Theme1/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.bootstrap.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.buttons.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/buttons.bootstrap.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/pdfmake.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/vfs_fonts.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/buttons.html5.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/buttons.print.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.fixedHeader.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.keyTable.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.responsive.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/responsive.bootstrap.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.scroller.min.js"></script>
+    <script type="text/javascript" src="../App_Themes/Theme1/plugins/parsleyjs/dist/parsley.min.js"></script>
+    <!-- Datatable init js -->
+    <script src="../App_Themes/Theme1/blue/assets/pages/datatables.init.js"></script>
+
+}
+

@@ -1,0 +1,335 @@
+﻿@model IEnumerable<App.Domain.VM_6P7>
+@{
+    ViewBag.Title = "rptVat6P7Pdf";
+    Layout = null;
+
+    decimal sumTotalValue = 0;
+    var CompInfo = AcclineERP.Models.GetCompanyInfo.GetComInfo();
+    string CompanyAddress = ((CompInfo.Addr1 == null ? string.Empty : CompInfo.Addr1) + (CompInfo.Addr2 == null ? string.Empty : CompInfo.Addr2));
+}
+
+<script src="~/Scripts/jquery-1.9.1.min.js"></script>
+<script src="~/Scripts/Export.js"></script>
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/select2/select2.css" rel="stylesheet" type="text/css" />
+<link href="~/Css/FormDesign.css" rel="stylesheet" />
+
+<style>
+    tr {
+        page-break-inside: avoid;
+        width: 100%;
+    }
+
+
+    .trstyle {
+        font: 13px !important;
+        font-weight: bold !important;
+    }
+
+    body {
+        padding-right: 0px;
+        font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+    }
+
+    .border {
+        color: #335; /* Lighten up font color */
+        font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+        font-weight: 300;
+        border-collapse: collapse;
+        border-spacing: 0;
+    }
+
+    text {
+        font-size: 14px !important;
+        font-weight: bold !important;
+    }
+
+    .tds {
+        /*border: 1px solid black;*/
+        font-weight: 500;
+        font-family: Arial;
+        border-right: hidden !important;
+    }
+    /* Make cells a bit taller */
+    .ths {
+        /*border: 1px solid black;*/
+        font-weight: 500;
+        font-family: Arial;
+    }
+
+    .th {
+        background: #F3F3F3; /* Light grey background */
+        font-weight: bold; /* Make sure they're bold */
+    }
+
+    .td {
+        background: #FAFAFA; /* Lighter grey background */
+        text-align: center; /* Center our text */
+    }
+
+    .breakhere {
+        page-break-after: always;
+    }
+</style>
+
+<div id="toReport" class="panel-body" style=" text-align: center !important;margin:initial; width: 100%;padding:10px; height: 100%;  ">
+    <div class="panel-body">
+
+        <div style=" text-align :center !important;font-size:15px; font-weight: bold;border:1px solid ;border-bottom:0!important">
+
+
+            গণপ্রজাতন্ত্রী বাংলাদেশ সরকার জাতীয় রাজস্ব বোর্ড <br>
+
+
+            মূসক-৬.৭<br>
+
+
+
+            ক্রেডিট নোট  [বিধি ৪০ এর উপ-বিধি (১) এর দফা ( ছ ) দৃষ্টব্য]
+
+
+        </div>
+
+        <div style=" text-align :center !important;font-size:15px; font-weight: bold;border:1px solid ;border-top:0!important">
+            <table cellpadding="1" cellspacing="1" rules=all style="border:0px;margin: 0px; padding: 5px;width:100%" ;>
+                <thead style=" overflow: visible !important;">
+
+
+
+                    <tr>
+                        <th style="font-size: 14px;  border: 0 !important; text-align: left; ">
+                            ফেরত প্রদানকারী ব্যক্তির নাম :
+                            @Model.Select(s => s.ReturnTo).FirstOrDefault()<br />
+                            বিআইএন  : @Model.Select(s => s.ReturnToBIN).FirstOrDefault()<br />
+                            মূল চালান নম্বর :@Model.Select(s => s.OrigChallanNo).FirstOrDefault() <br />
+                            মূল চালান ইস্যুর তারিখ :@Model.Select(s => s.OrigChallanDate.ToShortDateString()).FirstOrDefault()
+                        </th>
+                        <td style="border: 0" ;></td>
+                        <td style="border: 0" ;></td>
+                        <td style="border: 0" ;></td>
+                        <td style="border: 0" ;></td>
+                        <th style="font-size: 14px; text-align:left;  border: 0 !important">
+                            ফেরত গ্রহণকারী ব্যক্তির নাম :@Model.Select(s => s.ReturnFrom).FirstOrDefault()<br />
+                            বিআইএন  :@Model.Select(s => s.ReturnFromBIN).FirstOrDefault()<br />
+                            ক্রেডিট নোট নম্বর :@Model.Select(s => s.CrNoteNo).FirstOrDefault()<br />
+                            ইস্যুর তারিখ :@Model.Select(s => s.CrNoteDate.ToShortDateString()).FirstOrDefault()<br />
+                        </th>
+                    </tr>
+
+
+
+                    <tr>
+                        @*<th style ="border: 0 !important"></th>
+                        <th style="border: 0 !important"></th>*@
+
+                        <th style="font-size: 16px; border: 0 !important; text-align: center; " colspan="6">
+                            সরবরাহের বিবরণ
+                        </th>
+                    </tr>
+
+                    <tr>
+                        <th style="  font-size: 14px; vertical-align: top;border-left:0px!important; text-align: center">ক্রমিক নং </th>
+                        <th style=" font-size: 14px; vertical-align: top; text-align: center">ফেরতপ্রাপ্ত সরবরাহের বিবরণ : </th>
+                        <th style=" font-size: 14px; vertical-align: top; text-align: center">সরবরাহের একক :</th>
+                        <th style=" font-size: 14px; vertical-align: top; text-align: center">পরিমান :</th>
+                        <th style=" font-size: 14px; vertical-align: top; text-align: center">একক মূল্য (টাকায়) :</th>
+                        <th style=" font-size: 14px; border-right:0px!important; vertical-align: top; text-align: center">মোট মূল্য (টাকায়):</th>
+
+                    </tr>
+                </thead>
+                <tbody id="tbodyId">
+                    @foreach (var item in Model)
+                    {
+
+
+                        sumTotalValue = sumTotalValue + item.TotalValue;
+
+                        <tr>
+                            <td style=" text-align:left;border-left:0px!important; font-size:12px">
+                                @Html.DisplayFor(modelItem => item.SerialNo)
+                            </td>
+                            <td style=" text-align:left; font-size:12px">
+
+                                @Html.DisplayFor(modelItem => item.ItemName)
+                            </td>
+                            <td style=" text-align:left; font-size:12px;">
+                                @Html.DisplayFor(modelItem => item.UnitIn)
+                            </td>
+                            <td style=" text-align:right; font-size:12px">
+                                @Html.DisplayFor(modelItem => item.ReturnQty)
+                            </td>
+                            <td style=" text-align:right; font-size:12px">
+                                @Html.DisplayFor(modelItem => item.UPriceIncVatSD)
+                            </td>
+                            <td style=" text-align:right;border-right:0px!important;  font-size:12px">
+                                @Html.DisplayFor(modelItem => item.TotalValue)
+                            </td>
+                        </tr>
+
+
+                    }
+
+
+                    <tr>
+
+
+                        <th style="font-size: 13px;  border:0; text-align: center;"></th>
+                        <th style="font-size: 13px;  border:0; text-align: center;"></th>
+                        <th style="font-size: 13px;  border:0; text-align: center;"></th>
+                        <th style="font-size: 13px;  border:0; text-align: center;"></th>
+                        <th style=" text-align:left; border: 0;">মোট মূল্য :</th>
+                        <th style="font-size: 13px; border-right:0px!important;  text-align: center;">@sumTotalValue</th>
+                    </tr>
+
+                    <tr>
+
+                        <th style="font-size: 13px;  border:0; text-align: center;"></th>
+                        <th style="font-size: 13px;  border:0; text-align: center;"></th>
+                        <th style="font-size: 13px;  border:0; text-align: center;"></th>
+                        <th style="font-size: 13px;  border:0; text-align: center;"></th>
+                        <th style="font-size: 13px;  border:0; text-align: left;">বাদ কর্তন :</th>
+                        <th style="font-size: 13px;border-right:0px!important;  text-align: center;">@Model.Select(s => s.DeductAmount).FirstOrDefault()</th>
+
+                    </tr>
+
+                    <tr>
+
+
+                        <th style="font-size: 13px;  border:0; text-align: center;"></th>
+                        <th style="font-size: 13px;  border:0; text-align: center;"></th>
+                        <th style="font-size: 13px;  border:0; text-align: center;"></th>
+                        <th style="font-size: 13px;  border:0; text-align: center;"></th>
+                        <th style="font-size: 13px;  border:0; text-align: left;">মূসকসহ মূল্য:</th>
+                        <th style="font-size: 13px;border-right:0px!important;   text-align: center;">@Model.Select(s => s.AmtInclVAT).FirstOrDefault()</th>
+
+                    </tr>
+
+                    <tr>
+                        <th style="font-size: 13px;  border:0; text-align: center;"></th>
+                        <th style="font-size: 13px;  border:0; text-align: center;"></th>
+                        <th style="font-size: 13px;  border:0; text-align: center;"></th>
+                        <th style="font-size: 13px;  border:0; text-align: center;"></th>
+                        <th style="font-size: 13px;  border:0; text-align: left;">মূসকের পরিমান :</th>
+                        <th style="font-size: 13px; border-right:0px!important;  text-align: center;">@Model.Select(s => s.VATAmount).FirstOrDefault()</th>
+
+                    </tr>
+
+                    <tr>
+
+
+                        <th style="font-size: 13px;  border:0; text-align: center;"></th>
+                        <th style="font-size: 13px;  border:0; text-align: center;"></th>
+                        <th style="font-size: 13px;  border:0; text-align: center;"></th>
+                        <th style="font-size: 13px;  border:0; text-align: center;"></th>
+                        <th style="font-size: 13px;  border:0; text-align: left;">সম্পূরক শুল্কের পরিমান :</th>
+                        <th style="font-size: 13px; border-right:0px!important;  text-align: center;">@Model.Select(s => s.SDAmount).FirstOrDefault()</th>
+                    </tr>
+
+                    <tr>
+
+                        <th style="font-size: 13px;  border:0; text-align: center;"></th>
+                        <th style="font-size: 13px;  border:0; text-align: center;"></th>
+                        <th style="font-size: 13px;  border:0; text-align: center;"></th>
+                        <th style="font-size: 13px;  border:0; text-align: center;"></th>
+                        <th style="font-size: 13px;  border:1px; text-align: left;">মোট কর : </th>
+                        <th style="font-size: 13px;border-right:0px!important;  border-bottom:1px!important; text-align: center;">@Model.Select(s => s.TotTaxAmt).FirstOrDefault()</th>
+
+                    </tr>
+
+
+
+                    <tr>
+
+                        <th style="font-size: 13px;  border:0; text-align: center;"></th>
+                        <th style="font-size: 13px;  border:0; text-align: center;"></th>
+                        <th style="font-size: 13px;  border:0; text-align: center;"></th>
+                        <th style="font-size: 13px;  border:0; text-align: center;"></th>
+                        <th style="font-size: 13px;  border:1px; text-align: left;"></th>
+                        <th style="font-size: 13px; border-bottom:1px!important; text-align: center;"></th>
+
+                    </tr>
+                </tbody>
+
+            </table>
+
+            <table>
+                <tr>
+                    <th style="font-size: 14px;  border-left:0;border-bottom: 0; border-top: 0; text-align: left; " colspan="27"><br /><br />ফেরতের কারণ </th>
+
+                </tr>
+                <tr>
+                    <th style="font-size: 14px;border:1px solid !important ; text-align:center ;padding:10px ">@Model.Select(s => s.ReturnReason).FirstOrDefault()</th>
+
+                </tr>
+
+                <tr>
+                    <th style="font-size: 14px; border-left:0; border-bottom: 0; border-top: 0; text-align: left; " colspan="27"><br /><br />দায়িত্বপ্রাপ্ত ব্যক্তির স্বাক্ষর</th>
+                </tr>
+                <tr>
+                    <th style="font-size: 14px; border-bottom: 0; border-top: 0; text-align: left; " colspan="27">১ প্রতি একক পণ্য /সেবার মূসক ও সম্পূরক শুল্কসহ মূল্য ।</th>
+                </tr>
+
+                <tr>
+                    <th style="font-size: 14px; border-left:0; border-bottom: 0; border-top: 0; text-align: left; " colspan="27">২ ফেরত প্রদানের জন্য কোনো ধরণের কর্তন থাকিলে উহার পরিমান । </th>
+                </tr>
+
+                <tr>
+                    <th style="font-size: 14px;  border-left:0;border-bottom: 0; border-top: 0; text-align: left; " colspan="27">৩ মূসক ও সম্পূরক শুল্কের যোগফল ।</th>
+                </tr>
+
+            </table>
+        </div>
+    </div>
+    <p></p>
+</div>
+
+
+<script type="text/javascript">
+
+    window.onload = function () {
+        //document.getElementById("toReport").style.display = "none";
+        self.print();
+        self.close();        
+    }
+    
+</script>
+
+<script>
+    var message = "";
+    ///////////////////////////////////
+    function clickIE() {
+        if (document.all) {
+            (message);
+            return false;
+        }
+    }
+
+    function clickNS(e) {
+        if (document.layers || (document.getElementById && !document.all)) {
+            if (e.which == 2 || e.which == 3) {
+                (message);
+                return false;
+            }
+        }
+    }
+    if (document.layers) {
+        document.captureEvents(Event.MOUSEDOWN);
+        document.onmousedown = clickNS;
+    } else {
+        document.onmouseup = clickNS;
+        document.oncontextmenu = clickIE;
+    }
+    //$("toReport").keydown(false);
+    
+    document.oncontextmenu = new Function("return false")
+</script>
+
+
+
+
+
+
+
+

@@ -1,0 +1,110 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="~/Images/Basic/logo.gif">
+    <title>@ViewBag.Title - Post Office</title>
+
+    @*@Scripts.Render("~/App_Themes/Theme1/blue/assets/js/jquery.min.js")*@
+    @Scripts.Render("~/Scripts/jq.js")
+
+    @*@Scripts.Render("~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.js")*@
+    <link href="../../App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+    <link href="../../App_Themes/Theme1/plugins/datatables/buttons.bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="../../App_Themes/Theme1/plugins/datatables/fixedHeader.bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="../../App_Themes/Theme1/plugins/datatables/responsive.bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="../../App_Themes/Theme1/plugins/datatables/scroller.bootstrap.min.css" rel="stylesheet" type="text/css" />
+
+    <link href="../../App_Themes/Theme1/blue/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="~/App_Themes/Theme1/plugins/switchery/switchery.min.css" rel="stylesheet" />
+    <link href="../../App_Themes/Theme1/plugins/jquery-circliful/css/jquery.circliful.css" rel="stylesheet" type="text/css" />
+    <!--<link href="~/App_Themes/Theme1/blue/assets/css/bootstrap.min.css" rel="stylesheet" />-->
+
+    <link href="../../App_Themes/Theme1/blue/assets/css/core.css" rel="stylesheet" type="text/css">
+    <link href="../../App_Themes/Theme1/blue/assets/css/icons.css" rel="stylesheet" type="text/css">
+    <link href="~/App_Themes/Theme1/blue/assets/css/components.css" rel="stylesheet" type="text/css">
+    <link href="../../App_Themes/Theme1/blue/assets/css/pages.css" rel="stylesheet" type="text/css">
+    <link href="../../App_Themes/Theme1/blue/assets/css/menu.css" rel="stylesheet" type="text/css">
+    <link href="../../App_Themes/Theme1/blue/assets/css/responsive.css" rel="stylesheet" type="text/css">
+    <script src="~/App_Themes/Theme1/blue/assets/js/modernizr.min.js"></script>
+
+
+</head>
+<body class="fixed-left">
+
+    <div id="wrapper">
+
+        <!-- Top Bar Start -->
+        <div class="topbar">
+            <!-- LOGO -->
+            <div class="topbar-left">
+                <div class="text-center">
+                    <a href="" class="logo"><i class="md md-equalizer"></i> <span>Post Office</span> </a>
+                </div>
+            </div>
+            <!-- Navbar -->
+            <div class="navbar navbar-default" role="navigation">
+                <div class="container">
+                    <div class="">
+                        <div class="pull-left">
+                           
+                            <span class="clearfix"></span>
+                        </div>
+                        <form role="search" class="navbar-left app-search pull-left hidden-xs">
+                           
+                        </form>
+
+                    </div>
+                    <!--/.nav-collapse -->
+                </div>
+            </div>
+        </div>
+        <!-- Top Bar End -->
+        <!-- ========== Left Sidebar Start ========== -->
+     
+        <!-- Left Sidebar End -->
+        <!-- ============================================================== -->
+        <!-- Start right Content here -->
+        <!-- ============================================================== -->
+
+        <div class="content-page">
+            <div class="content">
+                <div class="container">
+                    @RenderBody()
+                </div>
+            </div>
+
+
+            <footer class="footer text-right">
+                <p>&copy; @DateTime.Now.Year - Data Head Private Limited</p>
+            </footer>
+        </div>
+
+
+
+        <!-- /Right-bar -->
+    </div>
+
+    @RenderSection("scripts", required: false)
+    <script>
+        var resizefunc = [];
+    </script>
+    <!-- Plugins -->
+    @Scripts.Render("~/App_Themes/Theme1/blue/assets/js/bootstrap.min.js")
+
+    @Scripts.Render("~/App_Themes/Theme1/blue/assets/js/fastclick.js ")
+
+    @Scripts.Render("~/App_Themes/Theme1/blue/assets/js/wow.min.js ")
+
+
+    @Scripts.Render("~/App_Themes/Theme1/plugins/moment/moment.js")
+
+    @Scripts.Render("~/App_Themes/Theme1/plugins/parsleyjs/dist/parsley.min.js")
+
+
+    @Scripts.Render("~/App_Themes/Theme1/blue/assets/js/jquery.core.js ")
+    @Scripts.Render("~/App_Themes/Theme1/blue/assets/js/jquery.app.js ")
+
+</body>
+</html>

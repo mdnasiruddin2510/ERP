@@ -1,0 +1,891 @@
+﻿@model App.Domain.ViewModel.Part1Part2Model
+@{
+    ViewBag.Title = "TransWiseVat6P9P1_1RptPdf";
+    Layout = null;
+    var CompInfo = AcclineERP.Models.GetCompanyInfo.GetComInfo();
+    string CompanyAddress = ((CompInfo.Addr1 == null ? string.Empty : CompInfo.Addr1) + (CompInfo.Addr2 == null ? string.Empty : CompInfo.Addr2));
+    
+}
+<script src="~/Scripts/jquery-1.9.1.min.js"></script>
+<script src="~/Scripts/Export.js"></script>
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/select2/select2.css" rel="stylesheet" type="text/css" />
+<link href="~/Css/FormDesign.css" rel="stylesheet" />
+
+<style>
+
+     tr {
+        page-break-inside: avoid;
+    }
+
+    body {
+        padding-right: 0px;
+        font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+    }
+
+    .border {
+        color: #335; /* Lighten up font color */
+        font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+        font-weight: 300;
+        border-collapse: collapse;
+        border-spacing: 0;
+    }
+
+    .tds {
+        /*border: 1px solid black;*/
+        font-weight: 500;
+        font-family: Arial;
+        border-right: hidden !important;
+    }
+    /* Make cells a bit taller */
+    .ths {
+        /*border: 1px solid black;*/
+        font-weight: 500;
+        font-family: Arial;
+    }
+
+    .th {
+        background: #F3F3F3; /* Light grey background */
+        font-weight: bold; /* Make sure they're bold */
+    }
+
+    .td {
+        background: #FAFAFA; /* Lighter grey background */
+        text-align: center; /* Center our text */
+    }
+
+    .breakhere {
+        page-break-after: always;
+    }
+
+    #table {
+        max-width: 2480px;
+        width: 100%;
+    }
+
+        #table td {
+            width: auto;
+            overflow: hidden;
+            word-wrap: break-word;
+            font-weight: normal;
+        }
+</style>
+
+
+<div id="toReport" class="panel-body" style=" text-align: center !important; width: 100%; height: 100%; ">
+    <div align="center" class="panel-body">
+        <table border="1" cellpadding="0" cellspacing="0" id="table" rules=all style="width: 650px; margin: 0px; padding: 0">
+            <thead style=" overflow: visible !important;">
+                <tr>
+                    <th style="font-size: 13px; border-bottom: 0; border-top: 0; text-align: right; " colspan="27">মূসক- ৯.১</th>
+                </tr>
+                <tr>
+                    <th style=" font-size: 13px; font-weight: bold; text-align: center" colspan="27" bgcolor="#F2CA91">অংশ-১ : করদাতার তথ্য</th>
+                </tr>
+            </thead>
+            <tbody id="tbodyId">
+
+                @if (Model.P1_1PArt1.Count() != 0)
+                {
+                    foreach (var part1Item in Model.P1_1PArt1)
+                    {
+                <tr>
+                    <td style=" text-align:left; font-size:12px">(১) ব্যাবসায় সনাক্তকরণ সংখ্যা</td>
+                    <td style=" text-align: center">:</td>
+                    <td>@Html.DisplayFor(modelItem => part1Item.TP_BIN)</td>
+                </tr>
+                <tr>
+                    <td style=" text-align:left; font-size:12px">(২) করদাতার নাম </td>
+                    <td style=" text-align: center">:</td>
+                    <td>@Html.DisplayFor(modelItem => part1Item.TP_Name)</td>
+                </tr>
+                <tr>
+                    <td style=" text-align:left; font-size:12px">(৩) করদাতার ঠিকানা </td>
+                    <td style=" text-align: center">:</td>
+                    <td>@Html.DisplayFor(modelItem => part1Item.TP_Addr)</td>
+                </tr>
+                <tr>
+                    <td style=" text-align:left; font-size:12px">(৪) ব্যাবসার প্রকৃতি </td>
+                    <td style=" text-align: center">:</td>
+                    <td>@Html.DisplayFor(modelItem => part1Item.TP_Nat)</td>
+                </tr>
+                <tr>
+                    <td style=" text-align:left; font-size:12px">(৫) অথনতিক  কার্যক্রম এর প্রকৃতি  </td>
+                    <td style=" text-align: center">:</td>
+                    <td>@Html.DisplayFor(modelItem => part1Item.TP_FA_Nat)</td>
+                </tr>
+                    }
+                }
+            </tbody>
+        </table>
+        <br />
+        <table border="1" cellpadding="0" cellspacing="0" id="table" rules=all style="width: 650px; margin: 0px; padding: 0">
+            <thead style=" overflow: visible !important;">
+                <tr>
+                    <th style=" font-size: 13px; font-weight: bold; text-align: center" colspan="27" bgcolor="#F2CA91">অংশ-২ : দাখিলপত্র জমার তথ্য</th>
+                </tr>
+            </thead>
+            <tbody id="tbodyId">
+                @if (Model.P1_1PArt2.Count() != 0)
+                {
+                    foreach (var part2Item in Model.P1_1PArt2)
+                    {
+                        DateTime dt = Convert.ToDateTime(part2Item.Submmit_Dt);
+                        string s2 = dt.ToString("dd/MM/yyyy");
+                <tr>
+                    <td style=" text-align:left; font-size:12px">(১) কর মেয়াদ </td>
+                    <td>:</td>
+                    <td>@Html.DisplayFor(modelItem => part2Item.TD_Mon) / @Html.DisplayFor(modelItem => part2Item.TD_Yr) </td>
+                </tr>
+                <tr>
+                    @*@Html.CheckBoxFor(m => m[i].Accepted)*@
+                    <td style=" text-align:left; font-size:12px">(২) দাখিলপত্রের প্রকার [অনুগ্রহ করিয়া প্রযোজ্যটিতে টিক দিন]</td>
+                    <td>:</td>
+                    <td>
+                        (ক) মূল দাখিলপত্র (ধারা ৬৪) @if (part2Item.MR_Type == 64)
+                                {<input type="checkbox" id="chk64" checked="checked" />}
+                                else
+                                {<input type="checkbox" id="chk64" />}<br /> (খ) সংশোধিত দাখিলপত্র (ধারা ৬৬)    @if (part2Item.MR_Type == 66)
+                                {<input type="checkbox" id="chk66" checked="checked" />}
+                                else
+                                {<input type="checkbox" id="chk66" />}<br /> (গ) পুন্য অতিরিক্ত বা বিকল্প দাখিলপত্র (ধারা ৬৭)   @if (part2Item.MR_Type == 67)
+                                {<input type="checkbox" id="chk67" checked="checked" />}
+                                else
+                                {<input type="checkbox" id="chk67" />}
+                            <td />
+                        </tr>
+                        <tr>
+                            <td style=" text-align:left; font-size:12px">(৩) বিগত করমেয়াদে কোনো কার্যক্রম সম্পাদিত হইয়াছে কি? </td>
+                            <td>:</td>
+                            <td>
+                                @if (part2Item.Last_TP_Activity == '1')
+                                {<input type="checkbox" id="chk1" checked="checked" />}
+                                else
+                                {<input type="checkbox" id="chk1" />} হ্যা
+                                @if (part2Item.Last_TP_Activity == '2')
+                                {<input type="checkbox" id="chk2" checked="checked" />}
+                                else
+                                {<input type="checkbox" id="chk2" />}না   <br /> যদি না হয় তাহা হইলে অংশ-১,৩ এবং ১১ পূরণ করুন
+                            <td />
+                        </tr>
+                        <tr>
+                            <td style=" text-align:left; font-size:12px">(৪) পেশের তারিখ </td>
+                            <td>:</td>
+                            <td> @s2
+                            <td />
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+        <br />
+        <table border="1" cellpadding="0" cellspacing="0" id="table" rules=all style="width: 650px; margin: 0px; padding: 0">
+            <thead style=" overflow: visible !important;">
+                <tr>
+                    <th style=" font-size: 13px; font-weight: bold; text-align: center" colspan="27" bgcolor="#F2CA91">অংশ ৩: সরবরাহ প্রদান - প্রদেয় কর</th>
+                </tr>
+                <tr bgcolor="#aeaca9">
+                    <th style=" width: 25px; font-size: 14px; vertical-align: top; text-align: center" colspan=2>সরবরাহের প্রকৃতি </th>
+                    <th style=" width: 80px; font-size: 14px; vertical-align: top; text-align: center">নোট</th>
+                    <th style=" width: 90px; font-size: 14px; vertical-align: top; text-align: center">মূল্য (ক)</th>
+                    <th style=" width: 90px; font-size: 14px; vertical-align: top; text-align: center">এসডি (খ)</th>
+                    <th style=" width: 90px; font-size: 14px; vertical-align: top; text-align: center">মূসক (গ)</th>
+                </tr>
+            </thead>
+            <tbody id="tbodyId">
+                @if (Model.P1_1PArt3.Count() != 0)
+                {
+                    foreach (var part3Item in Model.P1_1PArt3)
+                    {
+                        var total = part3Item.D_Z_DExp_Val + part3Item.D_Z_IDExp_Val + part3Item.D_Ex_Val +
+                                    part3Item.D_Ideal_Val + part3Item.D_MRP_Val + part3Item.D_Fixed_Val + part3Item.D_NIdeal_Val +
+                                    part3Item.D_Ret_WS_Trade_Val;
+
+                        var total2 = part3Item.D_Z_DExp_SD + part3Item.D_Z_IDExp_SD + part3Item.D_Ex_SD +
+                            part3Item.D_Ideal_SD + part3Item.D_MRP_SD + part3Item.D_Fixed_SD + part3Item.D_NIdeal_SD +
+                            part3Item.D_Ret_WS_Trade_SD;
+
+                        var total3 = part3Item.D_Z_DExp_Vat + part3Item.D_Z_IDExp_Vat + part3Item.D_Ex_Vat +
+                            part3Item.D_Ideal_Vat + part3Item.D_MRP_Vat + part3Item.D_FR_Vat + part3Item.D_NIdeal_Vat +
+                            part3Item.D_Ret_WS_Trade_Vat;
+                        <tr>
+                            <td style="text-align:left; font-size:12px" rowspan="2">শূন্যহার বিশিষ্ট পণ্য/সেবা</td>
+                            <td style="text-align: center">সরাসরি রপ্তানি</td>
+                            <td style="text-align: center">১</td>
+                            <td>@Html.DisplayFor(modelItem => part3Item.D_Z_DExp_Val)</td>
+                            <td>@Html.DisplayFor(modelItem => part3Item.D_Z_DExp_SD)</td>
+                            <td>@Html.DisplayFor(modelItem => part3Item.D_Z_DExp_Vat)</td>
+                            <td style=" text-align: center">সাবফর্ম- ক</td>
+                        </tr>
+                        <tr>
+
+                            <td style="text-align: center">প্রচ্ছন্ন রপ্তানি</td>
+                            <td style="text-align: center">২</td>
+                            <td>@Html.DisplayFor(modelItem => part3Item.D_Z_IDExp_Val)</td>
+                            <td>@Html.DisplayFor(modelItem => part3Item.D_Z_IDExp_SD)</td>
+                            <td>@Html.DisplayFor(modelItem => part3Item.D_Z_IDExp_Vat)</td>
+                            <td style=" text-align: center">সাবফর্ম- ক</td>
+                        </tr>
+                        <tr>
+                            <td style=" text-align:left; font-size:12px" colspan=2>অব্যাহতি প্রাপ্ত পণ্য/সেবা</td>
+                            <td style=" text-align: center">৩</td>
+                            <td>@Html.DisplayFor(modelItem => part3Item.D_Ex_Val)</td>
+                            <td>@Html.DisplayFor(modelItem => part3Item.D_Ex_SD)</td>
+                            <td>@Html.DisplayFor(modelItem => part3Item.D_Ex_Vat)</td>
+                            <td style=" text-align: center">সাবফর্ম- ক</td>
+                        </tr>
+                        <tr>
+                            <td style=" text-align:left; font-size:12px" colspan=2>অদর্শ হারের পণ্য/সেবা</td>
+                            <td style=" text-align: center">৪</td>
+                            <td>@Html.DisplayFor(modelItem => part3Item.D_Ideal_Val)</td>
+                            <td>@Html.DisplayFor(modelItem => part3Item.D_Ideal_SD)</td>
+                            <td>@Html.DisplayFor(modelItem => part3Item.D_Ideal_Vat)</td>
+                            <td style=" text-align: center">সাবফর্ম- ক</td>
+                        </tr>
+                        <tr>
+                            <td style=" text-align:left; font-size:12px" colspan=2>সর্বোচ্চ খুচরা মূল্যভিত্তিক পণ্য</td>
+                            <td style=" text-align: center">৫</td>
+                            <td>@Html.DisplayFor(modelItem => part3Item.D_MRP_Val)</td>
+                            <td>@Html.DisplayFor(modelItem => part3Item.D_MRP_SD)</td>
+                            <td>@Html.DisplayFor(modelItem => part3Item.D_MRP_Vat)</td>
+                            <td style=" text-align: center">সাবফর্ম- ক</td>
+                        </tr>
+                        <tr>
+                            <td style=" text-align:left; font-size:12px" colspan=2>সুনির্দিষ্ট কর ভিত্তিক পণ্য/সেবা</td>
+                            <td style=" text-align: center">৬</td>
+                            <td>@Html.DisplayFor(modelItem => part3Item.D_Fixed_Val)</td>
+                            <td>@Html.DisplayFor(modelItem => part3Item.D_Fixed_SD)</td>
+                            <td>@Html.DisplayFor(modelItem => part3Item.D_FR_Vat)</td>
+                            <td style=" text-align: center">সাবফর্ম- গ</td>
+                        </tr>
+                        <tr>
+                            <td style=" text-align:left; font-size:12px" colspan=2>আদর্শ করহার ব্যতীত ভিন্ন করহার ভিত্তিক পণ্য/সেবা </td>
+                            <td style=" text-align: center">৭</td>
+                            <td>@Html.DisplayFor(modelItem => part3Item.D_NIdeal_Val)</td>
+                            <td>@Html.DisplayFor(modelItem => part3Item.D_NIdeal_SD)</td>
+                            <td>@Html.DisplayFor(modelItem => part3Item.D_NIdeal_Vat)</td>
+                            <td style=" text-align: center">সাবফর্ম- ক</td>
+                        </tr>
+                        <tr>
+                            <td style=" text-align:left; font-size:12px" colspan=2>খুচরা/পাইকারি/ব্যাবসায়ী ভিত্তিক সরবরাহ</td>
+                            <td style=" text-align: center">৮</td>
+                            <td>@Html.DisplayFor(modelItem => part3Item.D_Ret_WS_Trade_Val)</td>
+                            <td>@Html.DisplayFor(modelItem => part3Item.D_Ret_WS_Trade_SD)</td>
+                            <td>@Html.DisplayFor(modelItem => part3Item.D_Ret_WS_Trade_Vat)</td>
+                            <td style=" text-align: center">সাবফর্ম- ক</td>
+                        </tr>
+                        <tr style="font-weight: bold;">
+                            <td style=" text-align: left; font-weight: bold; font-size: 12px" colspan=2>মোট বিক্রয়মূল্য ও মোট পদেও কর</td>
+                            <td style=" font-weight: bold; text-align: center">৯</td>
+                            <td style=" font-weight: bold;">@total</td>
+                            <td style=" font-weight: bold;">@total2</td>
+                            <td style=" font-weight: bold;">@total3</td>
+                        </tr>
+
+                    }
+                }
+            </tbody>
+        </table>
+        <br />
+        <table border="1" cellpadding="0" cellspacing="0" id="table" rules=all style="width: 650px; margin: 0px; padding: 0">
+            <thead style=" overflow: visible !important;">
+                <tr>
+                    <th style=" font-size: 13px; font-weight: bold; text-align: center" colspan="27" bgcolor="#F2CA91">অংশ ৪: উপকরণ কর </th>
+                </tr>
+                <tr>
+                    <th style=" font-size: 13px; font-weight: bold; text-align: left" colspan="27" bgcolor="#F2CA91">(ক) আপনার সরবরাহকৃত সকল পণ্য যদি আদর্শ হারের হয়, সেক্ষেত্রে নোট ১০-২০ পূরণ করুন |<br /> (খ) আপনার সরবরাহকৃত সকল পণ্য যদি আদর্শ হারের না হয়, সেক্ষেত্রে নোট ২১-২২ পূরণ করুন |<br />(গ) আপনার সরবরাহকৃত সকল পণ্য যদি আদর্শ হারের এবং আদর্শহার ব্যাতিত উভয় হয়, সেক্ষেত্রে পণ্য উৎপাদনে উপকরণের ব্যবহার অনুযায়ী উপকরণ মূল্য অনুযায়ী হরে প্রযোজ্যতা অনুযায়ী নোট ১০-২২ পূরণ করুন | </th>
+                </tr>
+            </thead>
+
+            <thead style=" overflow: visible !important;">
+
+                <tr bgcolor="#aeaca9">
+                    <th style="  font-size: 14px; vertical-align: top; text-align: center" colspan=2>ক্রয়ের প্রকৃতি</th>
+                    <th style="  font-size: 14px; vertical-align: top; text-align: center">নোট</th>
+                    <th style=" font-size: 14px; vertical-align: top; text-align: center">মূল্য (ক)</th>
+                    <th style=" font-size: 14px; vertical-align: top; text-align: center">মূসক (খ)</th>
+                </tr>
+            </thead>
+            <tbody id="tbodyId">
+                @if (Model.P1_1PArt4.Count() != 0)
+                {
+                    foreach (var part4Item in Model.P1_1PArt4)
+                    {
+                        var total = part4Item.P_Z_LT_Val + part4Item.P_Z_Im_Val + part4Item.P_Ex_LT_Val + part4Item.P_Ex_Im_Val + part4Item.P_Ideal_LT_Val +
+                                   part4Item.P_Ideal_Im_Val + part4Item.P_NIdeal_LT_Val + part4Item.P_NIdeal_Im_Val + part4Item.P_Fixed_Val + part4Item.P_NEx_TO_Val
+                                   + part4Item.P_NEx_NR_Val + part4Item.P_NEx_LT_Val + part4Item.P_NEx_IM_Val;
+
+                        var total2 = part4Item.P_Z_LT_Vat + part4Item.P_Z_Im_Vat + part4Item.P_Ex_LT_Vat + part4Item.P_Ex_Im_Vat + part4Item.P_Ideal_LT_Vat +
+                            part4Item.P_Ideal_Im_Vat + part4Item.P_NIdeal_LT_Vat + part4Item.P_NIdeal_Im_Vat + part4Item.P_FR_Vat + part4Item.P_NEx_TO_Vat
+                            + part4Item.P_NEx_NR_Vat + part4Item.P_NEx_LT_Vat + part4Item.P_NEx_IM_Vat;
+                        <tr>
+                            <td style="text-align:left; font-size:12px" rowspan="2">শূন্যহার বিশিষ্ট পণ্য/সেবা</td>
+                            <td style="text-align: center">স্থানীয় ক্রয়</td>
+                            <th style="text-align: center">১০</th>
+                            <td>@Html.DisplayFor(modelItem => part4Item.P_Z_LT_Val)</td>
+                            <td>@Html.DisplayFor(modelItem => part4Item.P_Z_LT_Vat)</td>
+                            <td style=" text-align: center">সাবফর্ম- ক</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center">আমদানি</td>
+                            <td style="text-align: center">১১</td>
+                            <td>@Html.DisplayFor(modelItem => part4Item.P_Z_Im_Val)</td>
+                            <td>@Html.DisplayFor(modelItem => part4Item.P_Z_Im_Vat)</td>
+                            <td style=" text-align: center">সাবফর্ম- ক</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:left; font-size:12px" rowspan="2">অব্যাহতি প্রাপ্ত পণ্য/সেবা</td>
+                            <td style="text-align: center">স্থানীয় ক্রয়</td>
+                            <td style="text-align: center">১২</td>
+                            <td>@Html.DisplayFor(modelItem => part4Item.P_Ex_LT_Val)</td>
+                            <td>@Html.DisplayFor(modelItem => part4Item.P_Ex_LT_Vat)</td>
+                            <td style=" text-align: center">সাবফর্ম- ক</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center">আমদানি</td>
+                            <td style="text-align: center">১৩</td>
+                            <td>@Html.DisplayFor(modelItem => part4Item.P_Ex_Im_Val)</td>
+                            <td>@Html.DisplayFor(modelItem => part4Item.P_Ex_Im_Vat)</td>
+                            <td style=" text-align: center">সাবফর্ম- ক</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:left; font-size:12px" rowspan="2">অদর্শ হারের পণ্য/সেবা</td>
+                            <td style="text-align: center">স্থানীয় ক্রয়</td>
+                            <td style="text-align: center">১৪</td>
+                            <td>@Html.DisplayFor(modelItem => part4Item.P_Ideal_LT_Val)</td>
+                            <td>@Html.DisplayFor(modelItem => part4Item.P_Ideal_LT_Vat)</td>
+                            <td style=" text-align: center">সাবফর্ম- ক</td>
+                        </tr>
+                        <tr>
+
+                            <td style="text-align: center">আমদানি</td>
+                            <td style="text-align: center">১৫</td>
+                            <td>@Html.DisplayFor(modelItem => part4Item.P_Ideal_Im_Val)</td>
+                            <td>@Html.DisplayFor(modelItem => part4Item.P_Ideal_Im_Vat)</td>
+                            <td style=" text-align: center">সাবফর্ম- ক</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:left; font-size:12px" rowspan="2">অদর্শ হার ব্যাতিত অন্যান্য হারের পণ্য/সেবা</td>
+                            <td style="text-align: center">স্থানীয় ক্রয়</td>
+                            <td style="text-align: center">১৬</td>
+                            <td>@Html.DisplayFor(modelItem => part4Item.P_NIdeal_LT_Val)</td>
+                            <td>@Html.DisplayFor(modelItem => part4Item.P_NIdeal_LT_Vat)</td>
+                            <td style=" text-align: center">সাবফর্ম- ক</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center">আমদানি</td>
+                            <td style="text-align: center">১৭</td>
+                            <td>@Html.DisplayFor(modelItem => part4Item.P_NIdeal_Im_Val)</td>
+                            <td>@Html.DisplayFor(modelItem => part4Item.P_NIdeal_Im_Vat)</td>
+                            <td style=" text-align: center">সাবফর্ম- ক</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:left; font-size:12px">সুনির্দিষ্ট কর ভিত্তিক পণ্য/সেবা</td>
+                            <td style="text-align: center">স্থানীয় ক্রয়</td>
+                            <td style="text-align: center">১৮</td>
+                            <td>@Html.DisplayFor(modelItem => part4Item.P_Fixed_Val)</td>
+                            <td>@Html.DisplayFor(modelItem => part4Item.P_FR_Vat)</td>
+                            <td style=" text-align: center">সাবফর্ম- ক</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:left; font-size:12px" rowspan="2">রেয়াতযোগ্য  নয় এরুপ পণ্য/সেবা (স্থানীয় ক্রয়)</td>
+                            <td style="text-align: center">টার্নওভার প্রতিষ্ঠান হইতে</td>
+                            <td style="text-align: center">১৯</td>
+                            <td>@Html.DisplayFor(modelItem => part4Item.P_NEx_TO_Val)</td>
+                            <td>@Html.DisplayFor(modelItem => part4Item.P_NEx_TO_Vat)</td>
+                            <td style=" text-align: center">সাবফর্ম- ক</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center">অনিবন্ধিত প্রতিষ্ঠান হইতে</td>
+                            <td style="text-align: center">২০</td>
+                            <td>@Html.DisplayFor(modelItem => part4Item.P_NEx_NR_Val)</td>
+                            <td>@Html.DisplayFor(modelItem => part4Item.P_NEx_NR_Vat)</td>
+                            <td style=" text-align: center">সাবফর্ম- ক</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:left; font-size:12px" rowspan="2">রেয়াতযোগ্য  নয় এরুপ পণ্য/সেবা (যে সকল করদাতা শুধুমাত্র অব্যাহতিপ্রাপ্ত/সুনিদিষ্ট কর/আদর্শ হার ব্যাতিত অন্নান্য হারের পণ্য/সেবা সরবরাহ করেন)</td>
+                            <td style="text-align: center">স্থানীয় ক্রয়</td>
+                            <td style="text-align: center">২১</td>
+                            <td>@Html.DisplayFor(modelItem => part4Item.P_NEx_LT_Val)</td>
+                            <td>@Html.DisplayFor(modelItem => part4Item.P_NEx_LT_Vat)</td>
+                            <td style=" text-align: center">সাবফর্ম- ক</td>
+                        </tr>
+                        <tr>
+
+                            <td style="text-align: center">আমদানি</td>
+                            <td style="text-align: center">২২</td>
+                            <td>@Html.DisplayFor(modelItem => part4Item.P_NEx_IM_Val)</td>
+                            <td>@Html.DisplayFor(modelItem => part4Item.P_NEx_IM_Vat)</td>
+                            <td style=" width:60px; text-align: center">সাবফর্ম- ক</td>
+                        </tr>
+                        <tr style="font-weight: bold;">
+                            <td style=" text-align:left; font-weight:bold; font-size:12px" colspan=2>মোট উপকরণ কর রেয়াত</td>
+                            <td style=" font-weight: bold; text-align: center">২৩</td>
+                            <td style=" font-weight: bold;">@total</td>
+                            <td style=" font-weight: bold;">@total2</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+        <br />
+        <table border="1" cellpadding="0" cellspacing="0" id="table" rules=all style="width: 650px; margin: 0px; padding: 0">
+            <thead style=" overflow: visible !important;">
+                <tr>
+                    <th style=" font-size: 13px; font-weight: bold; text-align: center" colspan="27" bgcolor="#F2CA91">অংশ-৫: বৃদ্ধিকারী সমন্বয় (মূল্য সংযোজন কর)</th>
+                </tr>
+            </thead>
+            <thead style=" overflow: visible !important;">
+                <tr bgcolor="#aeaca9">
+                    <th style="  font-size: 14px; vertical-align: top; text-align: center">সমন্বয় ঘটনা</th>
+                    <th style="  font-size: 14px; vertical-align: top; text-align: center">নোট</th>
+                    <th style=" font-size: 14px; vertical-align: top; text-align: center">পরিমান</th>
+                </tr>
+            </thead>
+            <tbody id="tbodyId">
+                @if (Model.P1_1PArt5.Count() != 0)
+                {
+                    foreach (var part5Item in Model.P1_1PArt5)
+                    {
+                        var total = part5Item.VDS_Amt + part5Item.Non_Bk_Pay_Amt + part5Item.DN_Amt + part5Item.Other_Adj_Amt;
+                        <tr>
+                            <td style="text-align:left; font-size:12px">সরবরাহ গ্রহীতা কতৃক উৎসে কর্তনের জন্য</td>
+                            <th style="text-align: center">২৪</th>
+                            <td>@Html.DisplayFor(modelItem => part5Item.VDS_Amt)</td>
+                            <td style=" text-align: center">সাবফর্ম- ক</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:left; font-size:12px">ব্যাঙ্কিং চ্যানেলে মূল্য পরিশোধিত হয় নাই এমন সরবরাহের জন্য</td>
+                            <th style="text-align: center">২৫</th>
+                            <td>@Html.DisplayFor(modelItem => part5Item.Non_Bk_Pay_Amt)</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:left; font-size:12px">ডেবিট নোটের জন্য</td>
+                            <th style="text-align: center">২৬</th>
+                            <td>@Html.DisplayFor(modelItem => part5Item.DN_Amt)</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:left; font-size:12px">অন্যকোনো সমন্বয় ঘটনার জন্য(নিচে বর্ণনা করুন)</td>
+                            <th style="text-align: center">২৭</th>
+                            <td>@Html.DisplayFor(modelItem => part5Item.Other_Adj_Amt)</td>
+                        </tr>
+                        <tr style="font-weight: bold;">
+                            <td style=" text-align:left; font-weight:bold; font-size:12px">মোতে বৃদ্ধিকারী সমন্বয়</td>
+                            <td style="text-align: center">২৮</td>
+                            <td style=" font-weight: bold;">@total</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+        <br />
+        <table border="1" cellpadding="0" cellspacing="0" id="table" rules=all style="width: 650px; margin: 0px; padding: 0">
+            <thead style=" overflow: visible !important;">
+                <tr>
+                    <th style=" font-size: 13px; font-weight: bold; text-align: center" colspan="27" bgcolor="#F2CA91">অংশ-৬: হ্রাসকারী সমন্বয় (মূল্য সংযোজন কর)</th>
+                </tr>
+            </thead>
+            <thead style=" overflow: visible !important;">
+                <tr bgcolor="#aeaca9">
+                    <th style="  font-size: 14px; vertical-align: top; text-align: center">সমন্বয় ঘটনা</th>
+                    <th style="  font-size: 14px; vertical-align: top; text-align: center">নোট</th>
+                    <th style=" font-size: 14px; vertical-align: top; text-align: center">পরিমান</th>
+                </tr>
+            </thead>
+            <tbody id="tbodyId">
+                @if (Model.P1_1PArt6.Count() != 0)
+                {
+                    foreach (var part6Item in Model.P1_1PArt6)
+                    {
+                        var total = part6Item.Adj_VDS_Deli + part6Item.Adj_AIT_Im_Paid + part6Item.Adj_VAT_Ex_RM_Paid + part6Item.Adj_CN_Issue + part6Item.Other_Adj;
+                        <tr>
+                            <td style="text-align:left; font-size:12px">প্রদত্ত সরবরাহ হইতে উৎসে কর্তনের জন্য</td>
+                            <td style="text-align: center">২৯</td>
+                            <td>@Html.DisplayFor(modelItem => part6Item.Adj_VDS_Deli)</td>
+                            <td style=" text-align: center">সাবফর্ম-ঙ</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:left; font-size:12px">আমদানি পর্যায়ে প্রদেয় আগাম কর</td>
+                            <td style="text-align: center">৩০</td>
+                            <td>@Html.DisplayFor(modelItem => part6Item.Adj_AIT_Im_Paid)</td>
+                            <td style=" text-align: center">সাবফর্ম-চ</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:left; font-size:12px">রপ্তানি পণ্য উৎপাদনে ব্যাবহৃত কাঁচামালের বিপরীতে প্রদেয় মূল্য সংযোজন কর</td>
+                            <td style="text-align: center">৩১</td>
+                            <td>@Html.DisplayFor(modelItem => part6Item.Adj_VAT_Ex_RM_Paid)</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:left; font-size:12px">ক্রেডিট নোট ইস্যুর জন্য</td>
+                            <td style="text-align: center">৩২</td>
+                            <td>@Html.DisplayFor(modelItem => part6Item.Adj_CN_Issue)</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:left; font-size:12px">অন্যকোনো সমন্বয় ঘটনার জন্য(নিচে বর্ণনা করুন)</td>
+                            <td style="text-align: center">৩৩</td>
+                            <td>@Html.DisplayFor(modelItem => part6Item.Other_Adj)</td>
+                        </tr>
+                        <tr style="font-weight: bold;">
+                            <td style=" text-align:left; font-weight:bold; font-size:12px">মোট হ্রাসকারী সমন্বয়</td>
+                            <td style="text-align: center">৩৪</td>
+                            <td style=" font-weight: bold;">@total</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+        <br />
+        <table border="1" cellpadding="0" cellspacing="0" id="table" rules=all style="width: 650px; margin: 0px; padding: 0">
+            <thead style=" overflow: visible !important;">
+                <tr>
+                    <th style=" font-size: 13px; font-weight: bold; text-align: center" colspan="27" bgcolor="#F2CA91">অংশ-৭: নীট কর হিসাব</th>
+                </tr>
+            </thead>
+            <thead style=" overflow: visible !important;">
+                <tr bgcolor="#aeaca9">
+                    <th style="  font-size: 14px; vertical-align: top; text-align: center">আইটেম</th>
+                    <th style="  font-size: 14px; vertical-align: top; text-align: center">নোট</th>
+                    <th style=" font-size: 14px; vertical-align: top; text-align: center">পরিমান</th>
+                </tr>
+            </thead>
+            <tbody id="tbodyId">
+                @if (Model.P1_1PArt7.Count() != 0)
+                {
+                    foreach (var part7Item in Model.P1_1PArt7)
+                    {
+                <tr>
+                    <td style="text-align:left; font-size:12px">বর্তমান করমেয়াদ প্রদেয় মোট মূসক (সমাপনী জের এর সহিত সমন্বয় ব্যাতীত) (৯গ -২৩খ+২৮-৩৪)</td>
+                    <td style="text-align: center">৩৫</td>
+                    <td>@Html.DisplayFor(modelItem => part7Item.Curr_TD_Incrd_WO_CBAdj_VAT)</td>
+                </tr>
+                <tr>
+                    <td style="text-align:left; font-size:12px">সমাপনী জের এর সহিত সমন্বয়ের পর বর্তমান করমেয়াদে প্রদেয় মোট মূসক (৩৫-৫০)</td>
+                    <td style="text-align: center">৩৬</td>
+                    <td>@Html.DisplayFor(modelItem => part7Item.Curr_TD_Incrd_CBAdj_VAT)</td>
+                </tr>
+                <tr>
+                    <td style="text-align:left; font-size:12px">বর্তমান করমেয়াদ প্রদেয় মোট সম্পূরক শুল্ক (সমাপনী জের এর সহিত সমন্বয় ব্যাতীত)(৯খ+ ৩৯-৪০-৪১)</td>
+                    <td style="text-align: center">৩৭</td>
+                    <td>@Html.DisplayFor(modelItem => part7Item.Curr_TD_Incrd_Tot_WO_CBAdj_SD)</td>
+                </tr>
+                <tr>
+                    <td style="text-align:left; font-size:12px">সমাপনী জের এর সহিত সমন্বয়ের পর বর্তমান করমেয়াদে প্রদেয় মোট সম্পূরক শুল্ক  (৩৭-৫১)</td>
+                    <td style="text-align: center">৩৮</td>
+                    <td>@Html.DisplayFor(modelItem => part7Item.Curr_TD_Incrd_Tot_CBAdj_SD)</td>
+                </tr>
+                <tr>
+                    <td style="text-align:left; font-size:12px">ডেবিট নোট ইস্যুর জন্য সমন্বয়কৃত সম্পূরক শুল্ক</td>
+                    <td style="text-align: center">৩৯</td>
+                    <td>@Html.DisplayFor(modelItem => part7Item.DN_Adjd_SD)</td>
+                </tr>
+                <tr>
+                    <td style="text-align:left; font-size:12px">ক্রেডিট নোট ইস্যুর জন্য সমন্বয়কৃত সম্পূরক শুল্ক</td>
+                    <td style="text-align: center">৪০</td>
+                    <td>@Html.DisplayFor(modelItem => part7Item.CN_Adjd_SD)</td>
+                </tr>
+                <tr>
+                    <td style="text-align:left; font-size:12px">রপ্তানি পণ্য উৎপাদনে ব্যবহৃত কাঁচামালের বিপরীতে প্রদেয় সম্পূরক শুল্ক</td>
+                    <td style="text-align: center">৪১</td>
+                    <td>@Html.DisplayFor(modelItem => part7Item.Ex_RM_Incrd_SD)</td>
+                </tr>
+                <tr>
+                    <td style="text-align:left; font-size:12px">অপরিশোধিত মূসকের জন্য সুদ</td>
+                    <td style="text-align: center">৪২</td>
+                    <td>@Html.DisplayFor(modelItem => part7Item.Int_DueVAT)</td>
+                </tr>
+                <tr>
+                    <td style="text-align:left; font-size:12px">অপরিশোধিত সম্পূরক শুল্ক এর জন্য সুদ</td>
+                    <td style="text-align: center">৪৩</td>
+                    <td>@Html.DisplayFor(modelItem => part7Item.Int_DueSD)</td>
+                </tr>
+                <tr>
+                    <td style="text-align:left; font-size:12px">অর্থদণ্ড ও জরিমানা</td>
+                    <td style="text-align: center">৪৪</td>
+                    <td>@Html.DisplayFor(modelItem => part7Item.FIN_ChrgNComp)</td>
+                </tr>
+                <tr>
+                    <td style="text-align:left; font-size:12px">অবগারি শুল্ক</td>
+                    <td style="text-align: center">৪৫</td>
+                    <td>@Html.DisplayFor(modelItem => part7Item.BR_Tax)</td>
+                </tr>
+                <tr>
+                    <td style="text-align:left; font-size:12px">উন্নয়ন সারচার্জ</td>
+                    <td style="text-align: center">৪৬</td>
+                    <td>@Html.DisplayFor(modelItem => part7Item.DS_Chrg)</td>
+                </tr>
+                <tr>
+                    <td style="text-align:left; font-size:12px">তথ্য প্রযুক্তি উন্নয়ন সারচার্জ</td>
+                    <td style="text-align: center">৪৭</td>
+                    <td>@Html.DisplayFor(modelItem => part7Item.ITD_SChrg)</td>
+                </tr>
+                <tr>
+                    <td style="text-align:left; font-size:12px">স্বাস্থ সুরক্ষা সারচার্জ</td>
+                    <td style="text-align: center">৪৮</td>
+                    <td>@Html.DisplayFor(modelItem => part7Item.HP_SChrg)</td>
+                </tr>
+                <tr>
+                    <td style="text-align:left; font-size:12px">পরিবেশ সুরক্ষা সারচার্জ</td>
+                    <td style="text-align: center">৪৯</td>
+                    <td>@Html.DisplayFor(modelItem => part7Item.EP_SChrg)</td>
+                </tr>
+                <tr>
+                    <td style="text-align:left; font-size:12px">শেষ করমেয়াদের সমাপনী জের (মূল্য সংযোজন কর)</td>
+                    <td style="text-align: center">৫০</td>
+                    <td>@Html.DisplayFor(modelItem => part7Item.Last_TD_CB_VAT)</td>
+                </tr>
+                <tr>
+                    <td style="text-align:left; font-size:12px">শেষ করমেয়াদের সমাপনী জের (সম্পূরক শুল্ক)</td>
+                    <td style="text-align: center">৫১</td>
+                    <td>@Html.DisplayFor(modelItem => part7Item.Last_TD_CB_SD)</td>
+                </tr>
+                    }
+                }
+            </tbody>
+        </table>
+        <br />
+        <table border="1" cellpadding="0" cellspacing="0" id="table" rules=all style="width: 650px; margin: 0px; padding: 0">
+            <thead style=" overflow: visible !important;">
+                <tr>
+                    <th style=" font-size: 13px; font-weight: bold; text-align: center" colspan="27" bgcolor="#F2CA91">অংশ-৮: কর পরিশোধের তফসিল (ট্রেজারী জমা)</th>
+                </tr>
+            </thead>
+            <thead style=" overflow: visible !important;">
+                <tr bgcolor="#aeaca9">
+                    <th style="  font-size: 14px; vertical-align: top; text-align: center">আইটেম</th>
+                    <th style="  font-size: 14px; vertical-align: top; text-align: center">নোট</th>
+                    <th style=" font-size: 14px; vertical-align: top; text-align: center">অর্থনৈতিক কোড</th>
+                    <th style=" font-size: 14px; vertical-align: top; text-align: center">পরিমান</th>
+                </tr>
+            </thead>
+            <tbody id="tbodyId">
+                @if (Model.P1_1PArt8.Count() != 0)
+                {
+                    foreach (var part8Item in Model.P1_1PArt8)
+                    {
+                <tr>
+                    <td style="text-align:left; font-size:12px">বর্তমান করমেয়াদে পরিশোধিত মোট মূসক</td>
+                    <td style="text-align: center">৫২</td>
+                    <td></td>
+                    <td>@Html.DisplayFor(modelItem => part8Item.TrDep_TD_Paid_VAT)</td>
+                    <td>সাবফর্ম - ছ</td>
+                </tr>
+                <tr>
+                    <td style="text-align:left; font-size:12px">বর্তমান করমেয়াদে পরিশোধিত মোট সম্পূরক শুল্ক</td>
+                    <td style="text-align: center">৫৩</td>
+                    <td></td>
+                    <td>@Html.DisplayFor(modelItem => part8Item.TrDep_TD_Paid_SD)</td>
+                    <td>সাবফর্ম - ছ</td>
+                </tr>
+                <tr>
+                    <td style="text-align:left; font-size:12px">অপরিশোধিত মূসকের জন্য সুদ</td>
+                    <td style="text-align: center">৫৪</td>
+                    <td></td>
+                    <td>@Html.DisplayFor(modelItem => part8Item.TrDep_Due_VAT_Int)</td>
+                    <td>সাবফর্ম - ছ</td>
+                </tr>
+                <tr>
+                    <td style="text-align:left; font-size:12px">অপরিশোধিত সম্পূরক শুল্ক এর জন্য সুদ</td>
+                    <td style="text-align: center">৫৫</td>
+                    <td></td>
+                    <td>@Html.DisplayFor(modelItem => part8Item.TrDep_Due_SD_Int)</td>
+                    <td>সাবফর্ম - ছ</td>
+                </tr>
+                <tr>
+                    <td style="text-align:left; font-size:12px">অর্থদণ্ড ও জরিমানা</td>
+                    <td style="text-align: center">৫৬</td>
+                    <td></td>
+                    <td>@Html.DisplayFor(modelItem => part8Item.TrDep_FIN_ChrgNComp)</td>
+                    <td>সাবফর্ম - ছ</td>
+                </tr>
+                <tr>
+                    <td style="text-align:left; font-size:12px">অবগরী শুল্ক</td>
+                    <td style="text-align: center">৫৭</td>
+                    <td></td>
+                    <td>@Html.DisplayFor(modelItem => part8Item.TrDep_BR_Tax   )</td>
+                    <td>সাবফর্ম - ছ</td>
+                </tr>
+                <tr>
+                    <td style="text-align:left; font-size:12px">উন্নয়ণ সারচার্জ</td>
+                    <td style="text-align: center">৫৮</td>
+                    <td></td>
+                    <td>@Html.DisplayFor(modelItem => part8Item.TrDep_DS_Chrg)</td>
+                    <td>সাবফর্ম - ছ</td>
+                </tr>
+                <tr>
+                    <td style="text-align:left; font-size:12px">তথ্য প্রযুক্তি উন্নয়ন সারচার্জ</td>
+                    <td style="text-align: center">৫৯</td>
+                    <td></td>
+                    <td>@Html.DisplayFor(modelItem => part8Item.TrDep_ITD_SChrg)</td>
+                    <td>সাবফর্ম - ছ</td>
+                </tr>
+                <tr>
+                    <td style="text-align:left; font-size:12px">স্বাস্থ সুরক্ষা সারচার্জ</td>
+                    <td style="text-align: center">৬০</td>
+                    <td></td>
+                    <td>@Html.DisplayFor(modelItem => part8Item.TrDep_HP_SChrg)</td>
+                    <td>সাবফর্ম - ছ</td>
+                </tr>
+                <tr>
+                    <td style="text-align:left; font-size:12px">পরিবেশ সুরক্ষা সারচার্জ</td>
+                    <td style="text-align: center">৬১</td>
+                    <td></td>
+                    <td>@Html.DisplayFor(modelItem => part8Item.TrDep_EP_SChrg)</td>
+                    <td>সাবফর্ম - ছ</td>
+                </tr>
+
+                    }
+                }
+            </tbody>
+        </table>
+        <br />
+        <table border="1" cellpadding="0" cellspacing="0" id="table" rules=all style="width: 650px; margin: 0px; padding: 0">
+            <thead style=" overflow: visible !important;">
+                <tr>
+                    <th style=" font-size: 13px; font-weight: bold; text-align: center" colspan="27" bgcolor="#F2CA91">অংশ-৯: সমাপনী জের (পর বর্তী কর মেয়াদের প্রারম্ভিক জের)</th>
+                </tr>
+            </thead>
+            <thead style=" overflow: visible !important;">
+                <tr bgcolor="#aeaca9">
+                    <th style="  font-size: 14px; vertical-align: top; text-align: center">আইটেম</th>
+                    <th style="  font-size: 14px; vertical-align: top; text-align: center">নোট</th>
+                    <th style=" font-size: 14px; vertical-align: top; text-align: center">পরিমান</th>
+                    <th> </th>
+                </tr>
+            </thead>
+            <tbody id="tbodyId">
+                @if (Model.P1_1PArt9.Count() != 0)
+                {
+                    foreach (var part9Item in Model.P1_1PArt9)
+                    {
+                <tr>
+                    <td style="text-align:left; font-size:12px">সমাপনী জের (মূল্য সংযোজন কর)</td>
+                    <td style="text-align: center">৬২</td>
+                    <td>@Html.DisplayFor(modelItem => part9Item.CB_VAT)</td>
+                    <td> </td>
+                </tr>
+                <tr>
+                    <td style="text-align:left; font-size:12px">সমাপনী জের (সম্পূরক শুল্ক)</td>
+                    <td style="text-align: center">৬৩</td>
+                    <td>@Html.DisplayFor(modelItem => part9Item.CB_SD)</td>
+                    <td> </td>
+                </tr>
+
+                    }
+                }
+            </tbody>
+        </table>
+        <br />
+        <table border="1" cellpadding="0" cellspacing="0" id="table" rules=all style="width: 650px; margin: 0px; padding: 0">
+            <thead style=" overflow: visible !important;">
+                <tr>
+                    <th style=" font-size: 13px; font-weight: bold; text-align: center" colspan="27" bgcolor="#aeaca9">অংশ-১০: ফেরত</th>
+                </tr>
+            </thead>
+            <tbody id="tbodyId">
+                @if (Model.P1_1PArt10.Count() != 0)
+                {
+                    foreach (var part10Item in Model.P1_1PArt10)
+                    {
+                <tr>
+                    <td colspan="2">আমি সমাপনী জেরে উল্লিখিত অর্থ ফেরত গ্রহণে ইচ্ছুক</td>
+                </tr>
+                <tr>
+                    @*<td><input type="checkbox" id="chk64" />  </td>
+                    <td><input type="checkbox" id="chk64" />  </td>*@
+                    <td>
+                         @if (part10Item.CB_Return_Agreed ==1)
+                        {<input type="checkbox"  checked="checked" />}
+                        else
+                        {<input type="checkbox"   />} হাঁ
+                    <td />
+                    <td>
+                        @if (part10Item.CB_Return_Agreed == 0)
+                        {<input type="checkbox" checked="checked" />}
+                        else
+                        {<input type="checkbox" />} না
+                    <td />
+                </tr>
+
+                    }
+                }
+            </tbody>
+        </table>
+        <br />
+        <table border="1" cellpadding="0" cellspacing="0" id="table" rules=all style="width: 650px; margin: 0px; padding: 0">
+            <thead style=" overflow: visible !important;">
+                <tr>
+                    <th style=" font-size: 13px; font-weight: bold; text-align: center" colspan="27" bgcolor="#aeaca9">অংশ-১১: ঘোষণা</th>
+                </tr>
+            </thead>
+            <tbody id="tbodyId">
+                @if (Model.P1_1PArt11.Count() != 0)
+                {
+                    foreach (var part11Item in Model.P1_1PArt11)
+                    {
+                <tr>
+                    <td colspan="2">আমি ঘোষণা করিতেছি যে, এই দলিলপত্রে প্রদত্ত তথ্য সর্বোতভাবে সম্পূণ, সত্য ও নির্ভুল|</td>
+                </tr>
+                <tr>
+                    <td>নাম</td>
+                    <td>@Html.DisplayFor(modelItem => part11Item.Sub_Name)</td>
+                </tr>
+                <tr>
+                    <td>পদবি</td>
+                    <td>@Html.DisplayFor(modelItem => part11Item.Sub_Desig)</td>
+
+                </tr>
+                <tr>
+                    <td>তারিখ</td>
+                    <td>@Html.DisplayFor(modelItem => part11Item.Sub_Date)</td>
+
+                </tr>
+                <tr>
+                    <td>মোবাইল নম্বর</td>
+                    <td>@Html.DisplayFor(modelItem => part11Item.Sub_Mobile)</td>
+                </tr>
+                <tr>
+                    <td>ইমেইল</td>
+                    <td>@Html.DisplayFor(modelItem => part11Item.Sub_Email)</td>
+                </tr>
+                @*<tr>
+
+                        <td>সাক্ষর</td>
+                    </tr>*@
+                    }
+                }
+            </tbody>
+        </table>
+
+    </div>
+    <p></p>
+</div>
+<script>
+    var message = "";
+    ///////////////////////////////////
+    function clickIE() {
+        if (document.all) {
+            (message);
+            return false;
+        }
+    }
+
+    function clickNS(e) {
+        if (document.layers || (document.getElementById && !document.all)) {
+            if (e.which == 2 || e.which == 3) {
+                (message);
+                return false;
+            }
+        }
+    }
+    if (document.layers) {
+        document.captureEvents(Event.MOUSEDOWN);
+        document.onmousedown = clickNS;
+    } else {
+        document.onmouseup = clickNS;
+        document.oncontextmenu = clickIE;
+    }
+
+    document.oncontextmenu = new Function("return false")
+</script>

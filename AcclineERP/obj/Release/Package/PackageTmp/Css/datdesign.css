@@ -1,0 +1,9 @@
+﻿ .dataTables_scrollBody thead{
+        visibility:hidden;
+    }
+   #datatable-buttons tr .group{
+        background: #ABC0B6 !important;
+        font-size:11px;
+        color:#fff!important;
+        opacity:0.7;
+    }

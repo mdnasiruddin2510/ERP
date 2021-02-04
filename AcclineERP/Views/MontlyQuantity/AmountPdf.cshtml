@@ -1,0 +1,561 @@
+﻿
+@{
+    ViewBag.Title = "rptAmount";
+    Layout = null;
+
+}
+
+@model IEnumerable<App.Domain.ViewModel.MontlyQuantity>
+@{    
+    //ViewBag.Title = "MontlySales&QuantityReport";
+    Layout = null;
+    decimal tjan = 0.0m;
+    decimal tfab = 0.0m;
+    decimal tmar = 0.0m;
+    decimal tapr = 0.0m;
+    decimal tmay = 0.0m;
+    decimal tjun = 0.0m;
+    decimal tjul = 0.0m;
+    decimal taug = 0.0m;
+    decimal tsep = 0.0m;
+    decimal toct = 0.0m;
+    decimal tnov = 0.0m;
+    decimal tdec = 0.0m;
+    decimal total = 0.0m;
+
+    decimal gtjan = 0.0m;
+    decimal gtfab = 0.0m;
+    decimal gtmar = 0.0m;
+    decimal gtapr = 0.0m;
+    decimal gtmay = 0.0m;
+    decimal gtjun = 0.0m;
+    decimal gtjul = 0.0m;
+    decimal gtaug = 0.0m;
+    decimal gtsep = 0.0m;
+    decimal gtoct = 0.0m;
+    decimal gtnov = 0.0m;
+    decimal gtdec = 0.0m;
+    decimal gtotal = 0.0m;
+
+    DateTime dt = Convert.ToDateTime(ViewBag.Fdate);
+    string s2 = dt.ToString("dd-MM-yyyy");
+    DateTime Fdate = Convert.ToDateTime(s2);
+
+    //DateTime Fdate = ViewBag.Fdate;
+    DateTime dt1 = Convert.ToDateTime(ViewBag.Tdate);
+    string s21 = dt.ToString("dd-MM-yyyy");
+    DateTime Tdate = Convert.ToDateTime(s21);
+
+    //DateTime Tdate = ViewBag.Tdate;
+    int FM = Fdate.Month;
+    string FYYY = Fdate.Year.ToString();
+    string FY = FYYY.Substring(2, 2); //17
+    string TYYY = Tdate.Year.ToString();
+    string TY = TYYY.Substring(2, 2); //18
+    DateTime date = DateTime.Now;
+    switch (FM)
+    {
+        case 1:
+            //ViewBag.Col1Cap = "Jan" + "-" + FY;
+            ViewBag.Col1Cap = "Jan";
+            ViewBag.Col2Cap = "Feb";
+            ViewBag.Col3Cap = "Mar";
+            ViewBag.Col4Cap = "Apr";
+            ViewBag.Col5Cap = "May";
+            ViewBag.Col6Cap = "Jun";
+            ViewBag.Col7Cap = "Jul";
+            ViewBag.Col8Cap = "Aug";
+            ViewBag.Col9Cap = "Sep";
+            ViewBag.Col10Cap = "Oct";
+            ViewBag.Col11Cap = "Nov";
+            ViewBag.Col12Cap = "Dec";
+            break;
+        case 2:
+            ViewBag.Col1Cap = "Feb";
+            ViewBag.Col2Cap = "Mar";
+            ViewBag.Col3Cap = "Apr";
+            ViewBag.Col4Cap = "May";
+            ViewBag.Col5Cap = "Jun";
+            ViewBag.Col6Cap = "Jul";
+            ViewBag.Col7Cap = "Aug";
+            ViewBag.Col8Cap = "Sep";
+            ViewBag.Col9Cap = "Oct";
+            ViewBag.Col10Cap = "Nov";
+            ViewBag.Col11Cap = "Dec";
+            ViewBag.Col12Cap = "Jan";
+            break;
+        case 3:
+            ViewBag.Col1Cap = "Mar";
+            ViewBag.Col2Cap = "Apr";
+            ViewBag.Col3Cap = "May";
+            ViewBag.Col4Cap = "Jun";
+            ViewBag.Col5Cap = "Jul";
+            ViewBag.Col6Cap = "Aug";
+            ViewBag.Col7Cap = "Sep";
+            ViewBag.Col8Cap = "Oct";
+            ViewBag.Col9Cap = "Nov";
+            ViewBag.Col10Cap = "Dec";
+            ViewBag.Col11Cap = "Jan";
+            ViewBag.Col12Cap = "Feb";
+            break;
+        case 4:
+            ViewBag.Col1Cap = "Apr";
+            ViewBag.Col2Cap = "May";
+            ViewBag.Col3Cap = "Jun";
+            ViewBag.Col4Cap = "Jul";
+            ViewBag.Col5Cap = "Aug";
+            ViewBag.Col6Cap = "Sep";
+            ViewBag.Col7Cap = "Oct";
+            ViewBag.Col8Cap = "Nov";
+            ViewBag.Col9Cap = "Dec";
+            ViewBag.Col10Cap = "Jan";
+            ViewBag.Col11Cap = "Feb";
+            ViewBag.Col12Cap = "Mar";
+            break;
+        case 5:
+            ViewBag.Col1Cap = "May";
+            ViewBag.Col2Cap = "Jun";
+            ViewBag.Col3Cap = "Jul";
+            ViewBag.Col4Cap = "Aug";
+            ViewBag.Col5Cap = "Sep";
+            ViewBag.Col6Cap = "Oct";
+            ViewBag.Col7Cap = "Nov";
+            ViewBag.Col8Cap = "Dec";
+            ViewBag.Col9Cap = "Jan";
+            ViewBag.Col10Cap = "Feb";
+            ViewBag.Col11Cap = "Mar";
+            ViewBag.Col12Cap = "Apr";
+            break;
+        case 6:
+            ViewBag.Col1Cap = "Jun";
+            ViewBag.Col2Cap = "Jul";
+            ViewBag.Col3Cap = "Aug";
+            ViewBag.Col4Cap = "Sep";
+            ViewBag.Col5Cap = "Oct";
+            ViewBag.Col6Cap = "Nov";
+            ViewBag.Col7Cap = "Dec";
+            ViewBag.Col8Cap = "Jan";
+            ViewBag.Col9Cap = "Feb";
+            ViewBag.Col10Cap = "Mar";
+            ViewBag.Col11Cap = "Apr";
+            ViewBag.Col12Cap = "May";
+            break;
+        case 7:
+            ViewBag.Col1Cap = "Jul";
+            ViewBag.Col2Cap = "Aug";
+            ViewBag.Col3Cap = "Sep";
+            ViewBag.Col4Cap = "Oct";
+            ViewBag.Col5Cap = "Nov";
+            ViewBag.Col6Cap = "Dec";
+            ViewBag.Col7Cap = "Jan";
+            ViewBag.Col8Cap = "Feb";
+            ViewBag.Col9Cap = "Mar";
+            ViewBag.Col10Cap = "Apr";
+            ViewBag.Col11Cap = "May";
+            ViewBag.Col12Cap = "Jun";
+            break;
+        case 8:
+            ViewBag.Col1Cap = "Aug";
+            ViewBag.Col2Cap = "Sep";
+            ViewBag.Col3Cap = "Oct";
+            ViewBag.Col4Cap = "Nov";
+            ViewBag.Col5Cap = "Dec";
+            ViewBag.Col6Cap = "Jan";
+            ViewBag.Col7Cap = "Feb";
+            ViewBag.Col8Cap = "Mar";
+            ViewBag.Col9Cap = "Apr";
+            ViewBag.Col10Cap = "May";
+            ViewBag.Col11Cap = "Jun";
+            ViewBag.Col12Cap = "Jul";
+            break;
+        case 9:
+            ViewBag.Col1Cap = "Sep";
+            ViewBag.Col2Cap = "Oct";
+            ViewBag.Col3Cap = "Nov";
+            ViewBag.Col4Cap = "Dec";
+            ViewBag.Col5Cap = "Jan";
+            ViewBag.Col6Cap = "Feb";
+            ViewBag.Col7Cap = "Mar";
+            ViewBag.Col8Cap = "Apr";
+            ViewBag.Col9Cap = "May";
+            ViewBag.Col10Cap = "Jun";
+            ViewBag.Col11Cap = "Jul";
+            ViewBag.Col12Cap = "Aug";
+            break;
+        case 10:
+            ViewBag.Col1Cap = "Oct";
+            ViewBag.Col2Cap = "Nov";
+            ViewBag.Col3Cap = "Dec";
+            ViewBag.Col4Cap = "Jan";
+            ViewBag.Col5Cap = "Feb";
+            ViewBag.Col6Cap = "Mar";
+            ViewBag.Col7Cap = "Apr";
+            ViewBag.Col8Cap = "May";
+            ViewBag.Col9Cap = "Jun";
+            ViewBag.Col10Cap = "Jul";
+            ViewBag.Col11Cap = "Aug";
+            ViewBag.Col12Cap = "Sep";
+            break;
+        case 11:
+            ViewBag.Col1Cap = "Nov";
+            ViewBag.Col2Cap = "Dec";
+            ViewBag.Col3Cap = "Jan";
+            ViewBag.Col4Cap = "Feb";
+            ViewBag.Col5Cap = "Mar";
+            ViewBag.Col6Cap = "Apr";
+            ViewBag.Col7Cap = "May";
+            ViewBag.Col8Cap = "Jun";
+            ViewBag.Col9Cap = "Jul";
+            ViewBag.Col10Cap = "Aug";
+            ViewBag.Col11Cap = "Sep";
+            ViewBag.Col12Cap = "Oct";
+            break;
+        case 12:
+            ViewBag.Col1Cap = "Dec";
+            ViewBag.Col2Cap = "Jan";
+            ViewBag.Col3Cap = "Feb";
+            ViewBag.Col4Cap = "Mar";
+            ViewBag.Col5Cap = "Apr";
+            ViewBag.Col6Cap = "May";
+            ViewBag.Col7Cap = "Jun";
+            ViewBag.Col8Cap = "Jul";
+            ViewBag.Col9Cap = "Aug";
+            ViewBag.Col10Cap = "Sep";
+            ViewBag.Col11Cap = "Oct";
+            ViewBag.Col12Cap = "Nov";
+            break;
+    }
+
+    var CompInfo = AcclineERP.Models.GetCompanyInfo.GetComInfo();
+    string CompanyAddress = ((CompInfo.Addr1 == null ? string.Empty : CompInfo.Addr1) + (CompInfo.Addr2 == null ? string.Empty : CompInfo.Addr2));
+}
+<script src="~/Scripts/jquery-1.9.1.min.js"></script>
+<script src="~/Scripts/Export.js"></script>
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/select2/select2.css" rel="stylesheet" type="text/css" />
+<link href="~/Css/FormDesign.css" rel="stylesheet" />
+
+<style>
+    tr {
+        page-break-inside: avoid;
+    }
+
+    body {
+        padding-right: 0px;
+        font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+    }
+
+    .border {
+        color: #335; /* Lighten up font color */
+        font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+        font-weight: 300;
+        border-collapse: collapse;
+        border-spacing: 0;
+    }
+
+    .tds {
+        /*border: 1px solid black;*/
+        font-weight: 500;
+        font-family: Arial;
+        border-right: hidden !important;
+    }
+    /* Make cells a bit taller */
+    .ths {
+        /*border: 1px solid black;*/
+        font-weight: 500;
+        font-family: Arial;
+    }
+
+    .th {
+        background: #F3F3F3; /* Light grey background */
+        font-weight: bold; /* Make sure they're bold */
+    }
+
+    .td {
+        background: #FAFAFA; /* Lighter grey background */
+        text-align: center; /* Center our text */
+    }
+
+    .breakhere {
+        page-break-after: always;
+    }
+</style>
+<div id="toReport" class="panel-body" style="margin: 0; text-align:center !important;  padding:0;">
+    <div class=" panel-heading" style="text-align:center">
+        <div class="panel-title">
+            <label style="text-align:center !important; text-decoration: none; font-size:15px; font-weight:bold">@CompInfo.CompName</label><br>
+            <label style="text-align:center !important; text-decoration: none; font-size:12px; font-weight:normal"> @CompanyAddress</label><br>
+            @*<label style="text-align:center !important; text-decoration: none; font-size:12px; font-weight:normal">Phone: @CompInfo.Tel</label>*@<br>
+             </div>
+        <div class="panel-title">
+            <text style="text-align:center !important; text-decoration: none; font-size:12px;font-family:'Arial Narrow'; font-weight:bold">Product wise monthly sale (Amount)</text>
+        </div>
+        <div class="cashDate">
+            <text style="text-align:center !important; text-decoration: none; font-size:11px;font-family:'Arial Narrow';">From : @ViewBag.fDate &nbsp;&nbsp; To: @ViewBag.tDate</text>
+        </div>
+        <div >
+            <label style="text-align:center !important; text-decoration: none; font-size:12px; font-weight:bold">Location : @ViewBag.Location</label><br>
+            <label style="text-align:left !important;float:left; text-decoration: none; font-size:12px; font-weight:bold">Customer : @ViewBag.CustomerName </label><br>
+        </div>
+
+        @*<div class="panel-title">
+                <text style="text-align:center !important; text-decoration: none; font-size:20px;font-family:'Arial Narrow'; font-weight:bold">@ViewBag.Criteria</text>
+            </div>*@
+    </div>
+
+    <div class="panel-body" style="text-align:center">
+        <table cellpadding="5" cellspacing="1" border=1 frame=box rules=all style="width:100% ;table-layout:fixed"">
+            <thead style="overflow: visible !important;">
+                <tr>
+                    <th style="font-size:14px; font-family:'Arial Narrow'; width:40px;text-align:center">SL No</th>
+                    <th style=" font-size: 14px; font-family: 'Arial Narrow'; width:200px;text-align: center">Product</th>
+                    <th style=" font-size: 14px; font-family: 'Arial Narrow'; text-align: center">@ViewBag.Col1Cap</th>
+                    <th style=" font-size: 14px; font-family: 'Arial Narrow'; text-align: center">@ViewBag.Col2Cap</th>
+                    <th style=" font-size: 14px; font-family: 'Arial Narrow'; text-align: center">@ViewBag.Col3Cap</th>
+                    <th style=" font-size: 14px; font-family: 'Arial Narrow'; text-align: center">@ViewBag.Col4Cap</th>
+                    <th style=" font-size: 14px; font-family: 'Arial Narrow'; text-align: center">@ViewBag.Col5Cap</th>
+                    <th style=" font-size: 14px; font-family: 'Arial Narrow'; text-align: center">@ViewBag.Col6Cap</th>
+                    <th style=" font-size: 14px; font-family: 'Arial Narrow'; text-align: center">@ViewBag.Col7Cap</th>
+                    <th style=" font-size: 14px; font-family: 'Arial Narrow'; text-align: center">@ViewBag.Col8Cap</th>
+                    <th style=" font-size: 14px; font-family: 'Arial Narrow'; text-align: center">@ViewBag.Col9Cap</th>
+                    <th style=" font-size: 14px; font-family: 'Arial Narrow'; text-align: center">@ViewBag.Col10Cap</th>
+                    <th style=" font-size: 14px; font-family: 'Arial Narrow'; text-align: center">@ViewBag.Col11Cap</th>
+                    <th style=" font-size: 14px; font-family: 'Arial Narrow'; text-align: center">@ViewBag.Col12Cap</th>
+                    <th style=" font-size: 14px; font-family: 'Arial Narrow'; text-align: center">Total</th>
+                </tr>
+                @*<tr>
+                        <text style="text-align:right !important; text-decoration: none; font-size:20px;font-family:'Arial Narrow'; font-weight:bold">Location: @ViewBag.BranchCode</text>
+                    </tr>*@
+
+            </thead>
+            <tbody id="tbodyId">
+
+                @{
+                    foreach (var item in Model.Select(a => a.groupname).Distinct())
+                    {
+                        string jan = "";
+                        string fab = "";
+                        string mar = "";
+                        string apr = "";
+                        string may = "";
+                        string jun = "";
+                        string jul = "";
+                        string aug = "";
+                        string sep = "";
+                        string oct = "";
+                        string nov = "";
+                        string dec = "";
+                        string total1 = "";
+                        <tr style=" overflow: hidden">
+                            <td style=" white-space: nowrap;text-align: left;border-right: 0; font-weight: bold; font-size :15px">
+                            Group:@item
+                            </td>
+                        </tr>
+                        int serialno = 0;
+                        foreach (var i in Model.Where(a => a.groupname.Equals(@item)))
+                        {
+                            total = i.Jan + i.Feb + i.Mar + i.Apr + i.May + i.Jun + i.Jul + i.Aug + i.Sep + i.Oct + i.Nov + i.Decm;
+                            serialno = serialno + 1;
+                            <tr>
+                                <td style=" text-align:center; width:40px;font-size:12px">
+                                    @serialno
+                                </td>
+                                <td style="text-align:left; width:200px;font-size:12px">
+                                    @Html.DisplayFor(modelItem => i.itemname)
+                                </td>
+                                <td style=" text-align:right; font-size:12px;">
+                                    @if (i.Jan != 0)
+                                    {
+                                        @Html.DisplayFor(modelItem => i.Jan)
+                                    }
+                                </td>
+                                <td style="text-align: right; font-size: 12px;">
+                                    @if (i.Feb != 0)
+                                    {
+                                        @Html.DisplayFor(modelItem => i.Feb)
+                                    }
+                                </td>
+                                <td style=" text-align:right; font-size:12px;">
+                                    @if (i.Mar != 0)
+                                    {
+                                        @Html.DisplayFor(modelItem => i.Mar)
+                                    }
+                                </td>
+                                <td style=" text-align:right; font-size:12px;">
+                                    @if (i.Apr != 0)
+                                    {
+                                        @Html.DisplayFor(modelItem => i.Apr)
+                                    }
+                                </td>
+                                <td style=" text-align:right; font-size:12px;">
+                                    @if (i.May != 0)
+                                    {
+                                        @Html.DisplayFor(modelItem => i.May)
+                                    }
+                                </td>
+                                <td style=" text-align:right; font-size:12px;">
+                                    @if (i.Jun != 0)
+                                    {
+                                        @Html.DisplayFor(modelItem => i.Jun)
+                                    }
+                                </td>
+                                <td style=" text-align:right; font-size:12px;">
+                                    @if (i.Jul != 0)
+                                    {
+                                        @Html.DisplayFor(modelItem => i.Jul)
+                                    }
+                                </td>
+                                <td style=" text-align:right; font-size:12px;">
+                                    @if (i.Aug != 0)
+                                    {
+                                        @Html.DisplayFor(modelItem => i.Aug)
+                                    }
+                                </td>
+                                <td style=" text-align:right; font-size:12px;">
+                                    @if (i.Sep != 0)
+                                    {
+                                        @Html.DisplayFor(modelItem => i.Sep)
+                                    }
+                                </td>
+                                <td style=" text-align:right; font-size:12px;">
+                                    @if (i.Oct != 0)
+                                    {
+                                        @Html.DisplayFor(modelItem => i.Oct)
+                                    }
+                                </td>
+                                <td style=" text-align:right; font-size:12px;">
+                                    @if (i.Nov != 0)
+                                    {
+                                        @Html.DisplayFor(modelItem => i.Nov)
+                                    }
+                                </td>
+                                <td style=" text-align:right; font-size:12px;">
+                                    @if (i.Decm != 0)
+                                    {
+                                        @Html.DisplayFor(modelItem => i.Decm)
+                                    }
+                                </td>
+
+                                <td style=" text-align:right; font-size:12px;">
+                                    @total
+                                </td>
+                            </tr>
+                                    tjan += Convert.ToDecimal(i.Jan);
+                                    tfab += Convert.ToDecimal(i.Feb);
+                                    tmar += Convert.ToDecimal(i.Mar);
+                                    tapr += Convert.ToDecimal(i.Apr);
+                                    tmay += Convert.ToDecimal(i.May);
+                                    tjun += Convert.ToDecimal(i.Jun);
+                                    tjul += Convert.ToDecimal(i.Jul);
+                                    taug += Convert.ToDecimal(i.Aug);
+                                    tsep += Convert.ToDecimal(i.Sep);
+                                    toct += Convert.ToDecimal(i.Oct);
+                                    tnov += Convert.ToDecimal(i.Nov);
+                                    tdec += Convert.ToDecimal(i.Decm);
+                                    total += Convert.ToDecimal(total);
+                        }
+                        <tr>
+                            @if (@total != 0)
+                            {
+                                jan = (@tjan).ToString();
+                                fab = (@tfab).ToString();
+                                mar = (@tmar).ToString();
+                                apr = @tapr.ToString();
+                                may = @tmay.ToString();
+                                jun = @tjun.ToString();
+                                jul = @tjul.ToString();
+                                aug = @taug.ToString();
+                                sep = @tsep.ToString();
+                                oct = @toct.ToString();
+                                nov = @tnov.ToString();
+                                dec = @tdec.ToString();
+                                total1 = @total.ToString();
+                            }
+                            else
+                            {
+                                jan = (@tjan).ToString();
+                                fab = (@tfab).ToString();
+                                mar = (@tmar).ToString();
+                                apr = @tapr.ToString();
+                                may = @tmay.ToString();
+                                jun = @tjun.ToString();
+                                jul = @tjul.ToString();
+                                aug = @taug.ToString();
+                                sep = @tsep.ToString();
+                                oct = @toct.ToString();
+                                nov = @tnov.ToString();
+                                dec = @tdec.ToString();
+                                total1 = @total.ToString();
+                            }
+
+                            <th style=" "></th>
+                            <th style=" font-size: 12px; text-align: right"> Group wise Total:</th>
+                            <th style=" font-size: 12px; text-align: right">@jan</th>
+                            <th style=" font-size: 12px; text-align: right">@fab</th>
+                            <th style=" font-size: 12px; text-align: right">@mar</th>
+                            <th style=" font-size: 12px; text-align: right">@apr</th>
+                            <th style=" font-size: 12px; text-align: right">@may</th>
+                            <th style=" font-size: 12px; text-align: right">@jun</th>
+                            <th style=" font-size: 12px; text-align: right">@jul</th>
+                            <th style=" font-size: 12px; text-align: right">@aug</th>
+                            <th style=" font-size: 12px; text-align: right">@sep</th>
+                            <th style=" font-size: 12px; text-align: right">@oct</th>
+                            <th style=" font-size: 12px; text-align: right">@nov</th>
+                            <th style=" font-size: 12px; text-align: right">@dec</th>
+                            <th style=" font-size: 12px; text-align: right">@total1</th>
+                        </tr>
+                            gtjan += tjan;
+                            gtfab += tfab;
+                            gtmar += tmar;
+                            gtapr += tapr;
+                            gtmay += tmay;
+                            gtjun += tjun;
+                            gtjul += tjul;
+                            gtaug += taug;
+                            gtsep += tsep;
+                            gtoct += toct;
+                            gtnov += tnov;
+                            gtdec += tdec;
+                            gtotal += total;
+
+                            tjan = 0;
+                            tfab = 0;
+                            tmar = 0;
+                            tapr = 0;
+                            tmay = 0;
+                            tjun = 0;
+                            tjul = 0;
+                            taug = 0;
+                            tsep = 0;
+                            toct = 0;
+                            tnov = 0;
+                            tdec = 0;
+                            total = 0;
+
+
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+    <br />
+    <br />
+    <p style="">@*Prepared by ................................          Checked by ................................          Approved by ................................*@</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

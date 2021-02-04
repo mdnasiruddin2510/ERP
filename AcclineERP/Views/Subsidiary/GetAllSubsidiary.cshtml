@@ -1,0 +1,147 @@
+﻿@model IEnumerable<App.Domain.SubsidiaryInfo>
+@{
+    ViewBag.Title = "Subsidiary List";
+    Layout = null;
+    int sl = 0;
+    var CompInfo = AcclineERP.Models.GetCompanyInfo.GetComInfo();
+    string CompanyAddress = ((CompInfo.Addr1 == null ? string.Empty : CompInfo.Addr1) + (CompInfo.Addr2 == null ? string.Empty : CompInfo.Addr2));
+    
+}
+
+<script src="~/Scripts/jquery-1.9.1.min.js"></script>
+<script src="~/Scripts/Export.js"></script>
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/select2/select2.css" rel="stylesheet" type="text/css" />
+<link href="~/Css/FormDesign.css" rel="stylesheet" />
+
+<style>
+    tr {
+        page-break-inside: avoid;
+    }
+
+    /*body {
+        padding-right: 0px;
+        font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+    }*/
+
+    hr {
+        /*border: 1px dashed #000000;*/
+        border: 1px solid black;
+        /*border-style: none none dotted;*/
+        color: black;
+    }
+
+    .border {
+        color: #335; /* Lighten up font color */
+        font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+        font-weight: 300;
+        border-collapse: collapse;
+        border-spacing: 0;
+    }
+
+    .tds {
+        /*border: 1px solid black;*/
+        font-weight: 500;
+        font-family: Arial;
+        border-right: hidden !important;
+    }
+    /* Make cells a bit taller */
+    .ths {
+        /*border: 1px solid black;*/
+        font-weight: 500;
+        font-family: Arial;
+    }
+
+    .th {
+        background: #F3F3F3; /* Light grey background */
+        font-weight: bold; /* Make sure they're bold */
+    }
+
+    .td {
+        background: #FAFAFA; /* Lighter grey background */
+        text-align: center; /* Center our text */
+    }
+
+    .breakhere {
+        page-break-after: always;
+    }
+</style>
+
+
+<div id="toReport" class="panel-body" style="margin: auto; text-align:center !important; width:800px; height:1150px; padding:60px">
+    <div class="panel-heading" style="text-align:center">
+        <div class="panel-title">
+            <label style="text-align:center !important; text-decoration: none; font-size:25px; font-weight:bold">@CompInfo.CompName</label><br>
+            <label style="text-align:center !important; text-decoration: none; font-size:23px; font-weight:normal"> @CompanyAddress</label><br>
+            @*<label style="text-align:center !important; text-decoration: none; font-size:23px; font-weight:normal">Phone: @CompInfo.Tel</label>*@<br>
+        </div>
+        <br />
+        <div class="panel-title">
+            <text style="text-align:center !important; text-decoration: none; font-size:20px; font-weight:bold">@ViewBag.Title</text>
+        </div>
+
+    </div>
+    <hr />
+    <br />
+
+    <div class="panel-body" style="text-align:center">
+        <table cellpadding="5" cellspacing="1" border="0" style="width:800px">
+            <thead style="height:300px">
+                <tr>
+                    <th style="width:100px; text-align:center">Sl</th>
+                    <th style="width:180px; text-align:left">Subsidiary Code</th>
+                    <th style="width:320px; text-align:left">Subsidiary Name</th>
+                    <th style="width:200px; text-align:left">Subsidiary Type</th>
+                </tr>
+                <tr>
+                    <th style="width:100px; text-align:center"></th>
+                    <th style="width:180px; text-align:left"></th>
+                    <th style="width:320px; text-align:left"></th>
+                    <th style="width:200px; text-align:left"></th>
+                </tr>
+
+            </thead>
+            <tbody id="tbodyId">
+
+                @foreach (var item in Model)
+                {
+                    sl++;
+
+                    <tr>
+                        <td style="width:100px; text-align:center">
+                            @sl
+                        </td>
+                        <td style="width:180px; text-align:left">
+                            @Html.DisplayFor(modelItem => item.SubCode)
+                        </td>
+                        <td style="width:320px; text-align:left">
+                            @Html.DisplayFor(modelItem => item.SubName)
+                        </td>
+                        <td style="width:200px; text-align:left">
+                            @Html.DisplayFor(modelItem => item.SubType)
+                        </td>
+
+                    </tr>
+
+                }
+
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+@*<div class="panel-footer" style="text-align:right; width:850px">
+    <label style="font-size:13px">Print Date : @ViewBag.PrintDate</label>
+</div>
+
+<div class="xxx"></div>
+
+<p id='page-number'>
+    <script type="application/javascript">
+        aaa = document.getElementsByClassName("xxx").length;
+        document.write(aaa);
+    </script>
+</p>*@

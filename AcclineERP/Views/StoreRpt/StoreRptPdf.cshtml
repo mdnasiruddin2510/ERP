@@ -1,0 +1,96 @@
+﻿
+@{
+    ViewBag.Title = "StoreRptPdf";
+    Layout = null;
+    var CompInfo = AcclineERP.Models.GetCompanyInfo.GetComInfo();
+    string CompanyAddress = ((CompInfo.Addr1 == null ? string.Empty : CompInfo.Addr1) 
+                            + (CompInfo.Addr2 == null ? string.Empty : CompInfo.Addr2));
+}
+<script src="~/Scripts/jquery-1.9.1.min.js"></script>
+<script src="~/Scripts/Export.js"></script>
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/select2/select2.css" rel="stylesheet" type="text/css" />
+<link href="~/Css/FormDesign.css" rel="stylesheet" />
+
+<style>
+    tr {
+        page-break-inside: avoid;
+    }
+
+    body {
+        padding-right: 0px;
+        font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+    }
+
+    .border {
+        color: #335; /* Lighten up font color */
+        font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+        font-weight: 300;
+        border-collapse: collapse;
+        border-spacing: 0;
+    }
+
+    .tds {
+        /*border: 1px solid black;*/
+        font-weight: 500;
+        font-family: Arial;
+        border-right: hidden !important;
+    }
+    /* Make cells a bit taller */
+    .ths {
+        /*border: 1px solid black;*/
+        font-weight: 500;
+        font-family: Arial;
+    }
+
+    .th {
+        background: #F3F3F3; /* Light grey background */
+        font-weight: bold; /* Make sure they're bold */
+    }
+
+    .td {
+        background: #FAFAFA; /* Lighter grey background */
+        text-align: center; /* Center our text */
+    }
+
+    .breakhere {
+        page-break-after: always;
+    }
+</style>
+
+
+<div id="toReport" class="panel-body" style="margin: 0; text-align:center !important;  padding:0;">
+    <div class="panel-heading" style="text-align:center">
+        <div class="panel-title">
+            <label style="text-align:center !important; text-decoration: none; font-size:15px; font-weight:bold">@CompInfo.CompName</label><br>
+            <label style="text-align:center !important; text-decoration: none; font-size:12px; font-weight:normal"> @CompanyAddress</label><br>
+
+        </div>
+        <div class="panel-title">
+            <label style="text-align:center !important; text-decoration: none; font-size:12px; font-weight:normal">Location:@ViewBag.BranchCode</label><br>
+            <text style="text-align:center !important; text-decoration: none; font-size:12px;font-family:'Arial Narrow'; font-weight:bold">Stock Reject Report</text>
+        </div>
+        <div class="cashDate">
+            <text style="text-align:center !important; text-decoration: none; font-size:11px;font-family:'Arial Narrow';">From : @ViewBag.fDate &nbsp;&nbsp; To: @ViewBag.tDate</text>
+        </div>
+    </div>
+    <div class="panel-body" style="text-align:center">
+        <table cellpadding="1" cellspacing="0" border=1 frame=box rules=all style="  width: 100%">
+            <thead style=" overflow: visible !important;">
+                <tr>
+                    <th style="font-size:14px; font-family:'Arial Narrow'; text-align:center">Reject Date</th>
+                    <th style="font-size:14px; font-family:'Arial Narrow'; text-align: center">Lot No</th>
+                    <th style="font-size:14px; font-family:'Arial Narrow'; text-align: center">Item Name</th>
+                    <th style="font-size:14px; font-family:'Arial Narrow'; text-align: center">Quantity</th>
+                    <th style="font-size:14px; font-family:'Arial Narrow'; text-align: center">U.Price</th>
+                    <th style="font-size:14px; font-family:'Arial Narrow'; text-align: center">Reject Value</th>
+                    <th style="font-size:14px; font-family:'Arial Narrow'; text-align: center">Remarks</th>
+                </tr>
+            </thead>
+            <tbody id="tbodyId" style="line-height: 140%;"></tbody>
+        </table>
+    </div>
+</div>
+

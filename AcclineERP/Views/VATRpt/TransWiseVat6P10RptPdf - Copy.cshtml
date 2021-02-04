@@ -1,0 +1,256 @@
+﻿@model App.Domain.ViewModel.Ka_KhaModel
+@{
+    
+    ViewBag.Title = "TransWiseVat6P10RptPdf";
+    Layout = null;
+    var CompInfo = AcclineERP.Models.GetCompanyInfo.GetComInfo();
+    string CompanyAddress = ((CompInfo.Addr1 == null ? string.Empty : CompInfo.Addr1) + (CompInfo.Addr2 == null ? string.Empty : CompInfo.Addr2));
+}
+<script src="~/Scripts/jquery-1.9.1.min.js"></script>
+<script src="~/Scripts/Export.js"></script>
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/select2/select2.css" rel="stylesheet" type="text/css" />
+<link href="~/Css/FormDesign.css" rel="stylesheet" />
+
+<style>
+    tr {
+        page-break-inside: avoid;
+    }
+
+    body {
+        padding-right: 0px;
+        font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+    }
+
+    .border {
+        color: #335; /* Lighten up font color */
+        font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+        font-weight: 300;
+        border-collapse: collapse;
+        border-spacing: 0;
+    }
+
+    .tds {
+        /*border: 1px solid black;*/
+        font-weight: 500;
+        font-family: Arial;
+        border-right: hidden !important;
+    }
+    /* Make cells a bit taller */
+    .ths {
+        /*border: 1px solid black;*/
+        font-weight: 500;
+        font-family: Arial;
+    }
+
+    .th {
+        background: #F3F3F3; /* Light grey background */
+        font-weight: bold; /* Make sure they're bold */
+    }
+
+    .td {
+        background: #FAFAFA; /* Lighter grey background */
+        text-align: center; /* Center our text */
+    }
+
+    .breakhere {
+        page-break-after: always;
+    }
+
+    #table {
+        max-width: 2480px;
+        width: 100%;
+    }
+
+        #table td {
+            width: auto;
+            overflow: hidden;
+            word-wrap: break-word;
+        }
+
+</style>
+
+<div id="toReport" class="panel-body" style=" text-align: center !important; width: 100%; height: 100%; ">
+    <div class="panel-body">
+        <table border="1" cellpadding="0" cellspacing="0" id="table"  rules=all style="margin: 0px;padding: 0">
+            <thead style=" overflow: visible !important;">
+                <tr>
+                    <th style="font-size: 13px; border-bottom: 0; border-top: 0; text-align: right; " colspan="27">ফরম ৬.১০</th>
+                </tr>
+                <tr>
+                    <th style=" font-weight:bold; font-family: Tahoma, Arial, Helvetica, sans-serif; border-bottom: 0; border-top: 0; font-size: 20px; text-align: center; " colspan="27">২ লক্ষ টাকার অধিক মূল্যমানের ক্রয়-বিক্রয় চালানপত্রের তথ্য</th>
+                </tr>
+                <tr>
+                    <th style="border-bottom: 0; border-top: 0; font-size: 13px; text-align: center; " colspan="27">[বিধি ৪২ এর উপ-বিধি (১) দৃষ্টব্য]</th>
+                </tr>
+                <tr>
+                    <th style=" border-bottom:0; border-top:0; font-size: 13px; text-align: center" colspan="27"> নিবন্ধিত/তালিকাভুক্ত ব্যাক্তির নাম: ....................... বিআইএন:.....................</th>
+                </tr>
+
+                <tr>
+                    <th style=" font-size: 13px; text-align: left" colspan="27">অংশ-ক : ক্রয় হিসাব তথ্য</th>
+                </tr>
+                <tr>
+                    <th style=" width: 25px; font-size: 13px; vertical-align: top; text-align: center" rowspan="3">ক্রমিক সংখ্যা</th>
+                    <th style=" width: 80px; font-size: 13px; vertical-align: top; text-align: center" colspan="6">ক্রয়</th>
+                </tr>
+                <tr>
+                    <th style="  width: 45px; font-size: 13px; vertical-align: top; text-align: center" rowspan="2">চালানপত্র নং:</th>
+                    <th style="  width: 65px; font-size: 13px; vertical-align: top; text-align: center" rowspan="2">ইস্যুর তারিখ </th>
+                    <th style="  width: 45px; font-size: 13px; vertical-align: top; text-align: center" rowspan="2">মূল্য </th>
+                    <th style="  width: 65px; font-size: 13px; vertical-align: top; text-align: center" rowspan="2">বিক্রতের নাম </th>
+                    <th style="  width: 45px; font-size: 13px; vertical-align: top; text-align: center" rowspan="2">বিক্রতের ঠিকানা </th>
+                    <th style="  width: 65px; font-size: 13px; vertical-align: top; text-align: center" rowspan="2">বিক্রতের বিআইএন/ জাতীয় পরিচয়পত্র নং *</th>
+                </tr>
+                <tr></tr>
+                <tr>
+                    <th style=" font-size:13px; text-align:center">(১)</th>
+                    <th style=" font-size:13px; text-align:center">(২)</th>
+                    <th style=" font-size:13px; text-align:center">(৩)</th>
+                    <th style=" font-size:13px; text-align:center">(৪)</th>
+                    <th style=" font-size:13px; text-align:center">(৫)</th>
+                    <th style=" font-size:13px; text-align:center">(৬)</th>
+                    <th style=" font-size:13px; text-align:center">(৭) </th>
+                </tr>
+            </thead>
+            <tbody id="tbodyId">
+
+                @if (Model.VchrLst_Ka1.Count() != 0)
+                {
+                    foreach (var Kaitem in Model.VchrLst_Ka1)
+                    {
+
+                        <tr>
+                            <td style=" text-align:left; font-size:12px">
+                                @Html.DisplayFor(modelItem => Kaitem.SerialNo)
+                            </td>
+                            <td style=" text-align:left; font-size:12px;">
+                                @Html.DisplayFor(modelItem => Kaitem.ChallanNo)
+                            </td>
+                            <td style=" text-align:right; font-size:12px">
+                                @Kaitem.ChallanDate.ToString("dd-MMM-yyyy")
+                            </td>
+                            <td style="text-align:right; font-size:12px">
+                                @Html.DisplayFor(modelItem => Kaitem.TotalValue)
+                            </td>
+                            <td style=" text-align:right; font-size:12px;">
+                                @Html.DisplayFor(modelItem => Kaitem.Name)
+                            </td>
+                            <td style=" text-align:right; font-size:12px;">
+                                @Html.DisplayFor(modelItem => Kaitem.Addr)
+                            </td>
+                            <td style=" text-align:right; font-size:12px;">
+                                @Html.DisplayFor(modelItem => Kaitem.BIN_NID_No)
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+
+
+        <table border="1" cellpadding="0" cellspacing="0" id="table"  rules=all style="margin: 0px;padding: 0">
+            <thead style=" overflow: visible !important;">
+                <tr>
+                    <th style=" font-size: 13px; text-align: left" colspan="27">অংশ-খ  : বিক্রয় হিসাব তথ্য</th>
+                </tr>
+                <tr>
+                    <th style=" width: 25px; font-size: 13px; vertical-align: top; text-align: center" rowspan="3">ক্রমিক সংখ্যা</th>
+                    <th style=" width: 80px; font-size: 13px; vertical-align: top; text-align: center" colspan="6">বিক্রয়</th>
+                </tr>
+                <tr>
+                    <th style="  width: 45px; font-size: 13px; vertical-align: top; text-align: center" rowspan="2">চালানপত্র নং:</th>
+                    <th style="  width: 65px; font-size: 13px; vertical-align: top; text-align: center" rowspan="2">ইস্যুর তারিখ </th>
+                    <th style="  width: 45px; font-size: 13px; vertical-align: top; text-align: center" rowspan="2">মূল্য </th>
+                    <th style="  width: 65px; font-size: 13px; vertical-align: top; text-align: center" rowspan="2">ক্রেতার নাম </th>
+                    <th style="  width: 45px; font-size: 13px; vertical-align: top; text-align: center" rowspan="2">ক্রেতার ঠিকানা </th>
+                    <th style="  width: 65px; font-size: 13px; vertical-align: top; text-align: center" rowspan="2">ক্রেতার বিআইএন/ জাতীয় পরিচয়পত্র নং *</th>
+                </tr>
+                <tr></tr>
+                <tr>
+                    <th style=" font-size:13px; text-align:center">(১)</th>
+                    <th style=" font-size:13px; text-align:center">(২)</th>
+                    <th style=" font-size:13px; text-align:center">(৩)</th>
+                    <th style=" font-size:13px; text-align:center">(৪)</th>
+                    <th style=" font-size:13px; text-align:center">(৫)</th>
+                    <th style=" font-size:13px; text-align:center">(৬)</th>
+                    <th style=" font-size:13px; text-align:center">(৭) </th>
+                </tr>
+            </thead>
+            <tbody id="tbodyId">
+                @if (Model.VchrLst_Kha1.Count() != 0)
+                {
+                    foreach (var Khaitem in Model.VchrLst_Kha1)
+                    {
+                        <tr>
+                            <td style=" text-align:left; font-size:12px">
+                                @Html.DisplayFor(modelItem => Khaitem.SerialNo)
+                            </td>
+                            <td style=" text-align:left; font-size:12px;">
+                                @Html.DisplayFor(modelItem => Khaitem.ChallanNo)
+                            </td>
+                            <td style=" text-align:right; font-size:12px">
+                                @Khaitem.ChallanDate .ToString("dd-MMM-yyyy")
+                            </td>
+                            <td style="text-align:right; font-size:12px">
+                                @Html.DisplayFor(modelItem => Khaitem.TotalValue)
+                            </td>
+                            <td style=" text-align:right; font-size:12px;">
+                                @Html.DisplayFor(modelItem => Khaitem.Name)
+                            </td>
+                            <td style=" text-align:right; font-size:12px;">
+                                @Html.DisplayFor(modelItem => Khaitem.Addr)
+                            </td>
+                            <td style=" text-align:right; font-size:12px;">
+                                @Html.DisplayFor(modelItem => Khaitem.BIN_NID_No)
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+
+    </div>
+    <p></p>
+</div>
+
+<script type="text/javascript">
+
+    //window.onload = function () {
+    //    event.preventDefault();
+    //    self.print();
+    //    self.close();
+    //}
+</script>
+
+<script>
+    var message = "";
+    ///////////////////////////////////
+    function clickIE() {
+        if (document.all) {
+            (message);
+            return false;
+        }
+    }
+
+    function clickNS(e) {
+        if (document.layers || (document.getElementById && !document.all)) {
+            if (e.which == 2 || e.which == 3) {
+                (message);
+                return false;
+            }
+        }
+    }
+    if (document.layers) {
+        document.captureEvents(Event.MOUSEDOWN);
+        document.onmousedown = clickNS;
+    } else {
+        document.onmouseup = clickNS;
+        document.oncontextmenu = clickIE;
+    }
+    //$("toReport").keydown(false);
+
+    document.oncontextmenu = new Function("return false")
+</script>

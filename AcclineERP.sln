@@ -1,0 +1,84 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2 - Application", "2 - Application", "{142D2EFB-F50B-4261-A63E-0F63F0A53C17}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3 - Domain", "3 - Domain", "{78F03D7D-6055-4A5D-96BB-358BED09E83A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4 - Infrastructure", "4 - Infrastructure", "{36648B27-F767-499A-9E56-3CA35113CEF1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application.Interfaces", "Application.Interfaces\Application.Interfaces.csproj", "{E4B39556-0995-444B-9223-DAF10A5BDACB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application.Services", "Application.Services\Application.Services.csproj", "{ED3978CA-30AC-4F75-BCB3-41A956819A0A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4.1 -  Data", "4.1 -  Data", "{E2134738-6604-4847-BDDD-921963E999A3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4.2 - CrossCutting", "4.2 - CrossCutting", "{433F05B3-7AB1-4165-8FAF-152BA39A9596}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data.Context", "Data.Context\Data.Context.csproj", "{71D04FA7-3424-4C8F-BA0E-018653EEB924}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data.Repository", "Data.Repository\Data.Repository.csproj", "{FFD8B43E-B2B3-4170-9F92-A7E8402CD4EE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CrossCutting.InversionOfControl", "CrossCutting.InversionOfControl\CrossCutting.InversionOfControl.csproj", "{315FE0E6-0A41-4E9F-A27D-414E1C209BF0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.Domain", "App.Domain\App.Domain.csproj", "{8C5DF764-3858-4C07-9729-AB68C49AE77F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AcclineERP", "AcclineERP\AcclineERP.csproj", "{676D0789-F41D-4A55-9719-C5D30C7DBE61}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AcclineERPApi", "AcclineERPApi\AcclineERPApi.csproj", "{2688C91F-23DB-4541-8E90-B1830A69C606}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E4B39556-0995-444B-9223-DAF10A5BDACB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E4B39556-0995-444B-9223-DAF10A5BDACB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E4B39556-0995-444B-9223-DAF10A5BDACB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E4B39556-0995-444B-9223-DAF10A5BDACB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ED3978CA-30AC-4F75-BCB3-41A956819A0A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED3978CA-30AC-4F75-BCB3-41A956819A0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ED3978CA-30AC-4F75-BCB3-41A956819A0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ED3978CA-30AC-4F75-BCB3-41A956819A0A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{71D04FA7-3424-4C8F-BA0E-018653EEB924}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{71D04FA7-3424-4C8F-BA0E-018653EEB924}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{71D04FA7-3424-4C8F-BA0E-018653EEB924}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{71D04FA7-3424-4C8F-BA0E-018653EEB924}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FFD8B43E-B2B3-4170-9F92-A7E8402CD4EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FFD8B43E-B2B3-4170-9F92-A7E8402CD4EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FFD8B43E-B2B3-4170-9F92-A7E8402CD4EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FFD8B43E-B2B3-4170-9F92-A7E8402CD4EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{315FE0E6-0A41-4E9F-A27D-414E1C209BF0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{315FE0E6-0A41-4E9F-A27D-414E1C209BF0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{315FE0E6-0A41-4E9F-A27D-414E1C209BF0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{315FE0E6-0A41-4E9F-A27D-414E1C209BF0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8C5DF764-3858-4C07-9729-AB68C49AE77F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8C5DF764-3858-4C07-9729-AB68C49AE77F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8C5DF764-3858-4C07-9729-AB68C49AE77F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8C5DF764-3858-4C07-9729-AB68C49AE77F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{676D0789-F41D-4A55-9719-C5D30C7DBE61}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{676D0789-F41D-4A55-9719-C5D30C7DBE61}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{676D0789-F41D-4A55-9719-C5D30C7DBE61}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{676D0789-F41D-4A55-9719-C5D30C7DBE61}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2688C91F-23DB-4541-8E90-B1830A69C606}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2688C91F-23DB-4541-8E90-B1830A69C606}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2688C91F-23DB-4541-8E90-B1830A69C606}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2688C91F-23DB-4541-8E90-B1830A69C606}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{E4B39556-0995-444B-9223-DAF10A5BDACB} = {142D2EFB-F50B-4261-A63E-0F63F0A53C17}
+		{ED3978CA-30AC-4F75-BCB3-41A956819A0A} = {142D2EFB-F50B-4261-A63E-0F63F0A53C17}
+		{8C5DF764-3858-4C07-9729-AB68C49AE77F} = {78F03D7D-6055-4A5D-96BB-358BED09E83A}
+		{E2134738-6604-4847-BDDD-921963E999A3} = {36648B27-F767-499A-9E56-3CA35113CEF1}
+		{433F05B3-7AB1-4165-8FAF-152BA39A9596} = {36648B27-F767-499A-9E56-3CA35113CEF1}
+		{71D04FA7-3424-4C8F-BA0E-018653EEB924} = {E2134738-6604-4847-BDDD-921963E999A3}
+		{FFD8B43E-B2B3-4170-9F92-A7E8402CD4EE} = {E2134738-6604-4847-BDDD-921963E999A3}
+		{315FE0E6-0A41-4E9F-A27D-414E1C209BF0} = {433F05B3-7AB1-4165-8FAF-152BA39A9596}
+	EndGlobalSection
+EndGlobal

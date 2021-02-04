@@ -1,0 +1,484 @@
+﻿@model App.Domain.VM_DrNote
+@{
+    ViewBag.Title = "Dr Note";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/select2/select2.css" rel="stylesheet" type="text/css" />
+<link href="~/Css/FormDesign.css" rel="stylesheet" />
+
+<style>
+    table.dataTable.select tbody tr,
+    table.dataTable thead th:first-child {
+        cursor: pointer;
+        text-align: center;
+    }
+
+    .form-control {
+        border: 1px solid #00ffff;
+    }
+
+    .required:after {
+        content: " *";
+        font-weight: bold;
+        color: red;
+    }
+
+    input#vat6p8 {
+        width: 25px;
+        height: 15px;
+        margin-top: 0px;
+    }
+
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    input[type=number] {
+        -moz-appearance: textfield;
+    }
+</style>
+
+<div class="row">
+    <div class="col-md-10">
+        <div class="panel panel-color panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    <text style="text-align:left !important; text-decoration: none;">Debit Note</text>
+                </h3>
+            </div>
+            <div class="panel-body">
+                <div class="col-md-12">
+
+                    <div class="col-md-6">
+
+                        <div class="col-md-12">
+                            <label class="col-md-4 required">Note No</label>
+                            <div class="input-group form-group col-md-4">
+                                <input type="text" class="form-control" id="@Html.IdFor(x => x.DrNoteNo)" required="required" value="@ViewBag.DrNoteNo">
+                                <input type="hidden" id="DrNoteId" />
+                                <input type="hidden" id="PreDrNoteNo">
+
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="col-md-4 required">Note Date</label>
+                            <div class="input-group form-group col-md-8">
+                                <input type="text" class="form-control datePage" id="@Html.IdFor(x => x.DrNoteDate)" value="@DateTime.Today.ToShortDateString()">
+                                <span class="input-group-addon bg-primary b-0 text-white"><i class="ion-calendar"></i></span>
+
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="col-md-4 required">Reason</label>
+                            <div class="input-group form-group col-md-8">
+                                @Html.DropDownListFor(x => x.Reason, null, "--- Select ---", new { @class = "form-control select2", required = "required", @Value = ViewBag.DrDrNoteId })
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="col-md-4 required">Challan No</label>
+                            <div class="input-group form-group col-md-8">
+                                <input type="text" class="form-control" id="@Html.IdFor(x => x.ChallanNo)" required="required">
+
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="col-md-4 required">Amount</label>
+                            <div class="input-group form-group col-md-8">
+                                <input type="number" class="form-control" id="@Html.IdFor(x => x.Amount)" required="required">
+
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="col-md-4">Remarks</label>
+                            <div class="input-group form-group col-md-8">
+                                @Html.TextAreaFor(x => x.Remarks, new { @class = "form-control col-md-8 select2" })
+                            </div>
+                        </div>
+                        @if (ViewBag.MaintVAT == true)
+                        {
+                            <div class="col-sm-12" id="pnlVAT">
+                                <label class="col-md-4"></label>
+                                <div class="col-sm-8">
+                                    <div class="col-md-5">
+                                        <span class="checkbox-button">
+                                            <input type="checkbox" name="vat6p8" class="checkbox-primary" required="required" id="vat6p8" />
+                                            <input type="button" class="btn-primary" value="VAT 6.8" id="btnVAT6p8" />
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        
+                    </div>
+
+                    <div class="col-sm-10"><br /><br /></div>
+                    <div class="col-md-8" style=" text-align:center;overflow:hidden;">
+                        <input type="button" value="Save" class="btn btn-primary" id="btnSave" style="width:100px;" />
+                        <input type="button" value="Update" class="btn btn-primary" id="btnUpdate" style="width:100px;" />
+                        <input type="button" value="Clear" class="btn btn-primary" id="btnClear" style="width:100px;" />
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-10">
+        <div class="panel panel-color panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">Note List</h3>
+            </div>
+            <div class="panel-body">
+                <div class="row col-md-12">
+                    <br />
+                    <div class="row col-md-12" style="text-align:right">
+                        <input type="button" value="Reload" class="btn btn-primary" id="btnRefrash" />
+                    </div>
+
+                    <div class="col-md-12">
+                        <br />
+                        <br />
+                        <table class="table table-bordered table-responsive" id="datatable">
+                            <thead>
+                                <tr>
+                                    <th>Sl.</th>
+                                    <th>Note No</th>
+                                    <th>Reason</th>
+                                    <th>Challan</th>
+                                    <th>Amount&nbsp;No</th>
+                                    <th>Remarks</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody style="text-align:center;">
+
+                                @if (ViewBag.NoteList != null)
+                                {
+                                    int i = 0;
+                                    foreach (var item in ViewBag.NoteList)
+                                    {
+                                        <tr>
+                                            @{
+                                        i++;
+                                            }
+                                            <td>@i</td>
+                                            <td>@item.DrNoteNo</td>
+                                            <td style="text-align:left;">@item.Reason</td>
+                                            <td style="text-align:left;">@item.ChallanNo</td>
+                                            <td>@item.Amount</td>
+                                            <td>@item.Remarks</td>
+                                            <td>
+                                                <a href="#" value="@item.DrNoteNo" id="edit"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></a>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts{
+    <script src="/App_Themes/Theme1/plugins/select2/select2.min.js"></script>
+    <script src="~/App_Themes/Theme1/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+    <script>
+    $(document).ready(function () {
+        var ispType = '@ViewBag.errMsg';
+        if (ispType != '') {
+            ispType = '@ViewBag.errMsg';
+        }
+        if (ispType == "P") {
+            alert("No view Permission for this User");
+        }
+
+        $('#datatable').DataTable();
+
+        var loadInfo = {
+            DrNoteId: "",
+            DrNoteNo: "",
+            DrNoteDate: "",
+            Reason: "",
+            ChallanNo: "",
+            Amount: "",
+            Remarks: ""
+        }
+
+        function setOrder() {
+            loadInfo.DrNoteId = $("#DrNoteId").val();
+            loadInfo.DrNoteNo = $("#DrNoteNo").val();
+            loadInfo.DrNoteDate = $("#DrNoteDate").val();
+            loadInfo.Reason = $("#Reason").val();
+            loadInfo.ChallanNo = $("#ChallanNo").val();
+            loadInfo.Amount = $("#Amount").val();
+            loadInfo.Remarks = $("#Remarks").val();
+        }
+        $('#Reason').select2();
+        $("#btnUpdate").hide();
+
+        $("#vat6p8").prop("disabled", true);
+        $(document).on("click", "#btnVAT6p8", function (e) {
+            var TransNo = $('#PreDrNoteNo').val();
+            if ($("#vat6p8").prop("checked") == true) {
+                window.open('@Url.Action("TransWiseVat6P8RptPdf", "VATRpt", null)?TransNo=' + TransNo);
+            }
+        })
+
+
+        $(document).on("click", "#btnSave", function () {
+            $("#btnSave").prop("disabled", false);
+            setOrder();
+            var validate = validateOnSave(loadInfo);
+            if (validate != undefined) {
+                alert(validate);
+                return;
+            }
+
+            $.ajax({
+                url: '@Url.Action("SaveDrNote", "VM_DrNote")',
+                contentType: "application/json;charset=utf-8",
+                data: JSON.stringify({ DrNote: loadInfo }),
+                type: 'POST',
+                dataType: 'json',
+                success: function (datas) {
+                    if (datas.Msg == "1") {
+                        $("#btnSave").prop("disabled", false);
+                        swal({
+                            title: "Ok",
+                            text: "Save Successfully!",
+                            type: "success"
+                        }, function () {
+
+                            if (datas.returnValue == '6.8') {
+                                $("#vat6p8").prop("checked", true);
+                                $("#PreDrNoteNo").val($("#DrNoteNo").val());
+                            }
+                            clearDrNoteForm();
+                        });
+
+                    }
+                    else if (datas == "X") {
+                        swal({
+                            title: "Sorry",
+                            text: "No Save Permission for this User",
+                            type: "warning"
+                        });
+                    }
+                    else if (datas == 0) {
+                        swal(
+                            'Sorry!',
+                            'Something went wrong during the process!',
+                            'warning'
+                        );
+                        $("#btnSave").prop("disabled", false);
+                    }
+                    else {
+                        swal({
+                            title: "Sorry!",
+                            text: datas,
+                            type: "warning"
+                        });
+                    }
+
+                }
+            });
+        });
+
+        function validateOnSave(validOrder) {
+            if (validOrder.DrNoteNo.trim() == "") {
+                return "Note No is required.";
+            }
+            if (validOrder.DrNoteDate.trim() == "") {
+                return "Note Date is required.";
+            }
+            if (!validOrder.Reason.trim().length) {
+                return "Please select Reason.";
+            }
+
+            if (validOrder.ChallanNo.trim() == "") {
+                return "Challan No is required.";
+            }
+            if (validOrder.Amount.trim() == "" || validOrder.Amount <= 0) {
+                return "Amount is required.";
+            }
+        }
+
+        $("#DrNoteNo").keypress(function (e) {
+            if (e.which == 13) {
+                $("#btnUpdate").show();
+                $.ajax({
+                    url: '@Url.Action("GetDrNoteByDrNoteNo", "VM_DrNote")',
+                    contentType: "application/json;charset=utf-8",
+                    data: { DrNoteNo: $("#DrNoteNo").val() },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (datas) {
+                        if (datas != null) {
+                            $("#DrNoteNo").prop("disabled", true);
+                            $("#DrNoteId").val(datas.VM_DrNote.DrNoteId);
+                            if (moment(datas.VM_DrNote.DrNoteDate).format('MM/DD/YYYY') != moment('01/01/1900').format('MM/DD/YYYY')) {
+                                $("#DrNoteDate").datepicker("setDate", DateInDMYformat(datas.VM_DrNote.DrNoteDate));
+                            }
+                            $("#Reason").val(datas.VM_DrNote.Reason).trigger('change.select2');
+                            $("#ChallanNo").val(datas.VM_DrNote.ChallanNo);
+                            $("#Amount").val(datas.VM_DrNote.Amount);
+                            $("#Remarks").val(datas.VM_DrNote.Remarks);
+
+                            if (datas.returnValue != "") {
+                                var strMsg = datas.returnValue;
+                                if (strMsg.split(';')[0] == '6.8') {
+                                    $("#vat6p8").prop("checked", true);
+                                    $("#PreDrNoteNo").val($("#DrNoteNo").val());
+                                }
+                            }
+
+                            $("#btnSave").hide();
+                        }
+                    },
+                    error: function () {
+                        swal("Sorry!! This Note doesn't exists.", "fail")
+                        $("#btnSave").hide();
+                    }
+                });
+            }
+        });
+
+        $(document).on('click', "#edit", function () {
+            var id = $(this).attr("value");
+            $("#btnUpdate").show();
+            $.ajax({
+                url: '@Url.Action("GetDrNoteByDrNoteNo", "VM_DrNote")',
+                contentType: "application/json;charset=utf-8",
+                data: JSON.stringify({ DrNoteNo: id }),
+                type: 'POST',
+                dataType: 'json',
+                success: function (datas) {
+                    if (datas != null) {
+                        $("#DrNoteNo").prop("disabled", true);
+                        $("#DrNoteId").val(datas.VM_DrNote.DrNoteId);
+                        $("#DrNoteNo").val(datas.VM_DrNote.DrNoteNo);
+                        if (moment(datas.VM_DrNote.DrNoteDate).format('MM/DD/YYYY') != moment('01/01/1900').format('MM/DD/YYYY')) {
+                            $("#DrNoteDate").datepicker("setDate", DateInDMYformat(datas.VM_DrNote.DrNoteDate));
+                        }
+                        $("#Reason").val(datas.VM_DrNote.Reason).trigger('change.select2');
+                        $("#ChallanNo").val(datas.VM_DrNote.ChallanNo);
+                        $("#Amount").val(datas.VM_DrNote.Amount);
+                        $("#Remarks").val(datas.VM_DrNote.Remarks);
+
+                        if (datas.returnValue != "") {
+                            var strMsg = datas.returnValue;
+                            if (strMsg.split(';')[0] == '6.8') {
+                                $("#vat6p8").prop("checked", true);
+                                $("#PreDrNoteNo").val($("#DrNoteNo").val());
+                            }
+                        }
+
+                        $("#btnSave").hide();
+                    }
+                }
+            });
+            $("#btnSave").hide();
+        });
+
+        $(document).on("click", "#btnUpdate", function () {
+            $("#btnSave").prop("disabled", false);
+            setOrder();
+            var validate = validateOnSave(loadInfo);
+            if (validate != undefined) {
+                alert(validate);
+                return;
+            }
+
+            $.ajax({
+                url: '@Url.Action("UpdateDrNote", "VM_DrNote")',
+                contentType: "application/json;charset=utf-8",
+                data: JSON.stringify({ DrNote: loadInfo }),
+                type: 'POST',
+                dataType: 'json',
+                success: function (datas) {
+                    if (datas == 1) {
+                        swal({
+                            title: "Ok",
+                            text: "Update Successfully!",
+                            type: "success"
+                        }, function () {
+                            clearDrNoteForm();
+                            $("#btnSave").prop("enable", false);
+
+                        });
+                    }
+                    else if (datas == "U") {
+                        swal({
+                            title: "Sorry",
+                            text: "No Update Permission for this User",
+                            type: "warning"
+                        });
+                    }
+                    else if (datas == 0) {
+                        swal(
+                            'Sorry!',
+                            'Something went wrong during the process!',
+                            'warning'
+                        );
+                        $("#btnSave").prop("disabled", false);
+                    }
+                    else {
+                        swal({
+                            title: "Sorry!",
+                            text: datas,
+                            type: "warning"
+                        });
+                    }
+
+                }
+            });
+        });
+
+
+        $(document).on("click", "#btnClear", function () {
+            clearDrNoteForm();
+        });
+
+        $(document).on("click", "#btnRefrash", function () {
+            location.reload();
+        });
+
+        function clearDrNoteForm() {
+            $("#DrNoteDate").val("@DateTime.Today.ToShortDateString()");
+            $("#Reason").val($('#Reason option:first-child').val()).trigger('change.select2');
+            $("#ChallanNo").val("");
+            $("#Amount").val(0);
+            $("#Remarks").val("");
+
+            $("#DrNoteNo").prop("disabled", false);
+            $.ajax({
+                    url: '@Url.Action("GetNewDrNotebyView", "VM_DrNote")',
+                    contentType: "application/json;charset=utf-8",
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (datas) {
+
+                        $("#DrNoteNo").val(datas);
+                    }
+                });
+            $("#btnUpdate").hide();
+            $("#btnSave").show();
+        }
+
+
+    });
+    </script>
+}

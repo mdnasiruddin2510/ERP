@@ -1,0 +1,164 @@
+﻿@model IEnumerable<App.Domain.ViewModel.BalSheetRptVM>
+@{
+    ViewBag.Title = "Income Expenditure Pdf";
+    Layout = null;
+    decimal IncPrevPeriod = 0;
+    decimal ExpPrevPeriod = 0;
+    decimal IncCurrPeriod = 0;
+    decimal ExpCurrPeriod = 0;
+    var CompInfo = AcclineERP.Models.GetCompanyInfo.GetComInfo();
+    string CompanyAddress = ((CompInfo.Addr1 == null ? string.Empty : CompInfo.Addr1) + (CompInfo.Addr2 == null ? string.Empty : CompInfo.Addr2));
+}
+
+<script src="~/Scripts/jquery-1.9.1.min.js"></script>
+<script src="~/Scripts/Export.js"></script>
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/select2/select2.css" rel="stylesheet" type="text/css" />
+<link href="~/Css/FormDesign.css" rel="stylesheet" />
+
+<style>
+    hr {
+        background-color: black;
+        height: 0.5px;
+    }
+
+    tr {
+        page-break-inside: avoid;
+    }
+</style>
+
+<div id="toReport" class="panel-body" style="margin: auto; text-align:center !important; width:800px; height:100%;">
+    <div class="panel-heading" style="text-align:center">
+        <div class="panel-title">
+            <label style="text-align:center !important; text-decoration: none; font-size:25px; font-weight:bold">@CompInfo.CompName</label><br>
+            <label style="text-align:center !important; text-decoration: none; font-size:23px; font-weight:normal"> @CompanyAddress</label><br>
+            @*<label style="text-align:center !important; text-decoration: none; font-size:23px; font-weight:normal">Phone: @CompInfo.Tel</label>*@<br>
+        </div>
+
+        <div class="cashDate">
+            <text style="text-align:center !important; text-decoration: none; font-size:15px; font-weight:bold">From : @ViewBag.fDate &nbsp;&nbsp; To: @ViewBag.tDate</text>
+        </div>
+    </div>
+    <hr />
+    <table cellpadding="0" cellspacing="0" border="0" style="width:800px">
+        <tr>
+            <th style="width:100px; font-size:13px; text-align:center"></th>
+            <th style="width:100px; font-size:13px; text-align:left">A/C Head</th>
+            <th style="width:100px; font-size:13px; text-align:center">Note No</th>
+            <th style="width:100px; font-size:13px; text-align:right">@ViewBag.currYM</th>
+            @if (ViewBag.None == "")
+            {
+                <th style="width:100px; font-size:13px; text-align:right">@ViewBag.prvYM</th>
+            }
+        </tr>
+    </table>
+    <hr />
+    <h3 style="text-align:left; height:10px">Incomes</h3>
+    <hr />
+    <table cellpadding="0" cellspacing="0" border="0" style="width:800px">
+
+        @foreach (var item in Model)
+        {
+            if (item.IncExp == "Income")
+            {
+                <tr>
+                    <td style="width:120px; text-align:center; font-size:12px">
+                        @*@Html.DisplayFor(modelItem => item.IncExp)*@
+                    </td>
+                    <td style="width:100px; text-align:left; font-size:12px">
+                        @Html.DisplayFor(modelItem => item.IncExpHead)
+                    </td>
+                    <td style="width:100px; text-align:center; font-size:12px">
+                        @Html.DisplayFor(modelItem => item.NoteNo)
+                    </td>
+                    <td style="width:100px; text-align:right; font-size:12px">
+                        @Html.DisplayFor(modelItem => item.CurrPeriod)
+                    </td>
+                    @if (ViewBag.None == "")
+                    {
+                        <td style="width:120px; text-align:right; font-size:12px">
+                            @Html.DisplayFor(modelItem => item.PrevPeriod)
+                        </td>
+                    }
+                </tr>
+                    IncCurrPeriod += item.CurrPeriod;
+                    IncPrevPeriod += item.PrevPeriod;
+            }
+            //IncCrrTot = CurrPeriod;
+            //IncPrvTot = PrevPeriod;
+
+        }
+        <tr>
+            <td style="border-right: hidden !important; border-left: hidden !important;border-bottom: hidden !important;"></td>
+            <td style="border-right: hidden !important; border-bottom: hidden !important;"></td>
+            <td style="border-right: hidden !important; border-bottom: hidden !important;"></td>
+            <td class="tds" style="text-align: right; font-size: 12px; border-top: 1px solid;border-bottom: hidden !important;border-right: hidden !important;"><b>@IncCurrPeriod</b><hr style="margin-bottom: 3px !important; margin-top: 0 !important;  margin-left:0px !important" /><hr style="margin-bottom: 0 !important; margin-top: 0 !important;  margin-left:0px !important" /></td>
+            @if (ViewBag.None == "")
+            {
+                <td class="tds" style="text-align: right; font-size: 12px; border-top: 1px solid;border-bottom: hidden !important;border-right: hidden !important;"><b>@IncPrevPeriod</b><hr style="margin-bottom: 3px !important; margin-top: 0 !important; margin-left:35px !important" /><hr style="margin-bottom: 0 !important; margin-top: 0 !important;  margin-left:35px !important" /></td>
+            }
+        </tr>
+    </table>
+    <h3 style="text-align:left; height:10px">Expenses</h3>
+    <hr />
+    <table cellpadding="0" cellspacing="0" border="0" style="width:800px">
+
+
+        @foreach (var item in Model)
+        {
+            if (item.IncExp == "Expense")
+            {
+                <tr>
+                    <td style="width:120px; text-align:center; font-size:12px">
+                        @*@Html.DisplayFor(modelItem => item.IncExp)*@
+                    </td>
+                    <td style="width:100px; text-align:left; font-size:12px">
+                        @Html.DisplayFor(modelItem => item.IncExpHead)
+                    </td>
+                    <td style="width:100px; text-align:center; font-size:12px">
+                        @Html.DisplayFor(modelItem => item.NoteNo)
+                    </td>
+                    <td style="width:100px; text-align:right; font-size:12px">
+                        @Html.DisplayFor(modelItem => item.CurrPeriod)
+                    </td>
+                    @if (ViewBag.None == "")
+                    {
+                    <td style="width:120px; text-align:right; font-size:12px">
+                        @Html.DisplayFor(modelItem => item.PrevPeriod)
+                    </td>
+                    }
+                </tr>
+
+                    ExpCurrPeriod += item.CurrPeriod;
+                    ExpPrevPeriod += item.PrevPeriod;
+            }
+            //ExpCrrTot = CurrPeriod;
+            //ExpPrvTot = PrevPeriod;
+        }
+        <tr>
+            <td style="border-right: hidden !important; border-left: hidden !important;border-bottom: hidden !important;"></td>
+            <td style="border-right: hidden !important; border-bottom: hidden !important;"></td>
+            <td style="border-right: hidden !important; border-bottom: hidden !important;"></td>
+            <td class="tds" style="text-align: right; font-size: 12px; border-top: 1px solid;border-bottom: hidden !important;border-right: hidden !important;"><b>@ExpCurrPeriod</b><hr style="margin-bottom: 3px !important; margin-top: 0 !important; margin-left:15px !important" /><hr style="margin-bottom: 0 !important; margin-top: 0 !important; margin-left:15px !important" /></td>
+
+            @if (ViewBag.None == "")
+            {
+            <td class="tds" style="text-align: right; font-size: 12px; border-top: 1px solid;border-bottom: hidden !important;border-right: hidden !important;"><b>@ExpPrevPeriod</b><hr style="margin-bottom: 3px !important; margin-top: 0 !important; margin-left:35px !important" /><hr style="margin-bottom: 0 !important; margin-top: 0 !important; margin-left:35px !important" /></td>
+            }
+
+
+        </tr>
+        @{
+            decimal ProfitLoss = IncCurrPeriod - ExpCurrPeriod;
+        }
+        <tr>
+            <td style="border-right: hidden !important; border-left: hidden !important;border-bottom: hidden !important;"></td>
+            <td style="border-right: hidden !important; border-bottom: hidden !important;"></td>
+            <td style="border-right: hidden !important; border-bottom: hidden !important; text-align:right">Profit/Loss :</td>
+            <td class="tds" style="text-align: right; font-size: 12px;"><b>@ProfitLoss</b></td>
+        </tr>
+    </table>
+
+</div>

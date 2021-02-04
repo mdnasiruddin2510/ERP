@@ -1,0 +1,2099 @@
+﻿﻿@model App.Domain.BankOperation
+@{
+    ViewBag.Title = "Bank Operation";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    List<App.Domain.ViewModel.BankOperationVModel> items = (List<App.Domain.ViewModel.BankOperationVModel>)ViewBag.Items;
+    var hoRemittance = items.Where(x => x.Tag == "RT" || x.Tag == "BD" || x.Tag == "BR").ToList();
+    var payment = items.Where(x => x.Tag == "BP" || x.Tag == "BW").ToList();
+    double recTotal = hoRemittance.Sum(x => x.Amount);
+    double payTotal = payment.Sum(x => x.Amount);
+    double closeBal = Convert.ToDouble(ViewData["OpenBal"]) + recTotal - payTotal;
+}
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/select2/select2.css" rel="stylesheet" type="text/css" />
+<link href="~/Css/FormDesign.css" rel="stylesheet" />
+
+<style>
+    table.dataTable.select tbody tr,
+    table.dataTable thead th:first-child {
+        cursor: pointer;
+    }
+
+    .form-control {
+        border: 1px solid #00ffff;
+    }
+
+    .required:after {
+        content: " *";
+        font-weight: bold;
+        color: red;
+    }
+
+    .largeSpace {
+        margin-right: 13px;
+        margin-left: 9px;
+    }
+
+    a#BOR {
+        color: darkblue;
+    }
+
+    a#GLEntriesp {
+        color: darkblue;
+    }
+
+    a#BOP {
+        color: darkblue;
+    }
+
+    a#GLEntries {
+        color: darkblue;
+    }
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    input[type=number] {
+        -moz-appearance: textfield;
+    }
+</style>
+
+@using (Html.BeginForm("BankOperation", "BankOperation", FormMethod.Post, new { @id = "formSubmit" }))
+{
+    <div class="column">
+        <div class="col-md-12">
+            <div class="panel panel-color panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <text style="text-align:left !important; text-decoration: none">Bank Operation</text>
+                        <text id="@Html.IdFor(x => x.bankAccode)" style="text-align:end !important; text-decoration: none; font-weight:bold; color:darkred; font-size:medium; margin-left:450px">@ViewBag.bankAccode</text>
+                    </h3>
+                </div>
+                <div class="panel-body" style="height:110px">
+                    <div class="col-md-12" style="margin-left:400px">
+                        <div class="col-md-6" style="text-align:end">
+                            @Html.LabelFor(x => x.TrDate, new { @class = "col-md-4 control-label" })
+                            <div class="input-group form-group col-md-6">
+                                <input type="text" class="form-control datePage" name="TrDate" id="@Html.IdFor(x => x.TrDate)" value="@ViewBag.Date">
+                                <span class="input-group-addon bg-primary b-0 text-white"></span>
+                                <span class="input-group-addon bg-primary b-0 text-white" id="search">GO</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12" style="margin-left:400px">
+                        <div class="col-md-6" style="text-align:end">
+                            @Html.LabelFor(x => x.OpenBal, new { @class = "col-md-4 control-label" })
+                            <div class="input-group form-group col-md-6">
+                                <input type="text" class="form-control" id="@Html.IdFor(x => x.OpenBal)" required="required" value="@ViewBag.OpenBal" disabled="disabled">
+                            </div>
+                            @Html.ValidationMessageFor(x => x.OpenBal)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="column">
+        <div class="col-md-12">
+            <div class="panel panel-color panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Receive</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="col-md-12">
+                        <div class="col-md-4 control-label">
+                            <label class="control-label" target="_blank">
+                                @Html.ActionLink(
+                                "Receipt Voucher waiting for Posting",
+                                "GetJournalVoucher",
+                                "BankOperation",
+                                new { Date = "blankDate" },
+                                new { id = "BOR", }
+                                )
+                            </label>
+                            <label id="CountNo">(@ViewBag.GLProvition)</label>
+
+
+                        </div>
+
+                        <div class="col-md-3 control-label">
+                            <label class="control-label" target="_blank">
+                                @Html.ActionLink(
+                                "List Of Receipt Voucher",
+                                "GetGLEntries",
+                                "BankOperation",
+                                new { Date = "blankDate" },
+                                new { id = "GLEntries", }
+                                )
+                            </label>
+                            <label>(@ViewBag.GLEntries)</label>
+                        </div>
+
+                        <div class="col-md-5" style="margin-left:480px; font-size:13px; font-weight:bold">
+                            @if (ViewBag.HasRemittance == true)
+                            {
+                                <button id="addModalButton" value="Add1" class="btn" style="width:130px">Remittance</button>
+                            }
+                            <button id="addModalButton2" value="Add2" class="btn" style="width:110px">Bank Receipt</button>
+                        </div>
+                    </div>
+                    <div class="row col-md-10" style="margin-left:80px">
+                        <div class="row">
+                            <div class="col-md-11">
+                                <br />
+                                <br />
+                                <table class="table table-bordered table-responsive" id="datatable-buttons">
+                                    <thead>
+                                        <tr>
+                                            <th>SL</th>
+                                            <th>Transaction No</th>
+                                            <th>Voucher No</th>
+                                            <th>Purpose</th>
+                                            <th>Amount</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tbodyId">
+                                        @foreach (var item in hoRemittance)
+                                        {
+                                            <tr>
+
+                                                <td>@item.SerialNo</td>
+                                                <td>@item.TransactionNo</td>
+                                                <td>@item.VoucherNo</td>
+                                                <td>@item.Purpose</td>
+                                                <td>@item.Amount</td>
+
+                                                <td>
+                                                    <a href="#" class="on-default remove-row deleteSup largeSpace" data-id="1" id="delete" value="@item.TransactionNo" tag="@item.Tag"><i class="glyphicon glyphicon-trash"></i></a>
+
+                                                    <a href="#" class="on-default remove-row deleteSup" data-id="1" id="edit" value="@item.TransactionNo" tag="@item.Tag"><i class="glyphicon glyphicon-edit"></i></a>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12" style="margin-left:250px; margin-top:10px">
+                        <div class="col-md-6">
+                            @Html.LabelFor(x => x.RecTotal, new { @class = "col-md-2 control-label" })
+                            <div class="form-group col-md-8">
+                                <div class="input-group form-group col-md-9">
+                                    <input type="text" class="form-control" id="@Html.IdFor(x => x.RecTotal)" required="required" value="@recTotal" disabled="disabled">
+
+                                </div>
+                                @Html.ValidationMessageFor(x => x.RecTotal)
+                            </div>
+                        </div>
+                        <div class="col-md-6"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="column">
+        <div class="col-md-12">
+            <div class="panel panel-color panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Payment</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="col-md-12">
+                        <div class="col-md-4 control-label">
+
+                            <label class="control-label" target="_blank">
+                                @Html.ActionLink(
+         "Payment Voucher waiting for Posting",
+                                "GetJournalVoucher",
+                                "BankOperation",
+                                new { Date = "blankDate" },
+                                new { id = "BOP", }
+                                )
+                            </label>
+                            <label id="CountNoE">(@ViewBag.GLProvitionB)</label>
+
+                        </div>
+
+
+                        <div class="col-md-3 control-label">
+
+                            <label class="control-label" target="_blank">
+                                @Html.ActionLink(
+           "List Of Payment Voucher",
+                                 "GetGLEntries",
+                                "BankOperation",
+                                new { Date = "blankDate" },
+                                new { id = "GLEntriesp", }
+                                )
+                            </label>
+                            <label>(@ViewBag.GLEntriesB)</label>
+
+                        </div>
+
+                        <div class="col-md-5" style="margin-left:610px; font-size:13px; font-weight:bold">
+                            <button id="addModalButton1" value="Add2" class="btn" style="width:110px">Bank Payment</button> &ensp; &ensp;
+                        </div>
+                    </div>
+                    <div class="row col-md-10" style="margin-left:80px">
+                        <div class="row">
+                            <div class="col-md-11">
+                                <br />
+                                <br />
+                                <table class="table table-bordered table-responsive" id="datatable-buttons1">
+                                    <thead>
+                                        <tr>
+                                            <th>SL</th>
+                                            <th>Transaction No</th>
+                                            <th>Voucher No</th>
+                                            <th>Purpose</th>
+                                            <th>Amount</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tbodyId1">
+                                        @foreach (var item in payment)
+                                        {
+                                            <tr>
+                                                <td>@item.SerialNo</td>
+                                                <td>@item.TransactionNo</td>
+                                                <td>@item.VoucherNo</td>
+                                                <td>@item.Purpose</td>
+                                                <td>@item.Amount</td>
+
+
+                                                <td>
+                                                    <a href="#" class="on-default remove-row deleteSup largeSpace" data-id="1" id="delete" value="@item.TransactionNo" tag="@item.Tag"><i class="glyphicon glyphicon-trash"></i></a>
+
+                                                    <a href="#" class="on-default remove-row deleteSup" data-id="1" id="edit" value="@item.TransactionNo" tag="@item.Tag"><i class="glyphicon glyphicon-edit"></i></a>
+                                                </td>
+                                            </tr>
+                                        }
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12" style="margin-left:200px; margin-top:10px">
+                        <div class="col-md-6">
+                            @Html.LabelFor(x => x.PayTotal, new { @class = "col-md-4 control-label" })
+                            <div class="form-group col-md-8">
+                                <div class="input-group form-group col-md-9">
+                                    <input type="text" class="form-control" id="@Html.IdFor(x => x.PayTotal)" required="required" value="@payTotal" disabled="disabled">
+                                </div>
+                                @Html.ValidationMessageFor(x => x.PayTotal)
+                            </div>
+                        </div>
+                        <div class="col-md-6"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="column">
+        <div class="col-md-12">
+            <div class="panel panel-color panel-primary">
+                <div class="panel-body">
+                    <div class="col-md-12" style="margin-left:400px">
+                        <div class="col-md-6" style="text-align:end">
+                            @Html.LabelFor(x => x.CloseBal, new { @class = "col-md-4 control-label" })
+                            <div class="form-group col-md-8">
+                                <div class="input-group form-group col-md-10">
+                                    <input type="text" class="form-control" id="@Html.IdFor(x => x.CloseBal)" required="required" value="@closeBal" disabled="disabled">    @**@
+                                </div>
+                                @Html.ValidationMessageFor(x => x.CloseBal)
+                            </div>
+                        </div>
+                    </div>
+                    @*<div class="row col-md-12" style="text-align:end">
+                            <div class="col-md-4"></div>
+                            <div class="col-md-8" style=" text-align:right;overflow:hidden;">
+                                <input type="button" value="Save" class="btn btn-primary" id="save" style="width:130px; text-align:center" />
+                                <input type="button" value="Print" class="btn btn-primary" id="print" style="width:100px;" />
+                            </div>
+                        </div>*@<div class="row col-md-12" style="text-align:end">
+                        <div class="col-md-4"></div>
+                        <div class="col-md-8" style=" text-align:right;overflow:hidden;">
+                            <input type="button" value="Save" class="btn btn-primary hidden" id="save" style="width:130px; text-align:center" />
+                            <input type="button" value="Print" class="btn btn-primary" id="print" style="width:100px;" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade bd-example-modal-lg " tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" id="Addmodal" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="panel panel-color panel-primary">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">H/O Remittance</h3>
+                            </div>
+                            <div class="panel-body">
+
+                                <div class="col-md-12">
+
+                                    <label class="col-md-3" for="RemitNo">Remittance No</label>
+                                    <div class="form-group col-md-6">
+                                        <input class="form-control" id="RemitNo" name="RemitNo" type="text" value="">
+                                        <span class="field-validation-valid" data-valmsg-for="RemitNo" data-valmsg-replace="true"></span>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <label class="col-md-3" for="RemitDate">Remittance Date</label>
+                                    <div class="form-group col-md-6">
+                                        <input type="text" class="form-control datePage" name="RemitDate" id="RemitDate" value="@ViewBag.Date" disabled="disabled">
+                                        <span class="input-group-addon bg-primary b-0 text-white"><i class="ion-calendar"></i></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="col-md-3" for="hVoucherNo">Voucher No</label>
+                                    <div class="form-group col-md-6">
+                                        <input class="form-control" id="hVoucherNo" name="hVoucherNo" type="text" value="">
+                                        <span class="field-validation-valid" data-valmsg-for="hVoucherNo" data-valmsg-replace="true"></span>
+                                    </div>
+
+                                    @*<span class="bg-primary b-0 text-white" id="newVchr"><i class="md-sync"></i></span>*@
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="col-md-3 required" for="hoAmount">Amount</label>
+                                    <div class="form-group col-md-6">
+                                        <input class="form-control" id="hoAmount" required="required" name="hoAmount" type="number" placeholder="0">
+                                        <span class="field-validation-valid" data-valmsg-for="hoAmount" data-valmsg-replace="true"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="col-md-3" for="hoRemarks">Remarks</label>
+                                    <div class="form-group col-md-9">
+                                        <input class="form-control" id="hoRemarks" name="hoRemarks" type="text" value="">
+                                        <span class="field-validation-valid" data-valmsg-for="hoRemarks" data-valmsg-replace="true"></span>
+                                    </div>
+                                </div>
+
+                                <div class="row col-md-12">
+                                    <div class="col-md-12">
+                                        <label for="select2-chosen-1" class="col-md-6"></label>
+                                        <input type="button" value="Save" class="btn btn-primary" id="saveHOR" />
+                                        <input type="button" value="Update" class="btn btn-primary" id="UpdateHOR" />
+                                        <input type="button" value="Clear" class="btn btn-primary" id="clearHOR" />
+                                        <input type="button" value="Close" class="btn btn-primary" id="closeHOR" />
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade bd-example-modal-lg " tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" id="Addmodal2" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="panel panel-color panel-primary">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">Bank Receipt</h3>
+
+                            </div>
+                            <div class="panel-body">
+
+                                <div class="col-md-12">
+
+                                    <label class="col-md-3" for="brReceiptNo">Receipt No</label>
+                                    <div class="form-group col-md-6">
+                                        <input class="form-control" id="brReceiptNo" name="brReceiptNo" type="text" value="">
+                                        <span class="field-validation-valid" data-valmsg-for="brReceiptNo" data-valmsg-replace="true"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="col-md-3" for="brReceiptDate">Receipt Date</label>
+                                    <div class="form-group col-md-6">
+                                        <input type="text" class="form-control datePage" id="brReceiptDate" value="@ViewBag.Date" disabled="disabled">
+                                        <span class="input-group-addon bg-primary b-0 text-white"><i class="ion-calendar"></i></span>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <label class="col-md-3" for="VoucherNo">Voucher No</label>
+                                    <div class="form-group col-md-6">
+                                        <input class="form-control" id="VoucherNo" name="VoucherNo" type="text" value="">
+                                        <span class="field-validation-valid" data-valmsg-for="VoucherNo" data-valmsg-replace="true"></span>
+                                    </div>
+
+                                    @*<span class="bg-primary b-0 text-white" id="newVchr"><i class="md-sync"></i></span>*@
+                                </div>
+
+                                <div class="col-md-12">
+                                    <label class="col-md-3 required" for="brPurAccode">Purpose</label>
+                                    <div class="form-group col-md-6">
+                                        <select class="form-control select2" required="required" id="brPurAccode" name="brPurAccode">
+                                            <option>Select Purpose</option>
+                                            @foreach (var item in ViewBag.brPurAccode)
+                                            {
+                                                <option value="@item.Value">@item.Text</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <label class="col-md-3 required" for="brSubCode">Subsidiary</label>
+                                    <div class="form-group col-md-6">
+                                        <select class="form-control select2" required="required" id="brSubCode" name="brSubCode">
+                                            @*<option>Select Purpose</option>*@
+                                            @*<option></option>*@
+                                            @foreach (var item in ViewBag.brSubCode)
+                                            {
+                                                <option value="@item.Value">@item.Text</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                @if (ViewBag.MaintJob == true)
+                                {
+                                    <div class="col-md-12">
+                                        <label class="col-md-3">Job No</label>
+                                        <div class="col-md-8" style="padding-left:0px">
+                                            <div class="col-md-8" style="padding-left:0px">
+                                                <div class="col-md-12 input-group form-group" style="padding-left: 5px !important;">
+                                                    <select class="form-control select2" id="JobNo" name="JobNo">
+                                                        <option value=" ">---- Select ----</option>
+                                                        @foreach (var item in ViewBag.JobNo)
+                                                        {
+                                                            <option value="@item.Value">@item.Text</option>
+                                                        }
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="col-md-12">
+                                                    <input type="button" class="btn" value="Add Job" id="btnJob" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                                <div class="col-md-12">
+                                    <label class="col-md-3" for="RefNo">Ref No</label>
+                                    <div class="form-group col-md-6">
+                                        <input class="form-control" id="RefNo" name="RefNo" type="text" value="">
+                                        <span class="field-validation-valid" data-valmsg-for="RefNo" data-valmsg-replace="true"></span>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <label class="col-md-3 required" for="bankCode">Bank</label>
+                                    <div class="form-group col-md-6">
+                                        <select class="form-control select2" required="required" id="bankCode" name="bankCode">
+                                            <option>----- Select -----</option>
+                                            @foreach (var item in ViewBag.bankCode)
+                                            {
+                                                <option value="@item.Value">@item.Text</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <label class="col-md-3 required" for="brChequeNo">Cheque No</label>
+                                    <div class="form-group col-md-6">
+                                        <input class="form-control" id="brChequeNo" required="required" name="brChequeNo" type="text" value="">
+                                        <span class="field-validation-valid" data-valmsg-for="brChequeNo" data-valmsg-replace="true"></span>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <label class="col-md-3 required" for="brChequeDate">Cheque Date</label>
+                                    <div class="form-group col-md-6">
+                                        <input type="text" class="form-control datePage" id="brChequeDate" value="@ViewBag.Date">
+                                        <span class="input-group-addon bg-primary b-0 text-white"><i class="ion-calendar"></i></span>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <label class="col-md-3 required" for="brAmount">Amount</label>
+                                    <div class="form-group col-md-4">
+                                        <input class="form-control" id="brAmount" name="brAmount" type="number" placeholder="0" required="required">
+                                        <span class="field-validation-valid" data-valmsg-for="brAmount" data-valmsg-replace="true"></span>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <input type="checkbox" class="brAdvance" id="brAdvance" name="brAdvance" value="" style="height:15px; width:15px"> &ensp;&nbsp;&nbsp; <label>Advance</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="col-md-3" for="brRemarks">Remarks</label>
+                                    <div class="form-group col-md-9">
+                                        <input class="form-control" id="brRemarks" name="brRemarks" type="text" value="">
+                                        <span class="field-validation-valid" data-valmsg-for="brRemarks" data-valmsg-replace="true"></span>
+                                    </div>
+                                </div>
+
+                                <div class="row col-md-12">
+                                    <div class="col-md-12">
+                                        <label for="select2-chosen-1" class="col-md-6"></label>
+                                        <input type="button" value="Save" class="btn btn-primary" id="saveBankReceipt" />
+                                        <input type="button" value="Update" class="btn btn-primary" id="UpdateBankReceipt" />
+                                        <input type="button" value="Clear" class="btn btn-primary" id="clearBankReceipt" />
+                                        <input type="button" value="Close" class="btn btn-primary" id="closeBankReceipt" />
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade bd-example-modal-lg " tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" id="Addmodal1" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="panel panel-color panel-primary">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">Payment</h3>
+
+                            </div>
+
+                            <div class="panel-body">
+                                <div class="col-md-12">
+
+                                    <label class="col-md-3 required" for="PayCode">Payment No</label>
+                                    <div class="form-group col-md-6">
+                                        <input class="form-control" id="PayCode" name="PayCode" type="text" value="">
+                                        <span class="field-validation-valid" data-valmsg-for="PayCode" data-valmsg-replace="true"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="col-md-3" for="PayDate">Payment Date</label>
+                                    <div class="form-group col-md-6">
+                                        <input type="text" class="form-control datePage" id="PayDate" value="@ViewBag.Date" disabled="disabled">
+                                        <span class="input-group-addon bg-primary b-0 text-white"><i class="ion-calendar"></i></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="col-md-3" for="pVoucherNo">Voucher No</label>
+                                    <div class="form-group col-md-6">
+                                        <input class="form-control" id="pVoucherNo" name="pVoucherNo" type="text" value="">
+                                        <span class="field-validation-valid" data-valmsg-for="pVoucherNo" data-valmsg-replace="true"></span>
+                                    </div>
+
+                                    @*<span class="bg-primary b-0 text-white" id="newVchr"><i class="md-sync"></i></span>*@
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="col-md-3 required" for="purAccode">Purpose</label>
+                                    <div class="form-group col-md-6">
+                                        <select class="form-control select2" id="purAccode" name="purAccode">
+                                            <option>Select Purpose</option>
+                                            @foreach (var item in ViewBag.purAccode)
+                                            {
+                                                <option value="@item.Value">@item.Text</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                @if (ViewBag.MaintJob == true)
+                                {
+                                    <div class="col-md-12">
+                                        <label class="col-md-3">Job No</label>
+                                        <div class="col-md-8" style="padding-left:0px">
+                                            <div class="col-md-8" style="padding-left:0px">
+                                                <div class="col-md-12 input-group form-group" style="padding-left: 5px !important;">
+                                                    <select class="form-control select2" id="payJobNo" name="payJobNo">
+                                                        <option value=" ">---- Select ----</option>
+                                                        @foreach (var item in ViewBag.JobNo)
+                                                        {
+                                                            <option value="@item.Value">@item.Text</option>
+                                                        }
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="col-md-12">
+                                                    <input type="button" class="btn" value="Add Job" id="btnJob" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                                <div class="col-md-12">
+                                    <label class="col-md-3 required" for="ChequeNo">Cheque No</label>
+                                    <div class="form-group col-md-6">
+                                        <input class="form-control" id="ChequeNo" name="ChequeNo" type="text" required="required">
+                                        <span class="field-validation-valid" data-valmsg-for="ChequeNo" data-valmsg-replace="true"></span>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <label class="col-md-3" for="ChequeDate">Cheque Date</label>
+                                    <div class="form-group col-md-6">
+                                        <input type="text" class="form-control datePage" id="ChequeDate" value="@ViewBag.Date">
+                                        <span class="input-group-addon bg-primary b-0 text-white"><i class="ion-calendar"></i></span>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <label class="col-md-3 required" for="Amount">Amount</label>
+                                    <div class="form-group col-md-4">
+                                        <input class="form-control" id="Amount" name="Amount" type="number" required="required">
+                                        <span class="field-validation-valid" data-valmsg-for="Amount" data-valmsg-replace="true"></span>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <input type="checkbox" class="Advance" id="Advance" name="Advance" value="" style="height:15px; width:15px"> &ensp;&nbsp;&nbsp; <label>Advance</label>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <label class="col-md-3 required" for="SubCode">To Whom</label>
+                                    <div class="form-group col-md-6">
+                                        <select class="form-control select2" id="SubCode" name="SubCode">
+                                            <option>---Select---</option>
+                                            @foreach (var item in ViewBag.SubCode)
+                                            {
+                                                <option value="@item.Value">@item.Text</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <label class="col-md-3" for="Remarks">Remarks</label>
+                                    <div class="form-group col-md-9">
+                                        <input class="form-control" id="Remarks" name="Remarks" type="text" value="">
+                                        <span class="field-validation-valid" data-valmsg-for="Remarks" data-valmsg-replace="true"></span>
+                                    </div>
+                                </div>
+
+                                <div class="row col-md-12">
+                                    <div class="col-md-12">
+                                        <label for="select2-chosen-1" class="col-md-6"></label>
+                                        <input type="button" value="Save" class="btn btn-primary" id="savePayment" />
+                                        <input type="button" value="Update" class="btn btn-primary" id="UpdatePayment" />
+                                        <input type="button" value="Clear" class="btn btn-primary" id="clearPayment" />
+                                        <input type="button" value="Close" class="btn btn-primary" id="closePayment" />
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true"
+         id="JobModal" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="panel panel-color panel-primary">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">Job Information</h3>
+
+                            </div>
+                            <div class="panel-body">
+                                <div class="clearfix">
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="col-md-3">Job No</label>
+                                    <div class="input-group form-group col-md-7">
+                                        <input type="text" class="form-control" id="nJobNo" name="nJobNo" />
+                                    </div>
+                                </div>
+                                <div class="col-md-10">
+                                    <div>
+                                        <div class="pull-right">
+                                            <input type="button" id="btnJobOk" value="Save" class="btn btn-primary" />
+                                            <input type="button" id="closeJob" value="Close" class="btn btn-primary" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+}
+
+
+
+
+
+@section Scripts{
+    <script src="/App_Themes/Theme1/plugins/select2/select2.min.js"></script>
+    <script src="~/App_Themes/Theme1/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+    <script>
+    $(document).ready(function () {
+        $('#print').hide();
+        $('#purAccode').select2();
+        $('#brPurAccode').select2();
+        $('#SubCode').select2();
+        $('#brSubCode').select2();
+        $('#bankCode').select2();
+        $("#UpdateHOR").hide();
+        $("#updatePayment").hide();
+        $("#datatable").DataTable();
+
+        //For GL Permission By Farhad
+        var ispType = '@ViewBag.errMsg';
+        if (ispType != '') {
+            ispType = '@ViewBag.errMsg';
+        }
+        if (ispType == "VWP") {
+            alert("No Voucher waiting for posting Permission for this User");
+        } else if (ispType == "VL") {
+            alert("No List Of vouchers Permission for this User");
+        }
+
+
+
+        jQuery("#TrDate").datepicker({
+            autoclose: true,
+            todayHighlight: true
+        });
+        jQuery("#RemitDate").datepicker({
+            autoclose: true,
+            todayHighlight: true
+        });
+        jQuery("#PayDate").datepicker({
+            autoclose: true,
+            todayHighlight: true
+        });
+        jQuery("#ChequeDate").datepicker({
+            autoclose: true,
+            todayHighlight: true
+        });
+        jQuery("#brChequeDate").datepicker({
+            autoclose: true,
+            todayHighlight: true
+        });
+        jQuery("#brReceiptDate").datepicker({
+            autoclose: true,
+            todayHighlight: true
+        });
+        $("#UpdateCashReceipt").hide();
+        $('#datatable-buttons').dataTable();
+        $('#datatable-buttons1').dataTable();
+
+
+
+
+
+
+
+        //For COP
+        $("#BOR").click(function () {
+            //Get the id of the selected item in dropdown
+            var TrDate = moment($('#TrDate').val(), 'DD/MM/YYYY').format('MM/DD/YYYY').toString();
+
+            var id = TrDate + '&pageType=BOR';
+
+            //Replace the predifined QueryString param "xxx" with the "id"
+            this.href = this.href.replace("blankDate", id);
+        });
+        //For GLEntries
+        $("#GLEntries").click(function () {
+            //Get the id of the selected item in dropdown
+            var TrDate = moment($('#TrDate').val(), 'DD/MM/YYYY').format('MM/DD/YYYY').toString();
+
+            var id = TrDate + '&pageType=BOR';
+
+            //Replace the predifined QueryString param "xxx" with the "id"
+            this.href = this.href.replace("blankDate", id);
+        });
+        //For COR
+        $("#BOP").click(function () {
+            //Get the id of the selected item in dropdown
+            var TrDate = moment($('#TrDate').val(), 'DD/MM/YYYY').format('MM/DD/YYYY').toString();
+
+            var id = TrDate + '&pageType=BOP';
+
+            //Replace the predifined QueryString param "xxx" with the "id"
+            this.href = this.href.replace("blankDate", id);
+        });
+
+        //For GLEntries
+        $("#GLEntriesp").click(function () {
+            //Get the id of the selected item in dropdown
+            var TrDate = moment($('#TrDate').val(), 'DD/MM/YYYY').format('MM/DD/YYYY').toString();
+
+            var id = TrDate + '&pageType=BOP';
+
+            //Replace the predifined QueryString param "xxx" with the "id"
+            this.href = this.href.replace("blankDate", id);
+        });
+
+
+        /////*************************Job No****************************//////
+        //$("#JobNo").select2();
+        $(document).on("click", "#btnJob", function () {
+            $("#JobModal").modal("show");
+        });
+        $(document).on("click", "#closeJob", function (e) {
+            e.preventDefault();
+            $('#JobModal').modal('hide');
+        });
+
+        $(document).on("click", "#btnJobOk", function (e) {
+            if ($("#nJobNo").val() != "") {
+                $.ajax({
+                    url: '@Url.Action("LoadandSaveJob", "Sales")',
+                    contentType: "application/json;charset=utf-8",
+                    data: {
+                        nJobNo: $("#nJobNo").val()
+                    },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        $('#JobNo').empty();
+                        //data.insertBefore('<option>', { Value: "", text: "--- Select ---" });
+                        $.each(data, function (index, value) {
+                            $('#JobNo').append($('<option>',
+                                {
+                                    value: value.Value,
+                                    text: value.Text
+                                })).select2();
+                        });
+                        $('#JobModal').modal('hide');
+                        $("#nJobNo").val("");
+                    }
+                });
+            }
+            else {
+                alert("Job No is required.");
+                return;
+            }
+
+        })
+
+
+        /////*************************HO Remittance****************************//////
+
+
+
+        $(document).on('click', '#addModalButton', function () {
+            $('#Addmodal').modal('show');
+            $('#saveHOR').show();
+            $('#UpdateHOR').hide();
+            $.ajax({
+                url: '@Url.Action("GetRemitNo", "HORemittance")',
+                contentType: "application/json;charset=utf-8",
+                type: 'GET',
+                dataType: 'json',
+                success: function (datas) {
+                    $("#RemitNo").val(datas);
+                }
+            });
+
+            $.ajax({
+                url: '@Url.Action("GetNewVoucherNo", "HORemittance")',
+                contentType: "application/json;charset=utf-8",
+                data: { VType: 'RT', TrDate: $("#TrDate").val() },
+                type: 'GET',
+                dataType: 'json',
+                success: function (datas) {
+                    $("#hVoucherNo").val(datas);
+                }
+            });
+
+            $(document).on("click", "#newVchr", function () {
+                $("#addModalButton").show();
+                $.ajax({
+                    url: '@Url.Action("GetNewVoucherNo", "HORemittance")',
+                    contentType: "application/json;charset=utf-8",
+                    data: { VType: 'RT' },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (datas) {
+                        if (datas != 0) {
+                            $("#hVoucherNo").val(datas);
+                        }
+                    }
+                })
+            });
+        });
+
+        $(document).on("click", "#saveHOR", function () {
+
+            var hoRemittance = { RemitDate: "", VoucherNo: "", RemitNo: "", Amount: "", Remarks: "" }
+            $("#saveHOR").prop("disabled", false);
+            hoRemittance.RemitDate = $("#RemitDate").val();
+            hoRemittance.VoucherNo = $("#hVoucherNo").val();
+            hoRemittance.RemitNo = $("#RemitNo").val();
+            hoRemittance.Amount = parseFloat($("#hoAmount").val()).toFixed(2).replace(".", ","); 
+            hoRemittance.Remarks = $("#hoRemarks").val();
+            if (parseFloat(hoRemittance.Amount) <= 0 || !hoRemittance.Amount.trim()) {
+                alert("Amount is Required");
+            }
+            else {
+                $.ajax({
+                    url: '@Url.Action("SaveHOR", "HORemittance")',
+                    contentType: "application/json;charset=utf-8",
+                    data: JSON.stringify({ hoRemit: hoRemittance }),
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function (datas) {
+
+                        if (datas == 0) {
+                            swal(
+                                'Sorry!',
+                                'Something went wrong please try again!',
+                                'warning'
+                            );
+                            $("#saveHOR").prop("disabled", false);
+                        }
+                        else if (datas == 1) {
+                            swal({
+                                title: "Save Successfully!",
+                                text: "Already exists Please try again!",
+                                type: "success"
+                            }, function () {
+                                $.ajax({
+                                    url: '@Url.Action("RemittanceNoIncreement", "HORemittance")',
+                                    type: 'GET',
+                                    dataType: 'json',
+                                    success: function (datas) {
+                                        $("#RemitNo").val(datas);
+                                    }
+                                });
+                            });
+                            $("#save").prop("disabled", false);
+                        }
+                        else if (datas == "X") {
+                            swal({
+                                title: "Sorry",
+                                text: "No Save Permission for this User",
+                                type: "warning"
+                            });
+                        }
+                        else {
+                            swal({
+                                title: "Ok",
+                                text: "Save Sucessfully!",
+                                type: "success"
+                            }, function () {
+                                $.ajax({
+                                    url: '@Url.Action("GetNewVoucherNo", "HORemittance")',
+                                    contentType: "application/json;charset=utf-8",
+                                    data: { VType: 'RT', TrDate: $("#TrDate").val() },
+                                    type: 'GET',
+                                    dataType: 'json',
+                                    success: function (datas) {
+                                        $("#hVoucherNo").val(datas);
+                                    }
+                                });
+                            });
+                            $("#saveHOR").prop("disabled", false);
+                            AddOnHORemittance(datas);
+                            clearHORemittance();
+                        }
+
+
+                    },
+                    error: function (datas) {
+                        swal("There is network connection error! or Critical system error (Try again!)", "warning")
+                        $("#saveHOR").prop("disabled", true);
+                    }
+                });
+            }
+
+        });
+
+        $("#UpdateHOR").on("click", function () {
+            var hoRemittance = { RemitDate: "", VoucherNo: "", RemitNo: "", Amount: "", Remarks: "" }
+            $("#saveHOR").prop("disabled", false);
+            hoRemittance.RemitDate = $("#RemitDate").val();
+            hoRemittance.VoucherNo = $("#hVoucherNo").val();
+            hoRemittance.RemitNo = $("#RemitNo").val();
+            hoRemittance.Amount = parseFloat($("#hoAmount").val()).toFixed(2).replace(".", ",");
+            hoRemittance.Remarks = $("#hoRemarks").val();
+            if (parseFloat(hoRemittance.Amount) <= 0 || !hoRemittance.Amount.trim()) {
+                alert("Amount is Required");
+            }
+            else {
+                $.ajax({
+                    url: '@Url.Action("UpdateHOR", "HORemittance")',
+                    contentType: "application/json;charset=utf-8",
+                    data: JSON.stringify({ hoRemit: hoRemittance }),
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function (datas) {
+
+                        if (datas == 0) {
+                            swal(
+                                'Sorry!',
+                                'Something went wrong please try again!',
+                                'warning'
+                            );
+                            $("#UpdateHOR").prop("disabled", false);
+                        }
+                        else if (datas == "U") {
+                            swal({
+                                title: "Sorry",
+                                text: "No Update Permission for this User",
+                                type: "warning"
+                            });
+                        }
+                        else {
+                            swal({
+                                title: "Ok",
+                                text: "Sucessfully Updated!",
+                                type: "success"
+                            }, function () {
+                                $.ajax({
+                                    url: '@Url.Action("GetNewVoucherNo", "HORemittance")',
+                                    contentType: "application/json;charset=utf-8",
+                                    data: { VType: 'RT', TrDate: $("#TrDate").val() },
+                                    type: 'GET',
+                                    dataType: 'json',
+                                    success: function (datas) {
+                                        $("#hVoucherNo").val(datas);
+                                    }
+                                });
+                            });
+                            $("#UpdateHOR").prop("disabled", false);
+                            AddOnHORemittance(datas);
+                            clearHORemittance();
+                        }
+
+
+                    },
+                    error: function (datas) {
+                        swal("There is network connection error! or Critical system error (Try again!)", "warning")
+                        $("#UpdateHOR").prop("disabled", true);
+                    }
+                });
+            }
+
+        });
+
+
+        function AddOnHORemittance(items) {
+            var totRcv = 0.0;
+            var table = $("#datatable-buttons").DataTable();
+            table.clear().draw();
+            $.each(items, function (index, data) {
+                table.rows.add([[data.SerialNo, data.TransactionNo, data.VoucherNo, data.Purpose, data.Amount, '<a href="#" class="on-default remove-row largeSpace" tag="' + data.Tag + '" deleteSup" data-id="' + data.SerialNo + '" id="delete" value="' + data.TransactionNo + '"><i class="glyphicon glyphicon-trash"></i></a><a href="#" class="on-default remove-row" tag="' + data.Tag + '" deleteSup" data-id="' + data.SerialNo + '" id="edit" value="' + data.TransactionNo + '"><i class="glyphicon glyphicon-edit"></i></a>']]).draw();
+                totRcv += data.Amount;
+            });
+            $("#RecTotal").val(totRcv);
+            $("#CloseBal").val(parseFloat($("#OpenBal").val()) + parseFloat($("#RecTotal").val()) - parseFloat($("#PayTotal").val()));
+        }
+
+
+        $(document).on("click", "#closeHOR", function () {
+            clearHORemittance();
+            $('#Addmodal').modal('hide');
+            //location.reload();
+
+            $.ajax({
+                url: '@Url.Action("GetGlECount", "CashOperation")',
+                contentType: "application/json;charset=utf-8",
+                data: { VType: 'BOR' },
+                type: 'GET',
+                dataType: 'json',
+                success: function (datas) {
+                    $("#CountNo").html('(' + datas + ')');
+                }
+            });
+        });
+
+        $(document).on("click", "#clearHOR", function () {
+            clearHORemittance();
+        });
+
+        function clearHORemittance() {
+
+            $("#RemitNo").val("");
+            $("#RemitDate").val("@DateTime.Today.ToString("MM/dd/yyyy")")
+            $("#hoAmount").val("");
+            $("#hVoucherNo").val("");
+            $("#hoRemarks").val("");
+            $.ajax({
+                url: '@Url.Action("GetRemitNo", "HORemittance")',
+                contentType: "application/json;charset=utf-8",
+                type: 'GET',
+                dataType: 'json',
+                success: function (datas) {
+
+                    $("#RemitNo").val(datas);
+                }
+            });
+
+
+            $.ajax({
+                url: '@Url.Action("GetNewVoucherNo", "HORemittance")',
+                contentType: "application/json;charset=utf-8",
+                data: { VType: 'RT' },
+                type: 'GET',
+                dataType: 'json',
+                success: function (datas) {
+                    $("#hVoucherNo").val(datas);
+                }
+            });
+        }
+
+
+
+        //********************************************** Bank Receipt ****************************************************//
+
+
+        $(document).on('click', '#addModalButton2', function () {
+            $("#saveBankReceipt").show();
+            $("#UpdateBankReceipt").hide();
+            $('#Addmodal2').modal('show');
+            $.ajax({
+                url: '@Url.Action("GetReceiptNo", "BankReceipt")',
+                contentType: "application/json;charset=utf-8",
+                type: 'GET',
+                dataType: 'json',
+                success: function (datas) {
+                    $("#brReceiptNo").val(datas);
+                }
+            });
+            $.ajax({
+                url: '@Url.Action("GetNewVoucherNo", "BankReceipt")',
+                contentType: "application/json;charset=utf-8",
+                data: { VType: 'BR', TrDate: $("#TrDate").val() },
+                type: 'GET',
+                dataType: 'json',
+                success: function (datas) {
+                    $("#VoucherNo").val(datas);
+                }
+            });
+
+
+            $(document).on("click", "#newVchr", function () {
+                $("#addModalButton").show();
+                $.ajax({
+                    url: '@Url.Action("GetNewVoucherNo", "BankReceipt")',
+                    contentType: "application/json;charset=utf-8",
+                    data: { VType: 'BR' },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (datas) {
+                        if (datas != 0) {
+                            $("#VoucherNo").val(datas);
+                        }
+                    }
+                })
+            });
+        });
+
+
+        $(document).on("click", "#saveBankReceipt", function () {
+            $("#saveBankReceipt").prop("disabled", false);
+            var bankReceipt = {
+                BReceiptNo: "", BReceiptDate: "", purAccode: "", SubCode: "", VoucherNo: "", RefNo: "",
+                bankCode: "", ChequeNo: "", ChequeDate: "", Amount: 0, Advance: false, Remarks: "", JobNo:""
+            };
+            bankReceipt.BReceiptNo = $("#brReceiptNo").val();
+            bankReceipt.BReceiptDate = $("#brReceiptDate").val();
+            bankReceipt.purAccode = $("#brPurAccode").val();
+            bankReceipt.JobNo = $("#JobNo").val();
+            bankReceipt.SubCode = $("#brSubCode").val();
+            bankReceipt.VoucherNo = $("#VoucherNo").val();
+            bankReceipt.RefNo = $("#RefNo").val();
+            bankReceipt.bankCode = $("#bankCode").val();
+            bankReceipt.ChequeNo = $("#brChequeNo").val();
+            bankReceipt.ChequeDate = $("#brChequeDate").val();
+            bankReceipt.Amount = parseFloat($("#brAmount").val()).toFixed(2).replace(".", ",");
+            bankReceipt.Advance = $("#brAdvance").prop("checked");
+            bankReceipt.Remarks = $("#brRemarks").val();
+            if (parseFloat(bankReceipt.Amount) <= 0 || !bankReceipt.Amount.trim()) {
+                alert("Amount is Required");
+            }
+            else {
+                $.ajax({
+                    url: '@Url.Action("SaveBankReceipt", "BankReceipt")',
+                    contentType: "application/json;charset=utf-8",
+                    data: JSON.stringify({ bankReceipt: bankReceipt }),
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function (datas) {
+                        if (datas == 0) {
+                            swal(
+                                'Sorry!',
+                                'Something went wrong please try again!',
+                                'warning'
+                            );
+                            $("#saveBankReceipt").prop("disabled", false);
+                        }
+                        else if (datas == "X") {
+                            swal({
+                                title: "Sorry",
+                                text: "No Save Permission for this User",
+                                type: "warning"
+                            });
+                        }
+                        else if (datas == 1) {
+                            swal({
+                                title: "Save Failed!!!",
+                                text: "Already exists Please try again!",
+                                type: "success"
+                            }, function () {
+                                $.ajax({
+                                    url: '@Url.Action("BankReceiptNoIncreement", "BankReceipt")',
+                                    type: 'GET',
+                                    dataType: 'json',
+                                    success: function (datas) {
+                                        $("#brReceiptNo").val(datas);
+                                    }
+                                });
+                            });
+                            $("#save").prop("disabled", false);
+                        }
+                        else {
+                            swal({
+                                title: "Ok",
+                                text: "Save Sucessfully!",
+                                type: "success"
+                            }, function () {
+                                $.ajax({
+                                    url: '@Url.Action("GetNewVoucherNo", "BankReceipt")',
+                                    contentType: "application/json;charset=utf-8",
+                                    data: { VType: 'BR', TrDate: $("#TrDate").val() },
+                                    type: 'GET',
+                                    dataType: 'json',
+                                    success: function (datas) {
+                                        $("#VoucherNo").val(datas);
+                                    }
+                                });
+
+                            });
+                            $("#saveBankReceipt").prop("disabled", false);
+                            AddOnHORemittance(datas);
+                            clearBankReceipt();
+                        }
+
+                    },
+                    error: function (datas) {
+                        swal("There is network connection error! or Critical system error (Try again!)", "warning")
+                        $("#saveBankReceipt").prop("disabled", true);
+                    }
+                });
+            }
+
+        });
+
+
+        $(document).on("click", "#UpdateBankReceipt", function () {
+            $("#UpdateBankReceipt").prop("disabled", false);
+            var bankReceipt = {
+                BReceiptNo: "", BReceiptDate: "", purAccode: "", SubCode: "", VoucherNo: "", RefNo: "",
+                bankCode: "", ChequeNo: "", ChequeDate: "", Amount: 0, Advance: false, Remarks: "", JobNo:""
+            };
+            bankReceipt.BReceiptNo = $("#brReceiptNo").val();
+            bankReceipt.BReceiptDate = $("#brReceiptDate").val();
+            bankReceipt.purAccode = $("#brPurAccode").val();
+            bankReceipt.JobNo = $("#JobNo").val();
+            bankReceipt.SubCode = $("#brSubCode").val();
+            bankReceipt.VoucherNo = $("#VoucherNo").val();
+            bankReceipt.RefNo = $("#RefNo").val();
+            bankReceipt.bankCode = $("#bankCode").val();
+            bankReceipt.ChequeNo = $("#brChequeNo").val();
+            bankReceipt.ChequeDate = $("#brChequeDate").val();
+            bankReceipt.Amount = parseFloat($("#brAmount").val()).toFixed(2).replace(".", ",");
+            bankReceipt.Advance = $("#brAdvance").prop("checked");
+            bankReceipt.Remarks = $("#brRemarks").val();
+            if (parseFloat(bankReceipt.Amount) <= 0 || !bankReceipt.Amount.trim()) {
+                alert("Amount is Required");
+            }
+            else {
+                $.ajax({
+                    url: '@Url.Action("UpdateBankReceipt", "BankReceipt")',
+                    contentType: "application/json;charset=utf-8",
+                    data: JSON.stringify({ bankReceipt: bankReceipt }),
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function (datas) {
+                        if (datas == 0) {
+                            swal(
+                                'Sorry!',
+                                'Something went wrong please try again!',
+                                'warning'
+                            );
+                            $("#UpdateBankReceipt").prop("disabled", false);
+                        } else if (datas == "U") {
+                            swal({
+                                title: "Sorry",
+                                text: "No Update Permission for this User",
+                                type: "warning"
+                            });
+                        }
+                        else {
+                            swal({
+                                title: "Ok",
+                                text: "Sucessfully Updated!",
+                                type: "success"
+                            }, function () {
+                                $.ajax({
+                                    url: '@Url.Action("GetNewVoucherNo", "BankReceipt")',
+                                        contentType: "application/json;charset=utf-8",
+                                        data: { VType: 'BR', TrDate: $("#TrDate").val() },
+                                        type: 'GET',
+                                        dataType: 'json',
+                                        success: function (datas) {
+                                            $("#VoucherNo").val(datas);
+                                        }
+                                    });
+
+                                });
+                                $("#UpdateBankReceipt").prop("disabled", false);
+                                AddOnHORemittance(datas);
+                                clearBankReceipt();
+                            }
+
+                        },
+                        error: function (datas) {
+                            swal("There is network connection error! or Critical system error (Try again!)", "warning")
+                            $("#UpdateBankReceipt").prop("disabled", true);
+                        }
+                    });
+                }
+            });
+
+            $(document).on("change", "#brPurAccode", function () { //
+                var order = { Accode: "", ReceiveFrom: "" };
+                if ('@ViewBag.IsSubsidiaryCtrl' == true) {                
+                    $.ajax({
+                        url: '@Url.Action("GetSubsidiaryByPurpose", "BankOperation")',
+                    contentType: "application/json;charset=utf-8",
+                    data: {
+                        purAccode: $("#brPurAccode").val()
+                    },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        $('#brSubCode').empty();
+                        $.each(data, function (index, value) {
+                            $('#brSubCode').append($('<option>',
+                                {
+                                    value: value.Value,
+                                    text: value.Text
+                                })).select2();
+                        });
+                        $("#brSubCode").val(order.brSubCode).trigger('change');
+                        order.brSubCode = "0";
+                    }
+                    });
+                }
+        });
+
+        $(document).on("click", "#closeBankReceipt", function () {
+            $('#Addmodal2').modal('hide');
+            // location.reload();
+            $.ajax({
+                url: '@Url.Action("GetGlECount", "CashOperation")',
+                contentType: "application/json;charset=utf-8",
+                data: { VType: 'BOR' },
+                type: 'GET',
+                dataType: 'json',
+                success: function (datas) {
+                    $("#CountNo").html('(' + datas + ')');
+                }
+            });
+        });
+
+
+        $(document).on("click", "#clearBankReceipt", function () {
+            clearBankReceipt();
+        });
+
+        function clearBankReceipt() {
+
+            $("#brReceiptNo").val("");
+            @*$("#ReceiptDate").val("@DateTime.Today.ToString("MM/dd/yyyy")");*@
+            $("#brPurAccode").val($('#purAccode option:first-child').val()).trigger('change.select2');
+            $("#bankCode").val($('#bankCode option:first-child').val()).trigger('change.select2');
+            $("#JobNo").val($('#JobNo option:first-child').val()).trigger('change.select2');
+            $("#brSubCode").val($('#brSubCode option:first-child').val()).trigger('change.select2');
+            $("#VoucherNo").val("");
+            $("#BankCode").val($('#BankCode option:first-child').val()).trigger('change.select2');
+            $("#brChequeNo").val("");
+            $("#brChequeDate").val("@DateTime.Today.ToString("MM/dd/yyyy")");
+            $("#RefNo").val("");
+            $("#brAmount").val("");
+            $("#brAdvance").prop("checked", false);
+            $("#brRemarks").val("");
+
+            $("#saveBankReceipt").show();
+            $("#UpdateBankReceipt").hide();
+
+            $.ajax({
+                url: '@Url.Action("GetReceiptNo", "BankReceipt")',
+                contentType: "application/json;charset=utf-8",
+                type: 'GET',
+                dataType: 'json',
+                success: function (datas) {
+                    $("#brReceiptNo").val(datas);
+                }
+            });
+
+            $.ajax({
+                url: '@Url.Action("GetNewVoucherNo", "BankReceipt")',
+                contentType: "application/json;charset=utf-8",
+                data: { VType: 'BR' },
+                type: 'GET',
+                dataType: 'json',
+                success: function (datas) {
+                    $("#VoucherNo").val(datas);
+                }
+            });
+
+
+        }
+
+
+
+
+        /////************************* Payment ****************************//////
+
+        $(document).on('click', '#addModalButton1', function () {
+            $("#savePayment").show();
+            $("#UpdatePayment").hide();
+            $('#Addmodal1').modal('show');
+            $.ajax({
+                url: '@Url.Action("GetPayNo", "Payment")',
+                contentType: "application/json;charset=utf-8",
+                type: 'GET',
+                dataType: 'json',
+                success: function (datas) {
+                    $("#PayCode").val(datas);
+                }
+            });
+
+            $.ajax({
+                url: '@Url.Action("GetNewVoucherNo", "Payment")',
+                contentType: "application/json;charset=utf-8",
+                data: { VType: 'BP', TrDate: $("#TrDate").val() },
+                type: 'GET',
+                dataType: 'json',
+                success: function (datas) {
+                    $("#pVoucherNo").val(datas);
+                }
+            });
+        });
+        $(document).on("click", "#newVchr", function () {
+            $("#addModalButton").show();
+            $.ajax({
+                url: '@Url.Action("GetNewVoucherNo", "Payment")',
+                contentType: "application/json;charset=utf-8",
+                data: { VType: 'BP' },
+                type: 'GET',
+                dataType: 'json',
+                success: function (datas) {
+                    if (datas != 0) {
+                        $("#pVoucherNo").val(datas);
+                    }
+                }
+            })
+        });
+
+
+
+        @*$.ajax({
+                url: '@Url.Action("GetVoucherNo", "Payment")',
+                contentType: "application/json;charset=utf-8",
+                data: JSON.stringify({ dateT: $("#PayDate").val() }),
+                type: 'POST',
+                dataType: 'json',
+                success: function (datas) {
+                    $("#pVoucherNo").val(datas);
+                }
+            });*@
+    });
+
+
+
+
+
+    $(document).on("click", "#savePayment", function () {
+        $("#savePayment").prop("disabled", false);
+        var payment = {
+            PayCode: "", PayDate: "", VoucherNo: "", purAccode: "", bankAccode: "", ChequeNo: "", ChequeDate: "",
+            Amount: 0, SubCode: "", Advance: false, JobNo:""
+        };
+        payment.PayCode = $("#PayCode").val();
+        payment.PayDate = $("#PayDate").val();
+        payment.VoucherNo = $("#pVoucherNo").val();
+        payment.purAccode = $("#purAccode").val();
+        payment.JobNo = $("#payJobNo").val();
+        payment.bankAccode = $("#bankAccode").val();
+        payment.ChequeNo = $("#ChequeNo").val();
+        payment.ChequeDate = $("#ChequeDate").val();
+        payment.Amount = parseFloat($("#Amount").val()).toFixed(2).replace(".", ",");
+        payment.SubCode = $("#SubCode").val();
+        payment.Advance = $("#Advance").prop("checked");
+
+        if (payment.ChequeNo == "") {
+            alert("Cheque No is Required");
+
+            if (parseFloat(payment.Amount) <= 0 || !payment.Amount.trim()) {
+                alert("Amount is Required");
+
+            }
+        }
+
+        else {
+            $.ajax({
+                url: '@Url.Action("SavePayment", "Payment")',
+                contentType: "application/json;charset=utf-8",
+                data: JSON.stringify({ payment: payment }),
+                type: 'POST',
+                dataType: 'json',
+                success: function (datas) {
+                    if (datas == 0) {
+                        swal(
+                            'Sorry!',
+                            'Something went wrong please try again!',
+                            'warning'
+                        );
+                        $("#saveHOR").prop("disabled", false);
+                    } else if (datas == "X") {
+                        swal({
+                            title: "Sorry",
+                            text: "No Save Permission for this User",
+                            type: "warning"
+                        });
+                    }
+                    else if (datas == 1) {
+                        swal({
+                            title: "Save Failed!!!",
+                            text: "Already exists Please try again!",
+                            type: "success"
+                        }, function () {
+                            $.ajax({
+                                url: '@Url.Action("PaymentNoIncreement", "Payment")',
+                                type: 'GET',
+                                dataType: 'json',
+                                success: function (datas) {
+                                    $("#PayCode").val(datas);
+                                }
+                            });
+                        });
+                        $("#save").prop("disabled", false);
+                    }
+                    else {
+                        swal({
+                            title: "Ok",
+                            text: "Save Sucessfully!",
+                            type: "success"
+                        }, function () {
+                            $.ajax({
+                                url: '@Url.Action("GetNewVoucherNo", "Payment")',
+                                contentType: "application/json;charset=utf-8",
+                                data: { VType: 'BP', TrDate: $("#TrDate").val() },
+                                type: 'GET',
+                                dataType: 'json',
+                                success: function (datas) {
+                                    $("#pVoucherNo").val(datas);
+                                }
+                            });
+
+                        });
+
+
+
+                        $("#saveHOR").prop("disabled", false);
+                        AddOnPayment(datas);
+                        clearPayment();
+                    }
+
+                },
+                error: function (datas) {
+                    swal("There is network connection error! or Critical system error (Try again!)", "warning")
+                    $("#saveCashReceipt").prop("disabled", true);
+                }
+            });
+        }
+
+    });
+
+
+    $(document).on("click", "#UpdatePayment", function () {
+        $("#savePaymnt").prop("disabled", false);
+        var payment = {
+            PayCode: "", PayDate: "", VoucherNo: "", purAccode: "", bankAccode: "", ChequeNo: "", ChequeDate: "",
+            Amount: 0, SubCode: "", Advance: false, JobNo:""
+        };
+        payment.PayCode = $("#PayCode").val();
+        payment.PayDate = $("#PayDate").val();
+        payment.VoucherNo = $("#pVoucherNo").val();
+        payment.purAccode = $("#purAccode").val();
+        payment.JobNo = $("#payJobNo").val();
+        payment.bankAccode = $("#bankAccode").val();
+        payment.ChequeNo = $("#ChequeNo").val();
+        payment.ChequeDate = $("#ChequeDate").val();
+        payment.Amount = parseFloat($("#Amount").val()).toFixed(2).replace(".", ",");
+        payment.SubCode = $("#SubCode").val();
+        payment.Advance = $("#Advance").prop("checked");
+
+        if (parseFloat(payment.Amount) <= 0 || !payment.Amount.trim()) {
+            alert("Amount is Required");
+        }
+        else {
+            $.ajax({
+                url: '@Url.Action("UpdatePayment", "Payment")',
+                contentType: "application/json;charset=utf-8",
+                data: JSON.stringify({ payment: payment }),
+                type: 'POST',
+                dataType: 'json',
+                success: function (datas) {
+                    if (datas == 0) {
+                        swal(
+                            'Sorry!',
+                            'Something went wrong please try again!',
+                            'warning'
+                        );
+                        $("#UpdatePayment").prop("disabled", false);
+                    } else if (datas == "U") {
+                        swal({
+                            title: "Sorry",
+                            text: "No Update Permission for this User",
+                            type: "warning"
+                        });
+                    }
+                    else if (datas.data == 1) {
+                        swal({
+                            title: "Ok",
+                            text: "Sucessfully Updated!",
+                            type: "success"
+                        }, function () {
+                            $.ajax({
+                                url: '@Url.Action("GetNewVoucherNo", "Payment")',
+                                contentType: "application/json;charset=utf-8",
+                                data: { VType: 'BP', TrDate: $("#TrDate").val() },
+                                type: 'GET',
+                                dataType: 'json',
+                                success: function (datas) {
+                                    $("#pVoucherNo").val(datas);
+                                }
+                            });
+
+                        });
+
+                        $("#savePayment").prop("disabled", false);
+                        AddOnPayment(datas.CashOPVM);
+                        clearPayment();
+                    }
+
+                },
+                error: function (datas) {
+                    swal("There is network connection error! or Critical system error (Try again!)", "warning")
+                    $("#savePayment").prop("disabled", true);
+                }
+            });
+        }
+
+    });
+
+
+    function AddOnPayment(items) {
+        var totExpense = 0.0;
+        var table = $("#datatable-buttons1").DataTable();
+        table.clear().draw();
+        $.each(items, function (index, data) {
+            table.rows.add([[data.SerialNo, data.TransactionNo, data.VoucherNo, data.Purpose, data.Amount, '<a href="#" class="on-default remove-row largeSpace" tag="' + data.Tag + '" deleteSup" data-id="' + data.SerialNo + '" id="delete" value="' + data.TransactionNo + '"><i class="glyphicon glyphicon-trash"></i></a><a href="#" class="on-default remove-row" tag="' + data.Tag + '" deleteSup" data-id="' + data.SerialNo + '" id="edit" value="' + data.TransactionNo + '"><i class="glyphicon glyphicon-edit"></i></a>']]).draw();
+            totExpense += data.Amount;
+        });
+        $("#PayTotal").val(totExpense);
+        $("#CloseBal").val(parseFloat($("#OpenBal").val()) + parseFloat($("#RecTotal").val()) - parseFloat($("#PayTotal").val()));
+
+    }
+
+    $(document).on("click", "#closePayment", function () {
+        clearPayment();
+        $('#Addmodal1').modal('hide');
+        //location.reload();
+        $.ajax({
+            url: '@Url.Action("GetGlECount", "CashOperation")',
+            contentType: "application/json;charset=utf-8",
+            data: { VType: 'BOP' },
+            type: 'GET',
+            dataType: 'json',
+            success: function (datas) {
+                $("#CountNoE").html('(' + datas + ')');
+            }
+        });
+    });
+
+
+    $(document).on("click", "#clearPayment", function () {
+        clearPayment();
+    });
+
+    function clearPayment() {
+        $("#PayCode").val("");
+        $("#PayDate").val("@DateTime.Today.ToString("MM/dd/yyyy")");
+        $("#purAccode").val($('#purAccode option:first-child').val()).trigger('change.select2');
+        $("#payJobNo").val($('#payJobNo option:first-child').val()).trigger('change.select2');
+        $("#bankAccode").val($('#bankAccode option:first-child').val()).trigger('change.select2');
+        $("#pVoucherNo").val("");
+        $("#ChequeNo").val("");
+        $("#Remarks").val("");
+        $("#ChequeDate").val("@DateTime.Today.ToString("MM/dd/yyyy")");
+        $("#Amount").val(0);
+        $("#SubCode").val($('#SubCode option:first-child').val()).trigger('change.select2');
+        $("#Advance").prop("checked", false);;
+
+        $.ajax({
+            url: '@Url.Action("GetPayNo", "Payment")',
+            contentType: "application/json;charset=utf-8",
+            type: 'GET',
+            dataType: 'json',
+            success: function (datas) {
+                $("#PayCode").val(datas);
+            }
+        });
+        $.ajax({
+            url: '@Url.Action("GetNewVoucherNo", "Payment")',
+            contentType: "application/json;charset=utf-8",
+            data: { VType: 'BP' },
+            type: 'GET',
+            dataType: 'json',
+            success: function (datas) {
+                $("#pVoucherNo").val(datas);
+            }
+        });
+
+
+
+    }
+
+
+
+    /////////*****************************************************//////////
+
+
+    $(document).on("click", "#print", function () {
+        alert("Not Implement Yet");
+    });
+
+
+
+
+    $(document).on("click", "#delete", function () {
+        var tag = $(this).attr("tag");
+        var value = $(this).attr("value");
+        $.ajax({
+            url: '@Url.Action("DeleteVoucherPro", "BankOperation")',
+            contentType: "application/json;charset=utf-8",
+            data: { remitNo: value, tag: tag },
+            type: 'GET',
+            dataType: 'json',
+            success: function (datas) {
+                if (datas == 0) {
+                    swal(
+                        'Sorry!',
+                        'This Voucher already Posted !!',
+                         'warning'
+                         );
+                }
+                else {
+                    swal({
+                        title: "Are you sure?",
+                        text: "You will not be able to recover this order data!",
+                        type: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#DD6B55",
+                        confirmButtonText: "Yes, delete it!",
+                        closeOnConfirm: true,
+                        closeOnCancel: true
+                    },
+                    function () {
+                        $.ajax({
+                            url: '@Url.Action("DelBankOperation", "BankOperation")',
+                            contentType: "application/json;charset=utf-8",
+                            data: { tag: tag, transactionNo: value, dateTime: $("#TrDate").val() },
+                            type: 'GET',
+                            dataType: 'json',
+                            success: function (datas) {
+
+                                if (datas == 0 && datas.length != 0) {
+                                    swal("Sorry!! Failed to delete this order data.", "fail");
+                                }
+                                else if (datas == 1) {
+
+                                    swal(
+                                    'Sorry!',
+                                    'You are not allowed to delete this data!!!',
+                                    'warning'
+                                );
+                                }
+                                else if (datas == "D") {
+                                    swal({
+                                        title: "Sorry",
+                                        text: "No Delete Permission for this User",
+                                        type: "warning"
+                                    });
+                                }
+                                else if (datas == 2) {
+                                    swal(
+                                    'Sorry!',
+                                    'You are not allowed to delete this data from here!!!',
+                                    'warning'
+                                );
+                                }
+
+                                else {
+
+                                    if (tag == "RT" || tag == "BD" || tag == "BR") {
+                                        $("#tbodyId").empty();
+                                        AddOnHORemittance(datas);
+                                        swal.close()
+                                        location.reload();
+                                    }
+                                    else {
+
+                                        $("#tbodyId1").empty();
+                                        AddOnPayment(datas);
+                                        swal.close()
+                                        location.reload();
+                                    }
+                                }
+                            },
+                            error: function (datas) {
+                                swal("Sorry!! Failed to delete this order data.", "fail")
+                            }
+                        });
+                    });
+                }
+
+            }
+        });
+    });
+
+    $(document).on("click", "#edit", function () {
+        var tag = $(this).attr("tag");
+        var value = $(this).attr("value");
+
+        if (tag == "RT") {
+            $("#UpdateHOR").show();
+            $("#saveHOR").hide();
+            //$('#Addmodal').modal('show');
+
+            $.ajax({
+                url: '@Url.Action("GetHORBYRemitNo", "HORemittance")',
+                contentType: "application/json;charset=utf-8",
+                data: { remitNo: value },
+                type: 'GET',
+                dataType: 'json',
+                success: function (datas) {
+                    if (datas != 0) {
+                        $('#Addmodal').modal('show');
+                        $("#RemitNo").val(datas.RemitNo);
+                        if (DateInDMYformat(datas.RemitDate) != moment('01/01/1900').format('DD/MM/YYYY')) {
+                            $("#RemitDate").datepicker("setDate", DateInDMYformat(datas.RemitDate));
+                        }
+                        $("#hVoucherNo").val(datas.VoucherNo);
+                        $("#hoAmount").val(datas.Amount);
+                        $("#hoRemarks").val(datas.Remarks);
+                    }
+
+                    else {
+                        swal(
+                                'Sorry!',
+                                'This Voucher already Posted !!',
+                               'warning'
+                                );
+                    }
+
+                }
+            });
+        }
+        else if (tag == "BD") {
+
+
+            $.ajax({
+                url: '@Url.Action("GetDtbBYDepositNo", "HORemittance")',
+                contentType: "application/json;charset=utf-8",
+                type: 'GET',
+                dataType: 'json',
+                success: function (datas) {
+                    if (datas == 0) {
+                        swal(
+                           'Sorry!',
+                           'You are not allowed to update these data from here! You can update these from Cash Operation!!!',
+                           'warning'
+                       );
+                    }
+
+                }
+            });
+
+
+        }
+
+        else if (tag == "BR") {
+            $("#UpdateBankReceipt").show();
+            $("#saveBankReceipt").hide();
+            // $('#Addmodal2').modal('show');
+
+            $.ajax({
+                url: '@Url.Action("GetBankReceiptBYReceiptNo", "BankReceipt")',
+                contentType: "application/json;charset=utf-8",
+                data: { receiptNo: value },
+                type: 'GET',
+                dataType: 'json',
+                success: function (datas) {
+                    if (datas != 0) {
+                        $('#Addmodal2').modal('show');
+                        $("#brReceiptNo").val(datas.BReceiptNo);
+                        if (DateInDMYformat(datas.BReceiptDate) != moment('01/01/1900').format('DD/MM/YYYY')) {
+                            $("#brReceiptDate").datepicker("setDate", DateInDMYformat(datas.BReceiptDate));
+                        }
+                        //$("#brReceiptDate").val();
+                        $("#brPurAccode").val(datas.purAccode).trigger('change.select2');
+                        $("#JobNo").val(datas.JobNo).trigger('change.select2');
+                        $("#VoucherNo").val(datas.VoucherNo);
+                        $("#brSubCode").val(datas.SubCode).trigger('change.select2');
+                        $("#RefNo").val(datas.RefNo); bankCode
+                        $("#brChequeNo").val(datas.ChequeNo);
+                        $("#bankCode").val(datas.bankCode).trigger('change.select2');
+                        if (DateInDMYformat(datas.ChequeDate) != moment('01/01/1900').format('DD/MM/YYYY')) {
+                            $("#brChequeDate").datepicker("setDate", DateInDMYformat(datas.ChequeDate));
+                        }
+                        $("#brAmount").val(datas.Amount);
+                        $("#brAdvance").prop("checked", datas.Advance);
+                        $("#brRemarks").val(datas.Remarks);
+                    }
+
+                    else {
+                        swal(
+                              'Sorry!',
+                              'This Voucher already Posted !!',
+                             'warning'
+                              );
+                    }
+
+                }
+            });
+        }
+
+        else if (tag == "BP") {
+            //$('#Addmodal1').modal('show');
+            $("#savePayment").hide();
+            $("#UpdatePayment").show();
+            $.ajax({
+                url: '@Url.Action("GetPaymentByPayNo", "Payment")',
+                contentType: "application/json;charset=utf-8",
+                data: { payNo: value },
+                type: 'GET',
+                dataType: 'json',
+                success: function (datas) {
+                    if (datas != 0) {
+                        $('#Addmodal1').modal('show');
+                        $("#PayCode").val(datas.PayCode);
+                        $("#PayDate").val();
+                        $("#pVoucherNo").val(datas.VoucherNo);
+                        $("#purAccode").val(datas.purAccode).trigger('change.select2');
+                        $("#payJobNo").val(datas.JobNo).trigger('change.select2');
+                        $("#bankAccode").val(datas.bankAccode).trigger('change.select2');
+                        $("#ChequeNo").val(datas.ChequeNo);
+                        if (DateInDMYformat(datas.ChequeDate) != moment('01/01/1900').format('DD/MM/YYYY')) {
+                            $("#ChequeDate").datepicker("setDate", DateInDMYformat(datas.ChequeDate));
+                        }
+                        $("#Amount").val(datas.Amount);
+                        $("#Advance").prop("checked", datas.Advance);
+                        $("#SubCode").val(datas.SubCode).trigger('change.select2');
+                    }
+
+                    else {
+                        swal(
+                             'Sorry!',
+                             'This Voucher already Posted !!',
+                            'warning'
+                             );
+                    }
+
+                }
+            });
+        }
+        else if (tag == "BW") {
+
+            $.ajax({
+                url: '@Url.Action("GetWihdrawBYWithdrawNo", "Payment")',
+                contentType: "application/json;charset=utf-8",
+                type: 'GET',
+                dataType: 'json',
+                success: function (datas) {
+                    if (datas == 0) {
+                        swal(
+                           'Sorry!',
+                           'You are not allowed to update these data from here! You can update these from Cash Operation!!!',
+                           'warning'
+                       );
+                    }
+
+                }
+            });
+
+        }
+    });
+
+    $("#save").on("click", function () {
+        var date = $("#TrDate").val();
+        $("#save").prop("disabled", true);
+        $.ajax({
+            url: '@Url.Action("SaveBankOperation", "BankOperation")',
+            contentType: "application/json;charset=utf-8",
+            data: { date: $("#TrDate").val() },
+            type: 'GET',
+            dataType: 'json',
+            success: function (datas) {
+                if (datas == 1) {
+                    swal("Saved Sucessfully !", "success");
+                    $("#save").prop("disabled", false);
+                }
+
+                else {
+                    swal("Saved Failed !", "fail");
+                    $("#save").prop("disabled", false);
+                }
+
+            }
+        });
+
+    });
+    $(document).on("click", "#search", function () {
+        $("#formSubmit").submit();
+        $("#addModalButton").hide();
+        $("#addModalButton1").hide();
+        $("#addModalButton2").hide();
+        $("#addModalButton3").hide();
+
+    });
+    //}
+    //});
+    </script>
+}

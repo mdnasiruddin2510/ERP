@@ -1,0 +1,534 @@
+﻿@model App.Domain.ViewModel.GroupVM
+@{
+    ViewBag.Title = "Group";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<style>
+    
+    .form-control {
+        border: 1px solid #00ffff;
+    }
+
+    fieldset {
+        display: block;
+        margin-left: 2px;
+        margin-right: 13px;
+        padding-top: 0.35em;
+        padding-bottom: 0.625em;
+        padding-left: 0.75em;
+        padding-right: 0.75em;
+        border: 2px groove;
+    }
+
+    legend {
+        display: block;
+        padding-left: 2px;
+        padding-right: 2px;
+        border: none;
+    }
+</style>
+
+@using (Html.BeginForm(@*"LocationPreview", "LocationAdd", FormMethod.Post, new { }*@))
+{
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-color panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <text style="text-align:left !important;text-decoration:none;">Item Grouping</text>
+                    </h3>
+                </div>
+                <fieldset>
+                    <div class="col-md-12">
+                        <div class="col-md-6">
+                            <label class="col-md-3">Group Type</label>
+                            <div class="input-group form-group col-md-8">
+                                @Html.DropDownListFor(x => x.GroupTypeId, null, "Select One", new { @class = "form-control select2*", @Value = ViewBag.GroupTypeId })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="col-md-6">
+                            <label class="col-md-3">Group Name</label>
+                            <div class="input-group form-group col-md-8">
+                                <input type="text" id="GroupName" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6" style="text-align:end">
+                        <div class="col-md-11" style=" text-align:end;overflow:hidden">
+                            <input type="button" value="ADD" class="btn btn-primary" id="btnadd" style="width:100px; margin-right:-4px" />
+                            <input type="button" value="UPDATE" class="btn btn-primary" id="btnupdate" style="width:100px; margin-right:-4px" />
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-12" style="margin-top: 10px; margin-bottom: 10px;" id="pnlDT">
+                        <div class="row col-sm-12 col-md-12" style="border:1px solid; border-color:#adcceb; width:100%">
+                            <div class="row">
+                                <div class="col-sm-12 col-md-12" style="padding:1px 18px 1px 18px">
+                                    <br />
+                                    <table class="table table-bordered table-responsive" id="Add-datatable" style="width:100%">
+                                        <thead>
+                                            <tr>
+                                                <th>Id</th>
+                                                <th>GroupName</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tbodyId"></tbody>
+                                    </table>
+                                    <br />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+    </div>
+}
+
+@section scripts{
+    <script src="~/App_Themes/Theme1/plugins/select2/select2.min.js" type="text/javascript"></script>
+    <script src="~/App_Themes/Theme1/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.bootstrap.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.buttons.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/buttons.bootstrap.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/pdfmake.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/vfs_fonts.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/buttons.html5.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/buttons.print.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.fixedHeader.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.keyTable.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.responsive.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/responsive.bootstrap.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.scroller.min.js"></script>
+    <script type="text/javascript" src="../App_Themes/Theme1/plugins/parsleyjs/dist/parsley.min.js"></script>
+    <script src="../App_Themes/Theme1/blue/assets/pages/datatables.init.js"></script>
+    <script>$("#GroupTypeId").select2()</script>
+    <script>
+        /////////////datatableshow////////////
+        $(document).ready(function () {
+            var id;
+            var table = $("#Add-datatable").DataTable({
+                "scrollX": true,
+                "scrollY": 100,
+                //"paging": false,
+                "ordering": false,
+                //"info": false,
+                //"searching": false,
+                //"ajax": "../Group/GetDataForSelectedGroup",
+                //"rowId": 'id',
+                //"columns": [
+                //           { "data": null, "bSortable": false },
+                //           { "data": "GroupName" },
+                //           {
+                //               mRender: function (data, type, row) {
+                //                   return '<a href="#" class="on-default remove-row deleteSup largeSpace" data-id="1" id="delete" class="btn btn-default" value="' + row.GroupID + '">'
+                //                           + '<span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a>&ensp;&ensp;'
+
+                //               }
+                //           },
+                //],
+                //"fnCreatedRow": function (row, data, index) {
+                //    $('td', row).eq(0).html(index + 1);
+                //}
+
+
+            });
+            $("#btnupdate").hide();
+            $("#btnadd").show();
+            //////////////////Save Data/////////////////////////
+            $(document).on("click", "#btnadd", function () {
+                GroupTypeId = $("#GroupTypeId option:selected").val()
+                GroupName = $("#GroupName").val();
+                if (GroupName == "") {
+                    alert("Please add Group Name.");
+                }else{
+
+                $.ajax({
+                    url: '@Url.Action("SaveSelectedGroupData", "Group")',
+                    contentType: "application/json;charset=utf-8",
+                    data: JSON.stringify({ GroupTypeId: GroupTypeId, GroupName: GroupName }),
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function (datas) {
+                        if (datas == 1) {
+                            swal({
+                                title: "Ok",
+                                text: "Successfully Saved!",
+                                type: "success",
+                                closeOnConfirm: true
+                            },
+
+                            function () {
+                                loadGroupWiseData();
+                                clearReceive();
+
+                            });
+                            //$("#btnadd").prop("disabled", false);
+                            //orders = [];
+                            //$('#tbodyId').empty();
+
+
+                        }
+                        else if (datas == "X") {
+                            swal({
+                                title: "Sorry",
+                                text: "No Save Permission for this User",
+                                type: "warning"
+                            });
+                        }
+                        else if (datas == 0) {
+                            swal(
+                                'Sorry!',
+                                'All (*) field are required. These Fields can not be empty!!!',
+                                'warning'
+                            );
+                            $("#save").prop("disabled", false);
+                        }
+                        else if (datas == 3) {                           //save  data
+                            swal({
+                                title: "Sorry!",
+                                text: "Data Already Exists",
+                                type: "warning"
+                            });
+                        }
+
+                            //});
+
+                            //}
+                        else {
+                            swal(
+                                'Sorry!',
+                                'Please Add item in the Table.!!!',
+                                'warning'
+                                );
+                        }
+                    }//success
+                });//ajax
+                }
+            });
+
+
+            //var loadInfo = {
+            //    GroupName: ""
+
+            //};
+            //function setOrder() {
+            //    loadInfo.GroupName = $("#GroupName").val();
+            //}
+            function clearReceive() {
+                $("#GroupName").val("");
+
+                //$("#BranchType").val($('#BranchType option:first-child').val()).trigger('change.select2');
+            }
+            ///////////////////////////GetAllData for Selected Branch from AcBR////////////////////
+            //  function getDataforSelectedGroup() {
+
+            //function validateOnSave(validOrder) {
+
+            //    if (!validOrder.GroupName.trim().length) {
+            //        return "Please add Group Name.";
+            //    }
+
+            //    return "";
+
+            //}
+
+            $(document).on("change", " #GroupTypeId", function () {
+                $('#tbodyId').empty();
+                loadGroupWiseData();
+            });
+
+            //////////////////////////////////////Checking/////////////////////
+            $('#datatable').DataTable({
+                responsive: true
+            });
+
+            var orders = [];
+            var delQtyOrder = [];
+            //$("#add").click(function () {
+            //    var Name=$("#GroupName").val();
+
+
+            //    addOnList();
+            $("tbody#tbodyId tr:even").css({
+                "background-color": "#e6e8e8"
+
+            });
+
+            //    clearItemInfo();
+            //});
+            function clearItemInfo() {
+                $("#GroupName").val("");
+
+
+            }
+
+            function addOnList() {
+                var newAddList = [];
+                var newAddListSl = 0;
+                var Name = $("#GroupName").val();
+
+
+                var item = {
+                    GroupName:GroupName,Sl:0
+                }
+                const i = orders.findIndex(x=>x. GroupName === GroupName);
+                if (i > -1)
+                {
+
+                    item.GroupName =GroupName;
+                    orders[i] = item;
+                }
+                    //else if( item.GroupName=="") {
+                    //    alert("Please Enter Value ");
+                    //}
+                else
+                {
+                    item.Sl = orders.length + 1;
+                    orders.push(item);
+                }
+                addOnTable();
+            }
+
+            ////////////////////check end///////////////////////////////
+            function loadGroupWiseData() {
+                GroupTypeId = $("#GroupTypeId option:selected").val()
+
+                $.ajax({
+                    url: '@Url.Action("GetDataForSelectedGroup", "Group")',
+                    contentType: "application/json;charset=utf-8",
+                    data: JSON.stringify({ GroupTypeId: GroupTypeId, GroupName: GroupName }),
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function (datas) {
+
+                        orders = [];
+                        GroupTypeId = GroupTypeId;
+                        if (datas.GroupinfoList.length > 0) {
+                            var j = 0;
+                            $.each(datas.GroupinfoList, function (index, datas) {
+                                j++;
+                                //datas.id = j;
+                                orders.push(datas);
+                            });
+
+                            addOnTable(GroupTypeId);
+
+                        } else {
+                            $('#tbodyId').empty();
+                        }
+                    }
+                });
+            }
+
+            function addOnTable(GroupTypeId)
+            {
+                $('#tbodyId').empty();
+                var sl = 0;
+                $.each(orders, function (index, data) {
+                    sl = sl + 1;
+                    data.Sl = sl;
+                    if (GroupTypeId == 1) {
+
+                        $("#tbodyId").append("<tr><td>" + sl + "</td><td>"
+                                                               + data.GroupName + "</td><td>"
+
+                                                            +'<a href="#" id="edit" value="' + data.GroupID + '">'
+                                       + '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span></a>&ensp;&ensp;'
+                               + '<a href="#" class="on-default remove-row deleteSup largeSpace" data-id="' + data.SGroupID + '" id="delete" value="' + data.GroupID + '">'
+                               + ' <i class="glyphicon glyphicon-trash"></i> </a>'+ "</td></tr>");
+                    }
+                    if (GroupTypeId == 2) {
+                        $("#tbodyId").append("<tr><td>" + sl + "</td><td>"
+                                                           + data.SGroupName + "</td><td>"
+
+                                                           +'<a href="#" id="edit" value="' + data.SGroupID + '">'
+                                       + '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span></a>&ensp;&ensp;'
+                               + '<a href="#" class="on-default remove-row deleteSup largeSpace" data-id="' + data.SGroupID + '" id="delete" value="' + data.SGroupID + '">'
+                               + ' <i class="glyphicon glyphicon-trash"></i> </a>'+ "</td></tr>");
+                    }
+                    else if (GroupTypeId == 3) {
+                        $("#Add-datatable").append("<tr><td>" + sl + "</td><td>"
+                                                          + data.SSGroupName + "</td><td>"
+                                                          +'<a href="#" id="edit" value="' + data.SSGroupID + '">'
+                                       + '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span></a>&ensp;&ensp;'
+                               + '<a href="#" class="on-default remove-row deleteSup largeSpace" data-id="' + data.SGroupID + '" id="delete" value="' + data.SSGroupID + '">'
+                               + ' <i class="glyphicon glyphicon-trash"></i> </a>'+ "</td></tr>");
+                    }
+                });
+
+            };
+            // }
+            /////////////////////////////delete Selected data for selected group //////////////////////
+            $(document).on("click", "#delete", function () {
+                var value = $(this).attr("value");
+                GroupTypeId = $("#GroupTypeId option:selected").val()
+                swal({
+                    title: "Are you sure?",
+                    text: "You will not be able to recover this data!",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "Yes, delete it!",
+                    closeOnConfirm: false,
+                    closeOnCancel: true
+                },
+                    function () {
+                        $.ajax({
+                            url: '@Url.Action("DeleteSelectedGroupData", "Group")',
+                            contentType: "application/json;charset=utf-8",
+                            data: { GroupID: value, GroupTypeId: GroupTypeId },
+                            type: 'GET',
+                            dataType: 'json',
+                            success: function (datas) {
+
+                                if (datas == 0 || datas == 2) {
+                                    swal("Sorry!! Failed to delete this data.", "fail");
+                                }
+                                else if (datas == 1) {
+                                    swal({
+                                        title: "Ok",
+                                        text: "Sucessfully Delete!",
+                                        type: "success",
+                                        closeOnConfirm: true
+
+                                    }, function () {
+                                        clearReceive();
+                                        loadGroupWiseData();
+                                        // location.reload();
+                                    });
+                                }
+                                else if (datas == "D") {
+
+                                    swal({
+                                        title: "Sorry",
+                                        text: "No Delete Permission for this User",
+                                        type: "warning"
+                                    });
+                                }
+                            },
+                            error: function (datas) {
+                                swal("Sorry!! Failed to delete this data.", "fail")
+                            }
+                        });
+                    });
+            });
+
+            ///////////////////////////Edit//////////////////
+
+            $(document).on('click', "#edit", function () {
+                var value = $(this).attr("value");
+                id = value;
+                GroupTypeId = $("#GroupTypeId option:selected").val()
+                //$("#update").show();
+                $.ajax({
+                    url: '@Url.Action("GetGroupByIdforEdit", "Group")',
+                    contentType: "application/json;charset=utf-8",
+                    data: JSON.stringify({ GroupID: value ,GroupTypeId: GroupTypeId}),
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function (datas) {
+                        GroupTypeId = GroupTypeId;
+                        if(datas.GroupTypeId==1){
+                            $("#GroupName").val(datas.GgName.GroupName);                   
+                            $("#btnupdate").show();
+                            $("#btnadd").hide();
+                        }
+                        else if(datas.GroupTypeId==2){
+                            $("#GroupName").val(datas.GgName.SGroupName);                   
+                            $("#btnupdate").show();
+                            $("#btnadd").hide();}
+                        else if(datas.GroupTypeId==3){
+                            $("#GroupName").val(datas.GgName.SSGroupName);                           
+                            $("#btnupdate").show();
+                            $("#btnadd").hide();}                      
+                    }
+                });
+
+            });
+            ////////////////////////Update//////////////////////////////////
+            $(document).on("click","#btnupdate",function(){
+                GroupName = $("#GroupName").val();
+                GroupTypeId = $("#GroupTypeId option:selected").val()
+           
+                $("#btnupdate").hide();
+                $("#btnadd").show();
+              
+                //setOrder();
+                //var validate = validateOnSave(loadInfo);
+                //if (validate != "") {
+                //    alert(validate);
+                //    return;
+                //}
+                if (orders != 0) {
+                    $.ajax({
+                        url: '@Url.Action("UpdateSelectedGroup", "Group")',
+                        contentType: "application/json;charset=utf-8",
+                        data: JSON.stringify({GroupName: GroupName, GroupID:id, GroupTypeId: GroupTypeId}),
+                        type: 'POST',
+                        dataType: 'json',
+                        success: function (datas) {
+                            if (datas) {
+
+
+                                swal({
+                                    title: "Ok",
+                                    text: "Successfully Updated!",
+                                    type: "success",
+                                    closeOnConfirm: true
+                                },
+
+                                function () {
+                                    //location.reload();
+                                    clearReceive();
+                                    loadGroupWiseData();
+                                });
+                              
+                            }
+
+                            else if (datas == "X") {
+                                swal({
+                                    title: "Sorry",
+                                    text: "No Save Permission for this User",
+                                    type: "warning"
+                                });
+                            }
+                            else if (datas == 0) {
+                                swal(
+                                    'Sorry!',
+                                    'All (*) field are required. These Fields can not be empty!!!',
+                                    'warning'
+                                );
+                                $("#save").prop("disabled", false);
+                            }
+                            else if (datas == 2) {                           //save  data
+                                swal({
+                                    title: "Sorry!",
+                                    text: "Data Already Exists",
+                                    type: "warning"
+                                });
+                            }
+
+                                //});
+
+                                //}
+                            else{
+                                swal(
+                                    'Sorry!',
+                                    'Please Add item in the Table.!!!',
+                                    'warning'
+                                    );
+                            }
+                        }//success
+                    });//ajax
+                }//if (orders != 0) {
+
+            });
+        });//ready function
+    </script>
+}

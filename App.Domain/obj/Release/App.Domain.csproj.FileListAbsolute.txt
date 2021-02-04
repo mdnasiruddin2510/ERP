@@ -1,0 +1,52 @@
+D:\PostOffice\trunk\ShahcementWeb\App.Domain\bin\Release\App.Domain.dll
+D:\PostOffice\trunk\ShahcementWeb\App.Domain\bin\Release\App.Domain.pdb
+D:\PostOffice\trunk\ShahcementWeb\App.Domain\obj\Release\App.Domain.dll
+D:\PostOffice\trunk\ShahcementWeb\App.Domain\obj\Release\App.Domain.pdb
+D:\PostOffice\trunk\ShahcementWeb\App.Domain\obj\Release\App.Domain.csprojResolveAssemblyReference.cache
+D:\Mukta\Tahsin Agro\trunk\Tahsin Agro\App.Domain\bin\Release\App.Domain.dll
+D:\Mukta\Tahsin Agro\trunk\Tahsin Agro\App.Domain\bin\Release\App.Domain.pdb
+D:\Mukta\Tahsin Agro\trunk\Tahsin Agro\App.Domain\obj\Release\App.Domain.csprojResolveAssemblyReference.cache
+D:\Mukta\Tahsin Agro\trunk\Tahsin Agro\App.Domain\obj\Release\App.Domain.dll
+D:\Mukta\Tahsin Agro\trunk\Tahsin Agro\App.Domain\obj\Release\App.Domain.pdb
+E:\National Tea\National Tea\trunk\NationalTea\App.Domain\bin\Release\App.Domain.dll
+E:\National Tea\National Tea\trunk\NationalTea\App.Domain\bin\Release\App.Domain.pdb
+E:\National Tea\National Tea\trunk\NationalTea\App.Domain\obj\Release\App.Domain.csprojResolveAssemblyReference.cache
+E:\National Tea\National Tea\trunk\NationalTea\App.Domain\obj\Release\App.Domain.dll
+E:\National Tea\National Tea\trunk\NationalTea\App.Domain\obj\Release\App.Domain.pdb
+F:\New folder\National Tea\trunk\NationalTea\App.Domain\bin\Release\App.Domain.dll
+F:\New folder\National Tea\trunk\NationalTea\App.Domain\bin\Release\App.Domain.pdb
+F:\New folder\National Tea\trunk\NationalTea\App.Domain\bin\Release\System.Web.Mvc.dll
+F:\New folder\National Tea\trunk\NationalTea\App.Domain\bin\Release\System.Web.Mvc.xml
+F:\New folder\National Tea\trunk\NationalTea\App.Domain\obj\Release\App.Domain.csprojResolveAssemblyReference.cache
+F:\New folder\National Tea\trunk\NationalTea\App.Domain\obj\Release\App.Domain.dll
+F:\New folder\National Tea\trunk\NationalTea\App.Domain\obj\Release\App.Domain.pdb
+D:\National Tea 160418\trunk\NationalTea\App.Domain\bin\Release\App.Domain.dll
+D:\National Tea 160418\trunk\NationalTea\App.Domain\bin\Release\App.Domain.pdb
+D:\National Tea 160418\trunk\NationalTea\App.Domain\obj\Release\App.Domain.csprojResolveAssemblyReference.cache
+D:\National Tea 160418\trunk\NationalTea\App.Domain\obj\Release\App.Domain.dll
+D:\National Tea 160418\trunk\NationalTea\App.Domain\obj\Release\App.Domain.pdb
+D:\NT\ASPL 20-09-18\trunk\NationalTea\App.Domain\bin\Release\App.Domain.dll
+D:\NT\ASPL 20-09-18\trunk\NationalTea\App.Domain\bin\Release\App.Domain.pdb
+D:\NT\ASPL 20-09-18\trunk\NationalTea\App.Domain\obj\Release\App.Domain.csprojResolveAssemblyReference.cache
+D:\NT\ASPL 20-09-18\trunk\NationalTea\App.Domain\obj\Release\App.Domain.dll
+D:\NT\ASPL 20-09-18\trunk\NationalTea\App.Domain\obj\Release\App.Domain.pdb
+D:\Farhad 28-10-18\ASPL 20-09-18\trunk\NationalTea\App.Domain\bin\Release\App.Domain.dll
+D:\Farhad 28-10-18\ASPL 20-09-18\trunk\NationalTea\App.Domain\bin\Release\App.Domain.pdb
+D:\Farhad 28-10-18\ASPL 20-09-18\trunk\NationalTea\App.Domain\obj\Release\App.Domain.csprojResolveAssemblyReference.cache
+D:\Farhad 28-10-18\ASPL 20-09-18\trunk\NationalTea\App.Domain\obj\Release\App.Domain.dll
+D:\Farhad 28-10-18\ASPL 20-09-18\trunk\NationalTea\App.Domain\obj\Release\App.Domain.pdb
+D:\Farhad 06032019\Farhad\ASPL\trunk\NationalTea\App.Domain\bin\Release\App.Domain.dll
+D:\Farhad 06032019\Farhad\ASPL\trunk\NationalTea\App.Domain\bin\Release\App.Domain.pdb
+D:\Farhad 06032019\Farhad\ASPL\trunk\NationalTea\App.Domain\obj\Release\App.Domain.csprojResolveAssemblyReference.cache
+D:\Farhad 06032019\Farhad\ASPL\trunk\NationalTea\App.Domain\obj\Release\App.Domain.dll
+D:\Farhad 06032019\Farhad\ASPL\trunk\NationalTea\App.Domain\obj\Release\App.Domain.pdb
+F:\Farhad\ASPL\trunk\NationalTea\App.Domain\bin\Release\App.Domain.dll
+F:\Farhad\ASPL\trunk\NationalTea\App.Domain\bin\Release\App.Domain.pdb
+F:\Farhad\ASPL\trunk\NationalTea\App.Domain\obj\Release\App.Domain.csprojResolveAssemblyReference.cache
+F:\Farhad\ASPL\trunk\NationalTea\App.Domain\obj\Release\App.Domain.dll
+F:\Farhad\ASPL\trunk\NationalTea\App.Domain\obj\Release\App.Domain.pdb
+F:\Farhad\ASPL\trunk\AcclineERP\App.Domain\bin\Release\App.Domain.dll
+F:\Farhad\ASPL\trunk\AcclineERP\App.Domain\bin\Release\App.Domain.pdb
+F:\Farhad\ASPL\trunk\AcclineERP\App.Domain\obj\Release\App.Domain.csprojResolveAssemblyReference.cache
+F:\Farhad\ASPL\trunk\AcclineERP\App.Domain\obj\Release\App.Domain.dll
+F:\Farhad\ASPL\trunk\AcclineERP\App.Domain\obj\Release\App.Domain.pdb

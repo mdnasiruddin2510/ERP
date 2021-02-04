@@ -1,0 +1,105 @@
+﻿@model App.Domain.EmailConfig
+
+<div class="modal fade" id="Addmodal" tabindex="-1" role="dialog" aria-labelledby="edit" aria-hidden="true" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">Email Template Configuration</h4>
+            </div>
+            <div class="modal-body form-horizontal ">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="row" id="rptshow">
+                            <div class="col-sm-12">
+                                <div class="card-box table-responsive">
+                                    <div class="form-group">
+                                        @Html.HiddenFor(x => x.Id)
+                                        @Html.LabelFor(x => x.TemplateHeader, new { @class = "col-md-4 control-label" })
+                                        <div class="col-sm-6">
+                                            @Html.TextBoxFor(x => x.TemplateHeader, new { @class = "form-control col-md-4" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(x => x.TempFixedTopDes, new { @class = "col-md-4 control-label" })
+                                        <div class="col-sm-6">
+                                            @Html.TextBoxFor(x => x.TempFixedTopDes, new { @class = "form-control col-md-4"})
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(x => x.ThanksGiving, new { @class = "col-md-4 control-label" })
+                                        <div class="col-sm-6">
+                                            @Html.TextBoxFor(x => x.ThanksGiving, new { @class = "form-control col-md-4"})
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(x => x.FooterThanks, new { @class = "col-md-4 control-label" })
+                                        <div class="col-sm-6">
+                                            @Html.TextBoxFor(x => x.FooterThanks, new { @class = "form-control col-md-4" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(x => x.Department, new { @class = "col-md-4 control-label" })
+                                        <div class="col-sm-6">
+                                            @Html.TextBoxFor(x => x.Department, new { @class = "form-control col-md-4"})
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(x => x.FooterConcern, new { @class = "col-md-4 control-label" })
+                                        <div class="col-sm-6">
+                                            @Html.TextBoxFor(x => x.FooterConcern, new { @class = "form-control col-md-4"})
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(x => x.FooterPhone, new { @class = "col-md-4 control-label" })
+                                        <div class="col-sm-6">
+                                            @Html.TextBoxFor(x => x.FooterPhone, new { @class = "form-control col-md-4"})
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(x => x.FooterFax, new { @class = "col-md-4 control-label" })
+                                        <div class="col-sm-6">
+                                            @Html.TextBoxFor(x => x.FooterFax, new { @class = "form-control col-md-4"})
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(x => x.FooterEmail, new { @class = "col-md-4 control-label" })
+                                        <div class="col-sm-6">
+                                            @Html.TextBoxFor(x => x.FooterEmail, new { @class = "form-control col-md-4"})
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(x => x.FooterWeb, new { @class = "col-md-4 control-label" })
+                                        <div class="col-sm-6">
+                                            @Html.TextBoxFor(x => x.FooterWeb, new { @class = "form-control col-md-4"})
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(x => x.IsActive, new { @class = "col-md-4 control-label" })
+                                        <div class="col-sm-6">
+                                            @Html.CheckBoxFor(x => x.IsActive, new { @class = "form-control col-md-4" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-6">
+                                            <input type="hidden" class="form-control col-md-4" id="@Html.IdFor(x=>x.Id)" />
+                                        </div>
+                                    </div> 
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-1"></div>
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-info waves-effect waves-light" id="add">Save changes</button>
+            </div>
+
+        </div>
+    </div>
+
+</div>

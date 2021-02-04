@@ -1,0 +1,155 @@
+﻿@model IEnumerable<App.Domain.ViewModel.Ageing>
+@{
+    ViewBag.Title = "rpt_Ageing1Pdf";
+    Layout = null;
+    int sl = 0;
+    decimal tdays30 = 0;
+    decimal tdays60 = 0;
+    decimal tdays90 = 0;
+    decimal tabove90 = 0;
+    decimal tTotal = 0;
+    decimal? Total = 0;
+    var CompInfo = AcclineERP.Models.GetCompanyInfo.GetComInfo();
+    string CompanyAddress = ((CompInfo.Addr1 == null ? string.Empty : CompInfo.Addr1) + (CompInfo.Addr2 == null ? string.Empty : CompInfo.Addr2));
+
+
+}
+
+<script src="~/Scripts/jquery-1.9.1.min.js"></script>
+<script src="~/Scripts/Export.js"></script>
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/select2/select2.css" rel="stylesheet" type="text/css" />
+<link href="~/Css/FormDesign.css" rel="stylesheet" />
+
+<style>
+    tr {
+        page-break-inside: avoid;
+    }
+
+    body {
+        padding-right: 0px;
+        font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+    }
+
+    .border {
+        color: #335; /* Lighten up font color */
+        font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+        font-weight: 300;
+        border-collapse: collapse;
+        border-spacing: 0;
+    }
+
+    .tds {
+        /*border: 1px solid black;*/
+        font-weight: 500;
+        font-family: Arial;
+        border-right: hidden !important;
+    }
+    /* Make cells a bit taller */
+    .ths {
+        /*border: 1px solid black;*/
+        font-weight: 500;
+        font-family: Arial;
+    }
+
+    .th {
+        background: #F3F3F3; /* Light grey background */
+        font-weight: bold; /* Make sure they're bold */
+    }
+
+    .td {
+        background: #FAFAFA; /* Lighter grey background */
+        text-align: center; /* Center our text */
+    }
+
+    .breakhere {
+        page-break-after: always;
+    }
+</style>
+
+
+<div id="toReport" class="panel-body" style="margin: 0; text-align:center !important;  padding:0;">
+    <div class="panel-heading" style="text-align:center">
+        <div class="panel-title">
+            <label style="text-align:center !important; text-decoration: none; font-size:15px; font-weight:bold">@CompInfo.CompName</label><br>
+            <label style="text-align:center !important; text-decoration: none; font-size:12px; font-weight:normal"> @CompanyAddress</label><br>
+
+        </div>
+        <div class="panel-title">
+            @*<label style="text-align:center !important; text-decoration: none; font-size:12px; font-weight:normal">Location:@ViewBag.BranchCode</label><br>*@
+            <text style="text-align:center !important; text-decoration: none; font-size:12px;font-family:'Arial Narrow'; font-weight:bold">Ageing Report</text>
+        </div>
+        <div class="cashDate">
+            <text style="text-align:center !important; text-decoration: none; font-size:11px;font-family:'Arial Narrow';">As On Date: @ViewBag.asonDate </text>
+        </div>
+    </div>
+    <div class="panel-body" style="text-align:center">
+        <table cellpadding="1" cellspacing="0" border=1 frame=box rules=all style="  width: 100%">
+            <thead style=" overflow: visible !important;">
+                <tr>
+                    <th style="  font-size: 14px; vertical-align: top;  text-align: center">Sl No.</th>
+                    <th style="  font-size: 14px; vertical-align: top;  text-align: center">Customer Code</th>
+                    <th style=" font-size: 14px; vertical-align: top;   text-align: center">Customer Name </th>
+                    <th style=" font-size: 14px; vertical-align: top;   text-align: center">Days 30</th>
+                    <th style=" font-size: 14px; vertical-align: top;  text-align: center">Days 60</th>
+                    <th style=" font-size: 14px; vertical-align: top; text-align: center">Days 90</th>
+                    <th style=" font-size: 14px; vertical-align: top; text-align: center">Above 90</th>
+                    <th style=" font-size: 14px; vertical-align: top; text-align: center">Total</th>
+                </tr>
+            </thead>
+            <tbody id="tbodyId" style="line-height: 140%;">
+                @foreach (var item in Model)
+                {
+
+                    sl++;
+                    <tr>
+                        <td style="text-align:center;font-size:12px">
+                            @sl
+                        </td>
+                        <td style=" text-align:center; font-size:12px">
+                            @Html.DisplayFor(modelItem => item.custcode)
+                        </td>
+                        <td style=" text-align:center; font-size:12px">
+                            @Html.DisplayFor(modelItem => item.custname)
+                        </td>
+
+                        <td style=" text-align:right; font-size:12px;">
+                            @Html.DisplayFor(modelItem => item.days30)
+                        </td>
+                        <td style=" text-align:right; font-size:12px">
+                            @Html.DisplayFor(modelItem => item.days60)
+                        </td>
+                        <td style="text-align:right; font-size:12px">
+                            @Html.DisplayFor(modelItem => item.days90)
+                        </td>
+                        <td style=" text-align:right; font-size:12px;">
+                            @Html.DisplayFor(modelItem => item.above90)
+                        </td>
+
+                        @{  Total = item.days30 + item.days60 + item.days90 + item.above90;                }
+                        <td style=" text-align:right; font-size:14px;">@Total</td>
+                    </tr>
+                          tdays30 += Convert.ToDecimal(item.days30);
+                          tdays60 += Convert.ToDecimal(item.days60);
+                          tdays90 += Convert.ToDecimal(item.days90);
+                          tabove90 += Convert.ToDecimal(item.above90);
+                          tTotal += Convert.ToDecimal(@Total);
+                }
+
+                <tr>
+                    <th style=""></th>
+                    <th style=""></th>
+                    <th style=" text-align:Center">Grand Total:</th>
+                    <th style=" text-align:right">@Convert.ToDecimal(@tdays30).ToString("#,##0.00")</th>
+                    <th style=" text-align:right">@Convert.ToDecimal(@tdays60).ToString("#,##0.00")</th>
+                    <th style=" text-align:right">@Convert.ToDecimal(@tdays90).ToString("#,##0.00")</th>
+                    <th style=" text-align:right">@Convert.ToDecimal(@tabove90).ToString("#,##0.00")</th>
+                    <th style=" text-align:right">@Convert.ToDecimal(@tTotal).ToString("#,##0.00")</th>
+                </tr>
+
+            </tbody>
+        </table>
+    </div>
+</div>

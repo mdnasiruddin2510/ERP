@@ -1,0 +1,273 @@
+﻿@model IEnumerable<App.Domain.ViewModel.Vat6_5>
+@{
+    ViewBag.Title = "rptVat6P5Pdf";
+    Layout = null;
+    decimal TotalValue = 0.0m;
+    decimal VATax = 0.0m;
+    int sl = 0;
+    int count = Model.Count();
+    string dt = "";
+    var CompName = AcclineERP.Models.GetCompanyInfo.GetComInfo().CompName;
+    var CompBin = AcclineERP.Models.GetCompanyInfo.GetComInfo().BIN;
+    var CompInfo = AcclineERP.Models.GetCompanyInfo.GetComInfo();
+    string CompanyAddress = ((CompInfo.Addr1 == null ? string.Empty : CompInfo.Addr1) + (CompInfo.Addr2 == null ? string.Empty : CompInfo.Addr2));
+}
+
+<script src="~/Scripts/jquery-1.9.1.min.js"></script>
+<script src="~/Scripts/Export.js"></script>
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/select2/select2.css" rel="stylesheet" type="text/css" />
+<link href="~/Css/FormDesign.css" rel="stylesheet" />
+
+<style>
+    tr {
+        page-break-inside: avoid;
+    }
+
+    body {
+        padding-right: 0px;
+        font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+    }
+
+    .border {
+        color: #335; /* Lighten up font color */
+        font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+        font-weight: 300;
+        border-collapse: collapse;
+        border-spacing: 0;
+    }
+
+    .tds {
+        /*border: 1px solid black;*/
+        font-weight: 500;
+        font-family: Arial;
+        border-right: hidden !important;
+    }
+    /* Make cells a bit taller */
+    .ths {
+        /*border: 1px solid black;*/
+        font-weight: 500;
+        font-family: Arial;
+    }
+
+    .th {
+        background: #F3F3F3; /* Light grey background */
+        font-weight: bold; /* Make sure they're bold */
+    }
+
+    .td {
+        background: #FAFAFA; /* Lighter grey background */
+        text-align: center; /* Center our text */
+    }
+
+    .breakhere {
+        page-break-after: always;
+    }
+</style>
+
+
+<body onkeypress="return disablectrlkeycombination(event);" onkeydown="return disablectrlkeycombination(event);"></body>
+
+<div id="toReport" class="panel-body" style=" text-align: center !important; width: 100%; font-weight:normal; height: 100%; ">
+
+    <div class="panel-body">
+        <table border="1" cellpadding="10" cellspacing="0" align="center" rules=all>
+            <thead style="overflow: visible!important;">
+                <tr>
+                    <th style="font-size: 13px; border-bottom: 0; border-top: 0; text-align: center; " colspan="27">গণপ্রজাতন্ত্রী বাংলাদেশ সরকার <br>জাতীয় রাজস্ব বোর্ড </th>
+                </tr>
+                <tr>
+                    <th style="font-size: 13px; border-bottom: 0; border-top: 1px; text-align: right; " colspan="27"><level style="padding:2px;border: 1px solid">মূসক-৬.৫</level>   </th>
+                </tr>
+
+                <tr>
+                    <th style="font-size: 16px; border-bottom: 0; border-top: 0; text-align: center;  " colspan="27"><text style="font-weight: bold;">কেন্দ্রীয় নিবন্ধিত প্রতিষ্ঠানের পণ্য স্থানান্তর চালানপত্র<br /> <label style="font-weight:normal;font-size: 16px"> [৪০ এর উপ-বিধি (১) এর দফা (ঙ) দ্রষ্টব্য] </label></th>
+
+                </tr>
+                <tr>
+                    <th style="font-size: 12px; border-bottom: 0; border-top: 0; text-align: left; " colspan="27">
+                        <div style="float:left">
+                            নিবন্ধিত ব্যাক্তির নাম: @CompName
+                            <br/>নিবন্ধিত ব্যাক্তির বিআইএন:@CompBin
+                            <br/>প্রেরণকারী ইউনিট/শাখা/পণ্যগারের নাম ও ঠিকানাঃ:@Model.Select(s => s.FromLoc).FirstOrDefault()
+                            <br/>গ্রহীতা ইউনিট/শাখা/পণ্যগারের নাম ও ঠিকানাঃ:@Model.Select(s => s.ToLoc).FirstOrDefault()
+                        </div>
+                    </th>
+                </tr>
+                <tr>
+                    <th style="font-size: 14px; border-bottom: 0; border-top: 0; border-right: 0; text-align: left; " colspan="6"></th>
+                    <th style="font-size: 14px; border-bottom: 0; border-top: 0; border-left: 0; text-align: left; " colspan="6">চালানপত্র নম্বর: @Model.Select(s => s.ChallanNo).FirstOrDefault() </th>
+                </tr>
+                <tr>
+                    <th style="font-size: 14px; border-bottom: 0; border-top: 0; border-right: 0; text-align: left; " colspan="6"></th>
+                    <th style="font-size: 14px; border-bottom: 0; border-top: 0; border-left: 0; text-align: left; " colspan="6">ইস্যুর তারিখ: @Model.Select(s => s.Challandate.ToShortDateString()).FirstOrDefault() </th>
+                </tr>
+                <tr>
+                    <th style="font-size: 14px; border-bottom: 0; border-top: 0; border-right: 0; text-align: left;" colspan="6"> </th>
+                    <th style="font-size: 14px; border-bottom: 0; border-top: 0; border-left: 0; text-align: left; " colspan="6"> ইস্যুর সময়: @Model.Select(s => s.ChallanTime).FirstOrDefault() </th>
+                </tr>
+                @*<tr>
+                        <th style=" font-size: 13px; text-align: center" colspan="27">পণ্য/সেবার বিক্রয়  </th>
+                    </tr>*@
+
+                <tr>
+                    <th style="  font-size: 14px; vertical-align: top; text-align: center">ক্রমিক সংখ্যা</th>
+                    <th style=" font-size: 14px; vertical-align: top;border-bottom:1px solid !important; text-align: center">  চালান নম্বরঃ</th>
+                    <th style=" font-size: 14px; vertical-align: top; text-align: center"> ইস্যুর তারিখঃ</th>
+                    <th style=" font-size: 14px; vertical-align: top; text-align: center"> ইস্যুর সময়ঃ</th>
+                    <th style=" font-size: 14px; vertical-align: top; text-align: center"> পণ্যের(প্রযোজ্য ক্ষেত্রে সুনির্দিষ্ট ব্রান্ড নামসহ) বিবরণ</th>
+                    <th style=" font-size: 14px; vertical-align: top; text-align: center">    পরিমাণ</th>
+                    <th style=" font-size: 14px; vertical-align: top; text-align: center">কর ব্যাতীত মূল্য</th>
+                    <th style=" font-size: 14px; vertical-align: top; text-align: center">প্রযোজ্য করের পরিমাণ</th>
+                    <th style=" font-size: 14px; vertical-align: top; text-align: center"> মন্তব্য</th>
+
+                </tr>
+            </thead>
+
+
+
+            <tbody id="tbodyId">
+                @foreach (var item in Model)
+                {
+
+                    sl++;
+                    dt = item.Challandate.ToShortDateString();
+                    <tr>
+                        <td style=" text-align:left; font-size:12px">
+                            @sl
+                        </td>
+
+
+                        @if (true)
+                        {
+                            <td style=" text-align:left;border-bottom:hidden; font-size:12px">
+                                @if (sl == 1)
+                                {   @Html.DisplayFor(modelItem => item.ChallanNo)
+                                }
+
+                            </td>
+                            <td style=" text-align:left;border-bottom:hidden; font-size:12px">
+                                @if (sl == 1)
+                                {  @Html.DisplayFor(modelItem => dt)
+                                }
+
+                            </td>
+                        }
+                        else
+                        {
+
+                            <td style=" text-align:left; font-size:12px">
+                                @if(sl == 1)
+                                {   
+                                    @Html.DisplayFor(modelItem => item.ChallanNo)
+                                }
+
+                            </td>
+                            <td style=" text-align:left; font-size:12px">
+                                @if (sl == 1)
+                                {  @Html.DisplayFor(modelItem => dt)
+                                }
+
+                            </td>
+
+                        }
+
+
+                        <td style=" text-align:left; font-size:12px">
+
+                            @Html.DisplayFor(modelItem => item.ChallanTime)
+
+                        <td style=" text-align:left; font-size:12px">
+
+                            @Html.DisplayFor(modelItem => item.ItemName)
+                        </td>
+                        <td style=" text-align:left; font-size:12px;">
+                            @Html.DisplayFor(modelItem => item.Qty)
+                        </td>
+                        <td style=" text-align:right; font-size:12px">
+                            @Html.DisplayFor(modelItem => item.TotalValue)
+                        </td>
+                        <td style="text-align:right; font-size:12px">
+                            @Html.DisplayFor(modelItem => item.VATax)
+                        </td>
+                        <td style=" text-align:right; font-size:12px;">
+                            @Html.DisplayFor(modelItem => item.Remarks)
+                        </td>
+
+                    </tr>
+                        TotalValue += Convert.ToDecimal(item.TotalValue);
+                        VATax += Convert.ToDecimal(item.VATax);
+
+                }
+                @*<tr>
+                        <th style=""></th>
+                        <th style=""></th>
+                        <th style=""></th>
+                        <th style=""></th>
+                        <th style=" text-align:Center">সর্বমোট</th>
+                        <th style=" text-align:right">@Convert.ToDecimal(@tTotalValue).ToString("#,##0.00")</th>
+                        <th style=" text-align:right">@Convert.ToDecimal(@tSuppTaxAmt).ToString("#,##0.00")</th>
+                        <th style=" text-align:right"></th>
+                        <th style=" text-align:right">@Convert.ToDecimal(@tVATAmt).ToString("#,##0.00")</th>
+                        <th style=" text-align:right">@Convert.ToDecimal(@tNetValue).ToString("#,##0.00")</th>
+                    </tr>*@
+            </tbody>
+            <tr>
+                <th style="font-size: 14px; border-bottom: 0; border-top: 0; text-align: left; " colspan="27">প্রতিষ্টান কতৃপক্ষের দায়িত্বপ্রাপ্ত ব্যাক্তির নাম:</th>
+            </tr>
+            <tr>
+                <th style="font-size: 14px; border-bottom: 0; border-top: 0; text-align: left; " colspan="27">পদবী:</th>
+            </tr>
+            <tr>
+                <th style="font-size: 14px; border-bottom: 0; border-top: 0; text-align: left; " colspan="27">স্বাক্ষর:</th>
+            </tr>
+            <tr>
+                <th style="font-size: 14px; border-bottom: 0; border-top: 0; text-align: left; " colspan="27">সীল: <br /></th>
+            </tr>
+            @*<tr>
+                    <th style="font-size: 14px; border-bottom: 0; border-top: 0; text-align: left; " colspan="27">* উৎসে কর্তনযোগ্য সরবরাহের ক্ষেত্রে ফরমেট সমন্বিত কর চলমান ও উৎসে কর কর্তন <br /> সনদপত্র হিসাবে বিবেচিত হইবে এবং উহা উৎসে কর কর্তনযোগ্য সরবরাহের ক্ষেত্রে প্রযোজ্য <br />হবে |</th>
+                </tr>*@
+        </table>
+    </div>
+    <p></p>
+</div>
+
+<script language="JavaScript">
+    function disableCtrlKeyCombination(e) {
+        //list all CTRL + key combinations you want to disable
+        var forbiddenKeys = new Array("a", "s", "c");
+        var key;
+        var isCtrl;
+
+        if (window.event) {
+            key = window.event.keyCode;     //IE
+            if (window.event.ctrlKey)
+                isCtrl = true;
+            else
+                isCtrl = false;
+        }
+        else {
+            key = e.which;     //firefox
+            if (e.ctrlKey)
+                isCtrl = true;
+            else
+                isCtrl = false;
+        }
+
+        //if ctrl is pressed check if other key is in forbidenKeys array
+        if (isCtrl) {
+            for (i = 0; i < forbiddenKeys.length; i++) {
+                //case-insensitive comparation
+                if (forbiddenKeys[i].toLowerCase() == String.fromCharCode(key).toLowerCase()) {
+                    //                                    alert("Key combination CTRL + "
+                    //                                                + String.fromCharCode(key)
+                    //                                                + " has been disabled.");
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+</script>

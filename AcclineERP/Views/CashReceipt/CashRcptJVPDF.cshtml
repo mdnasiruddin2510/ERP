@@ -1,0 +1,135 @@
+﻿@model IEnumerable<App.Domain.CashReceipt>
+
+@{
+    ViewBag.Title = "CR Journal Voucher";
+    Layout = null;
+    var CompInfo = AcclineERP.Models.GetCompanyInfo.GetComInfo();
+    string CompanyAddress = ((CompInfo.Addr1 == null ? string.Empty : CompInfo.Addr1) + (CompInfo.Addr2 == null ? string.Empty : CompInfo.Addr2));
+}
+
+<script src="~/Scripts/jquery-1.9.1.min.js"></script>
+<script src="~/Scripts/Export.js"></script>
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/select2/select2.css" rel="stylesheet" type="text/css" />
+<link href="~/Css/FormDesign.css" rel="stylesheet" />
+
+<style>
+    hr {
+        background-color: black;
+        height: 0.5px;
+    }
+</style>
+
+<div id="toReport" class="panel-body" style="margin: auto; text-align:center !important; width:800px; height:1150px; padding:60px">
+    <div class="panel-heading" style="text-align:center">
+        <div class="panel-title">
+            <label style="text-align:center !important; text-decoration: none; font-size:25px; font-weight:bold">@CompInfo.CompName</label><br>
+            <label style="text-align:center !important; text-decoration: none; font-size:23px; font-weight:normal"> @CompanyAddress</label><br>
+            @*<label style="text-align:center !important; text-decoration: none; font-size:23px; font-weight:normal">Phone: @CompInfo.Tel</label>*@<br>
+        </div>
+        <div class="panel-title">
+            <text style="text-align:center !important; text-decoration: none; font-size:23px; font-weight:bold">Journal Voucher</text>
+        </div>
+        <div class="panel-title">
+            <text style="text-align:center !important; text-decoration: none; font-size:20px; font-weight:bold">Voucher No : @ViewBag.VchrNo</text>
+        </div>
+        <div class="panel-title">
+            <text style="text-align:center !important; text-decoration: none; font-size:20px; font-weight:bold">Branch : @ViewBag.Branch</text>
+        </div>
+        <div class="cashDate">
+            <text style="text-align:center !important; text-decoration: none; font-size:15px; font-weight:bold">Date : @ViewBag.Date</text>
+        </div>
+    </div>
+    <hr />
+
+    <br />
+    <div class="panel-body" style="text-align:center">
+        <table cellpadding="5" cellspacing="1" border="0" style="width:800px">
+            <thead style="height:300px">
+                <tr>
+                    <th style="width:100px"></th>
+                    <th style="width:280px"></th>
+                    <th style="width:140px"></th>
+                    <th style="width:140px"></th>
+                    <th style="width:140px"></th>
+
+                </tr>
+
+                <tr>
+                    <th style="font-size:13px; text-align:center">A/C Code</th>
+                    <th style="font-size:13px; text-align:center">Account Name/th>
+                    <th style="font-size:13px; text-align:center">Transaction Type</th>
+                    <th style="font-size:13px; text-align:center">Debit</th>
+                    <th style="font-size:13px; text-align:center">Credit</th>
+                </tr>
+                <tr>
+                    <th style="width:120px; text-align:center"></th>
+                    <th style="width:120px; text-align:center"></th>
+                    <th style="width:100px; text-align:center"></th>
+                    <th style="width:100px; text-align:right"></th>
+                    <th style="width:100px; text-align:right"></th>
+                </tr>
+
+            </thead>
+            <tbody id="tbodyId">
+
+                <tr>
+                    <td style="text-align:left; font-size:12px"></td>
+                    <td style="text-align:center; font-size:12px">Cash</td>
+                    <td style="text-align:center; font-size:12px">Dr</td>
+                    <td style="text-align:center; font-size:12px">@ViewBag.Amount</td>
+                    <td style="text-align:center; font-size:12px">-</td>
+
+                </tr>
+                <tr>
+                    <td style="text-align:left; font-size:12px">@ViewBag.Accode</td>
+                    <td style="text-align:center; font-size:12px">@ViewBag.AcName</td>
+                    <td style="text-align:center; font-size:12px">Cr</td>
+                    <td style="text-align:center; font-size:12px">-</td>
+                    <td style="text-align:center; font-size:12px">@ViewBag.Amount</td>
+
+                </tr>
+                <tr>
+                    <th style="text-align:center"></th>
+                    <th style="text-align:center"></th>
+                    <th style="text-align:center"></th>
+                    <th style="text-align:right"><hr />@ViewBag.Amount<hr /><hr /></th>
+                    <th style="text-align:right"><hr />@ViewBag.Amount<hr /><hr /></th>
+                    <th style="text-align:center"></th>
+                </tr>
+                <tr>
+                    <th style="width:120px"></th>
+                    <th style="width:120px"></th>
+                    <th style="width:100px"></th>
+                    <th style="width:100px"></th>
+                    <th style="width:100px"></th>
+                </tr>
+                <tr>
+                    <th style="width:120px; text-align:center"></th>
+                    <th style="width:120px; text-align:center"></th>
+                    <th style="width:100px; text-align:center"></th>
+                    <th style="width:100px; text-align:right"></th>
+                    <th style="width:100px; text-align:right"></th>
+                </tr>
+            </tbody>
+
+
+
+        </table>
+    </div>
+    <br />
+
+    <div class="footer" id="footer">
+        <div class="remarks">
+            <text style="text-align:left !important; text-decoration: none; font-size:12px; font-weight:bold">Memo : @ViewBag.Remarks</text>
+        </div>
+    </div>
+</div>
+<div class="col-sm-10">
+    <br />
+    <br /><br />
+</div>
+
+

@@ -1,0 +1,376 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="ASPL_DEMOModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="CostLedger">
+    <Key>
+      <PropertyRef Name="RecId" />
+    </Key>
+    <Property Name="RecId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="LocNo" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="ItemCode" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="TrDate" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="RecQty" Type="Double" Nullable="false" />
+    <Property Name="RecRate" Type="Double" Nullable="false" />
+    <Property Name="RecTotal" Type="Double" Nullable="false" />
+    <Property Name="IssQty" Type="Double" Nullable="false" />
+    <Property Name="IssRate" Type="Double" Nullable="false" />
+    <Property Name="IssTotal" Type="Double" Nullable="false" />
+    <Property Name="BalQty" Type="Double" Nullable="false" />
+    <Property Name="BalRate" Type="Double" Nullable="false" />
+    <Property Name="BalTotal" Type="Double" Nullable="false" />
+    <Property Name="UpdSrc" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="UpdSrcNo" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+  </EntityType>
+  <EntityType Name="CurrentStock">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="LocCode" Type="String" MaxLength="3" FixedLength="false" Unicode="true" />
+    <Property Name="LotNo" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="ItemCode" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="CurrQty" Type="Double" Nullable="false" />
+    <Property Name="UnitPrice" Type="Double" Nullable="false" />
+  </EntityType>
+  <EntityType Name="CustWiseSummSaleRpt">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="SubCode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="SubName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="LocCode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="SaleAmount" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
+    <Property Name="Discount" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
+    <Property Name="Commission" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
+    <Property Name="VAT" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
+    <Property Name="GrossSale" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
+  </EntityType>
+  <EntityType Name="IssueDetail">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="IssueNo" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+    <Property Name="ItemCode" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+    <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Qty" Type="Double" Nullable="false" />
+    <Property Name="Price" Type="Double" Nullable="false" />
+    <Property Name="ExQty" Type="Double" Nullable="false" />
+    <Property Name="LotNo" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="SubCode" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="IssueMain" Relationship="Self.FK_dbo_IssueDetails_dbo_IssueMain_IssueNo" FromRole="IssueDetails" ToRole="IssueMain" />
+    <NavigationProperty Name="ItemInfo" Relationship="Self.FK_dbo_IssueDetails_dbo_ItemInfo_ItemCode" FromRole="IssueDetails" ToRole="ItemInfo" />
+    <Property Name="ItemType" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="IssueMain">
+    <Key>
+      <PropertyRef Name="IssueNo" />
+    </Key>
+    <Property Name="IssueNo" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="IssueDate" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="FromLocCode" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="ToLocCode" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="DesLocCode" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+    <Property Name="Accode" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+    <Property Name="IssueToSubCode" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+    <Property Name="JobNo" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="RefNo" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="RefDate" Type="DateTime" Precision="3" />
+    <Property Name="Remarks" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="IssueByCode" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="AppByCode" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="IssTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="IssDate" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="Amount" Type="Double" Nullable="false" />
+    <Property Name="FinYear" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="GLPost" Type="Boolean" Nullable="false" />
+    <Property Name="IsReceived" Type="Boolean" Nullable="false" />
+    <Property Name="BranchCode" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+    <Property Name="cashReceiptStatus" Type="Boolean" Nullable="false" />
+    <Property Name="StoreLocCode" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="VchrNo" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="IssueDetails" Relationship="Self.FK_dbo_IssueDetails_dbo_IssueMain_IssueNo" FromRole="IssueMain" ToRole="IssueDetails" />
+    <Property Name="EntrySrc" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="EntrySrcNo" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="ItemInfo">
+    <Key>
+      <PropertyRef Name="ItemCode" />
+    </Key>
+    <Property Name="ItemCode" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="ItemType" Type="Int32" />
+    <Property Name="ItemName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="OpenBal" Type="Double" Nullable="false" />
+    <Property Name="PartNo" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="UnitCode" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+    <Property Name="DetUnitCode" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+    <Property Name="Price" Type="Double" Nullable="false" />
+    <Property Name="PackSize" Type="Double" Nullable="false" />
+    <Property Name="PackItemCode" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="AltItemCode" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Ratio" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="RetailPrice" Type="Decimal" Precision="9" Scale="2" />
+    <Property Name="Prod_Ser" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+    <Property Name="HSCode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="ROLevel" Type="Decimal" Precision="18" Scale="0" />
+    <NavigationProperty Name="IssueDetails" Relationship="Self.FK_dbo_IssueDetails_dbo_ItemInfo_ItemCode" FromRole="ItemInfo" ToRole="IssueDetails" />
+    <Property Name="TaxHeadingNo" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="ItemMap">
+    <Key>
+      <PropertyRef Name="Id" />
+      <PropertyRef Name="ItemTypeCode" />
+      <PropertyRef Name="GroupID" />
+      <PropertyRef Name="SGroupID" />
+      <PropertyRef Name="SSGroupID" />
+      <PropertyRef Name="ItemCode" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ItemTypeCode" Type="Int32" Nullable="false" />
+    <Property Name="GroupID" Type="Int32" Nullable="false" />
+    <Property Name="SGroupID" Type="Int32" Nullable="false" />
+    <Property Name="SSGroupID" Type="Int32" Nullable="false" />
+    <Property Name="ItemCode" Type="String" MaxLength="5" FixedLength="true" Unicode="false" Nullable="false" />
+  </EntityType>
+  <EntityType Name="SalesDetail">
+    <Key>
+      <PropertyRef Name="SalesDetailID" />
+    </Key>
+    <Property Name="SalesDetailID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="SalesMainID" Type="Int64" Nullable="false" />
+    <Property Name="ItemCode" Type="String" MaxLength="5" FixedLength="true" Unicode="false" Nullable="false" />
+    <Property Name="LotNo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="Description" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="SaleQty" Type="Decimal" Precision="9" Scale="2" />
+    <Property Name="UnitPrice" Type="Decimal" Precision="9" Scale="2" />
+    <Property Name="VATPerc" Type="Decimal" Precision="9" Scale="2" />
+    <Property Name="VATAmt" Type="Decimal" Precision="9" Scale="2" />
+    <Property Name="DiscPerc" Type="Decimal" Precision="9" Scale="2" />
+    <Property Name="DiscAmt" Type="Decimal" Precision="9" Scale="2" />
+    <Property Name="ExtQty" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+    <Property Name="ExtUPrice" Type="Decimal" Precision="18" Scale="2" />
+  </EntityType>
+  <EntityType Name="SecUserInfo">
+    <Key>
+      <PropertyRef Name="UserID" />
+    </Key>
+    <Property Name="UserID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="UserName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Password" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="Email" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="CreateDate" Type="DateTime" Precision="0" />
+  </EntityType>
+  <EntityType Name="tmpAddedItem">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="SaleNo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="ItemCode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="LotNo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="ItemName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="Description" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Qty" Type="Decimal" Precision="9" Scale="2" Nullable="false" />
+    <Property Name="ExtQty" Type="Decimal" Precision="9" Scale="2" Nullable="false" />
+    <Property Name="UnitPrice" Type="Decimal" Precision="9" Scale="2" Nullable="false" />
+    <Property Name="Vat" Type="Decimal" Precision="18" Scale="2" />
+    <Property Name="Discount" Type="Decimal" Precision="18" Scale="2" />
+    <Property Name="VatPerc" Type="Decimal" Precision="18" Scale="2" />
+    <Property Name="DiscPerc" Type="Decimal" Precision="18" Scale="2" />
+    <Property Name="Amount" Type="Decimal" Precision="18" Scale="0" Nullable="false" />
+    <Property Name="EntrySl" Type="Byte" />
+    <Property Name="ExtUPrice" Type="Decimal" Precision="18" Scale="2" />
+  </EntityType>
+  <Association Name="FK_dbo_IssueDetails_dbo_IssueMain_IssueNo">
+    <End Role="IssueMain" Type="Self.IssueMain" Multiplicity="0..1" />
+    <End Role="IssueDetails" Type="Self.IssueDetail" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="IssueMain">
+        <PropertyRef Name="IssueNo" />
+      </Principal>
+      <Dependent Role="IssueDetails">
+        <PropertyRef Name="IssueNo" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_dbo_IssueDetails_dbo_ItemInfo_ItemCode">
+    <End Role="ItemInfo" Type="Self.ItemInfo" Multiplicity="0..1" />
+    <End Role="IssueDetails" Type="Self.IssueDetail" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ItemInfo">
+        <PropertyRef Name="ItemCode" />
+      </Principal>
+      <Dependent Role="IssueDetails">
+        <PropertyRef Name="ItemCode" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="ASPLEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="CostLedgers" EntityType="Self.CostLedger" />
+    <EntitySet Name="CurrentStocks" EntityType="Self.CurrentStock" />
+    <EntitySet Name="CustWiseSummSaleRpts" EntityType="Self.CustWiseSummSaleRpt" />
+    <EntitySet Name="IssueDetails" EntityType="Self.IssueDetail" />
+    <EntitySet Name="IssueMains" EntityType="Self.IssueMain" />
+    <EntitySet Name="ItemInfoes" EntityType="Self.ItemInfo" />
+    <EntitySet Name="ItemMaps" EntityType="Self.ItemMap" />
+    <EntitySet Name="SalesDetails" EntityType="Self.SalesDetail" />
+    <EntitySet Name="SecUserInfoes" EntityType="Self.SecUserInfo" />
+    <EntitySet Name="tmpAddedItems" EntityType="Self.tmpAddedItem" />
+    <AssociationSet Name="FK_dbo_IssueDetails_dbo_IssueMain_IssueNo" Association="Self.FK_dbo_IssueDetails_dbo_IssueMain_IssueNo">
+      <End Role="IssueMain" EntitySet="IssueMains" />
+      <End Role="IssueDetails" EntitySet="IssueDetails" />
+    </AssociationSet>
+    <AssociationSet Name="FK_dbo_IssueDetails_dbo_ItemInfo_ItemCode" Association="Self.FK_dbo_IssueDetails_dbo_ItemInfo_ItemCode">
+      <End Role="ItemInfo" EntitySet="ItemInfoes" />
+      <End Role="IssueDetails" EntitySet="IssueDetails" />
+    </AssociationSet>
+    <FunctionImport Name="rptCustomerWiseSummarySales" ReturnType="Collection(ASPL_DEMOModel.rptCustomerWiseSummarySales_Result)">
+      <Parameter Name="finYear" Mode="In" Type="String" />
+      <Parameter Name="locCode" Mode="In" Type="String" />
+      <Parameter Name="fdate" Mode="In" Type="DateTime" />
+      <Parameter Name="tdate" Mode="In" Type="DateTime" />
+    </FunctionImport>
+    <FunctionImport Name="CustWiseSummSale" ReturnType="Collection(ASPL_DEMOModel.CustWiseSummSale_Result)">
+      <Parameter Name="finYear" Mode="In" Type="String" />
+      <Parameter Name="locCode" Mode="In" Type="String" />
+      <Parameter Name="fdate" Mode="In" Type="DateTime" />
+      <Parameter Name="tdate" Mode="In" Type="DateTime" />
+    </FunctionImport>
+    <EntitySet Name="SalesMains" EntityType="ASPL_DEMOModel.SalesMain" />
+    <EntitySet Name="SysSets" EntityType="ASPL_DEMOModel.SysSet" />
+  </EntityContainer>
+  <ComplexType Name="rptCustomerWiseSummarySales_Result">
+    <Property Type="Int32" Name="Id" Nullable="false" />
+    <Property Type="String" Name="SubCode" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="SubName" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="LocCode" Nullable="true" MaxLength="50" />
+    <Property Type="Decimal" Name="SaleAmount" Nullable="false" Precision="18" Scale="2" />
+    <Property Type="Decimal" Name="Discount" Nullable="false" Precision="18" Scale="2" />
+    <Property Type="Decimal" Name="Commission" Nullable="false" Precision="18" Scale="2" />
+    <Property Type="Decimal" Name="VAT" Nullable="false" Precision="18" Scale="2" />
+    <Property Type="Decimal" Name="GrossSale" Nullable="false" Precision="18" Scale="2" />
+  </ComplexType>
+  <ComplexType Name="CustWiseSummSale_Result">
+    <Property Type="Int32" Name="Id" Nullable="false" />
+    <Property Type="String" Name="SubCode" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="SubName" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="LocCode" Nullable="true" MaxLength="50" />
+    <Property Type="Decimal" Name="SaleAmount" Nullable="false" Precision="18" Scale="2" />
+    <Property Type="Decimal" Name="Discount" Nullable="false" Precision="18" Scale="2" />
+    <Property Type="Decimal" Name="Commission" Nullable="false" Precision="18" Scale="2" />
+    <Property Type="Decimal" Name="VAT" Nullable="false" Precision="18" Scale="2" />
+    <Property Type="Decimal" Name="GrossSale" Nullable="false" Precision="18" Scale="2" />
+  </ComplexType>
+  <EntityType Name="SalesMain">
+    <Key>
+      <PropertyRef Name="SalesMainID" />
+    </Key>
+    <Property Name="SalesMainID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="SaleNo" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="SaleDate" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="JobNo" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="RefNo" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="RefDate" Type="DateTime" Precision="0" />
+    <Property Name="IssueNo" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="IssueDate" Type="DateTime" Precision="3" />
+    <Property Name="CustCode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="LocCode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="ProjCode" Type="String" MaxLength="2" FixedLength="true" Unicode="false" />
+    <Property Name="BranchCode" Type="String" MaxLength="3" FixedLength="true" Unicode="false" />
+    <Property Name="VATAmt" Type="Decimal" Precision="18" Scale="2" />
+    <Property Name="Transport" Type="Decimal" Precision="9" Scale="2" />
+    <Property Name="Labour" Type="Decimal" Precision="9" Scale="2" />
+    <Property Name="Discount" Type="Decimal" Precision="9" Scale="2" />
+    <Property Name="TotSaleAmt" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+    <Property Name="NetAmount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+    <Property Name="PrevDue" Type="Decimal" Precision="18" Scale="2" />
+    <Property Name="Remarks" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+    <Property Name="VchrNo" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="AppBy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="IssueBy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="ReceiptNo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="ReceiptAmt" Type="Decimal" Precision="18" Scale="2" />
+    <Property Name="IsPaid" Type="Boolean" />
+    <Property Name="Accode" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="ca_bk_op" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="CustInvSl" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="SysSet">
+    <Key>
+      <PropertyRef Name="SysId" />
+      <PropertyRef Name="Budget" />
+      <PropertyRef Name="ConsolidatedCash" />
+      <PropertyRef Name="NotProfit" />
+      <PropertyRef Name="VouSlTypeWise" />
+      <PropertyRef Name="HasProject" />
+      <PropertyRef Name="HasBranch" />
+      <PropertyRef Name="HasDept" />
+      <PropertyRef Name="HasUnit" />
+      <PropertyRef Name="HasParty" />
+      <PropertyRef Name="MultiFinYear" />
+      <PropertyRef Name="HeadWiseNarration" />
+      <PropertyRef Name="AlwaysMultiple" />
+      <PropertyRef Name="MaintOldCode" />
+      <PropertyRef Name="RecurringVoucher" />
+      <PropertyRef Name="ShowJobName" />
+      <PropertyRef Name="autovouaftersave" />
+      <PropertyRef Name="VchrLen" />
+      <PropertyRef Name="InvoiceFormat" />
+      <PropertyRef Name="MaintLot" />
+      <PropertyRef Name="MaintVAT" />
+      <PropertyRef Name="Stockedcheck" />
+      <PropertyRef Name="MakeChallanAuto" />
+      <PropertyRef Name="MakeRecvAuto" />
+      <PropertyRef Name="OnlyGL" />
+      <PropertyRef Name="HasRemittance" />
+      <PropertyRef Name="IsSubsidiaryCtrl" />
+      <PropertyRef Name="NoGrp" />
+      <PropertyRef Name="OnlyGrp" />
+      <PropertyRef Name="GrpAndSubGrp" />
+      <PropertyRef Name="SubSubGrp" />
+      <PropertyRef Name="HasSale" />
+      <PropertyRef Name="OnlyVAT" />
+    </Key>
+    <Property Name="SysId" Type="Int32" Nullable="false" />
+    <Property Name="Budget" Type="Boolean" Nullable="false" />
+    <Property Name="ConsolidatedCash" Type="Boolean" Nullable="false" />
+    <Property Name="NotProfit" Type="Boolean" Nullable="false" />
+    <Property Name="VouSlTypeWise" Type="Boolean" Nullable="false" />
+    <Property Name="HasProject" Type="Boolean" Nullable="false" />
+    <Property Name="HasBranch" Type="Boolean" Nullable="false" />
+    <Property Name="HasDept" Type="Boolean" Nullable="false" />
+    <Property Name="HasUnit" Type="Boolean" Nullable="false" />
+    <Property Name="HasParty" Type="Boolean" Nullable="false" />
+    <Property Name="MultiFinYear" Type="Boolean" Nullable="false" />
+    <Property Name="HeadWiseNarration" Type="Boolean" Nullable="false" />
+    <Property Name="AlwaysMultiple" Type="Boolean" Nullable="false" />
+    <Property Name="MaintOldCode" Type="Boolean" Nullable="false" />
+    <Property Name="BudgetAllocation" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="RecurringVoucher" Type="Boolean" Nullable="false" />
+    <Property Name="ShowJobName" Type="Boolean" Nullable="false" />
+    <Property Name="autovouaftersave" Type="Boolean" Nullable="false" />
+    <Property Name="VchrLen" Type="Int32" Nullable="false" />
+    <Property Name="MRConv" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+    <Property Name="InvoiceFormat" Type="Int32" Nullable="false" />
+    <Property Name="MaintJob" Type="Boolean" />
+    <Property Name="MaintLot" Type="Boolean" Nullable="false" />
+    <Property Name="MaintVAT" Type="Boolean" Nullable="false" />
+    <Property Name="Stockedcheck" Type="Boolean" Nullable="false" />
+    <Property Name="OpenDate" Type="DateTime" Precision="0" />
+    <Property Name="MakeChallanAuto" Type="Boolean" Nullable="false" />
+    <Property Name="MakeRecvAuto" Type="Boolean" Nullable="false" />
+    <Property Name="OnlyGL" Type="Boolean" Nullable="false" />
+    <Property Name="HasRemittance" Type="Boolean" Nullable="false" />
+    <Property Name="IsSubsidiaryCtrl" Type="Boolean" Nullable="false" />
+    <Property Name="NoGrp" Type="Boolean" Nullable="false" />
+    <Property Name="OnlyGrp" Type="Boolean" Nullable="false" />
+    <Property Name="GrpAndSubGrp" Type="Boolean" Nullable="false" />
+    <Property Name="SubSubGrp" Type="Boolean" Nullable="false" />
+    <Property Name="HasSale" Type="Boolean" Nullable="false" />
+    <Property Name="OnlyVAT" Type="Boolean" Nullable="false" />
+    <Property Name="RateChart" Type="Boolean" />
+    <Property Name="CashBasis" Type="Boolean" />
+    <Property Name="ActualBasis" Type="Boolean" />
+    <Property Name="MaintPacking" Type="Boolean" />
+  </EntityType>
+</Schema>

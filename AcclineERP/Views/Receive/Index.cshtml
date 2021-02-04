@@ -1,0 +1,1665 @@
+﻿@model App.Domain.ViewModel.ReceiveVM
+@{
+    ViewBag.Title = "Receive";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/select2/select2.css" rel="stylesheet" type="text/css" />
+<link href="~/Css/FormDesign.css" rel="stylesheet" />
+<style>
+    table.dataTable.select tbody tr,
+    table.dataTable thead th:first-child {
+        cursor: pointer;
+    }
+
+    .form-control {
+        border: 1px solid #00ffff;
+    }
+
+    .col-md-12 {
+        padding: 0 !important;
+    }
+
+    .required:after {
+        content: " *";
+        font-weight: bold;
+        color: red;
+    }
+
+    a#GLProvition {
+        color: darkblue;
+    }
+
+    a#GLEntries {
+        color: darkblue;
+    }
+
+    label#UnitName {
+        height: 30px;
+        font-size: 11px;
+        color: #4c5667 !important;
+        background: #eee;
+        line-height: 2.5;
+    }
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+    input[type=number] {
+        -moz-appearance: textfield;
+    }
+</style>
+@using (Html.BeginForm())
+{
+    <div class="row">
+        <div class="col-md-11">
+            <div class="panel panel-color panel-primary">
+                <div class="modal fade in" id="pView" role="dialog" aria-hidden="true">
+                    @Html.Partial("~/Views/Sales/CommonPV.cshtml")
+                </div>
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <text style="text-align:left !important; text-decoration: none;">Receive</text>
+                        <text id="@Html.IdFor(x => x.BranchCode)" style="text-align:right !important; text-decoration: none; font-weight:bold; color:antiquewhite; font-size:medium; margin-left:560px">@ViewBag.branchCode</text>
+                    </h3>
+                </div>
+                <div class="panel-body">
+                    <div class="input-group form-group col-md-12">
+                        @*<div class="col-md-4" style="padding-left:17%">
+                                <div class="checkbox checkbox-primary">
+                                    <input id="@Html.IdFor(x => x.CreditPur)" type="checkbox" name="CreditPur" /><label>Credit Purchase</label>
+
+                                </div>
+                            </div>*@
+                        <div class="col-md-5">
+                            <label class="control-label" target="_blank">
+                                @Html.ActionLink(
+                                "Receive Voucher waiting for posting",
+                                "GetJournalVoucher",
+                                "Receive",
+                                new { Date = "blankDate" },
+                                new { id = "GLProvition", }
+                                )
+                            </label>
+                            <label id="lblgl">(@ViewBag.GLProvition)</label>
+
+                        </div>
+                        <div class="col-md-3">
+                            <label class="control-label" target="_blank">
+                                @Html.ActionLink(
+                                "List Of Receive vouchers",
+                                "GetGLEntries",
+                                "Receive",
+                                new { Date = "blankDate" },
+                                new { id = "GLEntries", }
+                                )
+                            </label>
+                            <label id="lblglE">(@ViewBag.GLEntries)</label>
+
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="col-md-6">
+                            <div class="col-md-10">
+                                <label class="col-md-5" style="padding:initial;margin-right: -8px;">Receive No</label>
+                                <div class="input-group form-group col-md-6">
+                                    <input type="text" class="form-control" id="RcvNo" name="RcvNo" value="@ViewBag.ReceiveNo" , required="required" />
+                                </div>
+                            </div>
+                            <div class="col-md-2" style="padding-right:initial;">
+                                <input type="button" class="btn btn-primary" value="Edit" id="VchrNoEdit">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="col-md-4">Received Date</label>
+                            <div class="input-group form-group col-md-8">
+                                <input type="text" class="form-control datePage" placeholder="dd/mm/yyyy" id="@Html.IdFor(x => x.RcvDate)" value="@DateTime.Today.ToShortDateString()" required="required">
+                                <span class="input-group-addon bg-primary b-0 text-white"><i class="ion-calendar"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="col-md-6">
+                            <label class="col-md-4 required">Store Location</label>
+                            <div class="input-group form-group col-md-8">
+                                @Html.DropDownListFor(x => x.FromLocCode, null, new { @class = "form-control select2", @Value = ViewBag.FromLocCode })
+
+                                @Html.ValidationMessageFor(x => x.FromLocCode)
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="col-md-4">Voucher No</label>
+                            <div class="col-md-6" style="padding-left:1px;">
+                                <input class="form-control" id="VchrNo" name="VchrNo" type="text" value="@ViewBag.VchrNo">
+                                <span class="field-validation-valid" data-valmsg-for="VchrNo" data-valmsg-replace="true"></span>
+                            </div>
+                            @*<span class="bg-primary b-0 text-white" style="width: 130px; margin-top: 100px;" id="newVchr"><i class="md-sync"></i></span>*@
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="col-md-6">
+                            <label class="col-md-4 required">Receive Type</label>
+                            @*@Html.LabelFor(x => x.Source, new { @class = "col-md-4 required" })*@
+                            <div class="input-group form-group col-md-8">
+                                @Html.DropDownListFor(x => x.Source, null, "---- Select ----", new { @class = "form-control select2", @Value = ViewBag.Source })
+
+                                @Html.ValidationMessageFor(x => x.Source)
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="col-md-4">Receive From</label>
+                            <div class="input-group form-group col-md-8">
+                                @Html.DropDownListFor(x => x.ToLocCode, null, "---- Select ----", new { @class = "form-control select2", @Value = ViewBag.ToLocCode })
+
+                                @Html.ValidationMessageFor(x => x.ToLocCode)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="col-md-6">
+                            <label class="col-md-4">Ref No</label>
+                            <div class="input-group form-group col-md-8">
+                                @Html.TextBoxFor(x => x.RefNo, new { @class = "form-control col-md-8 select2", required = "required" })
+                                @Html.ValidationMessageFor(x => x.RefNo)
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="col-md-4">Ref Date</label>
+                            <div class="input-group form-group col-md-8">
+                                <input type="text" class="form-control datePage" placeholder="dd/mm/yyyy" id="@Html.IdFor(x => x.RefDate)" value="@DateTime.Today.ToShortDateString()" required="required">
+                                <span class="input-group-addon bg-primary b-0 text-white"><i class="ion-calendar"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="col-md-6">
+                            <label class="col-md-4">Item Type</label>
+                            <div class="input-group form-group col-md-8">
+                                @Html.DropDownListFor(x => x.ItemType, null, "---- Select ----", new { @class = "form-control select2", @Value = ViewBag.ItemType })
+
+                                @Html.ValidationMessageFor(x => x.ItemType)
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="col-md-4 required">GL A/C</label>
+                            @*@Html.LabelFor(x => x.Purpose, new { @class = "col-md-4 required" })*@
+                            <div class="input-group form-group col-md-8">
+                                @Html.DropDownListFor(x => x.Purpose, null, "--- Select ---", new { @class = "form-control select2", @Value = ViewBag.Purpose, required = "required" })
+
+                                @Html.ValidationMessageFor(x => x.Purpose)
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="col-md-12">
+                            <label class="col-md-4 required">Item</label>
+                            <div class="input-group form-group col-md-8">
+                                @Html.DropDownListFor(x => x.RecvItem, null, new { @class = "form-control select2", @Value = ViewBag.RecvItem })
+                                @Html.ValidationMessageFor(x => x.RecvItem)
+                            </div>
+
+                        </div>
+                        <div class="col-md-12">
+                            <label class="col-md-4">Description</label>
+                            <div class="input-group form-group col-md-8">
+                                @Html.TextBoxFor(x => x.Description, new { @class = "form-control col-md-8 select2", required = "required" })
+                                @Html.ValidationMessageFor(x => x.Description)
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="col-md-5" style="padding-left:initial">
+                                <label class="col-md-6 required">Rec. Qty</label>
+                                <div class="input-group form-group col-md-6">
+                                    @Html.TextBoxFor(x => x.Qty, new { @class = "form-control col-md-6 select2", required = "required" })
+                                </div>
+                            </div>
+                            <div class="col-md-5" style="padding-left:initial;padding-right:initial">
+                                <label class="col-md-5">Ext. Qty</label>
+                                <div class="input-group form-group col-md-7">
+                                    @Html.TextBoxFor(x => x.ExQty, new { @class = "form-control col-md-7 select2", required = "required" })
+                                </div>
+                            </div>
+                            <div class="col-md-2" style="padding-right:initial">
+                                <label id="UnitName" class="label label-dark col-md-12">#</label>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="col-md-5" style="padding-left:initial">
+                                <label class="col-md-6 required">Unit Price</label>
+                                <div class="input-group form-group col-md-6">
+                                    @Html.TextBoxFor(x => x.Price, new { @class = "form-control col-md-6 select2", required = "required" })
+                                </div>
+                            </div>
+                            <div class="col-md-5" style="padding-left:initial;padding-right:initial">
+                                <label class="col-md-5">Lot No</label>
+                                <div class="input-group form-group col-md-7">
+                                    @Html.TextBoxFor(x => x.LotNo, new { @class = "form-control col-md-7 select2", required = "required" })
+                                </div>
+                            </div>
+                            <div class="col-md-2" style="padding-right:initial; float:right">
+                                <input type="button" class="btn btn-primary" value="Add" id="add" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="col-md-12" style="margin-bottom:5px; border:1px solid; border-color:#adcceb; width:100%">
+                            <div class="row" style="padding:18px">
+                                <div class="col-md-12">
+                                    <br />
+                                    <table class="table table-bordered table-responsive" id="datatable-buttons" style="width:100%">
+                                        <thead>
+                                            <tr>
+                                                <th width="10px">SL</th>
+                                                <th>Code</th>
+                                                <th>Item<sapn>&nbsp;</sapn>Name</th>
+                                                <th>Qty</th>
+                                                <th>Price</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tbodyId"></tbody>
+
+                                    </table>
+                                    <br />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <label class="col-md-2">Remarks</label>
+                        <div class="input-group form-group col-md-9">
+                            @Html.TextBoxFor(x => x.Remarks, new { @class = "form-control col-md-8 select2", required = "required" })
+                            @Html.ValidationMessageFor(x => x.Remarks)
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="col-md-6">
+                            <label class="col-md-4 required">Received By</label>
+                            <div class="input-group form-group col-md-8">
+                                @Html.DropDownListFor(x => x.RcvdByCode, null, "--- Select ---", new { @class = "form-control select2", required = "required", @Value = ViewBag.RcvdByCode })
+                                @Html.ValidationMessageFor(x => x.RcvdByCode)
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="col-md-4">Time</label>
+                            <div class="input-group form-group col-md-6">
+                                <input type="text" class="form-control" placeholder="HH:MM:SS" id="@Html.IdFor(x => x.RcvdTime)" value="@DateTime.Now.ToString("hh:mm:ss tt")" required="required">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="col-md-6 ">
+                            <label class="col-md-4 required">Approved By</label>
+                            <div class="input-group form-group col-md-8">
+                                @Html.DropDownListFor(x => x.AppByCode, null, "--- Select ---", new { @class = "form-control col-md-8 select2", required = "required", @Value = ViewBag.AppByCode })
+                                @Html.ValidationMessageFor(x => x.AppByCode)
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="col-md-4">Date</label>
+                            <div class="input-group form-group col-md-6">
+                                <input type="text" class="form-control datePage" placeholder="dd/mm/yyyy" id="@Html.IdFor(x => x.RcvdDate)" value="@DateTime.Today.ToShortDateString()" required="required">
+                                <span class="input-group-addon bg-primary b-0 text-white"><i class="ion-calendar"></i></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row col-md-12" style="text-align:end">
+                        <div class="col-md-11" style=" text-align:right;overflow:hidden">
+                            <input type="button" value="Save" class="btn btn-primary" id="save" style="width:100px;" />
+                            <input type="button" value="Update" class="btn btn-primary" id="update" style="width:100px;" />
+                            <input type="button" value="Clear" class="btn btn-primary" id="clear" style="width:100px;" />
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+
+@section scripts{
+    <script src="~/App_Themes/Theme1/plugins/select2/select2.min.js" type="text/javascript"></script>
+    <script src="~/App_Themes/Theme1/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.bootstrap.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.buttons.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/buttons.bootstrap.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/pdfmake.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/vfs_fonts.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/buttons.html5.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/buttons.print.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.fixedHeader.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.keyTable.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.responsive.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/responsive.bootstrap.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.scroller.min.js"></script>
+    <script type="text/javascript" src="../App_Themes/Theme1/plugins/parsleyjs/dist/parsley.min.js"></script>
+    <!-- Datatable init js -->
+    <script src="../App_Themes/Theme1/blue/assets/pages/datatables.init.js"></script>
+
+    <script>
+
+        $(document).ready(function () {
+            var ispType ='@ViewBag.errMsg';
+            if (ispType != ''){
+                ispType = '@ViewBag.errMsg';
+            }
+            if (ispType == "VWP") {
+                alert("No Voucher waiting for posting Permission for this User");
+            }else if (ispType == "VL") {
+                alert("No List Of Receive vouchers Permission for this User");
+            }
+            $("#RcvNo").prop("disabled", true);
+            $("#VchrNoEdit").show();
+
+            $("#VchrNoEdit").on("click", function () {
+                $("#RcvNo").prop("disabled", false);
+                $("#VchrNoEdit").hide();
+            });
+            function select2Focus() {
+                var select2 = $(this).data('select2');
+                setTimeout(function() {
+                    if (!select2.opened()) {
+                        select2.open();
+                    }
+                }, 0);
+            }
+
+            $("input:text:visible:first").focus();
+            $("#update").hide();
+            $("#FromLocCode").select2().one('select2-focus', select2Focus).on("select2-blur", function () {$(this).one('select2-focus', select2Focus)});
+            $("#Purpose").select2().one('select2-focus', select2Focus).on("select2-blur", function () {$(this).one('select2-focus', select2Focus)});
+            $("#RcvdByCode").select2().one('select2-focus', select2Focus).on("select2-blur", function () {$(this).one('select2-focus', select2Focus)});
+            $("#ToLocCode").select2().one('select2-focus', select2Focus).on("select2-blur", function () {$(this).one('select2-focus', select2Focus)});
+            $("#RecvItem").select2().one('select2-focus', select2Focus).on("select2-blur", function () {$(this).one('select2-focus', select2Focus)});
+            $("#Source").select2().one('select2-focus', select2Focus).on("select2-blur", function () {$(this).one('select2-focus', select2Focus)});
+            $("#AppByCode").select2().one('select2-focus', select2Focus).on("select2-blur", function () {$(this).one('select2-focus', select2Focus)});
+            $("#ItemType").select2().one('select2-focus', select2Focus).on("select2-blur", function () {$(this).one('select2-focus', select2Focus)});
+            $("#ExQty").prop("disabled", true);
+            //$("#VchrNo").prop("disabled", true);
+
+            $($("#FromLocCode").select2("container")).addClass("error");
+            $($("#FromLocCode").select2("container")).removeClass("error");
+
+
+
+            var table = $('#datatable-buttons').dataTable({
+                "paging":   false,
+                "ordering": false,
+                "info":     false,
+                "searching": false
+
+
+            });
+            var loadInfo = {
+                RcvNo: "",
+                FromLocCode: "",
+                ToLocCode: "",
+                Source: "",
+                RefNo: "",
+                Accode: "",
+                RecvItem: "",
+                Description: "",
+                Qty: "",
+                ExQty: "",
+                Price: "",
+                LotNo: "",
+                RcvDate: "",
+                RefDate: "",
+                Remarks: "",
+                RcvdByCode: "",
+                AppByCode: "",
+                RcvdDate: "",
+                RcvdTime: "",
+                Purpose: "",
+                VchrNo: "",
+                ItemCode : ""
+            };
+            function setOrder() {
+                loadInfo.RcvNo = $("#RcvNo").val();
+                loadInfo.FromLocCode = $("#FromLocCode").val();
+                loadInfo.ToLocCode = $("#ToLocCode").val();
+                loadInfo.Source = $("#Source").val();
+                loadInfo.RefNo = $("#RefNo").val();
+                loadInfo.Purpose = $("#Purpose").val();
+                loadInfo.RecvItem = $("#RecvItem").val();
+                loadInfo.Description = $("#Description").val();
+                loadInfo.Qty = $("#Qty").val();
+                loadInfo.ExQty = $("#ExQty").val();
+                loadInfo.Price = $("#Price").val();
+                loadInfo.LotNo = $("#LotNo").val();
+                loadInfo.RcvDate = $("#RcvDate").val();
+                loadInfo.RefDate = $("#RefDate").val();
+                loadInfo.Remarks = $("#Remarks").val();
+                loadInfo.RcvdByCode = $("#RcvdByCode").val();
+                loadInfo.AppByCode = $("#AppByCode").val();
+                loadInfo.RcvdDate = $("#RcvdDate").val();
+                loadInfo.RcvdTime = $("#RcvdTime").val();
+                loadInfo.VchrNo = $("#VchrNo").val();
+            }
+
+            $('#datatable').DataTable({
+                responsive: true
+            });
+
+            $("#clear").on("click", function () {
+                clearReceive();
+                //location.reload();
+            });
+            function clearReceive() {
+
+                $("#RcvNo").prop("disabled", false);
+                $("#RcvDate").val("@DateTime.Today.ToShortDateString()");
+                $("#RefDate").val("@DateTime.Today.ToShortDateString()");
+                $("#FromLocCode").val($('#FromLocCode option:first-child').val()).trigger('change.select2');
+                $("#ToLocCode").val($('#ToLocCode option:first-child').val()).trigger('change.select2');
+                $("#Purpose").val($('#Purpose option:first-child').val()).trigger('change.select2');
+                $("#Source").val($('#Source option:first-child').val()).trigger('change.select2');
+                $("#ItemType").val($('#ItemType option:first-child').val()).trigger('change.select2');
+                $("#RecvItem").val($('#RecvItem option:first-child').val()).trigger('change.select2');
+                $("#RcvdByCode").val($('#RcvdByCode option:first-child').val()).trigger('change.select2');
+                $("#AppByCode").val($('#AppByCode option:first-child').val()).trigger('change.select2');
+                $("#RcvdDate").val("@DateTime.Today.ToShortDateString()");
+                $("#Description").val("");
+                $("#UnitName").html("#");
+                $("#Qty").val("");
+                $("#ExQty").val("");
+                $("#Price").val("");
+                $("#LotNo").val("");
+                // $("#VchrNo").val("");
+                $("#RefNo").val("");
+                $("#Amount").val("");
+                $("#Remarks").val("");
+
+                $("#save").show();
+                $("#update").hide();
+                //table.clear();
+                orders = new Array();
+                $.ajax({
+                    url: '@Url.Action("GetRecvNo", "Receive")',
+                    contentType: "application/json;charset=utf-8",
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (datas) {
+                        $("#RcvNo").val(datas);
+                    }
+                });
+
+                $.ajax({
+                    url: '@Url.Action("GetVoucherNo", "Receive")',
+                    contentType: "application/json;charset=utf-8",
+                    data: { VType: 'IR', TrDate: moment($('#RcvDate').val(), 'DD/MM/YYYY').format('MM/DD/YYYY').toString() },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (datas) {
+                        $("#VchrNo").val(datas);
+                    }
+                });
+
+                $.ajax({
+                    url: '@Url.Action("GetGlPCountN", "Receive")',
+                    contentType: "application/json;charset=utf-8",
+                    data: { VType: 'IR'},
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (datas) {
+                        $("#lblgl").text('('+datas+')');
+                    }
+                })
+
+                $.ajax({
+                    url: '@Url.Action("GetGlECountN", "Receive")',
+                    contentType: "application/json;charset=utf-8",
+                    data: { VType: 'IR', datetime: moment($('#RcvDate').val(), 'DD/MM/YYYY').format('MM/DD/YYYY').toString() },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (datas) {
+                        $("#lblglE").text('('+datas+')');
+                    }
+                })
+
+                table.fnClearTable();
+                isEdit = 0;
+
+
+            }
+
+            $.ajax({
+                url: '@Url.Action("GetVoucherNo", "Receive")',
+                contentType: "application/json;charset=utf-8",
+                data: { VType: 'IR', TrDate: moment($('#RcvDate').val(), 'DD/MM/YYYY').format('MM/DD/YYYY').toString() },
+                type: 'GET',
+                dataType: 'json',
+                success: function (datas) {
+                    $("#VchrNo").val(datas);
+                }
+            });
+
+            $(document).on("keyup mouseup", "#RcvDate", function (e) {   //click keyup  mouseup
+                $.ajax({
+                    url: '@Url.Action("GetGlECountN", "Receive")',
+                    contentType: "application/json;charset=utf-8",
+                    data: { VType: 'IR', datetime: moment($('#RcvDate').val(), 'DD/MM/YYYY').format('MM/DD/YYYY').toString() },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (datas) {
+                        $("#lblglE").text('('+datas+')');
+                    }
+                })
+            });
+
+            $(document).on("click", "#newVchr", function () {
+                $("#addModalButton").show();
+                $.ajax({
+                    url: '@Url.Action("GetNewVoucherNo", "Receive")',
+                    contentType: "application/json;charset=utf-8",
+                    data: { VType: 'IR' },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (datas) {
+                        if (datas != 0) {
+                            $("#VchrNo").val(datas);
+                        }
+                    }
+                })
+            });
+            //For GLEntries
+            $("#GLEntries").click(function () {
+                //Get the id of the selected item in dropdown
+                var RcvDate = moment($('#RcvDate').val(), 'DD/MM/YYYY').format('MM/DD/YYYY').toString();
+
+                var id = RcvDate + '&pageType=JVR';
+
+                //Replace the predifined QueryString param "xxx" with the "id"
+                this.href = this.href.replace("blankDate", id);
+            });
+
+
+            $("#glgo").click(function () {
+                //Get the id of the selected item in dropdown
+                var TrDate = moment($('#TrDate').val(), 'DD/MM/YYYY').format('MM/DD/YYYY').toString();
+
+                var id = TrDate + '&pageType=COP';
+
+                //Replace the predifined QueryString param "xxx" with the "id"
+                this.href = this.href.replace("blankDate", id);
+            });
+            //For GLprovition
+            $("#GLProvition").click(function () {
+                //Get the id of the selected item in dropdown
+                var RcvDate = moment($('#RcvDate').val(), 'DD/MM/YYYY').format('MM/DD/YYYY').toString();
+
+                var id = RcvDate + '&pageType=JVR';
+
+                //Replace the predifined QueryString param "xxx" with the "id"
+                this.href = this.href.replace("blankDate", id);
+            });
+
+
+
+            var isEdit = 0;
+            var orders = [];
+            var delQtyOrder = [];
+            $('#add').click(function () {
+                var Price = $("#Price").val();
+                var qty = $("#Qty").val();
+                if (isEdit != 1) {
+                    if ($("#RecvItem option:selected").text()== "---- Select ----") {
+                        alert("Item is required");
+                        return;
+                    }
+                    if(qty <= 0 || qty == "")
+                    {
+                        alert("Rec. Quantity is Required.");
+                        return;
+                    }
+                    if(Price <= 0 || Price == "")
+                    {
+                        alert("Unit Price is Required.");
+                        return;
+                    }
+
+                }
+                if ($("#Source").val() == null || $("#Source option:selected").text() == "---- Select ----") {
+                    alert("Please Receive Type");
+                    return;
+                }
+                //var credit = $("#CreditPur").prop("checked");
+                //if (credit == true) {
+                //    if ($("#ToLocCode").val() == null || $("#ToLocCode option:selected").text() == "---- Select ----") {
+                //        alert("Please select Receive From");
+                //        return;
+                //    }
+
+                //}else{
+                //    if ($("#Source").val() == null || $("#Source option:selected").text() == "---- Select ----") {
+                //        alert("Please Receive Type");
+                //        return;
+                //    }
+                //}
+
+                addOnList();
+                $("tbody#tbodyId tr:even").css({
+                    "background-color": "#e6e8e8"
+                });
+                clearItemInfo();
+            });
+            function clearItemInfo() {
+                $("#Qty").val("");
+                $("#Price").val("");
+                $("#Description").val("");
+                $("#LotNo").val("");
+                //$("#ExQty").val("");
+            }
+
+
+
+            function addOnList() {
+                var newAddList = [];
+                var newAddListSl = 0;
+
+                var RcvNo = $("#RcvNo").val();
+                var ItemCode = $("#RecvItem option:selected").val();
+                var CurrQty = parseFloat($("#Qty").val()).toFixed(2).replace(".", ","); //$("#Qty").val();
+                var Qty = parseFloat($("#Qty").val()).toFixed(2).replace(".", ","); //$("#Qty").val();
+                var ExQty = parseFloat($("#ExQty").val()).toFixed(2).replace(".", ","); //$("#ExQty").val();
+                var Description = $("#Description").val();
+                var LotNo = "01";
+                if ($("#LotNo").val() != "") {
+                    LotNo = $("#LotNo").val();
+                }
+                //var LotNo = $("#LotNo").val();
+                var Price = parseFloat($("#Price").val()).toFixed(2).replace(".", ","); 
+                var UnitPrice = parseFloat($("#Price").val()).toFixed(2).replace(".", ",");
+                var ItemName = $('#RecvItem option:selected').text();
+                var SubCode = $("#ToLocCode").val();
+
+                if (Qty != "") {
+                    var item = {
+                        ItemCode: ItemCode, CurrQty: CurrQty, LotNo: LotNo, SubCode: SubCode, Description:Description,
+                        Price: Price, Sl: 0, ItemName: ItemName, RcvNo: RcvNo, ExQty: ExQty, Qty: Qty, UnitPrice:UnitPrice
+                    }
+                    //item.Sl = orders.length + 1
+                    //orders.push(item);
+                    const i = orders.findIndex(_item => _item.ItemCode === ItemCode && _item.LotNo === LotNo);
+                    if (i > -1)
+                    {
+                        var prevQty = parseInt(orders[i].Qty.replace(",", "."));
+                        CurrQty = prevQty + parseInt(CurrQty.replace(",", "."));
+                        item.Qty = CurrQty;
+                        item.CurrQty = CurrQty;
+                        orders[i] = item;
+                    }
+                    else
+                    {
+                        item.Sl = orders.length + 1;
+                        orders.push(item);
+                    }
+                    addOnTable();
+                }
+                else {
+                    swal(
+                         'Sorry!',
+                         'Please give a quantity.',
+                         'warning'
+                     );
+
+                }
+            }
+                       
+
+            $(document).on('click', '#delete', function () {
+                var id = $(this).attr("value");
+
+                swal({
+                    title: "Are you sure?",
+                    text: "You will not be able to recover this order data!",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "Yes, delete it!",
+                    closeOnConfirm: true
+                },
+                 function () {
+                     if (isEdit == 1) {
+                         var delQtySl = 0;
+                         var delQtyItem = { Qty:Qty, RcvNo:RcvNo,  LotNo:LotNo, RecvItem:RecvItem}
+                         const i = orders.findIndex(_x => _x.Sl === parseInt(id));
+                         if (i > -1)
+                         {
+                             delQtySl++;
+                             delQtyItem.Qty = orders[i].Qty;
+                             delQtyItem.RcvNo = $("#RcvNo").val();
+                             delQtyItem.RecvItem = orders[i].ItemCode;
+                             delQtyItem.LotNo = orders[i].LotNo;
+                             delQtyOrder.push(delQtyItem)
+                         }
+                         @*$.ajax({
+                             url: '@Url.Action("DeleteFromDB", "Receive")',
+                             contentType: "application/json;charset=utf-8",
+                             data: { Qty: Qty, ItemCode:ItemCode,RcvNo:RcvNo },
+                             dataType: 'json',
+                             success: function (datas) { }
+                         })*@
+                     }
+                     deleteRow(id);
+                     addOnTable();
+                     //swal("Deleted!", "Your imaginary file has been deleted.", "success");
+
+                 });
+            });
+            function deleteRow(sl) {
+                var newOrder = [];
+                var newSl = 0;
+
+                $.each(orders, function (index, data) {
+
+                    if (data.Sl != sl) {
+                        newSl++;
+                        data.Sl = newSl;
+                        data.Id = 0;
+                        newOrder.push(data);
+                    }
+                });
+                orders = new Array();
+                orders = newOrder;
+
+            }
+
+            function addOnTable() {
+                $('#tbodyId').empty();
+                var sl = 0;
+                $.each(orders, function (index, data) {
+                    sl = sl + 1;
+                    data.Sl = sl;
+                    if (isEdit == 1) {
+                        $("#tbodyId").append("<tr><td>" + sl + "</td><td>"
+                                                           + data.ItemCode + "</td><td>"
+                                                           + data.ItemName + "</td><td>"
+                                                           + data.Qty + "</td><td>"
+                                                           + (data.Qty * data.Price).toFixed(2) + "</td><td>"
+                                                          + '<a href="#" class="on-default remove-row deleteSup" data-id="' + sl + '" id="delete" value="' + sl + '"><i class="glyphicon glyphicon-trash"></i></a>' + "</td></tr>");
+
+                    }
+                    else {
+                        $("#tbodyId").append("<tr><td>" + sl + "</td><td>"
+                                                           + data.ItemCode + "</td><td>"
+                                                           + data.ItemName + "</td><td>"
+                                                           + data.Qty + "</td><td>"
+                                                           + (data.Qty.replace(",", ".") * data.Price.replace(",", ".")).toFixed(2) + "</td><td>"
+                                                          + '<a href="#" class="on-default remove-row deleteSup" data-id="' + sl + '" id="delete" value="' + sl + '"><i class="glyphicon glyphicon-trash"></i></a>' + "</td></tr>");
+
+                    };
+                });
+                isEdit = 0;
+            }
+
+            //function addOnTable() {
+
+            //    $('#tbodyId').empty();
+            //    var sl = 0;
+            //    $.each(orders, function (index, data) {
+            //        sl = sl + 1;
+            //        data.Sl = sl;
+
+            //        $("#tbodyId").append("<tr><td>" + sl + "</td><td>"
+            //                        + data.ItemCode + "</td><td>"
+            //                        + data.ItemName + "</td><td>"
+            //                        + data.Qty + "</td><td>"
+            //                        + data.Qty * data.Price + "</td><td>"
+            //                       + '<a href="#" class="on-default remove-row deleteSup" data-id="' + sl + '" id="delete" value="' + sl + '"><i class="glyphicon glyphicon-trash"></i></a>' + "</td></tr>");
+            //    });
+            //}
+
+            //function upOnTable(tQty) {
+
+            //    var table = $('#datatable-buttons').DataTable();
+            //    var d = table.row('#2').data();
+            //    d[2] = tQty;
+            //    table.row('#2').data(d).draw();
+
+
+            //}
+
+            $(document).on("change", "#FromLocCode", function(e){
+                $("#RecvItem").val("").change();
+            })
+
+            $(document).on("change", "#RecvItem", function (e) {
+                var locNo = $("#FromLocCode").val();
+                if (locNo != " " && locNo != null) {
+                    $.ajax({
+                        type: "Get",
+                        contentType: "application/json;charset=utf-8",
+                        url: '@Url.Action("GetItemByQtyPrice", "Receive")',
+                        data: { Item: $("#RecvItem").val(), LocNo: $("#FromLocCode").val() },
+                        dataType: 'json',
+                        success: function (item) {
+                            if (item == 0) {
+                                clearItemInfo();
+                            }
+                            else {
+                                var prevDelQty = 0;
+                                const i = delQtyOrder.findIndex(_x => _x.RecvItem === item.ItemCode);
+                                if (i > -1)
+                                {
+                                    prevDelQty = parseInt(delQtyOrder[i].Qty);
+                                }
+                                $("#ExQty").val(item.CurrQty - prevDelQty);
+                                //$("#ExQty").val(item.CurrQty);
+                                $("label#UnitName").html(item.UnitName);
+                                //$("#Price").val(item.UnitPrice);
+                                //$("#LotNo").val(item.LotNo);
+                            }
+                        }
+                    });
+                }
+                else {
+                    alert("Please select Store location.");
+                };
+
+            });
+
+            $(document).on("change", "#Source", function () {
+
+                var isCheck = $('input[type="checkbox"]').is(':checked');
+                if (!isCheck) {
+
+                    var order = { Purpose: "", ToLocCode: "" };
+
+                    //for purpose load by source.......
+                    @*$.ajax({
+                        url: '@Url.Action("GetPurpuseBySrcDest", "Receive")',
+                        contentType: "application/json;charset=utf-8",
+                        data: {
+                            Source: $("#Source").val()
+                        },
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function (data) {
+                            $('#Purpose').empty();
+                            $.each(data, function (index, value) {
+                                $('#Purpose').append($('<option>',
+                                    {
+                                        value: value.Value,
+                                        text: value.Text
+                                    })).select2();
+                            });
+                            $("#Purpose").val(order.Purpose).trigger('change');
+                            order.Purpose = "0";
+                        }
+                    });*@
+
+                    //for Receive from load by source.......
+                    @*$.ajax({
+                        url: '@Url.Action("GetSubsidiaryBySrcDest", "Receive")',
+                        contentType: "application/json;charset=utf-8",
+                        data: {
+                            Source: $("#Source").val()
+                        },
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function (data) {
+                            $('#ToLocCode').empty();
+                            $.each(data, function (index, value) {
+                                $('#ToLocCode').append($('<option>',
+                                    {
+                                        value: value.Value,
+                                        text: value.Text
+                                    })).select2();
+                            });
+                            $("#ToLocCode").val(order.ToLocCode).trigger('change');
+                            order.ToLocCode = "0";
+                        }
+                    });*@
+
+                }
+
+            });
+
+            // var order = [];
+            $('input[type="checkbox"]').click(function () {
+
+                var ischecked = $(this).is(':checked');
+                if (!ischecked)
+                    location.reload();
+
+                var order = { Source: "", ToLocCode: "" };
+
+                $.ajax({
+                    url: '@Url.Action("GetIsCreditBySupp", "Receive")',
+                    contentType: "application/json;charset=utf-8",
+                    data: {
+                        isCredit: $("#CreditPur").val()
+                    },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        $('#Source').empty();
+                        $.each(data, function (index, value) {
+                            $('#Source').append($('<option>',
+                                {
+                                    value: value.Value,
+                                    text: value.Text
+                                })).select2();
+                        });
+                        //getPurBySubsi();
+
+                        $("input:text:visible:first").focus();
+                        $("#Source").select2().one('select2-focus', select2Focus)
+                            .on("select2-blur",
+                            function ()
+                            {
+                                //$(this).one('select2-focus', select2Focus)
+                                $("#Source").focus();
+                                var e = jQuery.Event("keypress");
+                                e.which = 13;
+                                $("#Source").val(order.Source);
+                                $("#Source").trigger(e);
+                            });
+
+
+                        GetRecvFromByPur();
+                        order.Source = "0";
+                    }
+                });
+
+
+            });
+
+
+            //function focusOnSancNo(SancNo) {
+
+            //    $("#Source").focus();
+            //    var e = jQuery.Event("keypress");
+            //    e.which = 13;
+            //    $("#Source").val(AppNo);
+            //    $("#Source").trigger(e);
+
+            //}
+
+            function getPurBySubsi() {
+                var order = { Purpose: "" };
+
+                $.ajax({
+                    url: '@Url.Action("GetPurpuseBySrcDest", "Receive")',
+                    contentType: "application/json;charset=utf-8",
+                    data: {
+                        Source: $("#Source").val()
+                    },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        $('#Purpose').empty();
+                        $.each(data, function (index, value) {
+                            $('#Purpose').append($('<option>',
+                                {
+                                    value: value.Value,
+                                    text: value.Text
+                                })).select2();
+                        });
+                        $("#Purpose").val(order.Purpose).trigger('change');
+                        order.Purpose = "0";
+                    }
+                });
+            }
+
+
+
+            function GetRecvFromByPur() {
+                var order = { ToLocCode: "" };
+
+                $.ajax({
+                    url: '@Url.Action("GetSubsidiaryBySrcDest", "Receive")',
+                    contentType: "application/json;charset=utf-8",
+                    data: {
+                        Source: $("#Source").val()
+                    },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        $('#ToLocCode').empty();
+                        $.each(data, function (index, value) {
+                            $('#ToLocCode').append($('<option>',
+                                {
+                                    value: value.Value,
+                                    text: value.Text
+                                })).select2();
+                        });
+                        $("#ToLocCode").val(order.ToLocCode).trigger('change');
+                        order.ToLocCode = "0";
+                    }
+                });
+            };
+
+            function GetAllSubsidiary() {
+                var order = { Purpose: "", ToLocCode: "" };
+
+                $.ajax({
+                    url: '@Url.Action("GetSubsidiaryBySrcDest", "Receive")',
+                    contentType: "application/json;charset=utf-8",
+                    data: {
+                        Source: "LoadAllIsEdit"
+                    },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        $('#ToLocCode').empty();
+                        $.each(data, function (index, value) {
+                            $('#ToLocCode').append($('<option>',
+                                {
+                                    value: value.Value,
+                                    text: value.Text
+                                })).select2();
+                        });
+                        $("#ToLocCode").val(order.ToLocCode).trigger('change');
+                        order.ToLocCode = "0";
+                    }
+                });
+
+            };
+
+            function GetAllPurpose() {
+                var order = { Purpose: "" };
+
+                $.ajax({
+                    url: '@Url.Action("GetPurpuseBySrcDest", "Receive")',
+                    contentType: "application/json;charset=utf-8",
+                    data: {
+                        Source: "LoadAllIsEdit"
+                    },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        $('#Purpose').empty();
+                        $.each(data, function (index, value) {
+                            $('#Purpose').append($('<option>',
+                                {
+                                    value: value.Value,
+                                    text: value.Text
+                                })).select2();
+                        });
+                        $("#Purpose").val(order.Purpose).trigger('change');
+                        order.Purpose = "0";
+                    }
+                });
+            };
+
+
+            $("#RcvNo").keypress(function (e) {
+                if (e.which == 13) {
+                    $("#save").hide();
+                    $("#update").show();
+                    GetAllSubsidiary();
+                    //GetAllPurpose();
+                    $.ajax({
+                        url: '@Url.Action("GetAllByCode", "Receive")',
+                        contentType: "application/json;charset=utf-8",
+                        data: { rcvNo: $("#RcvNo").val() },
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function (datas) {
+
+                            if (datas.Source == "undefined") {
+                                alert("error")
+                            }
+                            else {
+                                $("#RcvNo").prop("disabled", true);
+
+                                $("#RcvNo").val(datas.Main.RcvNo);
+                                if (moment(datas.Main.RcvDate).format('MM/DD/YYYY') != moment('01/01/1900').format('MM/DD/YYYY')) {
+                                    $("#RcvDate").datepicker("setDate", DateInDMYformat(datas.Main.RcvDate));
+                                }
+                                $("#FromLocCode").val(datas.Main.StoreLocCode).trigger('change.select2');
+                                $("#VchrNo").val(datas.Main.VchrNo);
+                                $("#ToLocCode").val(datas.Main.RecvFromSubCode).trigger('change.select2');
+                                $("#Source").val(datas.Main.Source).trigger('change.select2');
+                                $("#RefNo").val(datas.Main.RefNo);
+                                $("#ToLocCode").val(datas.Main.ToLocCode).trigger('change.select2');
+                                $("#Purpose").val(datas.Main.Accode).trigger('change.select2');
+                                $("#RecvItem").val(datas.Details.ItemName).trigger('change.select2');
+                                $("#Description").val(datas.Details.Description);
+                                if (moment(datas.Main.RefDate).format('MM/DD/YYYY') != moment('01/01/1900').format('MM/DD/YYYY')) {
+                                    $("#RefDate").datepicker("setDate", DateInDMYformat(datas.Main.RefDate));
+                                }
+
+                                $("#ItemType").val(datas.Main.ItemType);//.trigger('change.select2');
+                                $("#Remarks").val(datas.Main.Remarks);
+                                $("#RcvdByCode").val(datas.Main.RcvdByCode).trigger('change.select2');
+                                $("#AppByCode").val(datas.Main.AppByCode).trigger('change.select2');
+                                if (moment(datas.Main.RcvdDate).format('MM/DD/YYYY') != moment('01/01/1900').format('MM/DD/YYYY')) {
+                                    $("#RcvdDate").datepicker("setDate", DateInDMYformat(datas.Main.RcvdDate));
+                                }
+                                orders = [];
+                                if (datas.Details.length > 0) {
+                                    var j = 0;
+                                    $.each(datas.Details, function (index, data) {
+                                        j++;
+                                        data.Sl = j;
+                                        data.ExQty = data.CurrQty;
+                                        data.CurrQty = data.Qty;
+                                        orders.push(data);
+
+                                    });
+                                    isEdit = 1;
+                                    addOnTable();
+                                    //addOnList();
+                                }
+
+                            }
+
+                        },
+                        error: function () {
+                            swal("Sorry!! This order no does not exist.", "fail")
+                        }
+                    });
+                }
+            });
+
+
+            $(document).on("click", "#update", function () {
+                var recvInfo = {
+                    Id: 0, RcvNo: "", FromLocCode: "", ToLocCode: "", Source: "", RefNo: "", Accode: "", RecvItem: "", Description: "",
+                    Qty: "", ExQty: "", Price: "", LotNo: "", RcvDate: "", RefDate: "", ToLocCode: "", Remarks: "",
+                    RcvdByCode: "", AppByCode: "", RcvdDate: "", RcvdTime: "", VchrNo: ""
+                };
+                $("#update").prop("disabled", false);
+                recvInfo.RcvNo = $("#RcvNo").val();
+                recvInfo.StoreLocCode = $("#FromLocCode").val();
+                recvInfo.ToLocCode = $("#ToLocCode").val();
+                recvInfo.Source = $("#Source").val();
+                recvInfo.RefNo = $("#RefNo").val();
+                recvInfo.Accode = $("#Purpose").val();
+                recvInfo.RecvItem = $("#RecvItem").val();
+                recvInfo.Description = $("#Description").val();
+                recvInfo.Qty = $("#Qty").val();
+                recvInfo.ExQty = $("#ExQty").val();
+                recvInfo.Price = $("#Price").val();
+                recvInfo.LotNo = $("#LotNo").val();
+                recvInfo.RcvDate = $("#RcvDate").val();
+                recvInfo.RefDate = $("#RefDate").val();
+                recvInfo.ToLocCode = $("#ToLocCode").val();
+                recvInfo.Remarks = $("#Remarks").val();
+                recvInfo.RcvdByCode = $("#RcvdByCode").val();
+                recvInfo.AppByCode = $("#AppByCode").val();
+                recvInfo.RcvdDate = $("#RcvdDate").val();
+                recvInfo.RcvdTime = $("#RcvdTime").val();
+                recvInfo.VchrNo = $("#VchrNo").val();
+
+                $.ajax({
+                    url: '@Url.Action("UpdateRecvInfo", "Receive")',
+                    contentType: "application/json;charset=utf-8",
+                    data: JSON.stringify({ recvInfo: recvInfo, recvDetails: orders, currentStock: orders }),
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function (datas) {
+
+
+                        if (datas == 1) {
+
+                            document.getElementById("RcvNo").disabled = false;
+                            swal({
+                                title: "Ok",
+                                text: "Update Sucessfully!",
+                                type: "success"
+                            }, function () {
+                                location.reload();
+                            });
+                            $('#tbodyId').empty();
+                            orders = [];
+                            $("#RcvNo").val(datas);
+                            $("#update").hide();
+                            $("#save").show();
+                        }
+                        else if (datas == "U") {
+                            swal({
+                                title: "Sorry",
+                                text: "No Update Permission for this User",
+                                type: "warning"
+                            });
+                        }
+                        else if (datas == 0) {
+                            swal(
+                                'Sorry!',
+                                'Something went wrong please try again!',
+                                'warning'
+                            );
+                            $("#update").prop("disabled", false);
+                        }
+                        else if (datas == 'VchrPosted') {
+                            swal(
+                                 'Sorry!',
+                                 'This Voucher Already Posted.!!!',
+                                 'warning'
+                                 );
+                            $("#update").prop("disabled", false);
+                        }
+                    }
+                });
+
+            });
+
+            $(document).on("click", "#save", function () {
+                setOrder();
+                var validate = validateOnSave(loadInfo);
+                if (validate != "") {
+                    alert(validate);
+                    return;
+                }
+
+                var recvInfo = {
+                    RcvNo: "", StoreLocCode: "", ToLocCode: "", Source: "", RefNo: "", Accode: "", RecvItem: "", Description: "",
+                    Qty: "", ExQty: "", Price: "", LotNo: "", RcvDate: "", RefDate: "", RecvFromSubCode: "", Remarks: "",
+                    RcvdByCode: "", AppByCode: "", RcvdDate: "", RcvdTime: "", CreditPur: "", FromLocCode: FromLocCode, VchrNo:""
+                };
+                //$("#AreaCode").val(setOrder.AreaCode).trigger('change');
+                //$("#RefDate").val(moment(setOrder.RefDate).format("MM/DD/YYYY"));
+                //$('input[name="isCredit"]:checked').prop("checked", false)
+                //recvInfo.isCredit = $('input[name="isCredit"]:checked').prop("checked", true);//$("#isCredit").prop("checked", true);
+                var credit = $("#CreditPur").prop("checked");
+                if (credit == true) {
+                    recvInfo.CreditPur = true;
+                }
+                recvInfo.RcvNo = $("#RcvNo").val();
+                recvInfo.StoreLocCode = $("#FromLocCode").val();
+                recvInfo.FromLocCode = $("#FromLocCode").val();
+                recvInfo.RecvFromSubCode = $("#ToLocCode").val();
+                recvInfo.Source = $("#Source").val();
+                recvInfo.RefNo = $("#RefNo").val();
+                recvInfo.Accode = $("#Purpose").val();
+                recvInfo.RecvItem = $("#RecvItem").val();
+                recvInfo.Description = $("#Description").val();
+                recvInfo.Qty = $("#Qty").val();
+                recvInfo.ExQty = $("#ExQty").val();
+                recvInfo.Price = $("#Price").val();
+                recvInfo.LotNo = $("#LotNo").val();
+                recvInfo.RcvDate = $("#RcvDate").val();
+                recvInfo.RefDate = $("#RefDate").val();
+                //recvInfo.ToLocCode = $("#ToLocCode").val();
+                recvInfo.Remarks = $("#Remarks").val();
+                recvInfo.RcvdByCode = $("#RcvdByCode").val();
+                recvInfo.AppByCode = $("#AppByCode").val();
+                recvInfo.RcvdDate = $("#RcvdDate").val();
+                recvInfo.RcvdTime = $("#RcvdTime").val();
+                recvInfo.VchrNo = $("#VchrNo").val();
+                if (orders != 0) {
+                    $.ajax({
+                        url: '@Url.Action("SaveRecvInfo", "Receive")',
+                        contentType: "application/json;charset=utf-8",
+                        data: JSON.stringify({ recvInfo: recvInfo, recvDetails: orders, currentStock: orders }),
+                        type: 'POST',
+                        dataType: 'json',
+                        success: function (datas) {
+                            if (datas == 1) {
+                                swal({
+                                    title: "Ok",
+                                    text: "Successfully Saved!",
+                                    type: "success"
+                                },
+
+                                function () {
+                                    clearReceive();
+                                });
+                                $("#save").prop("disabled", false);
+                                orders = [];
+                                $('#tbodyId').empty();
+
+
+                            }
+                            else if (datas == "X") {
+                                swal({
+                                    title: "Sorry",
+                                    text: "No Save Permission for this User",
+                                    type: "warning"
+                                });
+                            }
+                            else if (datas == 0) {
+                                swal(
+                                    'Sorry!',
+                                    'Something went wrong please try again!',
+                                    'warning'
+                                );
+                                $("#save").prop("disabled", false);
+                            }
+                                //multi user code
+                            else if (datas == 3) {
+                                swal({
+                                    title: "Already exists !!!",
+                                    text: "Please try again!",
+                                    type: "success"
+                                }, function () {
+                                    $.ajax({
+                                        url: '@Url.Action("RcvNoIncreement", "Receive")',
+                                        contentType: "application/json;charset=utf-8",
+                                        type: 'GET',
+                                        dataType: 'json',
+                                        success: function (datas) {
+                                            $("#RcvNo").val(datas);
+                                        }
+                                    });
+                                });
+                                $("#save").prop("disabled", false);
+                            }
+                        }
+                    });
+                }else{
+                    swal(
+                        'Sorry!',
+                        'Please Add item in the Table.!!!',
+                        'warning'
+                        );
+                }
+
+            });
+
+
+            @*$(document).on("change", "#ItemType", function (e) {
+                var order = { RecvItem: "" };
+
+                $.ajax({
+                    url: '@Url.Action("GetItemByitemType", "Issue")',
+                    contentType: "application/json;charset=utf-8",
+                    data: {
+                        ItemType: $("#ItemType").val()
+                    },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        $('#RecvItem').empty();
+                        $.each(data, function (index, value) {
+                            $('#RecvItem').append($('<option>',
+                                {
+                                    value: value.Value,
+                                    text: value.Text
+                                })).select2();
+                        });
+
+                        $("input:text:visible:first").focus();
+                        $("#RecvItem").select2().one('select2-focus', select2Focus)
+                            .on("select2-blur",
+                            function ()
+                            {
+                                $(this).one('select2-focus', select2Focus)
+                            });
+
+                        $("#RecvItem").focus();
+                        var e = jQuery.Event("keypress");
+                        e.which = 13;
+                        //$("#RecvItem").val(order.RecvItem);
+                        $("#RecvItem").trigger('change');
+
+                        //$("#RecvItem").val(order.RecvItem).trigger('change');
+                        order.RecvItem = "0";
+                    }
+                });
+            });*@
+
+            function validateOnSave(validOrder) {
+                //var credit = $("#CreditPur").prop("checked");
+                //if (credit == true) {
+                //    if (validOrder.ToLocCode == null) {
+                //        return "Please select Receive From";
+                //    }
+                //}else{
+                //    if (!validOrder.Source.trim().length) {
+                //        return "Please Receive Type";
+                //    }
+                //}
+
+                if (!validOrder.FromLocCode.trim().length) {
+                    return "Please select store location.";
+                }
+
+                if (validOrder.Purpose == "") {
+                    return "GL A/C is required";
+                }
+                //if (!validOrder.RecvItem.trim().length) {
+                //    return "Item is required";
+                //}
+                //if (validOrder.RecvItem.trim()) {
+                //    return "Item is required";
+                //}
+                if (!validOrder.RcvdByCode.trim().length) {
+                    return "Received By is Required";
+                }
+                if (!validOrder.AppByCode.trim().length) {
+                    return "Approved By is Required";
+                }
+
+
+                //if (!validOrder.Source.trim() == "---- Select ----") {
+                //    return "Please select Source No.";
+                //}
+                //if (validOrder.Source.trim() == "0") {
+                //    return "Source is required";
+                //}
+                //if (!validOrder.Source.trim().length) {
+                //    return "Source is required";
+                //}
+                //if (validOrder.Source.trim() == "") {
+                //    return "Source is Required";
+                //}
+
+                return "";
+
+            }
+
+            //***************************** For Common Item Filtering option start *******************************
+            $(document).on("change", "#ItemType", function (e) {
+                if ('@ViewBag.NoGrp' == 'False') {
+
+                    if ($("#ItemType option:selected").text() != "---- Select ----") {
+                        $("#pView").modal("show");
+                    }
+                    //for group load by itemtype.......
+                    $.ajax({
+                        url: '@Url.Action("LoadGroupInfoByItemType", "Sales")',
+                        contentType: "application/json;charset=utf-8",
+                        data: {
+                            ItemType: $("#ItemType").val()
+                        },
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function (data) {
+                            $('#GroupID').empty();
+                            //data.insertBefore('<option>', { Value: "", text: "--- Select ---" });
+                            $.each(data, function (index, value) {
+                                $('#GroupID').append($('<option>',
+                                    {
+                                        value: value.Value,
+                                        text: value.Text
+                                    })).select2();
+                            });
+                            //$("#GroupID").val(order.Purpose).trigger('change');
+                            //order.Purpose = "0";
+                        }
+                    });
+                } else {
+                    //for Item load by itemtype.......
+                    $.ajax({
+                        url: '@Url.Action("LoadItemByItemType", "Sales")',
+                        contentType: "application/json;charset=utf-8",
+                        data: {
+                            ItemType: $("#ItemType").val()
+                        },
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function (data) {
+                            $('#RecvItem').empty();
+                            $.each(data, function (index, value) {
+                                $('#RecvItem').append($('<option>',
+                                    {
+                                        value: value.Value,
+                                        text: value.Text
+                                    })).select2();
+                            });
+                        }
+                    });
+                }
+            })
+
+            //for sgroupinfo load by GroupID.......
+            $(document).on("change", "#GroupID", function (e) {
+                if ('@ViewBag.OnlyGrp' == 'False') {
+
+                    $.ajax({
+                        url: '@Url.Action("LoadSGroupByGroupId", "Sales")',
+                        contentType: "application/json;charset=utf-8",
+                        data: {
+                            ItemType: $("#ItemType").val(), GroupID: $("#GroupID").val()
+                        },
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function (data) {
+                            $('#SGroupID').empty();
+                            $.each(data, function (index, value) {
+                                $('#SGroupID').append($('<option>',
+                                    {
+                                        value: value.Value,
+                                        text: value.Text
+                                    })).select2();
+                            });
+                        }
+                    });
+                }
+            })
+
+
+            //for ssgroupinfo load by sGroupID.......
+            $(document).on("change", "#SGroupID", function (e) {
+                if ('@ViewBag.SubSubGrp' == 'True') {
+                    $.ajax({
+                        url: '@Url.Action("LoadSSGroupInfo", "Sales")',
+                        contentType: "application/json;charset=utf-8",
+                        data: {
+                            ItemType: $("#ItemType").val(), GroupID: $("#GroupID").val(), SGroupID: $("#SGroupID").val()
+                        },
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function (data) {
+                            $('#SSGroupID').empty();
+                            $.each(data, function (index, value) {
+                                $('#SSGroupID').append($('<option>',
+                                    {
+                                        value: value.Value,
+                                        text: value.Text
+                                    })).select2();
+                            });
+                        }
+                    });
+                }
+            })
+
+            //for ItmeInfo load by ssGroupID....... ItemType, GroupId, SGroupId, SSGroupId
+            $(document).on("click", "#btnOk", function (e) {
+                $("#pView").modal("hide");
+
+                if ('@ViewBag.OnlyGrp' == 'True') {
+                    //for Item load by GroupID.......
+                    $.ajax({
+                        url: '@Url.Action("LoadItemByGroupId", "Sales")',
+                        contentType: "application/json;charset=utf-8",
+                        data: {
+                            ItemType: $("#ItemType").val(), GroupID: $("#GroupID").val()
+                        },
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function (data) {
+                            $('#RecvItem').empty();
+                            $.each(data, function (index, value) {
+                                $('#RecvItem').append($('<option>',
+                                    {
+                                        value: value.Value,
+                                        text: value.Text
+                                    })).select2();
+                            });
+                        }
+                    });
+                }
+
+                if ('@ViewBag.GrpAndSubGrp' == 'True') {
+                    $.ajax({
+                        url: '@Url.Action("LoadItemBySGroupID", "Sales")',
+                        contentType: "application/json;charset=utf-8",
+                        data: {
+                            ItemType: $("#ItemType").val(), GroupID: $("#GroupID").val(), SGroupID: $("#SGroupID").val()
+                        },
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function (data) {
+                            $('#RecvItem').empty();
+                            $.each(data, function (index, value) {
+                                $('#RecvItem').append($('<option>',
+                                    {
+                                        value: value.Value,
+                                        text: value.Text
+                                    })).select2();
+                            });
+                            ClearComView();
+                        }
+                    });
+                }
+
+                if ('@ViewBag.SubSubGrp' == 'True') {
+                    $.ajax({
+                        url: '@Url.Action("LoadItemBySSGroupID", "Sales")',
+                        contentType: "application/json;charset=utf-8",
+                        data: {
+                            ItemType: $("#ItemType").val(), GroupID: $("#GroupID").val(), SGroupID: $("#SGroupID").val(), SSGroupID: $("#SSGroupID").val()
+                        },
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function (data) {
+                            $('#RecvItem').empty();
+                            $.each(data, function (index, value) {
+                                $('#RecvItem').append($('<option>',
+                                    {
+                                        value: value.Value,
+                                        text: value.Text
+                                    })).select2();
+                            });
+                            ClearComView();
+                        }
+                    });
+                }
+            })
+
+            $(document).on("click", "#closePopOver", function (e) {
+                e.preventDefault();
+                jQuery("#ItemType option").filter(function () {
+                    return $.trim($(this).text()) == '---- Select ----'
+                }).prop('selected', true).trigger('change.select2');
+
+                $("#pView").modal("hide");
+                ClearComView();
+            });
+
+            function ClearComView() {
+                var Stext = '---- Select ----';
+
+                jQuery("#GroupID option").filter(function () {
+                    return $.trim($(this).text()) == Stext
+                }).prop('selected', true).trigger('change.select2');
+
+                jQuery("#SGroupID option").filter(function () {
+                    return $.trim($(this).text()) == Stext
+                }).prop('selected', true).trigger('change.select2');
+
+                jQuery("#SSGroupID option").filter(function () {
+                    return $.trim($(this).text()) == Stext
+                }).prop('selected', true).trigger('change.select2');
+            }
+            //***************************** For Common Item Filtering option start *******************************
+
+        });
+
+
+    </script>
+}

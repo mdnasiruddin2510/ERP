@@ -1,0 +1,2123 @@
+﻿@model App.Domain.ViewModel.PurchaseVM
+@{
+    ViewBag.Title = "Purchase";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/select2/select2.css" rel="stylesheet" type="text/css" />
+<link href="~/Css/FormDesign.css" rel="stylesheet" />
+
+<style>
+    table.dataTable.select tbody tr,
+    table.dataTable thead th:first-child {
+        cursor: pointer;
+    }
+
+    .dataTables_scrollBody > table > thead > tr > th[class*="sort"]::after {
+        display: none;
+    }
+
+    input#vat6p1, input#vat6p10, input#vat6p2p1, input#vat9p1SFKa, input#vat9p1SFKha {
+        width: 25px;
+        height: 15px;
+        /*margin-bottom: 5px;*/
+        margin-top: 0px;
+    }
+
+    .combobox {
+        display: inline-block;
+        position: relative;
+    }
+
+        .combobox select {
+            display: none;
+            overflow-y: auto;
+        }
+
+    .form-control {
+        border: 1px solid #00ffff;
+    }
+
+    .required:after {
+        content: " *";
+        font-weight: bold;
+        color: red;
+    }
+
+    a#glPro {
+        color: darkblue;
+    }
+
+    a#GLEntries {
+        color: darkblue;
+    }
+
+    label.col-md-4 {
+        padding: 0px !important;
+    }
+
+    fieldset {
+        border: solid 1px #b9b4b4 !important;
+        padding: 5px 5px 5px 5px;
+        margin-bottom: 20px;
+        border-bottom: none;
+        width: inherit;
+    }
+
+    legend {
+        width: auto !important;
+        border: none;
+        font-size: 14px;
+    }
+
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    input[type=number] {
+        -moz-appearance: textfield;
+    }
+</style>
+@using (Html.BeginForm())
+{
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="panel panel-color panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <text style="text-align:left !important; text-decoration: none;">Purchase</text>
+                    </h3>
+                </div>
+                <div class="panel-body">
+                    <div class="modal fade in" id="pView" role="dialog" aria-hidden="true">
+                        @Html.Partial("~/Views/Sales/CommonPV.cshtml")
+                    </div>
+                    @if (ViewBag.OnlyVAT == false)
+                    {
+                        <div class="input-group form-group col-md-12">
+                            <div class="col-md-4" style="text-align:right">
+
+                                <label class="control-label">
+                                    @Html.ActionLink(
+                                "Purchase waiting for Posting",
+                                "GetJournalVoucher",
+                                "Purchase",
+                                new { Date = "blankDate" },
+                                new { id = "glPro", }
+                                )
+                                </label>
+                                <label id="CountNo">(@ViewBag.GLProvition)</label>
+                            </div>
+                            <div class="col-md-4" style="text-align:center">
+                                <label class="control-label" target="_blank">
+                                    @Html.ActionLink(
+                                "List of Purchase Voucher",
+                                "GetGLEntries",
+                                "Purchase",
+                                new { Date = "blankDate" },
+                                new { id = "GLEntries", }
+                                )
+                                </label>
+                                <label>(@ViewBag.GLEntries)</label>
+                            </div>
+                        </div>
+                    }
+                    <div class="col-sm-12">
+                        <div class="col-sm-10">
+                            <div class="col-sm-2"></div>
+                            <div class="col-sm-8">
+                                <label class="col-md-3 required" style="margin-right: -25px;padding-left: 0px;">Location</label>
+                                <div class="input-group form-group col-sm-9">
+                                    @Html.DropDownListFor(x => x.LocNo, null, "---- Select ----", new { @class = "form-control select2", @Value = ViewBag.LocNo })
+                                    <input type="hidden" name="Location" id="Location" />
+                                </div>
+                            </div>
+                            <div class="col-sm-2">
+                                @if (ViewBag.MakeRecvAuto == true)
+                                {
+                                    <div class="checkbox checkbox-primary">
+                                        <input type="checkbox" name="MakeRecvAuto" class="MakeRecvAuto" checked="checked" value="MakeRecvAuto" id="MakeRecvAuto" /><label style="color:darkblue; font-weight:bold">Make Receive Auto</label>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                        <div class="col-sm-10">
+                            <div class="col-sm-2"></div>
+                            <div class="col-sm-5">
+                                <label class="col-md-4 required">Purchase No</label>
+                                <div class="input-group form-group col-md-7">
+                                    <input type="text" class="form-control" id="PurNo" name="PurNo" value="@ViewBag.PurNo" />
+                                    <input type="hidden" id="PrePurNo">
+                                    <input type="hidden" id="PreBill_Ch_No">
+                                </div>
+                            </div>
+                            @if (ViewBag.MaintJob == true)
+                            {
+                                <div class="col-sm-4">
+                                    <label class="col-md-3">Job No</label>
+                                    <div class="col-md-9 input-group form-group">
+                                        @Html.DropDownListFor(x => x.JobNo, null, "---- Select ----", new { @class = "form-control select2", @Value = ViewBag.JobNo })
+                                    </div>
+                                </div>
+                                <div class="col-md-1">
+                                    <input type="button" class="btn" value="Add Job" id="btnJob" />
+                                </div>
+                            }
+                        </div>
+
+                        <div class="col-sm-10">
+                            <div class="col-sm-2"></div>
+                            <div class="col-sm-5">
+                                <label class="col-md-4 required">Purchase Date</label>
+                                <div class="input-group form-group col-md-7">
+                                    <input type="text" class="form-control datePage" id="@Html.IdFor(x => x.PurDate)" value="@DateTime.Today.ToShortDateString()">
+                                    <span class="input-group-addon bg-primary b-0 text-white"><i class="ion-calendar"></i></span>
+                                    <input type="hidden" id="PrePurDate">
+                                </div>
+                            </div>
+                            <div class="col-sm-5">
+                                <label class="col-md-4 required">GL A/C</label>
+                                <div class="input-group form-group col-md-8">
+                                    @Html.DropDownListFor(x => x.Ca_Bk_Op, null, new { @class = "form-control select2", @Value = ViewBag.Ca_Bk_Op })
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="col-sm-10">
+                            <div class="col-sm-2"></div>
+                            <div class="col-sm-5">
+                                <label class="col-md-4 required">Purchase Type</label>
+                                <div class="input-group form-group col-md-7">
+                                    @Html.DropDownListFor(x => x.PurType, new SelectList(new List<SelectListItem> {
+                                new SelectListItem { Text = "Local", Value = "Local" },
+                                new SelectListItem { Text = "Foreign", Value = "Foreign" } }, "Value", "Text", "Local"), new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="col-sm-5">
+                                <label class="col-md-4 required">Purpose</label>
+                                <div class="input-group form-group col-md-8">
+                                    @Html.DropDownListFor(x => x.Accode, null, new { @class = "form-control select2", @Value = ViewBag.Accode })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-10">
+                            <div class="col-sm-2"></div>
+                            <div class="col-sm-5">
+                                <label class="col-md-4">Reference No</label>
+                                <div class="input-group form-group col-md-7">
+                                    @Html.TextBoxFor(x => x.RefNo, new { @class = "form-control col-md-8 select2" })
+                                </div>
+                            </div>
+                            <div class="col-sm-5">
+                                <label class="col-md-4">Reference Date</label>
+                                <div class="input-group form-group col-md-7">
+                                    <input type="text" class="form-control datePage" id="@Html.IdFor(x => x.RefDate)" value="">
+                                    <span class="input-group-addon bg-primary b-0 text-white"><i class="ion-calendar"></i></span>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-10">
+                            <div class="col-sm-2"></div>
+                            <div class="col-sm-5">
+                                <label class="col-md-4">L/C No</label>
+                                <div class="input-group form-group col-md-7">
+                                    @Html.TextBoxFor(x => x.LCNo, new { @class = "form-control col-md-8 select2" })
+                                </div>
+                            </div>
+                            <div class="col-sm-5">
+                                <label class="col-md-4">L/C Date</label>
+                                <div class="input-group form-group col-md-7">
+                                    <input type="text" class="form-control datePage" id="@Html.IdFor(x => x.LCOpenDate)" value="">
+                                    <span class="input-group-addon bg-primary b-0 text-white"><i class="ion-calendar"></i></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-10">
+                            <div class="col-sm-2"></div>
+                            <div class="col-sm-5">
+                                <label class="col-md-4 required">Currency</label>
+                                <div class="input-group form-group col-md-7">
+                                    @Html.DropDownListFor(x => x.PurCurrency, null, new { @class = "form-control select2", @Value = ViewBag.PurCurrency })
+                                </div>
+                            </div>
+                            <div class="col-sm-5 hidden" id="pnlConvRate">
+                                <label class="col-md-4">Conversion Rate</label>
+                                <div class="input-group form-group col-md-7">
+                                    @Html.TextBoxFor(x => x.ConversionRate, new { @type = "number", @class = "form-control col-md-8 select2" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <fieldset class="col-sm-8" style="margin-left: 140px">
+                            <legend> </legend>
+                            <div class="col-sm-12">
+                                <div class="col-sm-8">
+                                    <label class="col-md-3 required">Supplier Name</label>
+                                    <div class="input-group form-group col-md-9">
+                                        @Html.DropDownListFor(x => x.SupCode, null, "---- Select ----", new { @class = "form-control select2", @Value = ViewBag.SupCode })
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <label class="col-md-3">Category</label>
+                                    <div class="input-group form-group col-md-9" style="padding-left: 10px;">
+                                        <label class="form-control" id="SubCategory"></label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-12">
+                                <div class="col-sm-6">
+                                    <label class="col-md-4 required">Address</label>
+                                    <div class="input-group form-group col-md-7">
+                                        @Html.TextAreaFor(x => x.Address, new { @class = "form-control col-md-8 select2" })
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="col-md-4">Country of Orgin</label>
+                                    <div class="input-group form-group col-md-7">
+                                        @Html.DropDownListFor(x => x.CountryCode, null, "Select Type", new { @class = "form-control select2" })
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="col-sm-12">
+                                <div class="col-sm-6">
+                                    <label class="col-md-4 required">Registration No</label>
+                                    <div class="input-group form-group col-md-7">
+                                        @Html.TextBoxFor(x => x.RegNo, new { @class = "form-control col-md-8 select2", placeholder = "BIN/TIN/NID/Other No" })
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="col-md-6 hidden" id="pnlRegType">
+                                        <label class="col-md-4">Reg Type</label>
+                                        <div class="input-group form-group col-md-8">
+                                            @Html.TextBoxFor(x => x.RegType, new { @class = "form-control col-md-8 select2", placeholder = "BIN/TIN/NID", @style = "margin-left: 5px;" })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="input-group form-group col-md-12">
+                                            <div class="checkbox checkbox-primary">
+                                                <input type="checkbox" name="VatChPro" class="VatChPro" id="VatChPro" />
+                                                <label style="font-weight:bold">VAT Challan Provided</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="col-sm-12">
+                                <div class="col-sm-6">
+                                    <label class="col-md-4 required" id="lblBOE_Cha_No">Challan No</label>
+                                    <div class="input-group form-group col-md-7">
+                                        @Html.TextBoxFor(x => x.B_C_No, new { @class = "form-control col-md-8 select2" })
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="col-md-4 required" id="lblBOE_Cha_Date">Challan Date</label>
+                                    <div class="input-group form-group col-md-7">
+                                        <input type="text" class="form-control datePage" id="@Html.IdFor(x => x.B_C_Date)" value="">
+                                        <span class="input-group-addon bg-primary b-0 text-white"><i class="ion-calendar"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-12">
+                                <div class="col-sm-6">
+                                    <label class="col-md-4">Custom House</label>
+                                    <div class="input-group form-group col-md-7">
+                                        @Html.DropDownListFor(x => x.CHCode, null, new { @class = "form-control select2" })
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="col-md-4">                                        
+                                    </label>
+                                    <div class="input-group form-group col-md-7">                                        
+                                    </div>
+                                </div>
+                            </div>
+
+                        </fieldset>
+
+                        <fieldset>
+                            <legend> </legend>
+                            <div class="col-md-12">
+                                <div class="col-sm-10">
+                                    <label class="col-md-2" style="margin-right: -2px;">Item Type</label>
+                                    <div class="input-group form-group col-md-7">
+                                        @Html.DropDownListFor(x => x.ItemType, null, "---- Select ----", new { @class = "form-control select2", @Value = ViewBag.ItemType })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="col-sm-8">
+                                    <label class="col-md-2 required" style="margin-right: 25px;">Item Name</label>
+                                    <div class="input-group form-group col-md-9">
+                                        @Html.DropDownListFor(x => x.ItemName, null, new { @class = "form-control select2", @Value = ViewBag.ItemName })
+                                    </div>
+                                </div>
+                                @if (ViewBag.MaintVAT == true)
+                                {
+                                    <div class="col-md-2">
+                                        <label class="col-md-4">HS Code</label>
+                                        <div class="input-group form-group col-md-8">
+                                            @Html.TextBoxFor(x => x.HSCode, new { @class = "form-control col-md-8 select2" })
+                                            <input type="hidden" name="TaxHeadingNo" id="TaxHeadingNo" />
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+
+                            <div class="col-sm-12">
+                                <div class="col-sm-4">
+                                    <label class="col-md-5 required">Opening Quantity</label>
+                                    <div class="input-group form-group col-md-7">
+                                        @Html.TextBoxFor(x => x.OpenQty, new { @type = "number", @class = "form-control col-md-8 select2", disabled = "true" })
+                                    </div>
+                                </div>
+                                <div class="col-sm-5">
+                                    <label class="col-md-4 required">Opening Amount</label>
+                                    <div class="input-group form-group col-md-7">
+                                        @Html.TextBoxFor(x => x.OpeningAmt, new { @type = "number", @class = "form-control col-md-8 select2", disabled = "true" })
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="col-sm-4">
+                                    <label class="col-md-5 required">Purchase Quantity</label>
+                                    <div class="input-group form-group col-md-7">
+                                        @Html.TextBoxFor(x => x.PurQty, new { @type = "number", @class = "form-control col-md-8 select2" })
+                                    </div>
+                                </div>
+                                <div class="col-sm-5">
+                                    <label class="col-md-4 required">Purchase Price</label>
+                                    <div class="input-group form-group col-md-7">
+                                        @Html.TextBoxFor(x => x.UPrice, new { @type = "number", @class = "form-control col-md-8 select2" })
+                                    </div>
+                                </div>
+                                @if (ViewBag.MaintLot == true)
+                                {
+                                    <div class="col-sm-3">
+                                        <label class="col-md-4">Lot No.</label>
+                                        <div class="input-group form-group col-md-7">
+                                            @Html.TextBoxFor(x => x.LotNo, new { @class = "form-control col-md-8 select2" })
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+
+                            <div class="col-sm-12">
+                                <div class="col-sm-4">
+                                    <label class="col-md-5 required">Amount</label>
+                                    <div class="input-group form-group col-md-7">
+                                        @Html.TextBoxFor(x => x.Amount, new { @type = "number", @class = "form-control col-md-8 select2", disabled = "true" })
+                                    </div>
+                                </div>
+                                <div class="col-sm-5">
+                                    <label class="col-md-4">Supplementary Tax</label>
+                                    <div class="input-group form-group col-md-7">
+                                        @Html.TextBoxFor(x => x.SupTaxAmt, new { @type = "number", @class = "form-control col-md-8 select2" })
+                                        <input type="hidden" name="SuppTaxPrec" id="SuppTaxPrec" />
+                                        <input type="hidden" name="FixedRate" id="FixedRate" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-3" style="text-align: center;">
+                                    <label class="col-md-4">Description</label>
+                                    <div class="input-group form-group col-md-7">
+                                        @Html.TextBoxFor(x => x.Description, new { @class = "form-control col-md-8 select2" })
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-12">
+                                <div class="col-sm-4">
+                                    <label class="col-md-5">VAT Type</label>
+                                    <div class="input-group form-group col-md-7">
+                                        @Html.DropDownListFor(x => x.VATType, null, "--- Select ---", new { @class = "form-control select2", @Value = ViewBag.VATType })
+                                    </div>
+                                </div>
+                                <div class="col-sm-5">
+                                    <label class="col-md-4">VAT Amount</label>
+                                    <div class="input-group form-group col-md-7">
+                                        @Html.TextBoxFor(x => x.VATAmt, new { @type = "number", @class = "form-control col-md-8 select2" })
+                                        <input type="hidden" name="VATPrec" id="VATPrec" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-3" style="text-align: center;">
+                                    <input type="hidden" id="tPurId" />
+                                    <input type="button" class="btn btn-primary" value="Add" id="add" />
+                                    <input type="button" class="btn btn-primary hidden" value="Update" id="tmpUpdate" />
+                                </div>
+                            </div>
+
+
+                            <div class="col-sm-12 col-md-12" style="margin-top: 10px; margin-bottom: 10px;">
+                                <div class="row col-sm-12 col-md-12" style="border:1px solid; border-color:#adcceb; width:100%;margin-left: 2px;">
+                                    <div class="row">
+                                        <div class="col-sm-12 col-md-12" style="padding:1px 10px 1px 10px">
+                                            <br />
+                                            <table class="table table-bordered table-responsive" id="AddOntmpPurdatatable" style="width:100%">
+                                                <thead>
+                                                    <tr>
+                                                        <th width="5%">SL</th>
+                                                        <th width="10%">Item&nbsp;Name</th>
+                                                        <th width="5%">OB&nbsp;Qty.</th>
+                                                        <th width="10%">OB&nbsp;Amount</th>
+                                                        <th width="5%">Pur&nbsp;Qty.</th>
+                                                        <th width="5%">Price</th>
+                                                        <th width="5%">Amount</th>
+                                                        <th width="5%">Supp&nbsp;Tax</th>
+                                                        <th width="5%">VAT</th>
+                                                        <th width="5%">Sub&nbsp;Total</th>
+                                                        <th width="5%">VAT&nbsp;Ex.</th>
+                                                        <th width="5%">Tax&nbsp;Ex.</th>
+                                                        <th width="5%">Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="tbodyId"></tbody>
+
+                                            </table>
+                                            <br />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+                        </fieldset>
+
+                        <div class="col-sm-12">
+                            <div class="col-sm-10">
+                                <div class="col-sm-6">
+                                    <label class="col-md-4">Total Purchase Amount</label>
+                                    <div class="input-group form-group col-md-7">
+                                        @Html.TextBoxFor(x => x.TotPurAmt, new { @type = "number", @class = "form-control col-md-8 select2" })
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="col-md-4">
+                                        <input type="button" class="btn col-md-10" value="VDS" id="btnVDSModal" />
+                                    </label>
+                                    <div class="input-group form-group col-md-7">
+                                        @Html.TextBoxFor(x => x.VDSAmt, new { @class = "form-control col-md-8 select2" })
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="col-sm-10">
+                                <div class="col-sm-6">
+                                    <label class="col-md-4">Rebate Due Date</label>
+                                    <div class="input-group form-group col-md-7">
+                                        <input type="text" class="form-control datePage" id="@Html.IdFor(x => x.RebateDueDate)" value="">
+                                        <span class="input-group-addon bg-primary b-0 text-white"><i class="ion-calendar"></i></span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="col-md-4">Payment Due Date</label>
+                                    <div class="input-group form-group col-md-7">
+                                        <input type="text" class="form-control datePage" id="@Html.IdFor(x => x.PayDueDate)" value="">
+                                        <span class="input-group-addon bg-primary b-0 text-white"><i class="ion-calendar"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-2">
+                                <input type="button" class="btn btn-primary" value="Save" id="btnSave" />
+                                <input type="button" class="btn btn-primary hidden" value="Update" id="btnUpdate" />
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="col-sm-10">
+                                <div class="col-sm-6">
+                                    <label class="col-md-4 required">Entry Date & Time</label>
+                                    <div class="input-group form-group col-md-7">
+                                        <input type="text" class="form-control datePage" id="@Html.IdFor(x => x.EntryDateTime)" value="@DateTime.Today.ToShortDateString()">
+                                        <span class="input-group-addon bg-primary b-0 text-white"><i class="ion-calendar"></i></span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="col-md-4 required">Entry By</label>
+                                    <div class="input-group form-group col-md-7">
+                                        @Html.DropDownListFor(x => x.EntryBy, null, new { @class = "form-control select2", @Value = ViewBag.EntryBy })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-2">
+                                <input type="button" class="btn btn-primary" value="Clear" id="btnClear" />
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12">
+                            <div class="col-sm-10">
+                                <div class="col-sm-6">
+                                    <label class="col-md-4">Remarks</label>
+                                    <div class="input-group form-group col-md-7">
+                                        @Html.TextAreaFor(x => x.Remarks, new { @class = "form-control col-md-8 select2" })
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="col-sm-12" style="padding-left:0px !important">
+                                        <label class="col-md-4">Voucher No</label>
+                                        <div class="input-group form-group col-md-7">
+                                            @Html.TextBoxFor(x => x.VchrNo, new { @class = "form-control col-md-8 select2", disabled = "true" })
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12">
+                                        <label class="col-md-4"> </label>
+                                        <div class="checkbox checkbox-primary col-md-7">
+                                            <input type="checkbox" name="Posted" class="Posted" value="Posted" id="Posted" /><label>Posted</label>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+
+                        @if (ViewBag.MaintVAT == true)
+                        {
+                            <div class="col-sm-12" id="pnlVAT">
+                                <label class="col-md-2"></label>
+                                <div class="col-sm-10">
+                                    <div class="col-md-2">
+                                        <span class="checkbox-button">
+                                            <input type="checkbox" name="vat6p1" class="checkbox-primary"  id="vat6p1" />
+                                            <input type="button" class="btn-primary" value="VAT 6.1" id="btnVAT6p1" />
+                                        </span>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <span class="checkbox-button">
+                                            <input type="checkbox" name="vat6p2p1" class="checkbox-primary"  id="vat6p2p1" />
+                                            <input type="button" class="btn-primary" value="VAT 6.2.1" id="btnVAT6p2p1" />
+                                        </span>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <span class="checkbox-button">
+                                            <input type="checkbox" name="vat6p10" class="checkbox-primary"  id="vat6p10" />
+                                            <input type="button" class="btn-primary" value="VAT 6.10" id="btnVAT6p10" />
+                                        </span>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <span class="checkbox-button">
+                                            <input type="checkbox" name="vat9p1SFKa" class="checkbox-primary"  id="vat9p1SFKa" />
+                                            <input type="button" class="btn-primary" value="VAT 9.1 (SF KA)" id="btnvat9p1SFKa" />
+                                        </span>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <span class="checkbox-button">
+                                            <input type="checkbox" name="vat9p1SFKha" class="checkbox-primary"  id="vat9p1SFKha" />
+                                            <input type="button" class="btn-primary" value="VAT 9.1 (SF KHA)" id="btnvat9p1SFKha" />
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" id="JobModal" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="panel panel-color panel-primary">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">Job Information</h3>
+
+                            </div>
+                            <div class="panel-body">
+                                <div class="clearfix">
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="col-md-3">Job No</label>
+                                    <div class="input-group form-group col-md-7">
+                                        <input type="text" class="form-control" id="nJobNo" name="nJobNo" />
+                                    </div>
+                                </div>
+                                <div class="col-md-10">
+                                    <div>
+                                        <div class="pull-right">
+                                            <input type="button" id="btnJobOk" value="Save" class="btn btn-primary" />
+                                            <input type="button" id="closeJob" value="Close" class="btn btn-primary" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" id="VDSModal" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="panel panel-color panel-primary">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">VDS On Payment</h3>
+
+                            </div>
+                            <div class="panel-body">
+                                <div class="clearfix">
+                                </div>
+                                <div class="col-md-10">
+                                    <div class="col-md-12">
+                                        <label class="col-md-4 required">Payment No</label>
+                                        <div class="input-group form-group col-md-8">
+                                            <input type="text" class="form-control" id="@Html.IdFor(x => x.VDS_PaymentNo)"  value="@ViewBag.VDS_PaymentNo">
+                                            <input type="hidden" id="VDS_PID" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <label class="col-md-4 required">Supplier name</label>
+                                        <div class="input-group form-group col-md-8">
+                                            <input type="text" class="form-control" id="@Html.IdFor(x => x.Supp_name)" >
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <label class="col-md-4 required">Supplier Address</label>
+                                        <div class="input-group form-group col-md-8">
+                                            <input type="text" class="form-control" id="@Html.IdFor(x => x.Supp_Addr)" >
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <label class="col-md-4 required">Supplier BIN</label>
+                                        <div class="input-group form-group col-md-8">
+                                            <input type="text" class="form-control" id="@Html.IdFor(x => x.Supp_BIN)" >
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <label class="col-md-4 required">TotalValue</label>
+                                        <div class="input-group form-group col-md-8">
+                                            <input type="number" class="form-control" id="@Html.IdFor(x => x.TotalValue)" >
+
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <label class="col-md-4 required">VAT Deduct</label>
+                                        <div class="input-group form-group col-md-8">
+                                            <input type="number" class="form-control" id="@Html.IdFor(x => x.VAT_Deduct)">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <label class="col-md-4 required">Challan No</label>
+                                        <div class="input-group form-group col-md-8">
+                                            <input type="text" class="form-control" id="@Html.IdFor(x => x.Challan_No)" >
+
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <label class="col-md-4 required">Challan Date</label>
+                                        <div class="input-group form-group col-md-8">
+                                            <input type="text" class="form-control datePage" id="@Html.IdFor(x => x.Challan_Dt)" value="@DateTime.Today.ToShortDateString()">
+                                            <span class="input-group-addon bg-primary b-0 text-white"><i class="ion-calendar"></i></span>
+
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <label class="col-md-4 required">Account</label>
+                                        <div class="input-group form-group col-md-8">
+                                            @Html.DropDownListFor(x => x.AccountCode, null, "--- Select ---", new { @class = "form-control select2", required = "required", @Value = ViewBag.AccountCode })
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-12">
+                                        <label class="col-md-4">Remarks</label>
+                                        <div class="input-group form-group col-md-8">
+                                            @Html.TextAreaFor(x => x.VDSRemarks, new { @class = "form-control col-md-8 select2" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-8">
+                                    <div>
+                                        <div class="pull-right">
+                                            <input type="button" id="btnVDSSubmit" value="Submit" class="btn btn-primary" />
+                                            <input type="button" id="closeJob" value="Close" class="btn btn-primary" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+}
+
+@section scripts{
+    <script src="~/App_Themes/Theme1/plugins/select2/select2.min.js" type="text/javascript"></script>
+    <script src="~/App_Themes/Theme1/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.bootstrap.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.buttons.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/buttons.bootstrap.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/pdfmake.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/vfs_fonts.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/buttons.html5.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/buttons.print.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.fixedHeader.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.keyTable.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.responsive.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/responsive.bootstrap.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.scroller.min.js"></script>
+    <script type="text/javascript" src="../App_Themes/Theme1/plugins/parsleyjs/dist/parsley.min.js"></script>
+    <script src="../App_Themes/Theme1/blue/assets/pages/datatables.init.js"></script>
+
+    <script>
+    $(document).ready(function () {
+
+        function select2Focus() {
+            var select2 = $(this).data('select2');
+            setTimeout(function () {
+                if (!select2.opened()) {
+                    select2.open();
+                }
+            }, 0);
+        }
+
+        $("input:text:visible:first").focus();
+        $("#SupCode").select2().one('select2-focus', select2Focus).on("select2-blur", function () { $(this).one('select2-focus', select2Focus) });
+        $("#ItemType").select2().one('select2-focus', select2Focus).on("select2-blur", function () { $(this).one('select2-focus', select2Focus) });
+        $("#ItemName").select2().one('select2-focus', select2Focus).on("select2-blur", function () { $(this).one('select2-focus', select2Focus) });
+        $("#JobNo").select2().one('select2-focus', select2Focus).on("select2-blur", function () { $(this).one('select2-focus', select2Focus) });
+        $("#Accode").select2().one('select2-focus', select2Focus).on("select2-blur", function () { $(this).one('select2-focus', select2Focus) });
+        $("#Ca_Bk_Op").select2().one('select2-focus', select2Focus).on("select2-blur", function () { $(this).one('select2-focus', select2Focus) });
+        $("#VATType").select2().one('select2-focus', select2Focus).on("select2-blur", function () { $(this).one('select2-focus', select2Focus) });
+        $("#CountryCode").select2().one('select2-focus', select2Focus).on("select2-blur", function () { $(this).one('select2-focus', select2Focus) });
+        $("#CHCode").select2().one('select2-focus', select2Focus).on("select2-blur", function () { $(this).one('select2-focus', select2Focus) });
+        //For GL Permission By Farhad
+        var ispType = '@ViewBag.errMsg';
+        if (ispType != '') {
+            ispType = '@ViewBag.errMsg';
+        }
+        if (ispType == "VWP") {
+            alert("No Voucher waiting for posting Permission for this User");
+        } else if (ispType == "VL") {
+            alert("No List Of vouchers Permission for this User");
+        }
+
+        $(document).on("change", "#PurCurrency", function () {
+            if ($("#PurCurrency option:selected").text() == 'BDT') {
+                $('#pnlConvRate').attr("class", "col-sm-5 hidden");
+            } else {
+                $('#pnlConvRate').attr("class", "col-sm-5");
+            }
+        });
+
+        $.ajax({
+            url: '@Url.Action("GetNewVoucherNo", "CashReceipt")',
+            contentType: "application/json;charset=utf-8",
+            data: { VType: 'AP' },
+            type: 'GET',
+            dataType: 'json',
+            success: function (datas) {
+                $("#VchrNo").val(datas);
+            }
+        });
+
+        $("#vat6p1,#vat6p2p1, #HSCode, #vat6p10, #vat9p1SFKa, #vat9p1SFKha").prop("disabled", true);
+
+        $(document).on("click", "#btnVAT6p1, #btnVAT6p2p1, #btnVAT6p10, #btnvat9p1SFKa , #btnvat9p1SFKha", function (e) {
+            var fDate = moment($('#PrePurDate').val(), 'DD/MM/YYYY').format('MM/DD/YYYY').toString();
+            var TransNo = $('#PrePurNo').val();
+            var PreBill_Ch_No = $('#PreBill_Ch_No').val();
+            var value = $(this).attr("id");
+            if ($("#vat6p1").prop("checked") == true && value == "btnVAT6p1") {
+                window.open('@Url.Action("TransWiseVatRptPdf", "VATRpt", null)?fDate=' + fDate + '&tDate=' + fDate + '&TransNo=' + TransNo);
+            }
+            if ($("#vat6p10").prop("checked") == true && value == "btnVAT6p10") {
+                window.open('@Url.Action("TransWiseVat6P10RptPdf", "VATRpt", null)?fDate=' + fDate + '&tDate=' + fDate + '&TransNo=' + PreBill_Ch_No);
+            }
+            if ($("#vat6p2p1").prop("checked") == true && value == "btnVAT6p2p1") {
+                window.open('@Url.Action("TransWiseVat6P2P1RptPdf", "VATRpt", null)?fDate=' + fDate + '&tDate=' + fDate + '&TransNo=' + TransNo);
+            }
+            if ($("#vat9p1SFKa").prop("checked") == true && value == "btnvat9p1SFKa") {
+                window.open('@Url.Action("TransWiseVat9P1_SF_KaRptPdf", "VATRpt", null)?fDate=' + fDate + '&tDate=' + fDate + '&TransNo=' + TransNo);
+            }
+            if ($("#vat9p1SFKha").prop("checked") == true && value == "btnvat9p1SFKha") {
+                window.open('@Url.Action("TransWiseVat9P1_SF_Ka_2_RptPdf", "VATRpt", null)?fDate=' + fDate + '&tDate=' + fDate + '&TransNo=' + TransNo);
+            }
+        })
+
+
+        $("#TotPurAmt").val(0);
+        $("#PurQty").val(0);
+        $("#PurQty").val(0);
+        $("#SupTaxAmt").val(0);
+        $("#VATAmt").val(0);
+
+        $("#UPrice").val(0);
+        $("#Amount").val(0);
+
+        $("#PurQty, #UPrice").on("keydown keyup", function () {
+            $("#Amount").val(parseFloat(parseFloat($("#PurQty").val()) * parseFloat($("#UPrice").val())).toFixed(2));
+
+
+
+
+            $("#SupTaxAmt").val(parseFloat((parseFloat($("#SuppTaxPrec").val()) * parseFloat($("#Amount").val())) / 100).toFixed(2));
+            if ($("#FixedRate").val() != 0) {
+                $("#VATAmt").val($("#FixedRate").val());
+            } else {
+                $("#VATAmt").val(parseFloat((parseFloat($("#VATPrec").val()) * parseFloat($("#Amount").val())) / 100).toFixed(2));
+            }
+        });
+
+
+        $(document).on("change", "#PurType", function () {
+            if ($(this).val() == "Local") {
+                document.getElementById('lblBOE_Cha_No').innerHTML = 'Challan No';
+                document.getElementById('lblBOE_Cha_Date').innerHTML = 'Challan Date';
+            } else {
+                document.getElementById('lblBOE_Cha_No').innerHTML = 'Bill of Entry No';
+                document.getElementById('lblBOE_Cha_Date').innerHTML = 'Bill of Entry Date';
+            }
+        });
+
+
+        //For SuppTax and VAT Amt
+        $("#PurQty").on("focusout", function () {
+            if ($("#HSCode").val() != "" && $("#PurQty").val() != "" && $("#PurQty").val() >= 1) {
+                $.ajax({
+                    type: "Get",
+                    contentType: "application/json;charset=utf-8",
+                    url: '@Url.Action("GetSuppTaxVATPrec", "Purchase")',
+                    data: { TaxHeadingNo: $("#TaxHeadingNo").val(), HSCode: $("#HSCode").val(), PurQty: $("#PurQty").val() },
+                    dataType: 'json',
+                    success: function (item) {
+                        if (item != 0) {
+                            $("#SuppTaxPrec").val(item.SDRate);
+                            $("#VATPrec").val(item.VATRate);
+                            $("#FixedRate").val(item.FixedRate);
+                            $("#VATAmt").val(item.FixedRate);
+                            if (item.FixedRate != "0") {
+                                $("#VATType").val('Fiexed Rate').trigger('change.select2');
+                            } else if (item.VATRate != "0") {
+                                $("#VATType").val('Non Standard Rate').trigger('change.select2');
+                            } else if (item.SDRate != "0") {
+                                $("#VATType").val('Non Standard Rate').trigger('change.select2');
+                            } else {
+                                $("#VATType").val('Standard (15%)').trigger('change.select2');
+                            }
+                        }
+                    }
+                });
+            }
+        });
+
+
+
+
+
+        //For GLEntries
+        $("#GLEntries").click(function () {
+            //Get the id of the selected item in dropdown
+            var SaleDate = moment($('#PurDate').val(), 'DD/MM/YYYY').format('MM/DD/YYYY').toString();
+
+            var id = SaleDate + '&pageType=AP';
+
+            //Replace the predifined QueryString param "xxx" with the "id"
+            this.href = this.href.replace("blankDate", id);
+        });
+
+
+        $("#glPro").click(function () {
+            //Get the id of the selected item in dropdown
+            var SaleDate = moment($('#PurDate').val(), 'DD/MM/YYYY').format('MM/DD/YYYY').toString();
+
+            var id = SaleDate + '&pageType=AP';
+
+            //Replace the predifined QueryString param "xxx" with the "id"
+            this.href = this.href.replace("blankDate", id);
+        });
+
+        function validateOnAdd(validOrder) {
+            if (validOrder.Location == "") {
+                return "Location is required.";
+            }
+            if (validOrder.ItemName == "") {
+                return "Item Name is required.";
+            }
+            if (validOrder.OpenQty < 0 || validOrder.OpenQty == "") {
+                return "Opening Qty is unexpected.";
+            }
+            if (validOrder.OpeningAmt < 0 || validOrder.OpeningAmt == "") {
+                return "Opening Amount is unexpected.";
+            }
+            if (validOrder.PurQty <= 0 || validOrder.PurQty == "") {
+                return "Purchase Qty is unexpected.";
+            }
+            if (validOrder.UPrice <= 0 || validOrder.UPrice == "") {
+                return "Purchase Price is unexpected.";
+            }
+            if (validOrder.Amount < 0 || validOrder.Amount == "") {
+                return "Amount is unexpected.";
+            }
+            return "";
+        }
+
+        $(document).on("click", "#btnJob", function () {
+            $("#JobModal").modal("show");
+        });
+        $(document).on("click", "#closeJob", function (e) {
+            e.preventDefault();
+            $('#JobModal').modal('hide');
+            $('#VDSModal').modal('hide');
+        });
+                
+
+        $(document).on("click", "#btnJobOk", function (e) {
+            if ($("#nJobNo").val() != "") {
+                $.ajax({
+                    url: '@Url.Action("LoadandSaveJob", "Sales")',
+                    contentType: "application/json;charset=utf-8",
+                    data: {
+                        nJobNo: $("#nJobNo").val()
+                    },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        $('#JobNo').empty();
+                        //data.insertBefore('<option>', { Value: "", text: "--- Select ---" });
+                        $.each(data, function (index, value) {
+                            $('#JobNo').append($('<option>',
+                                {
+                                    value: value.Value,
+                                    text: value.Text
+                                })).select2();
+                        });
+                        $('#JobModal').modal('hide');
+                        $("#nJobNo").val("");
+                    }
+                });
+            }
+            else {
+                alert("Job No is required.");
+                return;
+            }
+
+        })
+
+
+
+
+        $(document).on("click", "#add, #tmpUpdate", function () {
+
+            var addOnTempPurTbl = {
+                tPurId: "", LocNo: "", PurNo: "", ItemName: "", OBQty: "", OBAmt: "", PurQty: "", UPrice: "", LotNo: "", Amount: "",
+                SupTaxAmt: "", Description: "", VATType: "", VATAmt: "", SubTotal: "", VATEx: "", TaxEx: "", VatPerc: "", DiscPerc: ""
+            }
+            $("#Location").val($("#LocNo").val());
+            addOnTempPurTbl.tPurId = $("#tPurId").val();
+            addOnTempPurTbl.LocNo = $("#LocNo").val();
+            addOnTempPurTbl.PurNo = $("#PurNo").val();
+            addOnTempPurTbl.ItemName = $("#ItemName").val();
+            addOnTempPurTbl.OBQty = parseFloat($("#OpenQty").val());
+            addOnTempPurTbl.OBAmt = parseFloat($("#OpeningAmt").val());
+            addOnTempPurTbl.PurQty = $("#PurQty").val();
+            addOnTempPurTbl.UPrice = parseFloat($("#UPrice").val());
+            if ($("#LotNo").val() == "" || $("#LotNo").val() == undefined) {
+                addOnTempPurTbl.LotNo = "01";
+            } else {
+                addOnTempPurTbl.LotNo = $("#LotNo").val();
+            }
+            addOnTempPurTbl.Amount = parseFloat($("#Amount").val());
+            addOnTempPurTbl.SupTaxAmt = parseFloat($("#SupTaxAmt").val());
+            addOnTempPurTbl.Description = $("#Description").val();
+            addOnTempPurTbl.VATType = $("#VATType").val();
+            addOnTempPurTbl.VATAmt = parseFloat($("#VATAmt").val());
+            addOnTempPurTbl.SubTotal = parseFloat(addOnTempPurTbl.Amount) + parseFloat(addOnTempPurTbl.SupTaxAmt) + parseFloat(addOnTempPurTbl.VATAmt);
+            //$("#TotPurAmt").val(parseFloat($("#TotPurAmt").val()) + parseFloat(addOnTempPurTbl.SubTotal));
+            if ($("#VATType").val() == "Exempted") {
+                addOnTempPurTbl.VATEx = "Exempted";
+            } else {
+                addOnTempPurTbl.VATEx = "";
+            }
+            addOnTempPurTbl.TaxEx = "0";
+            addOnTempPurTbl.SDRate = $("#SuppTaxPrec").val();
+            addOnTempPurTbl.VATRate = $("#VATPrec").val();
+
+            var validate = validateOnAdd(addOnTempPurTbl);
+            if (validate != "") {
+                alert(validate);
+                return;
+            }
+
+            $.ajax({
+                url: '@Url.Action("SaveTempPurTbl", "Purchase")',
+                contentType: "application/json;charset=utf-8",
+                data: JSON.stringify({ addOnTempPurTbl: addOnTempPurTbl }),
+                type: 'POST',
+                dataType: 'json',
+                success: function (datas) {
+                    if (datas == 1 || datas == 2) {
+                        loadGridByPurNo();
+                        clearItemInfo();
+                    }
+                    else if (datas == "A") {
+                        swal({
+                            title: "Sorry",
+                            text: "No Add Permission for this User",
+                            type: "warning"
+                        });
+                    }
+                    else {
+                        swal({
+                            title: "Sorry!",
+                            text: datas,
+                            type: "warning"
+                        });
+
+                    }
+                }
+            });
+
+        });
+
+        function clearItemInfo() {
+            $("#add").show();
+            $("#tPurId").val("0");
+            $('#tmpUpdate').attr("class", "btn btn-primary hidden");
+            $("#Amount").val("0");
+            $("#PurQty").val("0");
+            $("#UPrice").val("0");
+            $("#LotNo").val("");
+            $("#VATAmt").val("0");
+            $("#OpenQty").val("");
+            $("#OpeningAmt").val("");
+            $("#SupTaxAmt").val("0");
+            $("#Description").val("");
+            $("#VATType").val($('#VATType option:first-child').val()).trigger('change.select2');
+            $("#ItemName").val($('#ItemName option:first-child').val()).trigger('change.select2');
+            $("#ItemType").val($('#ItemType option:first-child').val()).trigger('change.select2');
+        }
+
+        $("#btnClear").on("click", function () {
+            clearPurForm();
+            $("#vat6p1").prop("checked", false);
+            $("#vat6p2p1").prop("checked", false);
+            $("#vat6p10").prop("checked", false);
+            $("#vat9p1SFKa").prop("checked", false);
+            $("#vat9p1SFKha").prop("checked", false);
+        });
+
+        function clearPurForm() {
+            isSave = "1";
+            $("#btnSave").show();
+            $('#btnUpdate').attr("class", "btn btn-primary hidden");
+            $("#PurNo").prop("disabled", false);
+            $("#Location").val("");
+            $("#RefNo").val("");
+            $("#LCNo").val("");
+            $("#ConversionRate").val("");
+            $('#pnlConvRate').attr("class", "col-sm-5 hidden");
+            $("#Address").val("");
+            $("#RegNo").val("");
+            $("#RegType").val("");
+            $("#B_C_No").val("");
+            $("#VDSAmt").val("");
+            $("#CHCode").val("");
+            $("#TotPurAmt").val("");
+            $("#Remarks").val("");
+            $("#PurDate").val("@DateTime.Today.ToShortDateString()");
+            $("#RefDate").val("");
+            $("#LCOpenDate").val("");
+            $("#B_C_Date").val("");
+            $("#RebateDueDate").val("");
+            $("#EntryDateTime").val("@DateTime.Today.ToShortDateString()");
+            $("#PurCurrency").val($('#PurCurrency option:first-child').val()).trigger('change.select2');
+            $("#PurType").val($('#PurType option:first-child').val()).trigger('change.select2');
+            $("#SupCode").val($('#SupCode option:first-child').val()).trigger('change.select2');
+            $("#CountryCode").val("BGD").trigger('change.select2');
+            $("#JobNo").val($('#JobNo option:first-child').val()).trigger('change.select2');
+            $("#Ca_Bk_Op").val($('#Ca_Bk_Op option:first-child').val()).trigger('change.select2');
+            $("#Accode").val($('#Accode option:first-child').val()).trigger('change.select2');
+            $("#SubCategory").html("");
+            $.ajax({
+                url: '@Url.Action("GetNewVoucherNo", "CashReceipt")',
+                contentType: "application/json;charset=utf-8",
+                data: { VType: 'AP' },
+                type: 'GET',
+                dataType: 'json',
+                success: function (datas) {
+                    $("#VchrNo").val(datas);
+                }
+            });
+            $.ajax({
+                url: '@Url.Action("GetNewPurNo", "Purchase")',
+                contentType: "application/json;charset=utf-8",
+                type: 'GET',
+                dataType: 'json',
+                success: function (datas) {
+                    $("#PurNo").val(datas);
+                    loadGridByPurNo();
+                }
+            });
+            $.ajax({
+                url: '@Url.Action("GetGlECount", "Purchase")',
+                contentType: "application/json;charset=utf-8",
+                data: { VType: 'AP', TrDate: new Date() },
+                type: 'GET',
+                dataType: 'json',
+                success: function (datas) {
+                    $("#CountNo").html('(' + datas + ')');
+                }
+            });
+            var table = $('#AddOntmpPurdatatable').DataTable();
+            table.search('').draw();
+            table.clear().draw();
+        }
+
+        var loadInfo = {
+            LocNo: "",
+            PurNo: "",
+            PurDate: "",
+            JobNo: "",
+            PurType: "",
+            RefNo: "",
+            RefDate: "",
+            LCNo: "",
+            LCOpenDate: "",
+            PurCurrency: "",
+            ConversionRate: "",
+            SupCode: "",
+            CountryCode: "",
+            Address: "",
+            RegNo: "",
+            B_C_No: "",
+            VDSAmt: "",
+            CHCode: "",
+            B_C_Date: "",
+            Ca_Bk_Op: "",
+            Accode: "",
+            RegType: "",
+
+            ItemType: "",
+            ItemName: "",
+            OpenQty: "",
+            OpeningAmt: "",
+            PurQty: "",
+            UPrice: "",
+            Amount: "",
+            SupTaxAmt: "",
+            VATType: "",
+            VATAmt: "",
+
+            TotPurAmt: "",
+            PayDueDate: "",
+            RebateDueDate: "",
+            EntryDateTime: "",
+            Posted: "",
+            vat6p1: "",
+            vat6p10: "",
+            vat9p1SFKa: "",
+            Remarks: "",
+            VchrNo: "",
+            EntryBy: "",
+            MakeRecvAuto: "",
+            VatChPro: "",
+            SubCategory: "",
+            HSCode: ""
+
+        };
+
+        function setOrder() {
+            loadInfo.LocNo = $("#LocNo").val();
+            loadInfo.PurNo = $("#PurNo").val();
+            loadInfo.PurDate = $("#PurDate").val();
+            loadInfo.JobNo = $("#JobNo").val();
+            loadInfo.PurType = $("#PurType").val();
+            loadInfo.RefNo = $("#RefNo").val();
+            loadInfo.RefDate = $("#RefDate").val();
+            loadInfo.LCNo = $("#LCNo").val();
+            loadInfo.LCOpenDate = $("#LCOpenDate").val();
+            loadInfo.PurCurrency = $("#PurCurrency").val();
+            loadInfo.ConversionRate = parseFloat($("#ConversionRate").val()).toFixed(2).replace(".", ","); //$("#ConversionRate").val();
+            loadInfo.SupCode = $("#SupCode").val();
+            loadInfo.CountryCode = $("#CountryCode").val();
+            loadInfo.Address = $("#Address").val();
+            loadInfo.RegNo = $("#RegNo").val();
+            loadInfo.RegType = $("#RegType").val();
+            loadInfo.B_C_No = $("#B_C_No").val();
+            loadInfo.VDSAmt = $("#VDSAmt").val();
+            loadInfo.CHCode = $("#CHCode").val();
+            loadInfo.B_C_Date = $("#B_C_Date").val();
+            loadInfo.TotPurAmt = $("#TotPurAmt").val();
+            loadInfo.PayDueDate = $("#PayDueDate").val();
+            loadInfo.RebateDueDate = $("#RebateDueDate").val();
+            loadInfo.EntryBy = $("#EntryBy").val();
+            loadInfo.EntryDateTime = $("#EntryDateTime").val();
+            loadInfo.VchrNo = $("#VchrNo").val();
+            loadInfo.Remarks = $("#Remarks").val();
+            loadInfo.Posted = $("#Posted").val();
+            loadInfo.vat6p1 = $("#vat6p1").prop("checked"); //$("#vat6p1").val();
+            loadInfo.vat6p10 = $("#vat6p10").prop("checked"); //$("#vat6p10").val();
+            loadInfo.vat9p1SFKa = $("#vat9p1SFKa").prop("checked"); //$("#vat9p1SFKa").val();
+            if ($("#MakeRecvAuto").prop("checked") == true) {
+                loadInfo.MakeRecvAuto = $("#MakeRecvAuto").val();
+            } else {
+                loadInfo.MakeRecvAuto = "";
+            }
+            loadInfo.VatChPro = $("#VatChPro").prop("checked");
+            loadInfo.Ca_Bk_Op = $("#Ca_Bk_Op").val();
+            loadInfo.Accode = $("#Accode").val();
+            loadInfo.SubCategory = $("#SubCategory").val();
+            loadInfo.HSCode = $("#HSCode").val();
+        }
+
+        var isSave = "1";
+        $(document).on("click", "#btnSave, #btnUpdate", function () {
+            setOrder();
+            var validate = validateOnSave(loadInfo);
+            if (validate != "") {
+                alert(validate);
+                return;
+            }
+
+            var table = $('#AddOntmpPurdatatable').DataTable();
+
+            $.ajax({
+                url: '@Url.Action("SaveUpdatePur", "Purchase")',
+                contentType: "application/json;charset=utf-8",
+                data: JSON.stringify({ purMain: loadInfo, isSave: isSave, VDSPayment: loadVDSInfo }),
+                type: 'POST',
+                dataType: 'json',
+                success: function (datas) {
+                    if (datas.Msg == "1") {
+                        swal({
+                            title: "Ok",
+                            text: "Save Successfully!",
+                            type: "success"
+                        }, function () {
+                            $("#PrePurNo").val($("#PurNo").val());
+                            $("#PreBill_Ch_No").val($("#B_C_No").val());
+                            $("#PrePurDate").val($("#PurDate").val());
+
+                            var strMsg = datas.returnValue;
+                            if (strMsg.split(';')[0] == '6.1') {
+                                $("#vat6p1").prop("checked", true);
+                            }
+                            if (strMsg.split(';')[1] == '6.2.1') {
+                                $("#vat6p2p1").prop("checked", true);
+                            }
+                            if (strMsg.split(';')[2] == '6.10') {
+                                $("#vat6p10").prop("checked", true);
+                            }
+                            if (strMsg.split(';')[2] == '9.1_SF_ka' || strMsg.split(';')[3] == '9.1_SF_ka') {
+                                $("#vat9p1SFKa").prop("checked", true);
+                            }
+                            if (strMsg.split(';')[2] == '9.1_SF_kha' || strMsg.split(';')[3] == '9.1_SF_kha' || strMsg.split(';')[4] == '9.1_SF_kha') {
+                                $("#vat9p1SFKha").prop("checked", true);
+                            }
+                            $.ajax({
+                                url: '@Url.Action("GetNewVoucherNo", "CashReceipt")',
+                                contentType: "application/json;charset=utf-8",
+                                data: { VType: 'AP' },
+                                type: 'GET',
+                                dataType: 'json',
+                                success: function (datas) {
+                                    $("#VchrNo").val(datas);
+                                }
+                            });
+                            clearPurForm();
+                        });
+                    }
+                    else if (datas == "0") {
+                        swal({
+                            title: "Ok",
+                            text: "Update Successfully!",
+                            type: "success"
+                        }, function () {
+                            $.ajax({
+                                url: '@Url.Action("GetNewVoucherNo", "CashReceipt")',
+                                contentType: "application/json;charset=utf-8",
+                                data: { VType: 'AP' },
+                                type: 'GET',
+                                dataType: 'json',
+                                success: function (datas) {
+                                    $("#VchrNo").val(datas);
+                                }
+                            });
+                            clearPurForm();
+                        });
+                    }
+                    else if (datas == "X") {
+                        swal({
+                            title: "Sorry",
+                            text: "No Save Permission for this User",
+                            type: "warning"
+                        });
+                    }
+                    else if (datas == "U") {
+                        swal({
+                            title: "Sorry",
+                            text: "No Update Permission for this User",
+                            type: "warning"
+                        });
+                    }
+                    else if (datas == "3") {
+                        swal({
+                            title: "Sorry",
+                            text: "Please add the item on table.",
+                            type: "warning"
+                        });
+                    }
+                    else {
+                        swal({
+                            title: "Sorry!",
+                            text: datas,
+                            type: "warning"
+                        });
+                    }
+                }
+            });
+
+        });
+
+
+
+        function validateOnSave(validOrder) {
+            //if (validOrder.LocNo != $("#Location").val()) {
+            //    return "Location is unexpected.";
+            //}
+            if (!validOrder.PurNo.trim().length) {
+                return "Purchase No is required.";
+            }
+            @*if ('@ViewBag.MaintJob' == 'True') {
+                    if (validOrder.JobNo == "") {
+                        return "Job No is required.";
+                    }
+                }*@
+            if (validOrder.PurDate.trim() == "") {
+                return "Purchase Date is Required";
+            }
+            if (!validOrder.PurType.trim().length) {
+                return "Purchase Type is required.";
+            }
+            if (validOrder.Ca_Bk_Op == "0") {
+                return "GL A/C is required.";
+            }
+            if (validOrder.Accode == "0") {
+                return "Purpose is required.";
+            }
+            if (!validOrder.PurCurrency.trim().length) {
+                return "Purchase Currency is required.";
+            }
+            if ($("#PurCurrency option:selected").text() != 'BDT') {
+                if (!validOrder.ConversionRate.trim().length) {
+                    return "Conversion Rate is required.";
+                }
+            }
+            if (validOrder.SupCode == "") {
+                return "Supplier Name is required.";
+            }
+            if (validOrder.CountryCode == "") {
+                return "Country of orgin is required.";
+            }
+            if (validOrder.RegNo == "") {
+                return "Registration No is required.";
+            }
+            if (validOrder.B_C_No == "") {
+                return "Bill of Entry No is required.";
+            }
+            if (validOrder.B_C_Date.trim() == "") {
+                return "Bill of Entry Date is Required";
+            }
+            if (!validOrder.EntryBy.trim().length) {
+                return "Entry By No is required.";
+            }
+            if (validOrder.EntryDateTime.trim() == "") {
+                return "Entry Date $ Time is Required";
+            }
+            return "";
+        }
+
+
+
+        //function GetSaleNo() {
+        //    var SaleNo = $("#PurNo").val();
+        //    return SaleNo;
+        //}
+        $('#AddOntmpPurdatatable').dataTable({
+            "scrollY": 200,
+            "scrollX": true,
+            "destroy": true,
+            "crossDomain": true,
+            //"ajax": {
+            //    "url": "../Sales/GetDatatableOnly",
+            //    "type": "GET",
+            //    "datatype": "json",
+            //    "data": function (d) {
+            //        d.SaleNo = GetSaleNo();
+            //    }
+            //},
+
+            "columns": [
+                       { "data": null, "bSortable": false },
+                       { "data": "ItemName" },
+                       { "data": "OBQty" },
+                       { "data": "OBAmt" },
+                       { "data": "PurQty" },
+                       { "data": "UPrice" },
+                       { "data": "Amount" },
+                       { "data": "SupTaxAmt" },
+                       { "data": "VATAmt" },
+                       { "data": "SubTotal" },
+                       { "data": "VATEx" },
+                       { "data": "TaxEx" },
+                       {
+                           mRender: function (data, type, row) {
+                               return '<a href="#" class="on-default remove-row deleteSup" data-id="1" id="tmpEdit" value="' + row.tPurId + '"><i class="glyphicon glyphicon-edit"></i></a>&emsp;<a href="#" class="on-default remove-row deleteSup largeSpace" data-id="1" id="delete" value="' + row.tPurId + '">'  //
+                                       + ' <i class="glyphicon glyphicon-trash"></i> </a> '
+                           }
+                       }
+            ],
+            order: [0, 'asc'],
+            select: {
+                style: 'os',
+            },
+            "columnDefs": [
+                        {
+                            "targets": 1,
+                            //"visible": false,
+                            "searchable": false
+                        },
+                        {
+                            "targets": 2,
+                            "className": "text-center",
+                            "searchable": false
+                        },
+                        {
+                            "targets": 3,
+                            "autoWidth": false,
+                            "className": "text-right",
+                            "width": "500px"
+                        },
+                        {
+                            "targets": 4,
+                            "className": "text-center",
+                        },
+                        {
+                            "targets": 6,
+                            "className": "text-right",
+                        },
+                        {
+                            "targets": 7,
+                            "className": "text-right",
+                        },
+                        {
+                            "targets": 9,
+                            "className": "text-right",
+                        },
+                        {
+                            "targets": 10,
+                            "className": "text-right",
+                        },
+                        {
+                            "targets": 8,
+                            "className": "text-right",
+                        },
+                        {
+                            "targets": 11,
+                            "className": "text-right",
+                        }, {
+                            "targets": 5,
+                            "className": "text-right",
+                        }], fixedColumns: true,
+
+            "fnCreatedRow": function (row, data, index) {
+                $('td', row).eq(0).html(index + 1);
+            }
+        });
+
+        loadGridByPurNo();
+        function loadGridByPurNo() {
+            $.ajax({
+                url: '@Url.Action("GetTmpPurDatatableOnly", "Purchase")',
+                contentType: "application/json;charset=utf-8",
+                data: JSON.stringify({ purNo: $("#PurNo").val() }),
+                type: 'POST',
+                dataType: 'json',
+                success: function (data) {
+
+                    if (data.data.length >= 0) {
+
+                        var pAmt = 0;
+                        $.each(data.data, function (index, data) {
+                            pAmt = parseFloat(pAmt) + parseFloat(data.SubTotal);
+                        });
+                        $("#TotPurAmt").val(pAmt);
+
+                        var table = $('#AddOntmpPurdatatable').DataTable();
+                        table.clear();
+                        table.rows.add(data.data).draw();
+                    }
+                }
+            });
+        }
+
+
+        $("#PurNo").on('keydown', function (e) {
+            if (e.which == 13 || e.which == 9) {
+                $.ajax({
+                    url: '@Url.Action("GetAllByPurNo", "Purchase")',
+                    contentType: "application/json;charset=utf-8",
+                    data: { PurNo: $("#PurNo").val() },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (datas) {
+                        if (datas.pMain != null) {
+                            $("#PurNo").prop("disabled", true);
+                            $("#LocNo").val(datas.pMain.LocNo).trigger('change');
+                            $("#JobNo").val(datas.pMain.JobNo).trigger('change');
+                            $("#PurType").val(datas.pMain.PurType).trigger('change');
+                            $("#RefNo").val(datas.pMain.RefNo);
+                            $("#PurCurrency").val(datas.pMain.PurCurrency).trigger('change');
+                            $("#SupCode").val(datas.pMain.SupCode).trigger('change');
+                            $("#CountryCode").val(datas.pMain.CountryCode).trigger('change');
+                            $("#EntryBy").val(datas.pMain.EntryBy).trigger('change');
+                            $("#Accode").val(datas.pMain.Accode).trigger('change');
+                            $("#Ca_Bk_Op").val(datas.pMain.Ca_bk_Op).trigger('change');
+                            $("#LCNo").val(datas.pMain.LCNo);
+                            $("#ConversionRate").val(datas.pMain.ConversionRate);
+                            $("#Address").val(datas.pMain.Address);
+                            $("#RegNo").val(datas.pMain.RegNo);
+                            $("#RegType").val(datas.pMain.RegType);
+                            $("#RefNo").val(datas.pMain.RefNo);
+                            $("#B_C_No").val(datas.pMain.B_C_No);
+                            $("#VDSAmt").val(datas.pMain.VDSAmt);
+                            $("#CHCode").val(datas.pMain.CHCode).trigger('change');
+                            $("#Remarks").val(datas.pMain.Remarks);
+                            if (DateInDMYformat(datas.pMain.PurDate) != moment('01/01/1900').format('DD/MM/YYYY')) {
+                                $("#PurDate").datepicker("setDate", DateInDMYformat(datas.pMain.PurDate));
+                            }
+                            if (DateInDMYformat(datas.pMain.RefDate) != moment('01/01/1900').format('DD/MM/YYYY')) {
+                                $("#RefDate").datepicker("setDate", DateInDMYformat(datas.pMain.RefDate));
+                            }
+                            if (DateInDMYformat(datas.pMain.LCOpenDate) != moment('01/01/1900').format('DD/MM/YYYY')) {
+                                $("#LCOpenDate").datepicker("setDate", DateInDMYformat(datas.pMain.LCOpenDate));
+                            }
+                            if (DateInDMYformat(datas.pMain.B_C_Date) != moment('01/01/1900').format('DD/MM/YYYY')) {
+                                $("#B_C_Date").datepicker("setDate", DateInDMYformat(datas.pMain.B_C_Date));
+                            }
+                            if (DateInDMYformat(datas.pMain.RebateDueDate) != moment('01/01/1900').format('DD/MM/YYYY')) {
+                                $("#RebateDueDate").datepicker("setDate", DateInDMYformat(datas.pMain.RebateDueDate));
+                            }
+                            if (DateInDMYformat(datas.pMain.EntryDateTime) != moment('01/01/1900').format('DD/MM/YYYY')) {
+                                $("#EntryDateTime").datepicker("setDate", DateInDMYformat(datas.pMain.EntryDateTime));
+                            }
+                            if (DateInDMYformat(datas.pMain.PayDueDate) != moment('01/01/1900').format('DD/MM/YYYY')) {
+                                $("#PayDueDate").datepicker("setDate", DateInDMYformat(datas.pMain.PayDueDate));
+                            }
+                            isSave = "0";
+                            loadGridByPurNo();
+                            $("#btnSave").hide();
+                            $('#btnUpdate').attr("class", "btn btn-primary");
+                            if (datas.returnValue != "") {
+                                var strMsg = datas.returnValue;
+                                if (strMsg.split(';')[0] == '6.1') {
+                                    $("#vat6p1").prop("checked", true);
+                                }
+                                if (strMsg.split(';')[1] == '6.2.1') {
+                                    $("#vat6p2p1").prop("checked", true);
+                                }
+                                if (strMsg.split(';')[2] == '6.10') {
+                                    $("#vat6p10").prop("checked", true);
+                                }
+                                if (strMsg.split(';')[2] == '9.1_SF_ka' || strMsg.split(';')[3] == '9.1_SF_ka') {
+                                    $("#vat9p1SFKa").prop("checked", true);
+                                }
+                                if (strMsg.split(';')[2] == '9.1_SF_kha' || strMsg.split(';')[3] == '9.1_SF_kha' || strMsg.split(';')[4] == '9.1_SF_kha') {
+                                    $("#vat9p1SFKha").prop("checked", true);
+                                }
+                                $("#PrePurNo").val($("#PurNo").val());
+                                $("#PreBill_Ch_No").val($("#B_C_No").val());
+                                $("#PrePurDate").val($("#PurDate").val());
+                            }
+                        }
+                        else if (datas == "") {
+                            swal({
+                                title: "Sorry",
+                                text: "This purchase no does not exist.",
+                                type: "warning"
+                            });
+                        }
+                    },
+                    error: function () {
+                        swal("Sorry!! An error occurred during the Get.", "fail")
+                    }
+                });
+            }
+        });
+
+
+        $(document).on("click", "#tmpEdit", function () {
+            var value = $(this).attr("value");
+
+            $.ajax({
+                url: '@Url.Action("GetTempPurTbl", "Purchase")',
+                contentType: "application/json;charset=utf-8",
+                data: { tPurId: value },
+                type: 'GET',
+                dataType: 'json',
+                success: function (datas) {
+                    if (datas.tPurId == "undefined") {
+                        alert("error")
+                    }
+                    else {
+                        $("#tPurId").val(datas.tPurId);
+                        $("#LocNo").val(datas.LocNo).trigger('change');
+                        $("#ItemName").val(datas.ItemName).trigger('change');
+                        $("#VATType").val(datas.VATType).trigger('change');
+                        $("#OpenQty").val(datas.OpenQty);
+                        $("#OpeningAmt").val(datas.OpeningAmt);
+                        $("#PurQty").val(datas.PurQty);
+                        $("#UPrice").val(datas.UPrice);
+                        $("#LotNo").val(datas.LotNo);
+                        $("#Amount").val(datas.Amount);
+                        $("#SupTaxAmt").val(datas.SupTaxAmt);
+                        $("#Description").val(datas.Description);
+                        $("#VATAmt").val(datas.VATAmt);
+                        $("#SuppTaxPrec").val(datas.SDRate);
+                        $("#VATPrec").val(datas.VATRate);
+                        $("#add").hide();
+                        $('#tmpUpdate').attr("class", "btn btn-primary");
+                    }
+                },
+                error: function () {
+                    swal("Sorry!! An error occurred during the Get.", "fail")
+                }
+            });
+        });
+
+
+        $(document).on("click", "#delete", function () {
+            var value = $(this).attr("value");
+            swal({
+                title: "Are you sure?",
+                text: "You will not be able to recover this data!",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Yes, delete it!",
+                closeOnConfirm: true,
+                closeOnCancel: true
+            },
+             function () {
+                 $.ajax({
+                     url: '@Url.Action("DelTempTbl", "Purchase")',
+                     contentType: "application/json;charset=utf-8",
+                     data: { Id: value },
+                     type: 'GET',
+                     dataType: 'json',
+                     success: function (datas) {
+
+                         if (datas == 0 && datas.length != 0) {
+                             swal("Sorry!! Failed to delete this voucher data.", "fail");
+                         }
+                         else if (datas == 1) {
+                             loadGridByPurNo();
+                         }
+                         else if (datas == "D") {
+                             swal({
+                                 title: "Sorry",
+                                 text: "No Delete Permission for this User",
+                                 type: "warning"
+                             });
+                         }
+                     },
+                     error: function (datas) {
+                         swal("Sorry!! Failed to delete this voucher data.", "fail")
+                     }
+                 });
+             });
+        });
+
+        $(document).on("change", "#SupCode", function (e) {
+            $("#Address").val("");
+            $("#RegNo").val("");
+            $.ajax({
+                type: "Get",
+                contentType: "application/json;charset=utf-8",
+                url: '@Url.Action("GetSupCodeByAddReg", "Purchase")',
+                data: { SupCode: $("#SupCode").val() },
+                dataType: 'json',
+                success: function (item) {
+                    $("#Address").val(item.SubAddress);
+                    $("#RegNo").val(item.BIN);
+                    $("#SubCategory").html(item.SubCategory);
+                    if (item.BIN == null || item.BIN == "") {
+                        $('#pnlRegType').attr("class", "col-md-6");
+                    } else {
+                        $('#pnlRegType').attr("class", "col-md-6 hidden");
+                    }
+                }
+            });
+        });
+
+        $(document).on("change", "#ItemName", function (e) {
+            if ($("#LocNo").val() != "") {
+
+                $("#Amount").val("0");
+                $("#PurQty").val("0");
+                $("#UPrice").val("0");
+                $("#VATAmt").val("0");
+                $("#SupTaxAmt").val("0");
+                $("#Description").val("");
+                $("#VATType").val($('#VATType option:first-child').val()).trigger('change.select2');
+
+                $.ajax({
+                    type: "Get",
+                    contentType: "application/json;charset=utf-8",
+                    url: '@Url.Action("GetItemByQtyPrice", "Receive")',
+                    data: { Item: $("#ItemName").val(), LocNo: $("#LocNo").val() },
+                    dataType: 'json',
+                    success: function (item) {
+                        if (item == 0) {
+                            clearItemInfo();
+                        }
+                        else {
+                            $("#OpenQty").val(item.CurrQty);
+                            $("#OpeningAmt").val(parseFloat(item.CurrQty) * parseFloat(item.UnitPrice));
+                            $("#HSCode").val(item.HSCode);
+                            $("#TaxHeadingNo").val(item.TaxHeadingNo);
+                        }
+                    }
+                });
+
+            } else {
+                alert("Location is required.");
+                $("#ItemName").val($('#ItemName option:first-child').val()).trigger('change.select2');
+                $("#ItemType").val($('#ItemType option:first-child').val()).trigger('change.select2');
+                return;
+            }
+        });
+
+        //***************************** For Common Item Filtering option start *******************************
+        $(document).on("change", "#ItemType", function (e) {
+            if ('@ViewBag.NoGrp' == 'False') {
+
+                if ($("#ItemType option:selected").text() != "---- Select ----") {
+                    $("#pView").modal("show");
+                }
+                //for group load by itemtype.......
+                $.ajax({
+                    url: '@Url.Action("LoadGroupInfoByItemType", "Sales")',
+                    contentType: "application/json;charset=utf-8",
+                    data: {
+                        ItemType: $("#ItemType").val()
+                    },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        $('#GroupID').empty();
+                        //data.insertBefore('<option>', { Value: "", text: "--- Select ---" });
+                        $.each(data, function (index, value) {
+                            $('#GroupID').append($('<option>',
+                                {
+                                    value: value.Value,
+                                    text: value.Text
+                                })).select2();
+                        });
+                        //$("#GroupID").val(order.Purpose).trigger('change');
+                        //order.Purpose = "0";
+                    }
+                });
+            } else {
+                //for Item load by itemtype.......
+                $.ajax({
+                    url: '@Url.Action("LoadItemByItemType", "Sales")',
+                    contentType: "application/json;charset=utf-8",
+                    data: {
+                        ItemType: $("#ItemType").val()
+                    },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        $('#ItemName').empty();
+                        $.each(data, function (index, value) {
+                            $('#ItemName').append($('<option>',
+                                {
+                                    value: value.Value,
+                                    text: value.Text
+                                })).select2();
+                        });
+                    }
+                });
+            }
+        })
+
+        //for sgroupinfo load by GroupID.......
+        $(document).on("change", "#GroupID", function (e) {
+            if ('@ViewBag.OnlyGrp' == 'False') {
+
+                $.ajax({
+                    url: '@Url.Action("LoadSGroupByGroupId", "Sales")',
+                    contentType: "application/json;charset=utf-8",
+                    data: {
+                        ItemType: $("#ItemType").val(), GroupID: $("#GroupID").val()
+                    },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        $('#SGroupID').empty();
+                        $.each(data, function (index, value) {
+                            $('#SGroupID').append($('<option>',
+                                {
+                                    value: value.Value,
+                                    text: value.Text
+                                })).select2();
+                        });
+                    }
+                });
+            }
+        })
+
+
+        //for ssgroupinfo load by sGroupID.......
+        $(document).on("change", "#SGroupID", function (e) {
+            if ('@ViewBag.SubSubGrp' == 'True') {
+                $.ajax({
+                    url: '@Url.Action("LoadSSGroupInfo", "Sales")',
+                    contentType: "application/json;charset=utf-8",
+                    data: {
+                        ItemType: $("#ItemType").val(), GroupID: $("#GroupID").val(), SGroupID: $("#SGroupID").val()
+                    },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        $('#SSGroupID').empty();
+                        $.each(data, function (index, value) {
+                            $('#SSGroupID').append($('<option>',
+                                {
+                                    value: value.Value,
+                                    text: value.Text
+                                })).select2();
+                        });
+                    }
+                });
+            }
+        })
+
+        //for ItmeInfo load by ssGroupID....... ItemType, GroupId, SGroupId, SSGroupId
+        $(document).on("click", "#btnOk", function (e) {
+            $("#pView").modal("hide");
+
+            if ('@ViewBag.OnlyGrp' == 'True') {
+                //for Item load by GroupID.......
+                $.ajax({
+                    url: '@Url.Action("LoadItemByGroupId", "Sales")',
+                    contentType: "application/json;charset=utf-8",
+                    data: {
+                        ItemType: $("#ItemType").val(), GroupID: $("#GroupID").val()
+                    },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        $('#ItemName').empty();
+                        $.each(data, function (index, value) {
+                            $('#ItemName').append($('<option>',
+                                {
+                                    value: value.Value,
+                                    text: value.Text
+                                })).select2();
+                        });
+                    }
+                });
+            }
+
+            if ('@ViewBag.GrpAndSubGrp' == 'True') {
+                $.ajax({
+                    url: '@Url.Action("LoadItemBySGroupID", "Sales")',
+                    contentType: "application/json;charset=utf-8",
+                    data: {
+                        ItemType: $("#ItemType").val(), GroupID: $("#GroupID").val(), SGroupID: $("#SGroupID").val()
+                    },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        $('#ItemName').empty();
+                        $.each(data, function (index, value) {
+                            $('#ItemName').append($('<option>',
+                                {
+                                    value: value.Value,
+                                    text: value.Text
+                                })).select2();
+                        });
+                        ClearComView();
+                    }
+                });
+            }
+
+            if ('@ViewBag.SubSubGrp' == 'True') {
+                $.ajax({
+                    url: '@Url.Action("LoadItemBySSGroupID", "Sales")',
+                        contentType: "application/json;charset=utf-8",
+                        data: {
+                            ItemType: $("#ItemType").val(), GroupID: $("#GroupID").val(), SGroupID: $("#SGroupID").val(), SSGroupID: $("#SSGroupID").val()
+                        },
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function (data) {
+                            $('#ItemName').empty();
+                            $.each(data, function (index, value) {
+                                $('#ItemName').append($('<option>',
+                                    {
+                                        value: value.Value,
+                                        text: value.Text
+                                    })).select2();
+                            });
+                            ClearComView();
+                        }
+                    });
+                }
+            })
+
+            $(document).on("click", "#closePopOver", function (e) {
+                e.preventDefault();
+                jQuery("#ItemType option").filter(function () {
+                    return $.trim($(this).text()) == '---- Select ----'
+                }).prop('selected', true).trigger('change.select2');
+
+                $("#pView").modal("hide");
+                ClearComView();
+            });
+
+            function ClearComView() {
+                var Stext = '---- Select ----';
+
+                jQuery("#GroupID option").filter(function () {
+                    return $.trim($(this).text()) == Stext
+                }).prop('selected', true).trigger('change.select2');
+
+                jQuery("#SGroupID option").filter(function () {
+                    return $.trim($(this).text()) == Stext
+                }).prop('selected', true).trigger('change.select2');
+
+                jQuery("#SSGroupID option").filter(function () {
+                    return $.trim($(this).text()) == Stext
+                }).prop('selected', true).trigger('change.select2');
+            }
+            //***************************** For Common Item Filtering option start *******************************
+
+            //****************************For VDS Modal ******************
+
+            var loadVDSInfo = {
+                VDS_PID: "",
+                VDS_PaymentNo: "",
+                Supp_name: "",
+                Supp_Addr: "",
+                Supp_BIN: "",
+                TotalValue: "",
+                VAT_Deduct: "",
+                Challan_No: "",
+                Challan_Dt: "",
+                AccountCode: "",
+                Remarks: ""
+            }
+
+            function setVDSOrder() {
+                loadVDSInfo.VDS_PID = $("#VDS_PID").val();
+                loadVDSInfo.VDS_PaymentNo = $("#VDS_PaymentNo").val();
+                loadVDSInfo.Supp_name = $("#Supp_name").val();
+                loadVDSInfo.Supp_Addr = $("#Supp_Addr").val();
+                loadVDSInfo.Supp_BIN = $("#Supp_BIN").val();
+                loadVDSInfo.TotalValue = $("#TotalValue").val();
+                loadVDSInfo.VAT_Deduct = $("#VAT_Deduct").val();
+                loadVDSInfo.Challan_No = $("#Challan_No").val();
+                loadVDSInfo.Challan_Dt = $("#Challan_Dt").val();
+                loadVDSInfo.AccountCode = $("#AccountCode").val();
+                loadVDSInfo.Remarks = $("#VDSRemarks").val();
+            }
+
+            $(document).on("click", "#btnVDSSubmit", function (e) {
+                e.preventDefault();
+                setVDSOrder();
+                var validate = validateOnVDSSave(loadVDSInfo);
+                if (validate != undefined) {
+                    alert(validate);
+                    return;
+                }
+                $('#VDSModal').modal('hide');
+                $('#VDSAmt').val($('#VAT_Deduct').val());
+
+            });
+
+            function validateOnVDSSave(validOrder) {
+                if (validOrder.VDS_PaymentNo.trim() == "") {
+                    return "Payment No is required.";
+                }
+                if (validOrder.Supp_name.trim() == "") {
+                    return "Supp_name is required.";
+                }
+                if (validOrder.Supp_Addr.trim() == "") {
+                    return "Supp_Addr is required.";
+                }
+                if (validOrder.Supp_BIN.trim() == "") {
+                    return "Supp_BIN is required.";
+                }
+                if (validOrder.TotalValue.trim() == "" || validOrder.TotalValue <= 0) {
+                    return "Total Amount is required.";
+                }
+                if (validOrder.VAT_Deduct.trim() == "" || validOrder.VAT_Deduct <= 0) {
+                    return "VAT Deduct is required.";
+                }
+                if (validOrder.Challan_No.trim() == "") {
+                    return "Challan No is required.";
+                }
+                if (validOrder.Challan_Dt.trim() == "") {
+                    return "Challan Date is required.";
+                }
+                if (!validOrder.AccountCode.trim().length) {
+                    return "Please select Account.";
+                }
+
+            }
+
+
+            $(document).on('click', '#btnVDSModal', function () {
+                $('#VDSModal').modal('show');
+                $.ajax({
+                    url: '@Url.Action("GetNewVDS_PaymentbyView", "VM_VDS_Payment")',
+                    contentType: "application/json;charset=utf-8",
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (datas) {
+                        $("#VDS_PaymentNo").val(datas);
+                    }
+                });
+
+            });
+
+            //****************************End VDS Modal ******************
+
+        });
+    </script>
+}
+

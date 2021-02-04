@@ -1,0 +1,1122 @@
+﻿@model App.Domain.ViewModel.IssueRecvInfoVM
+@{
+    ViewBag.Title = "IssueRecvInfo";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/select2/select2.css" rel="stylesheet" type="text/css" />
+<link href="~/Css/FormDesign.css" rel="stylesheet" />
+<style>
+    table.dataTable.select tbody tr,
+    table.dataTable thead th:first-child {
+        cursor: pointer;
+    }
+
+    .col-md-12 {
+        padding: 0 !important;
+    }
+
+    .form-control {
+        border: 1px solid #00ffff;
+    }
+
+    .required:after {
+        content: " *";
+        font-weight: bold;
+        color: red;
+    }
+
+    input#vat6p1, input#vat6p4 {
+        width: 25px;
+        height: 15px;
+        margin-top: 0px;
+    }
+
+    a#GLProvition {
+        color: darkblue;
+    }
+
+    a#GLEntries {
+        color: darkblue;
+    }
+
+    label#UnitName {
+        height: 30px;
+        font-size: 11px;
+        color: #4c5667 !important;
+        background: #eee;
+        line-height: 2.5;
+    }
+</style>
+@using (Html.BeginForm())
+{
+    <div class="row">
+        <div class="col-md-11">
+            <div class="panel panel-color panel-primary">
+                <div class="modal fade in" id="pView" role="dialog" aria-hidden="true">
+                    @Html.Partial("~/Views/Sales/CommonPV.cshtml")
+                </div>
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <text style="text-align:left !important; text-decoration: none;">Material Issue / Receive Information</text>
+                    </h3>
+                </div>
+                <div class="panel-body">
+
+                    <div class="input-group form-group col-md-12">
+                        <div class="col-md-4">
+                            <label class="control-label" target="_blank">
+                                @Html.ActionLink(
+                                "IssueReceive Voucher waiting for Posting",
+                                "GetJournalVoucher",
+                                "IssueRecvInfo",
+                                new { Date = "blankDate" },
+                                new { id = "GLProvition", }
+                                )
+                            </label>
+                            <label id="lblgl">(@ViewBag.GLProvition)</label>
+
+                        </div>
+                        <div class="col-md-3">
+                            <label class="control-label" target="_blank">
+                                @Html.ActionLink(
+                                "List of IssueReceive Voucher",
+                                "GetGLEntries",
+                                "IssueRecvInfo",
+                                new { Date = "blankDate" },
+                                new { id = "GLEntries", }
+                                )
+                            </label>
+                            <label>(@ViewBag.GLEntries)</label>
+
+                        </div>
+                    </div>
+
+
+                    <div class="col-md-12">
+                        <div class="col-md-6">
+                            <label class="col-md-4">Batch No</label>
+                            <div class="input-group form-group col-md-4">
+                                @Html.TextBoxFor(x => x.BatchNo, new { @class = "form-control col-md-8 select2", required = "required" })
+                                @Html.ValidationMessageFor(x => x.BatchNo)
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="col-md-4">Ref No</label>
+                            <div class="input-group form-group col-md-6">
+                                @Html.TextBoxFor(x => x.RefNo, new { @class = "form-control col-md-8 select2", required = "required" })
+                                @Html.ValidationMessageFor(x => x.RefNo)
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-md-12">
+                        <div class="col-md-6">
+                            <label class="col-md-4">Issue No</label>
+                            <div class="input-group form-group col-md-4">
+                                @Html.TextBoxFor(x => x.IssueNo, new { @class = "form-control col-md-8 select2", required = "required" })
+                                @Html.ValidationMessageFor(x => x.IssueNo)
+                            </div>
+
+                        </div>
+                        <div class="col-md-6">
+                            <label class="col-md-4">Ref Date</label>
+                            <div class="input-group form-group col-md-6">
+                                <input type="text" class="form-control datePage" placeholder="dd/mm/yyyy" id="@Html.IdFor(x => x.RefDate)" value="@DateTime.Today.ToShortDateString()" required="required">
+                                <span class="input-group-addon bg-primary b-0 text-white"><i class="ion-calendar"></i></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="col-md-6">
+                            <label class="col-md-4 required">Location</label>
+                            <div class="input-group form-group col-md-7">
+                                @Html.DropDownListFor(x => x.FromLocCode, null, new { @class = "form-control col-md-8 select2", @Value = ViewBag.FromLocCode })
+
+                                @Html.ValidationMessageFor(x => x.FromLocCode)
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="col-md-4"> Issue Date</label>
+                            <div class="input-group form-group col-md-6">
+                                <input type="text" class="form-control datePage" placeholder="dd/mm/yyyy" id="@Html.IdFor(x => x.IssueDate)" value="@DateTime.Today.ToShortDateString()" required="required">
+                                <span class="input-group-addon bg-primary b-0 text-white"><i class="ion-calendar"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+
+                        <div class="col-md-6">
+                            <label class="col-md-4 required">Item Type</label>
+                            <div class="input-group form-group col-md-7">
+                                @Html.DropDownListFor(x => x.ItemTypeCode, null, "----Select----", new { @class = "form-control col-md-8 select2", @Value = ViewBag.ItemTypeCode })
+
+                                @Html.ValidationMessageFor(x => x.ItemTypeCode)
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="col-md-6">Job No</label>
+                            <div class="col-md-6 input-group form-group">
+                               @Html.DropDownListFor(x => x.JobNo, null, "---- Select ----", new { @class = "form-control select2", @Value = ViewBag.JobNo })                                
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <input type="button" class="btn" value="Add Job" id="btnJob" />
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+
+                        <div class="col-md-6">
+                            <label class="col-md-4 required">Item</label>
+                            <div class="input-group form-group col-md-7">
+                                @Html.DropDownListFor(x => x.ItemCode, null, "----Select----", new { @class = "form-control col-md-8 select2", @Value = ViewBag.ItemCode })
+
+                                @Html.ValidationMessageFor(x => x.ItemCode)
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="col-md-4">Quantity</label>
+                            <div class="input-group form-group col-md-6">
+                                @Html.TextBoxFor(x => x.Qty, new { @class = "form-control col-md-8 select2", required = "required" })
+                                @Html.ValidationMessageFor(x => x.Qty)
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <div class="col-md-12">
+                        <div class="col-md-6">
+                            <label class="col-md-4">Lot No</label>
+                            <div class="input-group form-group col-md-7">
+                                @Html.TextBoxFor(x => x.LotNo, new { @class = "form-control col-md-8 select2", required = "required" })
+                                @Html.ValidationMessageFor(x => x.LotNo)
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="col-md-4">Unit Price</label>
+                            <div class="input-group form-group col-md-6">
+                                @Html.TextBoxFor(x => x.Price, new { @class = "form-control col-md-8 select2", required = "required" })
+                                @Html.ValidationMessageFor(x => x.Price)
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+
+                    </div>
+                    <div class="col-md-2" style="padding-right:initial; float:right">
+                        <input type="button" class="btn btn-primary" value="Add" id="add" />
+                    </div>
+
+                    <div class="col-md-12"><br /></div>
+                    <div class="col-md-12">
+                        <div class="col-md-12" style="margin-bottom:5px; border:1px solid; border-color:#adcceb; width:100%">
+                            <div class="row" style="padding:18px">
+                                <div class="col-md-12">
+                                    <br />
+                                    <table class="table table-bordered table-responsive" id="datatable" style="width:100%">
+                                        <thead>
+                                            <tr>
+                                                <th>SL</th>
+                                                <th>Code</th>
+                                                <th>Item<sapn>&nbsp;</sapn>Name</th>
+                                                <th>Lot No</th>
+                                                <th>Qty</th>
+                                                <th>Unit Price</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tbodyId"></tbody>
+                                    </table>
+                                    <br />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="col-md-6">
+                            <label class="col-md-4">Receive No</label>
+                            <div class="input-group form-group col-md-4">
+                                @Html.TextBoxFor(x => x.ReceiveNo, new { @class = "form-control col-md-8 select2", required = "required" })
+                                @Html.ValidationMessageFor(x => x.ReceiveNo)
+                            </div>
+                        </div>
+                        <div class="form-group col-md-2">
+                            <input type="text" name="isExtQty" id="iExtQty" />
+                        </div>
+                        <div class="form-group col-md-2">
+                            <input type="text" name="reExtQty" id="rExtQty" />
+                        </div>
+                        <div class="form-group col-md-2">
+                            <input type="text" name="totalUnM" id="totalUN" />
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="col-md-6">
+                            <label class="col-md-4 required">Produces Item</label>
+                            <div class="input-group form-group col-md-7">
+                                @Html.DropDownListFor(x => x.ProducesItem, null, "----Select----", new { @class = "form-control col-md-8 select2", @Value = ViewBag.ProducesItem })
+
+                                @Html.ValidationMessageFor(x => x.ProducesItem)
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="col-md-4">Lot No</label>
+                            <div class="input-group form-group col-md-6">
+                                @Html.TextBoxFor(x => x.RecvLotNo, new { @class = "form-control col-md-8 select2", required = "required" })
+                                @Html.ValidationMessageFor(x => x.RecvLotNo)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="col-md-6">
+                            <label class="col-md-4 required">Produces Quantity</label>
+                            <div class="input-group form-group col-md-7">
+                                @Html.TextBoxFor(x => x.ProduceQty, new { @class = "form-control col-md-8 select2", required = "required" })
+                                @Html.ValidationMessageFor(x => x.ProduceQty)
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="col-md-4 required">Received By</label>
+                            <div class="input-group form-group col-md-6">
+                                @Html.DropDownListFor(x => x.ReceivedByCode, null, "----Select----", new { @class = "form-control col-md-8 select2", @Value = ViewBag.ReceivedByCode })
+
+                                @Html.ValidationMessageFor(x => x.ReceivedByCode)
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-12">
+
+
+                        <div class="col-md-6">
+                            <label class="col-md-4">Price Per Unit</label>
+                            <div class="input-group form-group col-md-7">
+                                @Html.TextBoxFor(x => x.PricePerUnit, new { @class = "form-control col-md-8 select2", required = "required" })
+                                @Html.ValidationMessageFor(x => x.PricePerUnit)
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="col-md-4">Remarks</label>
+                            <div class="input-group form-group col-md-6">
+                                @Html.TextAreaFor(x => x.Remarks, new { @class = "form-control col-md-8 select2", required = "required" })
+                                @Html.ValidationMessageFor(x => x.Remarks)
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row col-md-12" style="text-align:end">
+
+                        <div class="col-md-11" style=" text-align:right;overflow:hidden">
+                            <input type="button" value="Save" class="btn btn-primary" id="save" style="width:100px;" />
+                            <input type="button" value="Update" class="btn btn-primary" id="update" style="width:100px;" />
+                            <input type="button" value="Clear" class="btn btn-primary" id="clear" style="width:100px;" />
+                            @*<input type="button" value="Close" class="btn btn-primary" id="closeIssue" />*@
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" id="JobModal" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="panel panel-color panel-primary">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">Job Information</h3>
+
+                            </div>
+                            <div class="panel-body">
+                                <div class="clearfix">
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="col-md-3">Job No</label>
+                                    <div class="input-group form-group col-md-7">
+                                        <input type="text" class="form-control" id="nJobNo" name="nJobNo" />
+                                    </div>
+                                </div>
+                                <div class="col-md-10">
+                                    <div>
+                                        <div class="pull-right">
+                                            <input type="button" id="btnJobOk" value="Save" class="btn btn-primary" />
+                                            <input type="button" id="closeJob" value="Close" class="btn btn-primary" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+}
+    @section scripts{
+        <script src="~/App_Themes/Theme1/plugins/select2/select2.min.js" type="text/javascript"></script>
+        <script src="~/App_Themes/Theme1/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+        <script src="../App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.js"></script>
+        <script src="../App_Themes/Theme1/plugins/datatables/dataTables.bootstrap.js"></script>
+        <script src="../App_Themes/Theme1/plugins/datatables/dataTables.buttons.min.js"></script>
+        <script src="../App_Themes/Theme1/plugins/datatables/buttons.bootstrap.min.js"></script>
+        <script src="../App_Themes/Theme1/plugins/datatables/pdfmake.min.js"></script>
+        <script src="../App_Themes/Theme1/plugins/datatables/vfs_fonts.js"></script>
+        <script src="../App_Themes/Theme1/plugins/datatables/buttons.html5.min.js"></script>
+        <script src="../App_Themes/Theme1/plugins/datatables/buttons.print.min.js"></script>
+        <script src="../App_Themes/Theme1/plugins/datatables/dataTables.fixedHeader.min.js"></script>
+        <script src="../App_Themes/Theme1/plugins/datatables/dataTables.keyTable.min.js"></script>
+        <script src="../App_Themes/Theme1/plugins/datatables/dataTables.responsive.min.js"></script>
+        <script src="../App_Themes/Theme1/plugins/datatables/responsive.bootstrap.min.js"></script>
+        <script src="../App_Themes/Theme1/plugins/datatables/dataTables.scroller.min.js"></script>
+        <script type="text/javascript" src="../App_Themes/Theme1/plugins/parsleyjs/dist/parsley.min.js"></script>
+        <!-- Datatable init js -->
+        <script src="../App_Themes/Theme1/blue/assets/pages/datatables.init.js"></script>
+        <script>
+
+    $(document).ready(function () {
+        $("#update").hide();
+        $("#totalUN").hide();
+        $("#iExtQty").hide();
+        $("#rExtQty").hide();
+
+        var ispType ='@ViewBag.errMsg';
+        if (ispType != ''){
+            ispType = '@ViewBag.errMsg';
+        }
+        if (ispType == "VWP") {
+            alert("No Voucher waiting for posting Permission for this User");
+        }else if (ispType == "VL") {
+            alert("No List Of IssueReceive vouchers Permission for this User");
+        }
+        $("#IssueNo").prop("disabled", true);
+        $("#ReceiveNo").prop("disabled", true);
+        $("#FromLocCode").select2();
+        $("#ItemTypeCode").select2();
+        $("#ItemCode").select2();
+        $("#ProducesItem").select2();
+        $("#ReceivedByCode").select2();
+        $("#JobNo").select2();
+
+        $('#datatable').DataTable({
+            "paging": false,
+            "ordering": false,
+            "info": false,
+            "searching": false
+
+        });
+
+        $.ajax({
+            url: '@Url.Action("GetIssueNo", "IssueRecvInfo")',
+            contentType: "application/json;charset=utf-8",
+            type: 'GET',
+            dataType: 'json',
+            success: function (datas) {
+                $("#IssueNo").val(datas);
+            }
+        });
+        $.ajax({
+            url: '@Url.Action("GetRecvNo", "IssueRecvInfo")',
+            contentType: "application/json;charset=utf-8",
+            type: 'GET',
+            dataType: 'json',
+            success: function (datas) {
+                $("#ReceiveNo").val(datas);
+            }
+        });
+
+        $.ajax({
+            url: '@Url.Action("GetGlPCountN", "IssueRecvInfo")',
+            contentType: "application/json;charset=utf-8",
+            data: { VType: 'IP'},
+            type: 'GET',
+            dataType: 'json',
+            success: function (datas) {
+                $("#lblgl").text('('+datas+')');
+            }
+        })
+
+        $.ajax({
+            url: '@Url.Action("GetGlECountN", "IssueRecvInfo")',
+            contentType: "application/json;charset=utf-8",
+            data: { VType: 'IP', datetime: moment($('#RcvDate').val(), 'DD/MM/YYYY').format('MM/DD/YYYY').toString() },
+            type: 'GET',
+            dataType: 'json',
+            success: function (datas) {
+                $("#lblglE").text('('+datas+')');
+            }
+        })
+
+        $(document).on("keyup mouseup", "#RcvDate", function (e) {   //click keyup  mouseup
+            $.ajax({
+                url: '@Url.Action("GetGlECountN", "IssueRecvInfo")',
+                contentType: "application/json;charset=utf-8",
+                data: { VType: 'IP', datetime: moment($('#IssueDate').val(), 'DD/MM/YYYY').format('MM/DD/YYYY').toString() },
+                type: 'GET',
+                dataType: 'json',
+                success: function (datas) {
+                    $("#lblglE").text('('+datas+')');
+                }
+            })
+        });
+
+        //For GLEntries
+        $("#GLEntries").click(function () {
+            //Get the id of the selected item in dropdown
+            var IssueRcvDate = moment($('#IssueDate').val(), 'DD/MM/YYYY').format('MM/DD/YYYY').toString();
+
+            var id = IssueRcvDate + '&pageType=IP';
+
+            //Replace the predifined QueryString param "xxx" with the "id"
+            this.href = this.href.replace("blankDate", id);
+        });
+
+        $("#glgo").click(function () {
+            //Get the id of the selected item in dropdown
+            var TrDate = moment($('#IssueDate').val(), 'DD/MM/YYYY').format('MM/DD/YYYY').toString();
+
+            var id = TrDate + '&pageType=IP';
+
+            //Replace the predifined QueryString param "xxx" with the "id"
+            this.href = this.href.replace("blankDate", id);
+        });
+        //For GLprovition
+        $("#GLProvition").click(function () {
+            //Get the id of the selected item in dropdown
+            var IssueRcvDate = moment($('#IssueDate').val(), 'DD/MM/YYYY').format('MM/DD/YYYY').toString();
+
+            var id = IssueRcvDate + '&pageType=IP';
+
+            //Replace the predifined QueryString param "xxx" with the "id"
+            this.href = this.href.replace("blankDate", id);
+        });
+
+
+        $.ajax({
+            url: '@Url.Action("GetBatchNo", "IssueRecvInfo")',
+            contentType: "application/json;charset=utf-8",
+            type: 'GET',
+            dataType: 'json',
+            success: function (datas) {
+                $("#BatchNo").val(datas);
+            }
+        });
+        $(document).on("change","#ProduceQty",function(e){
+           
+            if(isEdit == 1){
+                var ppu;
+                var totalUP=parseFloat($("#totalUN").val());
+                var PQty=parseFloat($("#ProduceQty").val());
+                ppu=(totalUP/PQty);
+                $("#PricePerUnit").val(ppu.toFixed(2));
+            }else{
+                var ppu;
+                var totalUP=parseFloat($("#totalUN").val());
+                var PQty=parseFloat($("#ProduceQty").val());
+                ppu=(totalUP/PQty);
+                $("#PricePerUnit").val(ppu.toFixed(2));
+            }
+        });
+
+        $(document).on("click", "#btnJob", function () {
+            $("#JobModal").modal("show");
+        });
+        $(document).on("click", "#closeJob", function (e) {
+            e.preventDefault();
+            $('#JobModal').modal('hide');
+        });
+
+        $(document).on("click", "#btnJobOk", function (e) {
+            if ($("#nJobNo").val() != "") {
+                $.ajax({
+                    url: '@Url.Action("LoadandSaveJob", "Sales")',
+                    contentType: "application/json;charset=utf-8",
+                    data: {
+                        nJobNo: $("#nJobNo").val()
+                    },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        $('#JobNo').empty();
+                        //data.insertBefore('<option>', { Value: "", text: "--- Select ---" });
+                        $.each(data, function (index, value) {
+                            $('#JobNo').append($('<option>',
+                                {
+                                    value: value.Value,
+                                    text: value.Text
+                                })).select2();
+                        });
+                        $('#JobModal').modal('hide');
+                        $("#nJobNo").val("");
+                    }
+                });
+            }
+            else {
+                alert("Job No is required.");
+                return;
+            }
+
+        })
+
+        $(document).on("change", "#ItemCode, #ProducesItem", function (e) {
+            var locNo = $("#FromLocCode").val();
+            var ItemCode;
+            var value = $(this).attr("id");
+            if (value == "ProducesItem") {
+                ItemCode = $("#ProducesItem").val();
+            }else{
+                ItemCode = $("#ItemCode").val();
+            }
+
+            if (locNo != " " && locNo != null) {
+                $.ajax({
+                    type: "Get",
+                    contentType: "application/json;charset=utf-8",
+                    url: '@Url.Action("GetItemByQtyPrice", "Receive")',
+                    data: { Item: ItemCode, LocNo: $("#FromLocCode").val()},
+                    dataType: 'json',
+                    success: function (item) {
+                        if (item == 0) {
+                            clearItemInfo();
+                        }
+                        else {
+                            var prevDelQty = 0;
+                            const i = delQtyOrder.findIndex(_x => _x.ItemCode === item.ItemCode);
+                            if (i > -1)
+                            {
+                                prevDelQty = parseInt(delQtyOrder[i].Qty);
+                            }
+                           
+                            if(value == "ProducesItem")
+                            {
+                                $("#rExtQty").val(item.CurrQty + prevDelQty);
+                            }else
+                            {
+                                $("#iExtQty").val(item.CurrQty - prevDelQty);
+                                $("#Qty").val(item.CurrQty + prevDelQty);
+                                $("#Price").val(item.UnitPrice);
+                                $("#LotNo").val(item.LotNo);
+                            }
+
+
+                        }
+                    }
+                });
+            }
+            else {
+                alert("Please select Store location.");
+            };
+
+        });
+
+        var loadInfo = {
+
+            IssueNo: "",
+            FromLocCode: "",
+            BatchNo : "",
+            RefNo:"",
+            RefDate:"",
+            JobNo:"",
+            IssueDate : "",
+            LotNo : "",
+            ItemTypeCode : "",
+            ReceiveNo : "",
+            RExtQty:"",
+            ProducesItem : "",
+            RecvLotNo : "",
+            PricePerUnit : "",
+            ProduceQty : "",
+            Remarks : "",
+            ReceivedByCode : ""
+        };
+        function setOrder() {
+            loadInfo.IssueNo=$("#IssueNo").val();
+            loadInfo.FromLocCode = $("#FromLocCode").val();
+            loadInfo.BatchNo = $("#BatchNo").val();
+            loadInfo.RefNo = $("#RefNo").val();
+            loadInfo.RefDate = $("#RefDate").val();
+            loadInfo.JobNo = $("#JobNo").val();
+            loadInfo.LotNo = $("#LotNo").val();
+            loadInfo.ItemTypeCode = $("#ItemTypeCode").val();
+            loadInfo.ItemCode = $("#ItemCode").val();
+            loadInfo.Price = $("#Price").val();
+            loadInfo.Qty = $("#Qty").val();
+            loadInfo.ReceiveNo=$("#ReceiveNo").val();
+            loadInfo.RExtQty=$("#rExtQty").val();
+            loadInfo.ProducesItem = $("#ProducesItem").val();
+            loadInfo.RecvLotNo = $("#RecvLotNo").val();
+            loadInfo.PricePerUnit =parseFloat($("#PricePerUnit").val()).toFixed(2).replace(".",",");
+            loadInfo.Remarks = $("#Remarks").val();
+            loadInfo.ProduceQty =parseFloat($("#ProduceQty").val()).toFixed(2).replace(".",",");
+            loadInfo.ReceivedByCode = $("#ReceivedByCode").val();
+            loadInfo.IssueDate = $("#IssueDate").val();
+        }
+        function validateOnSave(validOrder) {
+
+            if (!validOrder.FromLocCode.trim().length) {
+                return "Please select From location.";
+            }
+
+            if (!validOrder.ItemTypeCode.trim().length) {
+
+                return "Item Type is required";
+            }
+            if (!validOrder.ProducesItem.trim().length) {
+
+                return "Produces Item is required";
+            }
+            if (!validOrder.ReceivedByCode.trim().length) {
+
+                return "Received By is required";
+            }
+            if (validOrder.ProduceQty == "") {
+                return "Produce Qty is required";
+            }
+            return "";
+
+        }
+
+
+        $(document).on("change", "#ItemTypeCode", function (e) {
+            //for Item load by itemtype.......
+            $.ajax({
+                url: '@Url.Action("LoadItemByItemType", "IssueRecvInfo")',
+                contentType: "application/json;charset=utf-8",
+                data: {
+                    ItemTypeCode: $("#ItemTypeCode").val()
+                },
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    $('#ItemCode').empty();
+                    $.each(data, function (index, value) {
+                        $('#ItemCode').append($('<option>',
+                            {
+                                value: value.Value,
+                                text: value.Text
+                            })).select2();
+                    });
+                }
+            });
+        });
+
+
+        $(document).on("click", "#save", function () {
+            setOrder();
+            var validate = validateOnSave(loadInfo);
+            if (validate != "") {
+                alert(validate);
+                return;
+            }
+
+            if (orders != 0) {
+                $.ajax({
+                    url: '@Url.Action("SaveIssueRecvInfo", "IssueRecvInfo")',
+                    contentType: "application/json;charset=utf-8",
+                    data: JSON.stringify({ issueRecvInfo: loadInfo, issueDetails: orders, currentStock: orders }),
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function (datas) {
+                        if (datas.Msg == "1") {
+                            swal({
+                                title: "Ok",
+                                text: "Sucessfully Saved!",
+                                type: "success"
+                            }, function () {
+                                location.reload();
+                                clearIssueRecvInfo();
+                            });
+                            $("#save").prop("disabled", false);
+                            $("#ItemTypeCode").prop("disabled", false);
+                            orders = [];
+                            $('#tbodyId').empty();
+
+                        }
+                        else if (datas == "X") {
+                            swal({
+                                title: "Sorry",
+                                text: "No Save Permission for this User",
+                                type: "warning"
+                            });
+                        }
+                        else if (datas == 0) {
+                            swal(
+                                'Sorry!',
+                                'Please select valid Item or Store location!!!',
+                                'warning'
+                            );
+                            $("#save").prop("disabled", false);
+                        }
+
+                            //multi user code
+                        else if (datas == 3) {
+                            swal({
+                                title: "Already exists Please try again!",
+                                text: "Please try again!",
+                                type: "success"
+                            }, function () {
+                                $.ajax({
+                                    url: '@Url.Action("IssueNoIncreement", "Issue")',
+                                    contentType: "application/json;charset=utf-8",
+                                    type: 'GET',
+                                    dataType: 'json',
+                                    success: function (datas) {
+                                        $("#IssueNo").val(datas);
+                                    }
+                                });
+                            });
+                            $("#save").prop("disabled", false);
+                        }
+                    }
+                });
+            }else{
+                swal(
+                    'Sorry!',
+                    'Please Add item in the Table.!!!',
+                    'warning'
+                    );
+            }
+        });
+
+        //----------Update IssueRecvInfo-----------//
+        $("#BatchNo").keypress(function (e) {
+            if (e.which == 13) {
+                $("#save").hide();
+                $("#update").show();
+                $.ajax({
+                    url: '@Url.Action("GetAllByBatchNo", "IssueRecvInfo")',
+                            contentType: "application/json;charset=utf-8",
+                            data: { batchNo: $("#BatchNo").val() },
+                            type: 'GET',
+                            dataType: 'json',
+                            success: function (datas) {
+                                    if (moment(datas.IssRcvInfo.RefDate).format('MM/DD/YYYY') != moment('01/01/1900').format('MM/DD/YYYY')) {
+                                        $("#RefDate").datepicker("setDate", DateInDMYformat(datas.IssRcvInfo.RefDate));
+                                    }
+                                    if (moment(datas.IssMain.IssDate).format('MM/DD/YYYY') != moment('01/01/1900').format('MM/DD/YYYY')) {
+                                        $("#IssueDate").datepicker("setDate", DateInDMYformat(datas.IssMain.IssDate));
+                                    }
+                                    $("#FromLocCode").val(datas.IssMain.FromLocCode).trigger('change.select2');
+                                    $("#RefNo").val(datas.IssRcvInfo.RefNo);
+                                    $("#IssueNo").val(datas.IssRcvInfo.IssueNo);
+                                    $("#ReceiveNo").val(datas.IssRcvInfo.ReceiveNo);
+                                    $("#JobNo").val(datas.IssRcvInfo.JobNo).trigger('change.select2');
+                                    $("#ReceivedByCode").val(datas.RcvdByCode).trigger('change.select2');
+                                    orders = [];
+                                    if (datas.IssueDetail.length > 0) {
+                                        var j = 0;
+                                        $.each(datas.IssueDetail, function (index, data) {
+                                            j++;
+                                            data.Sl = j;
+                                            data.ItemCode=data.ItemCode;
+                                            data.ItemName = data.ItemName;
+                                            data.LotNo = data.LotNo;
+                                            data.Qty = data.Qty;
+                                            data.Price = data.Price;
+                                            orders.push(data);
+
+                                        });
+                                        isEdit=1;
+                                        add=1;
+                                        addOnTable();
+                                        //addOnList();
+                                    }
+                                   
+
+                                    //orders1 = [];
+                                    if (datas.ReceiveDetail.length > 0) {
+                                        var j = 0;
+                                        $.each(datas.ReceiveDetail, function (index, data) {
+                                            $("#ProducesItem").val(data.ItemCode).trigger('change.select2');
+                                            $("#RecvLotNo").val(data.LotNo);
+                                            $("#ProduceQty").val(data.Qty);
+                                            $("#PricePerUnit").val(data.Price);
+
+                                        });
+
+                                    }
+
+                            },
+                            error: function () {
+                                swal("Sorry!! This order no does not exist.", "fail")
+                            }
+                        });
+                    };
+                });
+
+                $(document).on("click", "#update", function () {
+                    setOrder();
+                    $.ajax({
+                        url: '@Url.Action("UpdateIssueRecvInfo", "IssueRecvInfo")',
+                        contentType: "application/json;charset=utf-8",
+                        data: JSON.stringify({ issueRecvInfo: loadInfo, issueDetails: orders, currentStock: orders }),
+                        type: 'POST',
+                        dataType: 'json',
+                        success: function (datas) {
+                            if (datas.Msg == "1") {
+                                swal({
+                                    title: "Ok",
+                                    text: "Update Sucessfully!",
+                                    type: "success"
+                                }, function () {
+                                    location.reload();
+                                    clearIssueRecvInfo();
+                                });
+                                $("#ItemTypeCode").prop("disabled", false);
+                                $('#tbodyId').empty();
+                                orders = [];
+                                //$("#RcvNo").val(datas);
+                                $("#update").hide();
+                                $("#save").show();
+                            }
+                            else if (datas == "U") {
+                                swal({
+                                    title: "Sorry",
+                                    text: "No Update Permission for this User",
+                                    type: "warning"
+                                });
+                            }
+                            else if (datas == 0) {
+                                swal(
+                                    'Sorry!',
+                                    'Something went wrong please try again!',
+                                    'warning'
+                                );
+                                $("#update").prop("disabled", false);
+                            }
+                            else if (datas == 'VchrPosted') {
+                                swal(
+                                     'Sorry!',
+                                     'This Voucher Already Posted.!!!',
+                                     'warning'
+                                     );
+                                $("#update").prop("disabled", false);
+                            }
+                        }
+                    });
+
+                });
+
+                //------------------------------------------------------------------------------------------//
+                $("#clear").click(function () {
+                    clearIssueRecvInfo();
+                });
+                var add;
+                var isEdit;
+                var orders = [];
+                var delQtyOrder = [];
+                $("#add").click(function () {
+                    if(isEdit==1){
+                        $("#ItemTypeCode").prop("disabled", true);
+                        addOnList();
+                    }else{
+                        $("#ItemTypeCode").prop("disabled", true);
+                        addOnList();
+                    }
+                    $("tbody#tbodyId tr:even").css({
+                        "background-color": "#e6e8e8"
+
+                    });
+                });
+                function clearIssueRecvInfo() {
+
+                    $("#FromLocCode").val($('#FromLocCode option:first-child').val()).trigger('change.select2');
+                    $("#ItemTypeCode").val($('#ItemTypeCode option:first-child').val()).trigger('change.select2');
+                    $("#RefNo").val("");
+                    $("#JobNo").val($('#JobNo option:first-child').val()).trigger('change.select2');
+                    $("#ProducesItem").val($('#ProducesItem option:first-child').val()).trigger('change.select2');
+                    $("#ReceivedByCode").val($('#ReceivedByCode option:first-child').val()).trigger('change.select2');
+                    $("#ProduceQty").val("");
+                    $("#PricePerUnit").val("");
+                    $("#RecvLotNo").val("");
+                }
+                function clearIssueInfo() {
+
+                    //$("#ItemTypeCode").val($('#ItemTypeCode option:first-child').val()).trigger('change.select2');
+                    $("#ItemCode").val($('#ItemCode option:first-child').val()).trigger('change.select2');
+                    $("#LotNo").val("");
+                    $("#Price").val("");
+                    $("#Qty").val("");
+                }
+                function addOnList() {
+                    var newAddList = [];
+                    var newAddListSl = 0;
+                    var ItemCode = $('#ItemCode option:selected').val();
+                    if (ItemCode == "") {
+                        alert("Item is required.");
+                        return;
+                    }
+                    var ExQty=$("#iExtQty").val();
+                    var ItemName = $("#ItemCode option:selected").text();
+                    var LotNo=$("#LotNo").val();
+                    var Price=parseFloat($("#Price").val()).toFixed(2).replace(".",",");
+                    var Qty = parseFloat($("#Qty").val()).toFixed(2).replace(".", ",");
+                    if (Qty == "" || Qty <= 0) {
+                        alert("Quantity is required.");
+                        return;
+                    }
+                    var item = {
+                        ItemCode:ItemCode,ItemName:ItemName,LotNo:LotNo,Price:Price,ExQty:ExQty,Qty:Qty,Sl:0
+                    }
+                    const i = orders.findIndex(x=>x.ItemName===ItemName);
+                    if (i > -1)
+                    {
+                        item.ItemCode=ItemCode;
+                        item.ItemName =ItemName;
+                        item.LotNo =LotNo;
+                        item.Price =Price;
+                        item.ExQty=ExQty;
+                        item.Qty =Qty;
+                        orders[i] = item;
+                    }
+                    else
+                    {
+                        item.Sl = orders.length + 1;
+                        orders.push(item);
+                    }
+                    addOnTable();
+                }
+
+                function addOnTable()
+                {
+
+                    $('#tbodyId').empty();
+                    var sl = 0;
+                    var UN = 0;
+                    var len= 0; 
+                    $.each(orders, function (index, data) {
+                        sl = sl + 1;
+                        data.Sl = sl;
+                        len = orders.length;
+                        if (isEdit == 1) {
+                            $("#tbodyId").append("<tr><td>" + sl + "</td><td>"
+                                                               + data.ItemCode + "</td><td>"
+                                                               + data.ItemName + "</td><td>"
+                                                               + data.LotNo + "</td><td>"
+                                                               + data.Qty + "</td><td>"
+                                                               + data.Price+ "</td><td>"
+                                                              + '<a href="#" class="on-default remove-row deleteSup" data-id="' + sl + '" id="delete" value="' + sl + '"><i class="glyphicon glyphicon-trash"></i></a>' + "</td></tr>");
+                            UN=parseFloat(UN)+parseFloat(data.Qty*data.Price);
+                        }
+                        else if(isEdit == 1 && add == 1){
+                            if(sl==len){
+                                $("#tbodyId").append("<tr><td>" + sl + "</td><td>"
+                                                               +data.ItemCode+ "</td><td>"
+                                                              + data.ItemName + "</td><td>"
+                                                              + data.LotNo + "</td><td>"
+                                                              + data.Qty.replace(",", ".") + "</td><td>"
+                                                              + data.Price.replace(",", ".") + "</td><td>"
+                                                             + '<a href="#" class="on-default remove-row deleteSup" data-id="' + sl + '" id="delete" value="' + sl + '"><i class="glyphicon glyphicon-trash"></i></a>' + "</td></tr>");
+                                UN=parseFloat(UN)+parseFloat(data.Qty.replace(",",".")*data.Price.replace(",","."));
+                            }
+                            else(sl!=len)
+                            {
+                                $("#tbodyId").append("<tr><td>" + sl + "</td><td>"
+                                                              + data.ItemCode + "</td><td>"
+                                                              + data.ItemName + "</td><td>"
+                                                              + data.LotNo + "</td><td>"
+                                                              + data.Qty + "</td><td>"
+                                                              + data.Price+ "</td><td>"
+                                                             + '<a href="#" class="on-default remove-row deleteSup" data-id="' + sl + '" id="delete" value="' + sl + '"><i class="glyphicon glyphicon-trash"></i></a>' + "</td></tr>");
+                                UN=parseFloat(UN)+parseFloat(data.Qty*data.Price);
+                            }
+
+                        }
+                        else{
+                            $("#tbodyId").append("<tr><td>" + sl + "</td><td>"
+                                                                +data.ItemCode+ "</td><td>"
+                                                               + data.ItemName + "</td><td>"
+                                                               + data.LotNo + "</td><td>"
+                                                               + data.Qty.replace(",", ".") + "</td><td>"
+                                                               + data.Price.replace(",", ".") + "</td><td>"
+                                                              + '<a href="#" class="on-default remove-row deleteSup" data-id="' + sl + '" id="delete" value="' + sl + '"><i class="glyphicon glyphicon-trash"></i></a>' + "</td></tr>");
+                            UN=parseFloat(UN)+parseFloat(data.Qty.replace(",",".")*data.Price.replace(",","."));
+                        }
+                    });
+                    $("#totalUN").val(UN);
+
+                    clearIssueInfo();
+                }
+                //delete  datatable data
+                $(document).on('click', '#delete', function () {
+                    var id = $(this).attr("value");
+
+                    swal({
+                        title: "Are you sure?",
+                        text: "You will not be able to recover this order data!",
+                        type: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#DD6B55",
+                        confirmButtonText: "Yes, delete it!",
+                        closeOnConfirm: true
+                    },
+                     function () {
+
+                         var delQtySl = 0;
+                         var ItemCode;
+                         var ItemName;
+                         var LotNo;
+                         var ExQty;
+                         var Price;
+                         var Qty;
+                         var delQtyItem = {
+                             ItemCode:ItemCode,
+                             ItemName:ItemName,
+                             LotNo:LotNo,
+                             ExQty:ExQty,
+                             Qty:Qty,
+                             Price:Price
+                         }
+                         const i = orders.findIndex(_x => _x.Sl === parseInt(id));
+                         if (i > -1)
+                         {
+                             delQtySl++;
+                             delQtyItem.ItemCode = orders[i].ItemCode;
+                             delQtyItem.ItemName = orders[i].ItemName;
+                             delQtyItem.LotNo =orders[i].LotNo;
+                             delQtyItem.ExQty=orders[i].ExQty
+                             delQtyItem.Qty =orders[i].Qty;
+                             delQtyItem.Price =orders[i].Price;
+                             delQtyOrder.push(delQtyItem)
+                         }
+
+                         deleteRow(id);
+                         addOnTable();
+
+                     });
+                });
+                function deleteRow(sl) {
+                    var newOrder = [];
+                    var newSl = 0;
+
+                    $.each(orders, function (index, data) {
+
+                        if (data.Sl != sl) {
+                            newSl++;
+                            data.Sl = newSl;
+                            data.Id = 0;
+                            newOrder.push(data);
+                        }
+                    });
+                    orders = new Array();
+                    orders = newOrder;
+
+                }
+            });
+        </script>
+    }
+
+
+

@@ -1,0 +1,223 @@
+﻿@{
+    Layout = null;
+}
+@model IEnumerable<App.Domain.ViewModel.Vat9P1_SF_Ka>
+@{
+    ViewBag.Title = "TransWiseVat9P1_SF_Ka_2_RptPdf";
+    Layout = null;
+    decimal TotalValue = 0.0m;
+    decimal VATax = 0.0m;
+    int sl = 0;
+    int count = Model.Count();
+    string dt = "";
+    var CompName = AcclineERP.Models.GetCompanyInfo.GetComInfo().CompName;
+    var CompBin = AcclineERP.Models.GetCompanyInfo.GetComInfo().BIN;
+    var CompInfo = AcclineERP.Models.GetCompanyInfo.GetComInfo();
+    string CompanyAddress = ((CompInfo.Addr1 == null ? string.Empty : CompInfo.Addr1) + (CompInfo.Addr2 == null ? string.Empty : CompInfo.Addr2));
+}
+
+<script src="~/Scripts/jquery-1.9.1.min.js"></script>
+<script src="~/Scripts/Export.js"></script>
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/select2/select2.css" rel="stylesheet" type="text/css" />
+<link href="~/Css/FormDesign.css" rel="stylesheet" />
+
+<style>
+    tr {
+        page-break-inside: avoid;
+    }
+
+    body {
+        padding-right: 0px;
+        font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+    }
+
+    .border {
+        color: #335; /* Lighten up font color */
+        font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+        font-weight: 300;
+        border-collapse: collapse;
+        border-spacing: 0;
+    }
+
+    .tds {
+        /*border: 1px solid black;*/
+        font-weight: 500;
+        font-family: Arial;
+        border-right: hidden !important;
+    }
+    /* Make cells a bit taller */
+    .ths {
+        /*border: 1px solid black;*/
+        font-weight: 500;
+        font-family: Arial;
+    }
+
+    .th {
+        background: #F3F3F3; /* Light grey background */
+        font-weight: bold; /* Make sure they're bold */
+    }
+
+    .td {
+        background: #FAFAFA; /* Lighter grey background */
+        text-align: center; /* Center our text */
+    }
+
+    .breakhere {
+        page-break-after: always;
+    }
+
+
+
+</style>
+
+
+<body onkeypress="return disablectrlkeycombination(event);" onkeydown="return disablectrlkeycombination(event);">
+</body>
+
+<div id="toReport" class="panel-body" style=" text-align: center !important; width: 100%; font-weight:normal; height: 100%; ">
+
+    <div class="panel-body">
+
+
+
+        <table cellpadding="5" cellspacing="1" border="1" frame="box" rules="all" align="center" style="width:800px">
+
+
+            <tr style="text-align:center; font-weight:bold;  font-size:25px">
+                <div style="text-align:center; font-weight:bold;  font-size:25px">
+                    <u>সাবফর্ম-ক</u>
+                    <br />    বিক্রয় সংক্রান্ত তথ্য
+
+                </div>
+
+            </tr>
+            <tr>
+                <text style="font-size:20px">
+                    সাবফর্ম-ক নোট- ৪  আদর্শ  নেট পণ্য/ সেবার ক্ষেত্রে ( সাবফর্ম-ক নোট-১,২,৩,৫,৭ প্রযোজ্য হবে না )
+                </text>
+            </tr>
+            <thead style="height:300px">
+                <tr>
+                    <th style="width:80px; text-align:center">ক্রমিক সংখ্যা</th>
+                    <th style="width:200px; text-align:center">পণ্য/ সেবার নাম  </th>
+                    <th style="width:200px; text-align:center">পণ্য/ সেবার কোড </th>
+                    <th style="width:150px; text-align:center">পণ্য/ সেবার বাণিজ্যিক বর্ণনা </th>
+                    <th style="width:150px; text-align:center">মূল্য</th>
+                    <th style="width:200px; text-align:center">সম্পূরক  শুল্ক </th>
+                    <th style="width:150px; text-align:center">মূল্য সংযোজন কর </th>
+                    <th style="width:150px; text-align:center">মন্তব্য </th>
+
+                </tr>
+            </thead>
+            <tbody id="tbodyId">
+
+                @{
+                    decimal PurValue = 0, SuppTax = 0;
+                    decimal? VATAmt = 0;
+                }
+
+                @foreach (var item in Model)
+                {
+                    sl++;
+                    PurValue = PurValue + item.PurValue;
+                    VATAmt = VATAmt + item.VATAmt;
+                    SuppTax = SuppTax + item.SuppTax;
+
+                    <tr>
+                        <td style="width:40px; text-align:center">
+                            @sl
+                        </td>
+                        <td style="width:100px; text-align:center">
+                            @Html.DisplayFor(modelItem => item.VATType)
+                        </td>
+                        <td style="width:100px; text-align:center">
+                            @Html.DisplayFor(modelItem => item.HSCode)
+                        </td>
+
+                        <td style="width:120px; text-align:right">
+                            @Html.DisplayFor(modelItem => item.ItemName)
+                        </td>
+                        <td style="width:230px; text-align:right">
+                            @Html.DisplayFor(modelItem => item.PurValue)
+                        </td>
+                        <td style="width:230px; text-align:right">
+                            @Html.DisplayFor(modelItem => item.SuppTax)
+                        </td>
+                        <td style="width:230px; text-align:right">
+                            @Html.DisplayFor(modelItem => item.VATAmt)
+                        </td>
+                        <td style="width:230px; text-align:right">
+                            @Html.DisplayFor(modelItem => item.Remarks)
+                        </td>
+
+                    </tr>
+
+
+
+
+                }
+
+
+                <tr>
+                    <td></td>
+                    <td>মোট  =</td>
+                    <td></td>
+                    <td style=" text-align:right"> </td>
+                    <td style=" text-align:right">  @PurValue</td>
+                    <td style="text-align:right">   @VATAmt</td>
+                    <td style="text-align:right">  @SuppTax</td>
+                    <td></td>
+
+                </tr>
+            </tbody>
+
+
+
+        </table>
+
+
+
+    </div>
+    <p></p>
+</div>
+
+<script language="JavaScript">
+    function disableCtrlKeyCombination(e) {
+        //list all CTRL + key combinations you want to disable
+        var forbiddenKeys = new Array("a", "s", "c");
+        var key;
+        var isCtrl;
+
+        if (window.event) {
+            key = window.event.keyCode;     //IE
+            if (window.event.ctrlKey)
+                isCtrl = true;
+            else
+                isCtrl = false;
+        }
+        else {
+            key = e.which;     //firefox
+            if (e.ctrlKey)
+                isCtrl = true;
+            else
+                isCtrl = false;
+        }
+
+        //if ctrl is pressed check if other key is in forbidenKeys array
+        if (isCtrl) {
+            for (i = 0; i < forbiddenKeys.length; i++) {
+                //case-insensitive comparation
+                if (forbiddenKeys[i].toLowerCase() == String.fromCharCode(key).toLowerCase()) {
+                    //                                    alert(“Key combination CTRL + "
+                    //                                                + String.fromCharCode(key)
+                    //                                                + " has been disabled.");
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+</script>

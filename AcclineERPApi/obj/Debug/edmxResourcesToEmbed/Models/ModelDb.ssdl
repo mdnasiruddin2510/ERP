@@ -1,0 +1,390 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="ASPL_DEMOModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="CostLedger">
+    <Key>
+      <PropertyRef Name="RecId" />
+    </Key>
+    <Property Name="RecId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="LocNo" Type="nvarchar" MaxLength="128" Nullable="false" />
+    <Property Name="ItemCode" Type="nvarchar" MaxLength="20" Nullable="false" />
+    <Property Name="TrDate" Type="datetime" Nullable="false" />
+    <Property Name="RecQty" Type="float" Nullable="false" />
+    <Property Name="RecRate" Type="float" Nullable="false" />
+    <Property Name="RecTotal" Type="float" Nullable="false" />
+    <Property Name="IssQty" Type="float" Nullable="false" />
+    <Property Name="IssRate" Type="float" Nullable="false" />
+    <Property Name="IssTotal" Type="float" Nullable="false" />
+    <Property Name="BalQty" Type="float" Nullable="false" />
+    <Property Name="BalRate" Type="float" Nullable="false" />
+    <Property Name="BalTotal" Type="float" Nullable="false" />
+    <Property Name="UpdSrc" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="UpdSrcNo" Type="nvarchar" MaxLength="50" Nullable="false" />
+  </EntityType>
+  <EntityType Name="CurrentStock">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="LocCode" Type="nvarchar" MaxLength="3" />
+    <Property Name="LotNo" Type="nvarchar(max)" />
+    <Property Name="ItemCode" Type="nvarchar(max)" />
+    <Property Name="CurrQty" Type="float" Nullable="false" />
+    <Property Name="UnitPrice" Type="float" Nullable="false" />
+  </EntityType>
+  <EntityType Name="CustWiseSummSaleRpt">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="SubCode" Type="nvarchar" MaxLength="50" />
+    <Property Name="SubName" Type="nvarchar" MaxLength="50" />
+    <Property Name="LocCode" Type="nvarchar" MaxLength="50" />
+    <Property Name="SaleAmount" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+    <Property Name="Discount" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+    <Property Name="Commission" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+    <Property Name="VAT" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+    <Property Name="GrossSale" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+  </EntityType>
+  <EntityType Name="IssueDetails">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="IssueNo" Type="nvarchar" MaxLength="128" />
+    <Property Name="ItemCode" Type="nvarchar" MaxLength="128" />
+    <Property Name="Description" Type="nvarchar(max)" />
+    <Property Name="Qty" Type="float" Nullable="false" />
+    <Property Name="Price" Type="float" Nullable="false" />
+    <Property Name="ExQty" Type="float" Nullable="false" />
+    <Property Name="LotNo" Type="nvarchar(max)" />
+    <Property Name="SubCode" Type="nvarchar" MaxLength="128" />
+    <Property Name="ItemType" Type="nvarchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="IssueMain">
+    <Key>
+      <PropertyRef Name="IssueNo" />
+    </Key>
+    <Property Name="IssueNo" Type="nvarchar" MaxLength="128" Nullable="false" />
+    <Property Name="IssueDate" Type="datetime" Nullable="false" />
+    <Property Name="FromLocCode" Type="nvarchar(max)" />
+    <Property Name="ToLocCode" Type="nvarchar(max)" />
+    <Property Name="DesLocCode" Type="nvarchar" MaxLength="128" />
+    <Property Name="Accode" Type="nvarchar" MaxLength="128" />
+    <Property Name="IssueToSubCode" Type="nvarchar" MaxLength="128" />
+    <Property Name="JobNo" Type="nvarchar" MaxLength="50" />
+    <Property Name="RefNo" Type="nvarchar(max)" />
+    <Property Name="RefDate" Type="datetime" />
+    <Property Name="Remarks" Type="nvarchar(max)" />
+    <Property Name="IssueByCode" Type="nvarchar(max)" />
+    <Property Name="AppByCode" Type="nvarchar(max)" />
+    <Property Name="IssTime" Type="datetime" Nullable="false" />
+    <Property Name="IssDate" Type="datetime" Nullable="false" />
+    <Property Name="Amount" Type="float" Nullable="false" />
+    <Property Name="FinYear" Type="nvarchar(max)" />
+    <Property Name="GLPost" Type="bit" Nullable="false" />
+    <Property Name="IsReceived" Type="bit" Nullable="false" />
+    <Property Name="BranchCode" Type="nvarchar" MaxLength="128" />
+    <Property Name="cashReceiptStatus" Type="bit" Nullable="false" />
+    <Property Name="StoreLocCode" Type="nvarchar(max)" />
+    <Property Name="VchrNo" Type="nvarchar(max)" />
+    <Property Name="EntrySrc" Type="nvarchar" MaxLength="50" />
+    <Property Name="EntrySrcNo" Type="nvarchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="ItemInfo">
+    <Key>
+      <PropertyRef Name="ItemCode" />
+    </Key>
+    <Property Name="ItemCode" Type="nvarchar" MaxLength="128" Nullable="false" />
+    <Property Name="ItemType" Type="int" />
+    <Property Name="ItemName" Type="nvarchar(max)" />
+    <Property Name="OpenBal" Type="float" Nullable="false" />
+    <Property Name="PartNo" Type="nvarchar(max)" />
+    <Property Name="UnitCode" Type="nvarchar" MaxLength="128" />
+    <Property Name="DetUnitCode" Type="nvarchar" MaxLength="128" />
+    <Property Name="Price" Type="float" Nullable="false" />
+    <Property Name="PackSize" Type="float" Nullable="false" />
+    <Property Name="PackItemCode" Type="nvarchar(max)" />
+    <Property Name="AltItemCode" Type="nvarchar(max)" />
+    <Property Name="Ratio" Type="nvarchar(max)" />
+    <Property Name="RetailPrice" Type="numeric" Precision="9" Scale="2" />
+    <Property Name="Prod_Ser" Type="char" MaxLength="1" />
+    <Property Name="HSCode" Type="nvarchar" MaxLength="50" />
+    <Property Name="ROLevel" Type="numeric" Precision="18" Scale="0" />
+    <Property Name="TaxHeadingNo" Type="nvarchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="ItemMap">
+    <Key>
+      <PropertyRef Name="Id" />
+      <PropertyRef Name="ItemTypeCode" />
+      <PropertyRef Name="GroupID" />
+      <PropertyRef Name="SGroupID" />
+      <PropertyRef Name="SSGroupID" />
+      <PropertyRef Name="ItemCode" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ItemTypeCode" Type="int" Nullable="false" />
+    <Property Name="GroupID" Type="int" Nullable="false" />
+    <Property Name="SGroupID" Type="int" Nullable="false" />
+    <Property Name="SSGroupID" Type="int" Nullable="false" />
+    <Property Name="ItemCode" Type="char" MaxLength="5" Nullable="false" />
+  </EntityType>
+  <EntityType Name="SalesDetail">
+    <Key>
+      <PropertyRef Name="SalesDetailID" />
+    </Key>
+    <Property Name="SalesDetailID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="SalesMainID" Type="bigint" Nullable="false" />
+    <Property Name="ItemCode" Type="char" MaxLength="5" Nullable="false" />
+    <Property Name="LotNo" Type="varchar" MaxLength="50" />
+    <Property Name="Description" Type="nvarchar" MaxLength="50" />
+    <Property Name="SaleQty" Type="numeric" Precision="9" Scale="2" />
+    <Property Name="UnitPrice" Type="numeric" Precision="9" Scale="2" />
+    <Property Name="VATPerc" Type="numeric" Precision="9" Scale="2" />
+    <Property Name="VATAmt" Type="numeric" Precision="9" Scale="2" />
+    <Property Name="DiscPerc" Type="numeric" Precision="9" Scale="2" />
+    <Property Name="DiscAmt" Type="numeric" Precision="9" Scale="2" />
+    <Property Name="ExtQty" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+    <Property Name="ExtUPrice" Type="decimal" Precision="18" Scale="2" />
+  </EntityType>
+  <EntityType Name="SalesMain">
+    <Key>
+      <PropertyRef Name="SalesMainID" />
+    </Key>
+    <Property Name="SalesMainID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="SaleNo" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="SaleDate" Type="date" Nullable="false" />
+    <Property Name="JobNo" Type="nvarchar" MaxLength="50" />
+    <Property Name="RefNo" Type="nvarchar" MaxLength="50" />
+    <Property Name="RefDate" Type="date" />
+    <Property Name="IssueNo" Type="nvarchar" MaxLength="50" />
+    <Property Name="IssueDate" Type="datetime" />
+    <Property Name="CustCode" Type="nvarchar" MaxLength="50" />
+    <Property Name="LocCode" Type="nvarchar" MaxLength="50" />
+    <Property Name="ProjCode" Type="char" MaxLength="2" />
+    <Property Name="BranchCode" Type="char" MaxLength="3" />
+    <Property Name="VATAmt" Type="numeric" Precision="18" Scale="2" />
+    <Property Name="Transport" Type="numeric" Precision="9" Scale="2" />
+    <Property Name="Labour" Type="numeric" Precision="9" Scale="2" />
+    <Property Name="Discount" Type="numeric" Precision="9" Scale="2" />
+    <Property Name="TotSaleAmt" Type="numeric" Precision="18" Scale="2" Nullable="false" />
+    <Property Name="NetAmount" Type="numeric" Precision="18" Scale="2" Nullable="false" />
+    <Property Name="PrevDue" Type="numeric" Precision="18" Scale="2" />
+    <Property Name="Remarks" Type="nvarchar" MaxLength="200" />
+    <Property Name="VchrNo" Type="nvarchar" MaxLength="50" />
+    <Property Name="AppBy" Type="nvarchar" MaxLength="50" />
+    <Property Name="IssueBy" Type="nvarchar" MaxLength="50" />
+    <Property Name="ReceiptNo" Type="varchar" MaxLength="50" />
+    <Property Name="ReceiptAmt" Type="numeric" Precision="18" Scale="2" />
+    <Property Name="IsPaid" Type="bit" />
+    <Property Name="Accode" Type="varchar" MaxLength="50" />
+    <Property Name="ca_bk_op" Type="varchar" MaxLength="50" />
+    <Property Name="CustInvSl" Type="nvarchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="SecUserInfo">
+    <Key>
+      <PropertyRef Name="UserID" />
+    </Key>
+    <Property Name="UserID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="UserName" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Password" Type="nvarchar" MaxLength="100" />
+    <Property Name="Email" Type="nvarchar" MaxLength="100" />
+    <Property Name="CreateDate" Type="date" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'SmartChem.dbo.SysSet' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="SysSet">
+    <Key>
+      <PropertyRef Name="SysId" />
+      <PropertyRef Name="Budget" />
+      <PropertyRef Name="ConsolidatedCash" />
+      <PropertyRef Name="NotProfit" />
+      <PropertyRef Name="VouSlTypeWise" />
+      <PropertyRef Name="HasProject" />
+      <PropertyRef Name="HasBranch" />
+      <PropertyRef Name="HasDept" />
+      <PropertyRef Name="HasUnit" />
+      <PropertyRef Name="HasParty" />
+      <PropertyRef Name="MultiFinYear" />
+      <PropertyRef Name="HeadWiseNarration" />
+      <PropertyRef Name="AlwaysMultiple" />
+      <PropertyRef Name="MaintOldCode" />
+      <PropertyRef Name="RecurringVoucher" />
+      <PropertyRef Name="ShowJobName" />
+      <PropertyRef Name="autovouaftersave" />
+      <PropertyRef Name="VchrLen" />
+      <PropertyRef Name="InvoiceFormat" />
+      <PropertyRef Name="MaintLot" />
+      <PropertyRef Name="MaintVAT" />
+      <PropertyRef Name="Stockedcheck" />
+      <PropertyRef Name="MakeChallanAuto" />
+      <PropertyRef Name="MakeRecvAuto" />
+      <PropertyRef Name="OnlyGL" />
+      <PropertyRef Name="HasRemittance" />
+      <PropertyRef Name="IsSubsidiaryCtrl" />
+      <PropertyRef Name="NoGrp" />
+      <PropertyRef Name="OnlyGrp" />
+      <PropertyRef Name="GrpAndSubGrp" />
+      <PropertyRef Name="SubSubGrp" />
+      <PropertyRef Name="HasSale" />
+      <PropertyRef Name="OnlyVAT" />
+    </Key>
+    <Property Name="SysId" Type="int" Nullable="false" />
+    <Property Name="Budget" Type="bit" Nullable="false" />
+    <Property Name="ConsolidatedCash" Type="bit" Nullable="false" />
+    <Property Name="NotProfit" Type="bit" Nullable="false" />
+    <Property Name="VouSlTypeWise" Type="bit" Nullable="false" />
+    <Property Name="HasProject" Type="bit" Nullable="false" />
+    <Property Name="HasBranch" Type="bit" Nullable="false" />
+    <Property Name="HasDept" Type="bit" Nullable="false" />
+    <Property Name="HasUnit" Type="bit" Nullable="false" />
+    <Property Name="HasParty" Type="bit" Nullable="false" />
+    <Property Name="MultiFinYear" Type="bit" Nullable="false" />
+    <Property Name="HeadWiseNarration" Type="bit" Nullable="false" />
+    <Property Name="AlwaysMultiple" Type="bit" Nullable="false" />
+    <Property Name="MaintOldCode" Type="bit" Nullable="false" />
+    <Property Name="BudgetAllocation" Type="nvarchar(max)" />
+    <Property Name="RecurringVoucher" Type="bit" Nullable="false" />
+    <Property Name="ShowJobName" Type="bit" Nullable="false" />
+    <Property Name="autovouaftersave" Type="bit" Nullable="false" />
+    <Property Name="VchrLen" Type="int" Nullable="false" />
+    <Property Name="MRConv" Type="char" MaxLength="1" />
+    <Property Name="InvoiceFormat" Type="int" Nullable="false" />
+    <Property Name="MaintJob" Type="bit" />
+    <Property Name="MaintLot" Type="bit" Nullable="false" />
+    <Property Name="MaintVAT" Type="bit" Nullable="false" />
+    <Property Name="Stockedcheck" Type="bit" Nullable="false" />
+    <Property Name="OpenDate" Type="date" />
+    <Property Name="MakeChallanAuto" Type="bit" Nullable="false" />
+    <Property Name="MakeRecvAuto" Type="bit" Nullable="false" />
+    <Property Name="OnlyGL" Type="bit" Nullable="false" />
+    <Property Name="HasRemittance" Type="bit" Nullable="false" />
+    <Property Name="IsSubsidiaryCtrl" Type="bit" Nullable="false" />
+    <Property Name="NoGrp" Type="bit" Nullable="false" />
+    <Property Name="OnlyGrp" Type="bit" Nullable="false" />
+    <Property Name="GrpAndSubGrp" Type="bit" Nullable="false" />
+    <Property Name="SubSubGrp" Type="bit" Nullable="false" />
+    <Property Name="HasSale" Type="bit" Nullable="false" />
+    <Property Name="OnlyVAT" Type="bit" Nullable="false" />
+    <Property Name="RateChart" Type="bit" />
+    <Property Name="CashBasis" Type="bit" />
+    <Property Name="ActualBasis" Type="bit" />
+    <Property Name="MaintPacking" Type="bit" />
+  </EntityType>
+  <EntityType Name="tmpAddedItem">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="SaleNo" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="ItemCode" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="LotNo" Type="varchar" MaxLength="50" />
+    <Property Name="ItemName" Type="nvarchar" MaxLength="100" />
+    <Property Name="Description" Type="nvarchar" MaxLength="50" />
+    <Property Name="Qty" Type="numeric" Precision="9" Scale="2" Nullable="false" />
+    <Property Name="ExtQty" Type="numeric" Precision="9" Scale="2" Nullable="false" />
+    <Property Name="UnitPrice" Type="numeric" Precision="9" Scale="2" Nullable="false" />
+    <Property Name="ExtUPrice" Type="decimal" Precision="18" Scale="2" />
+    <Property Name="Vat" Type="numeric" Precision="18" Scale="2" />
+    <Property Name="Discount" Type="numeric" Precision="18" Scale="2" />
+    <Property Name="VatPerc" Type="numeric" Precision="18" Scale="2" />
+    <Property Name="DiscPerc" Type="numeric" Precision="18" Scale="2" />
+    <Property Name="Amount" Type="numeric" Precision="18" Scale="0" Nullable="false" />
+    <Property Name="EntrySl" Type="tinyint" />
+  </EntityType>
+  <Association Name="FK_dbo_IssueDetails_dbo_IssueMain_IssueNo">
+    <End Role="IssueMain" Type="Self.IssueMain" Multiplicity="0..1" />
+    <End Role="IssueDetails" Type="Self.IssueDetails" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="IssueMain">
+        <PropertyRef Name="IssueNo" />
+      </Principal>
+      <Dependent Role="IssueDetails">
+        <PropertyRef Name="IssueNo" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_dbo_IssueDetails_dbo_ItemInfo_ItemCode">
+    <End Role="ItemInfo" Type="Self.ItemInfo" Multiplicity="0..1" />
+    <End Role="IssueDetails" Type="Self.IssueDetails" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ItemInfo">
+        <PropertyRef Name="ItemCode" />
+      </Principal>
+      <Dependent Role="IssueDetails">
+        <PropertyRef Name="ItemCode" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Function Name="rptCustomerWiseSummarySales" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="finYear" Type="varchar" Mode="In" />
+    <Parameter Name="locCode" Type="varchar" Mode="In" />
+    <Parameter Name="fdate" Type="smalldatetime" Mode="In" />
+    <Parameter Name="tdate" Type="smalldatetime" Mode="In" />
+  </Function>
+  <EntityContainer Name="ASPL_DEMOModelStoreContainer">
+    <EntitySet Name="CostLedger" EntityType="Self.CostLedger" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="CurrentStock" EntityType="Self.CurrentStock" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="CustWiseSummSaleRpt" EntityType="Self.CustWiseSummSaleRpt" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="IssueDetails" EntityType="Self.IssueDetails" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="IssueMain" EntityType="Self.IssueMain" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="ItemInfo" EntityType="Self.ItemInfo" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="ItemMap" EntityType="Self.ItemMap" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="SalesDetail" EntityType="Self.SalesDetail" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="SalesMain" EntityType="Self.SalesMain" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="SecUserInfo" EntityType="Self.SecUserInfo" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tmpAddedItem" EntityType="Self.tmpAddedItem" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="SysSet" EntityType="Self.SysSet" store:Type="Tables" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [SysSet].[SysId] AS [SysId], 
+    [SysSet].[Budget] AS [Budget], 
+    [SysSet].[ConsolidatedCash] AS [ConsolidatedCash], 
+    [SysSet].[NotProfit] AS [NotProfit], 
+    [SysSet].[VouSlTypeWise] AS [VouSlTypeWise], 
+    [SysSet].[HasProject] AS [HasProject], 
+    [SysSet].[HasBranch] AS [HasBranch], 
+    [SysSet].[HasDept] AS [HasDept], 
+    [SysSet].[HasUnit] AS [HasUnit], 
+    [SysSet].[HasParty] AS [HasParty], 
+    [SysSet].[MultiFinYear] AS [MultiFinYear], 
+    [SysSet].[HeadWiseNarration] AS [HeadWiseNarration], 
+    [SysSet].[AlwaysMultiple] AS [AlwaysMultiple], 
+    [SysSet].[MaintOldCode] AS [MaintOldCode], 
+    [SysSet].[BudgetAllocation] AS [BudgetAllocation], 
+    [SysSet].[RecurringVoucher] AS [RecurringVoucher], 
+    [SysSet].[ShowJobName] AS [ShowJobName], 
+    [SysSet].[autovouaftersave] AS [autovouaftersave], 
+    [SysSet].[VchrLen] AS [VchrLen], 
+    [SysSet].[MRConv] AS [MRConv], 
+    [SysSet].[InvoiceFormat] AS [InvoiceFormat], 
+    [SysSet].[MaintJob] AS [MaintJob], 
+    [SysSet].[MaintLot] AS [MaintLot], 
+    [SysSet].[MaintVAT] AS [MaintVAT], 
+    [SysSet].[Stockedcheck] AS [Stockedcheck], 
+    [SysSet].[OpenDate] AS [OpenDate], 
+    [SysSet].[MakeChallanAuto] AS [MakeChallanAuto], 
+    [SysSet].[MakeRecvAuto] AS [MakeRecvAuto], 
+    [SysSet].[OnlyGL] AS [OnlyGL], 
+    [SysSet].[HasRemittance] AS [HasRemittance], 
+    [SysSet].[IsSubsidiaryCtrl] AS [IsSubsidiaryCtrl], 
+    [SysSet].[NoGrp] AS [NoGrp], 
+    [SysSet].[OnlyGrp] AS [OnlyGrp], 
+    [SysSet].[GrpAndSubGrp] AS [GrpAndSubGrp], 
+    [SysSet].[SubSubGrp] AS [SubSubGrp], 
+    [SysSet].[HasSale] AS [HasSale], 
+    [SysSet].[OnlyVAT] AS [OnlyVAT], 
+    [SysSet].[RateChart] AS [RateChart], 
+    [SysSet].[CashBasis] AS [CashBasis], 
+    [SysSet].[ActualBasis] AS [ActualBasis], 
+    [SysSet].[MaintPacking] AS [MaintPacking]
+    FROM [dbo].[SysSet] AS [SysSet]</DefiningQuery>
+    </EntitySet>
+    <AssociationSet Name="FK_dbo_IssueDetails_dbo_IssueMain_IssueNo" Association="Self.FK_dbo_IssueDetails_dbo_IssueMain_IssueNo">
+      <End Role="IssueMain" EntitySet="IssueMain" />
+      <End Role="IssueDetails" EntitySet="IssueDetails" />
+    </AssociationSet>
+    <AssociationSet Name="FK_dbo_IssueDetails_dbo_ItemInfo_ItemCode" Association="Self.FK_dbo_IssueDetails_dbo_ItemInfo_ItemCode">
+      <End Role="ItemInfo" EntitySet="ItemInfo" />
+      <End Role="IssueDetails" EntitySet="IssueDetails" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

@@ -1,0 +1,237 @@
+﻿@model IEnumerable<App.Domain.SummaryReport>
+
+
+@{
+    ViewBag.Title = "Report Ledger";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    decimal TotDrAmt = 0;
+    decimal TotCrAmt = 0;
+    decimal ToCBDebit = 0;
+    decimal TotOBDebit = 0;
+
+}
+
+
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/select2/select2.css" rel="stylesheet" type="text/css" />
+<link href="~/Css/FormDesign.css" rel="stylesheet" />
+
+<style>
+    table.dataTable.select tbody tr,
+    table.dataTable thead th:first-child {
+        cursor: pointer;
+    }
+
+    .form-control {
+        border: 1px solid #00ffff;
+    }
+
+    .required:after {
+        content: " *";
+        font-weight: bold;
+        color: red;
+    }
+
+    .largeSpace {
+        margin-right: 13px;
+        margin-left: 9px;
+    }
+
+    tr {
+        page-break-inside: avoid;
+    }
+</style>
+
+@using (Html.BeginForm("SummaryReportPdf", "SummaryReport", FormMethod.Post, new { target = "_blank" }))
+{
+    <div class="column">
+        <div class="col-md-12">
+            <div class="panel panel-color panel-primary">
+                <div class="panel-heading">
+                    <div class="panel-title">
+                        <text style="text-align:left !important; text-decoration: none;">@ViewBag.RptCap</text>
+                        <input type="text" class="fa-pull-right" name="tDate" data-valmsg-for="Search.tDate" data-valmsg-replace="true" style="color:#7E3B2D; background-color:bisque; font-size:12px; width:70px" value="@ViewBag.tDate">
+                        <label class="fa-pull-right" style="color:#7E3B2D; text-align:center; padding-top:5px; font-size:12px; width:50px">To</label>
+                        <input type="text" class="fa-pull-right" name="fDate" data-valmsg-for="Search.fDate" data-valmsg-replace="true" style="color:#7E3B2D; background-color:bisque; font-size:12px; width:70px" value="@ViewBag.fDate">
+                        <label class="fa-pull-right" style="color:#7E3B2D; text-align:center; padding-top:5px; font-size:12px; width:70px">From</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="column">
+            <div class="col-md-12">
+                <div class="panel panel-color panel-primary">
+                    <div class="panel-body">
+                        <div class="col-md-12">
+                            <div class="col-md-2">
+                            </div>
+                            @if (ViewBag.RptCaption == "Trial Balance")
+                            {
+                            <div class="col-md-7" style="text-align:right">
+                                <label class="col-md-4 control-label">Branch : </label>
+                                <div class="input-group form-group col-md-8">
+                                    <input type="text" class="form-control" id="OpenBal" style="text-align:left; font-weight:bold; width:250px" value="@ViewBag.Branch" disabled="disabled">
+                                </div>
+                            </div>
+                            }
+                           
+                                   <div class="col-md-7" style="text-align:right">
+                                    <label class="col-md-4 control-label">Location : </label>
+                                    <div class="input-group form-group col-md-8">
+                                    <input type="text" class="form-control" id="OpenBal" style="text-align:left; font-weight:bold; width:250px" value="@ViewBag.Location" disabled="disabled">
+                                    </div>
+                                </div>
+                            
+
+                            <div class="col-md-3" style="text-align:center">
+                                <input type="submit" value="Print" class="btn btn-primary" id="preview" style="width:150px;" />
+                            </div>
+                        </div>
+                        <br />
+                        <br />
+                        <div class="row col-md-12" style="text-align:center; margin-left:40px">
+                            <div class="row">
+                                <div class="col-md-11">
+                                    @{
+    List<string> st = new List<string>();
+    foreach (var item in Model)
+    {
+        var SubCode = item.Ctrl_SubCode;
+        int indx = SubCode.IndexOf("(");
+        int Lindx = SubCode.IndexOf(")");
+        int len = Lindx - indx;
+        var str = SubCode.Substring(indx + 1, len - 1);
+        st.Add(str);
+
+    }
+    var itemp = st.Distinct().ToList();
+                                    }
+
+                                    @foreach (var mp in itemp)
+                                    {
+                                        <div style="float:left; font-size:15px; "><b> @Html.DisplayFor(modelItem => mp)</b> </div>
+
+                                        TotOBDebit = 0;
+                                        TotDrAmt = 0;
+                                        TotCrAmt = 0;
+                                        ToCBDebit = 0;
+                                        <table class="table table-bordered table-responsive" id="datatable-buttons">
+                                            <thead>
+                                                <tr>
+                                                    <th style="font-size:13px; text-align:center">@ViewBag.Col1Cap</th>
+                                                    <th style="font-size:13px; text-align:center">@ViewBag.Col2Cap</th>
+                                                    <th style="font-size:13px; text-align:center">@ViewBag.Col3Cap</th>
+                                                    <th style="font-size:13px; text-align:center">@ViewBag.Col4Cap</th>
+                                                    <th style="font-size:13px; text-align:center">@ViewBag.Col5Cap</th>
+                                                    <th style="font-size:13px; text-align:center">@ViewBag.Col6Cap</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="tbodyId">
+                                                @foreach (var item in Model.Where(x => x.Ctrl_SubCode.Contains('(' + mp + ')')))
+                                                {
+                                                    var SubCode = item.Ctrl_SubCode;
+                                                    var str = SubCode.Substring(0, 5);
+                                                    <tr>
+                                                        <td style="text-align:left; font-size:12px">
+                                                            @Html.DisplayFor(modelItem => str)
+                                                        </td>
+                                                        <td style="text-align:left; font-size:12px">
+                                                            @Html.DisplayFor(modelItem => item.Ctrl_SubName)
+                                                        </td>
+                                                        <td style="text-align:right; font-size:12px">
+                                                            @Html.DisplayFor(modelItem => item.OBDebit)
+                                                        </td>
+                                                        <td style="text-align:right; font-size:12px">
+                                                            @Html.DisplayFor(modelItem => item.Debit)
+                                                        </td>
+                                                        <td style="text-align:right; font-size:12px">
+                                                            @Html.DisplayFor(modelItem => item.Credit)
+                                                        </td>
+                                                        <td style="text-align:right; font-size:12px">
+                                                            @Html.DisplayFor(modelItem => item.CBDebit)
+                                                        </td>
+                                                    </tr>
+                                                    TotOBDebit += Convert.ToDecimal(item.OBDebit);
+                                                    TotDrAmt += Convert.ToDecimal(item.Credit);
+                                                    TotCrAmt += Convert.ToDecimal(item.Debit);
+                                                    ToCBDebit += Convert.ToDecimal(item.CBDebit);
+
+                                                }
+
+                                                <tr>
+                                                    <td style="border-right: hidden !important;border-bottom: hidden !important; border-left:hidden !important;"></td>
+                                                    <td style="border-right: hidden !important;border-bottom: hidden !important; border-left:hidden !important;"></td>
+                                                    <td class="tds" style="text-align: right; width:130px; font-size: 12px; border-top: 1px solid;border-bottom: hidden !important;border-right: hidden !important;"><b>@TotOBDebit</b><hr style="margin-bottom: 3px !important; margin-top: 0 !important" /><hr style="margin-bottom: 0 !important; margin-top: 0 !important" /></td>
+                                                    <td class="tds" style="text-align: right; width:100px;  font-size: 12px; border-top: 1px solid;border-bottom: hidden !important;border-right: hidden !important;"><b>@TotCrAmt</b><hr style="margin-bottom: 3px !important; margin-top: 0 !important" /><hr style="margin-bottom: 0 !important; margin-top: 0 !important" /></td>
+                                                    <td class="tds" style="text-align: right; width:100px;  font-size: 12px; border-top: 1px solid;border-bottom: hidden !important;border-right: hidden !important;"><b>@TotDrAmt</b><hr style="margin-bottom: 3px !important; margin-top: 0 !important" /><hr style="margin-bottom: 0 !important; margin-top: 0 !important" /></td>
+                                                    <td class="tds" style="text-align: right; width:130px;  font-size: 12px; border-top: 1px solid;border-bottom: hidden !important;border-right: hidden !important;"><b>@ToCBDebit</b><hr style="margin-bottom: 3px !important; margin-top: 0 !important" /><hr style="margin-bottom: 0 !important; margin-top: 0 !important" /></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    }
+                                    <br />
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <br />
+                        <div class="row col-md-12" style="text-align:center">
+                            <input type="submit" value="Print" class="btn btn-primary" id="preview" style="width:150px;" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+
+@section Scripts{
+    <script src="~/App_Themes/Theme1/plugins/select2/select2.min.js" type="text/javascript"></script>
+    <script src="~/App_Themes/Theme1/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.bootstrap.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.buttons.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/buttons.bootstrap.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/pdfmake.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/vfs_fonts.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/buttons.html5.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/buttons.print.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.fixedHeader.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.keyTable.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.responsive.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/responsive.bootstrap.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.scroller.min.js"></script>
+    <script type="text/javascript" src="../App_Themes/Theme1/plugins/parsleyjs/dist/parsley.min.js"></script>
+    <!-- Datatable init js -->
+    <script src="../App_Themes/Theme1/blue/assets/pages/datatables.init.js"></script>
+    <script>
+        $(document).ready(function () {
+
+            $("table#tabledataInner tr:odd").css({
+                "background-color": "#e1e4e4"
+            });
+
+            $('#datatable-buttons').dataTable({
+                "iDisplayLength": 100,
+                "lengthMenu": [1, 2, 4, 10, 25, 50, 100],
+                "paging": false,
+                "ordering": false,
+                "info": false
+            });
+            var rows_selected = [];
+            var table = $('#datatable-buttons').DataTable();
+
+
+        });
+    </script>
+}
+
+
+
+
+

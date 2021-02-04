@@ -1,0 +1,175 @@
+﻿@model IEnumerable<App.Domain.ViewModel.JarnalVoucher>
+@{
+    ViewBag.Title = "GLEntriesRcvPdf";
+    Layout = null;
+    decimal TotDrAmt = 0;
+    decimal TotCrAmt = 0;
+    var vHead = Model.Select(x => new { x.VchrNo, x.VDate }).Distinct().ToList();
+    string VNo = vHead.Select(x => x.VchrNo).First().ToString();
+    string vDate = vHead.Select(x => x.VDate).First().ToShortDateString();
+    var CompInfo = AcclineERP.Models.GetCompanyInfo.GetComInfo();
+    string CompanyAddress = ((CompInfo.Addr1 == null ? string.Empty : CompInfo.Addr1) + (CompInfo.Addr2 == null ? string.Empty : CompInfo.Addr2));
+    
+}
+<script src="~/Scripts/jquery-1.9.1.min.js"></script>
+<script src="~/Scripts/Export.js"></script>
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/select2/select2.css" rel="stylesheet" type="text/css" />
+<link href="~/Css/FormDesign.css" rel="stylesheet" />
+
+<style>
+    hr {
+        background-color: black;
+        /*height: 0.5px;*/
+    }
+
+    body {
+        padding-right: 0px;
+        font-weight: bold;
+        font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+    }
+
+    .myinput[type="checkbox"]:before {
+        position: relative;
+        display: block;
+        width: 15px;
+        height: 15px;
+        border: 1px solid black;
+        content: "";
+        background: #FFF;
+    }
+
+    .border {
+        color: #335; /* Lighten up font color */
+        font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+        font-weight: 300;
+        border-collapse: collapse;
+        border-spacing: 0;
+    }
+
+    .tds {
+        /*border: 1px solid black;*/
+        font-weight: 500;
+        font-family: Arial;
+        border-right: hidden !important;
+    }
+    /* Make cells a bit taller */
+    .ths {
+        /*border: 1px solid black;*/
+        font-weight: 500;
+        font-family: Arial;
+    }
+
+    .th {
+        background: #F3F3F3; /* Light grey background */
+        font-weight: bold; /* Make sure they're bold */
+    }
+
+    .td {
+        background: #FAFAFA; /* Lighter grey background */
+        text-align: center; /* Center our text */
+    }
+
+    .breakhere {
+        page-break-after: always;
+    }
+</style>
+
+
+
+<div id="toReport" class="panel-body" style="margin: auto; text-align:center !important; width:800px; height:auto; padding:60px">
+    <div class="panel-heading" style="text-align:center">
+        <div class="panel-title">
+            <label style="text-align:center !important; text-decoration: none; font-size:25px; font-weight:bold">@CompInfo.CompName</label><br>
+            <label style="text-align:center !important; text-decoration: none; font-size:23px; font-weight:normal"> @CompanyAddress</label><br>
+            @*<label style="text-align:center !important; text-decoration: none; font-size:23px; font-weight:normal">Phone: @CompInfo.Tel</label>*@<br>
+        </div>
+        <div class="panel-title">
+            <text style="text-align:center !important; text-decoration: none; font-size:18px; ">JOURNAL VOUCHER</text>
+        </div>
+        <div class="panel-title">
+            <text style="text-align:center !important; text-decoration: none; font-size:15px; ">Branch : @ViewBag.Branch</text>
+        </div>
+
+    </div>
+    <hr />
+    @*<text style="text-align:center !important; text-decoration: none; font-size:18px; ">JOURNAL VOUCHER</text>
+        <text style="text-align:center !important; text-decoration: none; font-size:18px; ">JOURNAL VOUCHER</text>
+        <text style="text-align:center !important; text-decoration: none; font-size:18px; ">JOURNAL VOUCHER</text>
+        <text style="text-align:center !important; text-decoration: none; font-size:18px; ">JOURNAL VOUCHER</text>
+        <text style="text-align:center !important; text-decoration: none; font-size:18px; ">JOURNAL VOUCHER</text>
+        <text style="text-align:center !important; text-decoration: none; font-size:18px; ">JOURNAL VOUCHER</text>*@
+    <label class="">Voucher No: </label>
+    <label class="col-md-8">@VNo</label>&emsp;
+    <label class="col-md-4">Date: </label>
+    <label class="col-md-8">@vDate</label>&emsp;
+    <label class="col-md-4">Posted: </label>
+    <label class="col-md-8">No</label>
+    <br />
+    <br />
+    <div class="panel-body" style="text-align:center">
+        <table cellpadding="5" cellspacing="1" border=1 frame=box rules=all style="width:800px">
+            <thead style="height:300px">
+                <tr>
+                    <th class="ths" style="font-size:15px; text-align:center">A/C</th>
+                    <th class="ths" style="font-size:15px; text-align:center">Subsidiary</th>
+                    <th class="ths" style="font-size:15px; text-align:center">Description</th>
+                    <th class="ths" style="font-size:15px; text-align:center">Debit</th>
+                    <th class="ths" style="font-size:15px; text-align:center">Credit</th>
+                    @*<th style="font-size:13px; text-align:center">Unit</th>
+                        <th style="font-size:13px; text-align:center">Dept</th>*@
+                </tr>
+            </thead>
+            <tbody id="tbodyId">
+
+                @foreach (var item in Model)
+                {
+
+                    <tr>
+                        <td class="tds" style="text-align:center; font-size:12px">
+                            @Html.DisplayFor(modelItem => item.ACCode)
+                        </td>
+                        <td class="tds" style="text-align:center; font-size:12px">
+                            @Html.DisplayFor(modelItem => item.Sub_Ac)
+                        </td>
+                        <td class="tds" style="text-align:center; font-size:12px;">
+                            @Html.DisplayFor(modelItem => item.Narration)
+                        </td>
+                        <td class="tds" style="text-align:right; font-size:12px">
+                            @Html.DisplayFor(modelItem => item.DrAmount)
+                        </td>
+                        <td style="text-align:right; font-size:12px;">
+                            @Html.DisplayFor(modelItem => item.CrAmount)
+                        </td>
+
+                    </tr>
+                    TotDrAmt += Convert.ToDecimal(item.DrAmount);
+                    TotCrAmt += Convert.ToDecimal(item.CrAmount);
+                } 
+                <tr>
+                    <td style="border-right: hidden !important; border-left: hidden !important;border-bottom: hidden !important;"></td>
+                    <td style="border-right: hidden !important; border-bottom: hidden !important;"></td>
+                    <td style="border-right: hidden !important; border-bottom: hidden !important;"></td>
+                    <td class="tds" style="text-align: right; font-size: 12px; border-left: 0px !important;border-bottom: hidden !important;border-right: hidden !important;"><b>@TotCrAmt</b><hr style="margin-bottom: 3px !important; margin-top: 0 !important" /><hr style="margin-bottom: 0 !important; margin-top: 0 !important" /></td>
+                    <td class="tds" style="text-align: right; font-size: 12px; border-top: 1px solid;border-bottom: hidden !important;border-right: hidden !important;"><b>@TotDrAmt</b><hr style="margin-bottom: 3px !important; margin-top: 0 !important" /><hr style="margin-bottom: 0 !important; margin-top: 0 !important" /></td>
+
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div>
+
+    <text style="text-align:left !important;  font-size:15px; margin-left:70px; border-top:1px solid">Prepared By</text>
+    <text style="text-align:center !important;  font-size:15px; margin-left:200px;border-top:1px solid">Checked By</text>
+    <text style="text-align:right !important; font-size:15px;  margin-left:200px;border-top:1px solid">Approved By</text>
+
+</div>
+<br />
+<div class="panel-footer" style="width:850px ;margin-left:70px">
+    <label style="font-size:11px; text-align:left;">Print Date : @ViewBag.PrintDate</label>&emsp;
+    <i><label style="font-size:11px; text-align:right; margin-left:600px;">Page 1 of 1</label></i>
+</div>
+

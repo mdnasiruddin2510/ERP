@@ -1,0 +1,892 @@
+﻿@model App.Domain.SecUserInfo
+@{
+    ViewBag.Title = "Security User Info";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/Css/FormDesign.css" rel="stylesheet" />
+
+<style>
+    .dataTables_scrollBody > table > thead > tr > th[class*="sort"]::after {
+        display: none;
+    }
+
+    .hideme {
+        display: none;
+    }
+
+    .button {
+        height: 35px;
+        color: white;
+        font-weight: bold;
+    }
+
+        .button:hover {
+            /*background-image:url('tiny_.gif');*/
+        }
+</style>
+
+<div class="container">
+    <div class="row">
+
+
+        <div class="panel panel-color panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    <text style="text-align:left !important; text-decoration: none;">User Info</text>
+                    <text style="color:#1E3B2D;font-size:12px;margin-right:100px;" class="pull-right">@ViewBag.Status</text>
+                </h3>
+            </div>
+            <div class="panel-body">
+                <div class="col-md-12">
+                    <div class="col-md-7">
+                        <div class="row col-md-12">
+                            <div class="col-md-12">
+                                @Html.LabelFor(x => x.UserName, new { @class = "col-md-4" })
+                                <div class="form-group col-md-4">
+                                    @Html.TextBoxFor(x => x.UserName, null, new { @class = "form-control", required = "required", maxlength = "50" })
+                                    @Html.ValidationMessageFor(x => x.UserName)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row col-md-12">
+                            <div class="col-md-12">
+                                @Html.LabelFor(x => x.Password, new { @class = "col-md-4" })
+                                <div class="form-group col-md-8">
+                                    @Html.PasswordFor(x => x.Password, new { @class = "form-control", required = "required", maxlength = "50" })
+                                    <span>Enter a password longer than 0 characters</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row col-md-12">
+                            <div class="col-md-12">
+                                @Html.LabelFor(x => x.ConfPassword, new { @class = "col-md-4" })
+                                <div class="form-group col-md-8">
+                                    @Html.PasswordFor(x => x.ConfPassword, new { @class = "form-control", required = "required", maxlength = "50" })
+                                    <span>Please confirm your password</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row col-md-12">
+                            <div class="col-md-12">
+                                @Html.LabelFor(x => x.Email, new { @class = "col-md-4" })
+                                <div class="form-group col-md-8">
+                                    @Html.TextBoxFor(x => x.Email, null, new { @class = "form-control", required = "required", maxlength = "50" })
+                                    @Html.ValidationMessageFor(x => x.Email)
+                                </div>
+                            </div>
+                        </div>
+                        @*<div class="row col-md-12">
+                            <div class="col-md-12">
+                                @Html.LabelFor(x => x.CreateDate, new { @class = "col-md-4" })
+                                <div class="form-group col-md-4">
+                                    <input type="text" class="form-control col-md-6 datePage" id="CreateDate" name="CreateDate" />
+                                    @Html.ValidationMessageFor(x => x.CreateDate)
+                                </div>
+                            </div>
+                        </div>*@
+                    </div>
+                    <div class="col-md-5">
+                        <div class="col-md-12">
+
+                        </div>
+                        <div class="col-md-12" id="dvbtnAddRights">
+                            @*<div class="col-md-12">
+                                    <input type="submit" class="btn btn-primary button" style="float:left;margin-left:40px" value="Add Rights" id="btnAddRights" />
+                                </div>*@
+                        </div>
+                    </div>
+
+                    @*<div class="col-md-12" id="dvdtFormProcess">
+                            <br />
+                                <br />
+                            <div class="col-md-10" style="padding: 20px 30px 10px 50px;">
+                                <table class="table table-bordered table-responsive display select" id="datatableFormProc">
+                                    <thead>
+                                        <tr>
+                                            <th><input type="checkbox" name="select_all" value="1" id="dtFprc-select-all"></th>
+                                            <th>FormName</th>
+                                            <th>ProcessName</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                            <br />
+                            <br />
+
+                        </div>*@
+
+                    <br />
+                    <br />
+
+                    <div class="row col-md-12">
+                        <div class="col-md-12" style="text-align:center">
+                            <input type="submit" class="btn btn-primary button" value="Save" id="btnSaveUsrInfo" />
+                            <input type="button" class="btn btn-primary button" value="Update" id="btnUpdateUsrInfo" />
+                            <input type="button" class="btn btn-primary button" value="Clear" id="btnClearUsrInfo" />
+                        </div>
+                    </div>
+
+                    <br />
+                    <br />
+
+                    <div class="col-md-12">
+                        <br />
+                        <br />
+                        <div class="col-md-10" style="padding: 20px 30px 10px 50px;">
+                            <table class="table table-bordered table-responsive" id="datatable">
+                                <thead>
+                                    <tr>
+                                        <th>Sl.</th>
+                                        <th class="hideme">UserID</th>
+                                        <th>UserName</th>
+                                        <th class="hideme">Password</th>
+                                        <th>Email</th>
+                                        <th>CreateDate</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                        <br />
+                        <br />
+
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>
+
+        @*</div>*@
+
+    </div>
+
+</div>
+
+@section Scripts{
+    <script src="~/App_Themes/Theme1/plugins/select2/select2.min.js" type="text/javascript"></script>
+    <script src="~/App_Themes/Theme1/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.bootstrap.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.buttons.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/buttons.bootstrap.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/pdfmake.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/vfs_fonts.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/buttons.html5.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/buttons.print.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.fixedHeader.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.keyTable.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.responsive.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/responsive.bootstrap.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.scroller.min.js"></script>
+    <script type="text/javascript" src="../App_Themes/Theme1/plugins/parsleyjs/dist/parsley.min.js"></script>
+    <!-- Datatable init js -->
+    <script src="../App_Themes/Theme1/blue/assets/pages/datatables.init.js"></script>
+
+    <script>
+
+        $(document).keypress(function (e) {
+            if (e.which == 13) {
+                e.preventDefault();
+            }
+
+        })
+
+        $(".select2").select2({
+            allowClear: true
+        });
+
+
+        jQuery(".datePage").datepicker({
+            autoclose: true,
+            todayHighlight: true,
+            format: 'mm/dd/yyyy',
+            changeMonth: true,
+            changeYear: true
+        });
+
+
+        $("#btnUpdateUsrInfo").hide();
+        //$("#dvbtnAddRights").show();
+        //$("#dvdtFormProcess").hide();
+
+
+        var UsrInfo = {
+
+            UserID: "",
+            UserName: "",
+            Password: "",
+            ConfPassword: "",
+            Email: "",
+            CreateDate: ""
+
+        };
+
+
+        var table = $("#datatable").DataTable({
+            "scrollX": true,
+            "ajax": "../SecUserInfo/GetAllDataForSecUserInfo",
+            "columns": [
+                       { "data": null, "bSortable": false },
+                       { "data": "UserID", "class": "hideme" },
+                       { "data": "UserName" },
+                       { "data": "Password", "class": "hideme" },
+                       { "data": "Email" },
+                       {
+                           "data": "CreateDate", "type": "date",
+                           "render": function (value) {
+                               if (value === null) return "";
+
+                               var pattern = /Date\(([^)]+)\)/;
+                               var results = pattern.exec(value);
+                               var dt = new Date(parseFloat(results[1]));
+
+                               return (dt.getMonth() + 1) + "/" + dt.getDate() + "/" + dt.getFullYear();
+                           }
+                       },
+                       {
+
+                           targets: [1],
+                           mRender: function (data, type, row) {
+                               return '<a href="#" id="edit" class="btn btn-default">'
+                                       + '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span></a>&ensp;&ensp;'
+                               + '<a href="#" class="on-default remove-row deleteSup largeSpace" data-id="1" id="deleteUsr" value="' + row.UserID + '">'
+                               + ' <i class="glyphicon glyphicon-trash"></i> </a>'
+                           }
+                       },
+            ],
+            "fnCreatedRow": function (row, data, index) {
+                $('td', row).eq(0).html(index + 1);
+            }
+
+
+        });
+
+        $('body').on('click', '#edit', function () {
+
+            var data = table.row($(this).closest('tr')).data();
+
+            var UserID = data.UserID;
+            //var GroupName = data.GroupName;
+
+            //rows_selected = [];
+
+            //$("#dvbtnAddRights").hide();
+            //$("#dvdtFormProcess").show();
+
+            $.ajax({
+                url: '@Url.Action("GetSecUserInfoByID", "SecUserInfo")',
+                contentType: "application/json;charset=utf-8",
+                data: { UserID: UserID },
+                type: "GET",
+                dataType: 'json',
+                success: function (data) {
+
+
+                    if (data == 0) {
+
+                        swal({
+                            title: "Sorry!",
+                            text: "An Error Occured During Load!",
+                            type: "warning"
+                        });
+
+                        $("#btnSaveUsrInfo").show();
+                        $("#btnUpdateUsrInfo").hide();
+
+                        //$("#dvbtnAddRights").hide();
+                        //$("#dvdtFormProcess").show();
+
+                        //Usertable.search('').draw();
+                        //Usertable.clear().draw();
+
+
+                    }
+                    else {
+
+
+                        if (!jQuery.isEmptyObject(data)) {
+
+
+                            data = $.parseJSON(data);
+                            //var UIG = data.SecUserInfos;
+
+                            //if (UIG != null && UIG.length > 0) {
+
+                            //    $("#dvbtnAddRights").hide();
+                            //    $("#dvdtFormProcess").show();
+
+                            //    $.each(data.SecUserInfos, function (key, item) {
+                            //        rows_selected.push(item.FormProcessID);
+                            //    });
+
+                                $("#btnSaveUsrInfo").hide();
+                                $("#btnUpdateUsrInfo").show();
+                            //}
+
+
+
+                            //Usertable.clear();
+                            //Usertable.rows.add(data).draw();
+
+                            setUsrInfoObj(data);
+                            setUsrInfoFieldData(data);
+
+                        }
+                        else {
+                            //$("#dvbtnAddRights").show();
+                            //$("#dvdtFormProcess").hide();
+
+                            $("#btnSaveUsrInfo").show();
+                            $("#btnUpdateUsrInfo").hide();
+                        }
+
+                        @*$.ajax({
+                            url: '@Url.Action("GetSeccFormProcessToAddInRights", "SecUserInfo")',
+                            contentType: "application/json;charset=utf-8",
+                            type: 'POST',
+                            dataType: 'json',
+                            success: function (data) {
+
+                                if (data) {
+
+                                    Usertable.clear();
+                                    Usertable.rows.add(data).draw();
+
+                                }
+                                else if (data.length == 0) {
+
+                                    Usertable.search('').draw();
+                                    Usertable.clear().draw();
+                                }
+
+                            }
+                        });*@
+
+
+
+
+                    }
+
+                }
+            });
+
+        });
+
+
+        $(document).on("click", "#deleteUsr", function () {
+            var value = $(this).attr("value");
+            swal({
+                title: "Are you sure?",
+                text: "You will not be able to recover this data!",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Yes, delete it!",
+                closeOnConfirm: false,
+                closeOnCancel: true
+            },
+                function () {
+                    $.ajax({
+                        url: '@Url.Action("DeleteSecUserInfo", "SecUserInfo")',
+                        contentType: "application/json;charset=utf-8",
+                        data: { UserID: value },
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function (datas) {
+
+                            if (datas == 0 || datas == 2) {
+                                swal("Sorry!! Failed to delete this data.", "fail");
+                            }
+                            else if (datas == 1) {
+                                swal({
+                                    title: "Ok",
+                                    text: "Sucessfully Delete!",
+                                    type: "success"
+                                }, function () {
+                                    clearUsrInfoControls();
+                                });
+                            }
+                            else if (datas == "D") {
+
+                                swal({
+                                    title: "Sorry",
+                                    text: "No Delete Permission for this User",
+                                    type: "warning"
+                                });
+
+                            }
+
+                        },
+                        error: function (datas) {
+                            swal("Sorry!! Failed to delete this data.", "fail")
+                        }
+                    });
+                });
+        });
+
+        function validateUsrInfOnSave(validUsrInf) {
+
+            if (!validUsrInf.UserName.trim().length) {
+                return "UserName is required.";
+            }
+            if (!validUsrInf.Password.trim().length) {
+                return "Password is required.";
+            }
+            if (!validUsrInf.ConfPassword.trim().length) {
+                return "Confirm Password is required.";
+            }
+
+            return "";
+        }
+
+        function setUsrInfo() {
+
+            //UsrInfo.UserID = $("#UserID").val();
+            UsrInfo.UserName = $("#UserName").val();
+            UsrInfo.Password = $("#Password").val();
+            UsrInfo.ConfPassword = $("#ConfPassword").val();
+            UsrInfo.Email = $("#Email").val();
+            //UsrInfo.CreateDate = $("#CreateDate").val();
+        }
+
+        function setUsrInfoObj(objUGInfo) {
+
+            UsrInfo.UserID = objUGInfo.UserID;
+            UsrInfo.UserName = objUGInfo.UserName;
+            UsrInfo.Password = objUGInfo.Password;
+            UsrInfo.ConfPassword = objUGInfo.ConfPassword;
+            UsrInfo.Email = objUGInfo.Email;
+            UsrInfo.CreateDate = objUGInfo.CreateDate;
+        }
+
+        $(document).on("click",
+        "#btnSaveUsrInfo",
+        function () {
+
+            setUsrInfo();
+
+            //var SecFrmProc = rows_selected;
+
+            var validate = validateUsrInfOnSave(UsrInfo);
+            if (validate != "") {
+                alert(validate);
+                return;
+            }
+
+
+            $.ajax({
+                url: '@Url.Action("SaveSecUserInfo", "SecUserInfo")',
+                contentType: "application/json;charset=utf-8",
+                data: JSON.stringify({ SecUsrInfo: UsrInfo }),
+                type: 'POST',
+                dataType: 'json',
+                success: function (data) {
+
+                    if (data == 1) {
+
+                        swal({
+                            title: "Ok",
+                            text: "All Information Saved Sucessfully!",
+                            type: "success"
+                        });
+
+                        var e = jQuery.Event("change");
+                        $("#FormCode").trigger(e);
+
+                        clearUsrInfo();
+                        clearUsrInfoControls();
+
+
+                    }
+                    else if (data == 0) {
+
+                        swal({
+                            title: "Sorry!",
+                            text: "An Error Occured During Save!",
+                            type: "warning"
+                        });
+
+                    }
+                    else if (data == 2) {
+
+                        swal({
+                            title: "Sorry!",
+                            text: "User Already Exists!!",
+                            type: "warning"
+                        });
+
+                    }
+                    else if (data == "X") {
+
+                        swal({
+                            title: "Sorry",
+                            text: "No Save Permission for this User",
+                            type: "warning"
+                        });
+
+                    }
+
+                    table.ajax.reload();
+
+                }
+            });
+        });
+
+
+        $(document).on("click",
+       "#btnUpdateUsrInfo",
+       function () {
+
+           setUsrInfo();
+
+           //var SecFrmProc = rows_selected;
+
+           var validate = validateUsrInfOnSave(UsrInfo);
+           if (validate != "") {
+               alert(validate);
+               return;
+           }
+
+
+           $.ajax({
+               url: '@Url.Action("UpdateSecUserInfo", "SecUserInfo")',
+               contentType: "application/json;charset=utf-8",
+               data: JSON.stringify({ SecUsrInfo: UsrInfo }),
+               type: 'POST',
+               dataType: 'json',
+               success: function (data) {
+
+                   if (data == 1) {
+
+                       swal({
+                           title: "Ok",
+                           text: "All Information Updated Sucessfully!",
+                           type: "success"
+                       });
+
+                       clearUsrInfo();
+                       clearUsrInfoControls();
+                   }
+                   else if (data == 0) {
+
+                       swal({
+                           title: "Sorry!",
+                           text: "An Error Occured During Update!",
+                           type: "warning"
+                       });
+
+                   }
+                   else if (data == 2) {
+
+                       swal({
+                           title: "Sorry!",
+                           text: "No Available Data to Update!",
+                           type: "warning"
+                       });
+
+                   }
+                   else if (data == 3) {
+
+                       swal({
+                           title: "Sorry!",
+                           text: "Code Already Exists!",
+                           type: "warning"
+                       });
+
+                   }
+                   else if (data == "U") {
+
+                       swal({
+                           title: "Sorry",
+                           text: "No Edit/Update Permission for this User",
+                           type: "warning"
+                       });
+
+                   }
+
+                   table.ajax.reload();
+
+               }
+           });
+       });
+
+        function clearUsrInfo() {
+
+            UsrInfo.UserID = "";
+            UsrInfo.UserName = "";
+            UsrInfo.Password = "";
+            UsrInfo.ConfPassword = "";
+            UsrInfo.Email = "";
+            UsrInfo.CreateDate = "";
+        }
+
+        function clearUsrInfoControls() {
+
+            $("#UserName").val("");
+            $("#Password").val("");
+            $("#ConfPassword").val("");
+            $("#Email").val("");
+            //$('#CreateDate').datepicker('setDate', null);
+
+
+            $("#btnSaveUsrInfo").show();
+            $("#btnUpdateUsrInfo").hide();
+
+            table.search('').draw();
+            table.clear().draw();
+            table.ajax.reload();
+
+        }
+
+
+        function setUsrInfoFieldData(UsrInfo) {
+
+            $("#UserName").val(UsrInfo.UserName);
+            $("#Password").val(UsrInfo.Password);
+            $("#ConfPassword").val(UsrInfo.Password);
+            $("#Email").val(UsrInfo.Email);
+
+            //if (UsrInfo.CreateDate == null) {
+            //    $("#CreateDate").val("");
+            //}
+            //else {
+            //    $('#CreateDate').datepicker('setDate', moment(UsrInfo.CreateDate).format("MM/DD/YYYY"));
+            //}
+
+            //$("#btnSaveUsrInfo").hide();
+            //$("#btnUpdateUsrInfo").show();
+        }
+
+
+        $("#btnClearUsrInfo").on("click", function () {
+
+            clearUsrInfoControls();
+        });
+
+
+        //
+        // Updates "Select all" control in a data table
+        //
+        //function updateDataTableSelectAllCtrl(table) {
+        //    var $table = Usertable.table().node();
+        //    var $chkbox_all = $('tbody input[type="checkbox"]', $table);
+        //    var $chkbox_checked = $('tbody input[type="checkbox"]:checked', $table);
+        //    var chkbox_select_all = $('thead input[name="select_all"]', $table).get(0);
+
+        //    // If none of the checkboxes are checked
+        //    if ($chkbox_checked.length === 0) {
+        //        chkbox_select_all.checked = false;
+        //        if ('indeterminate' in chkbox_select_all) {
+        //            chkbox_select_all.indeterminate = false;
+        //        }
+
+        //        // If all of the checkboxes are checked
+        //    } else if ($chkbox_checked.length === $chkbox_all.length) {
+        //        chkbox_select_all.checked = true;
+        //        if ('indeterminate' in chkbox_select_all) {
+        //            chkbox_select_all.indeterminate = false;
+        //        }
+
+        //        // If some of the checkboxes are checked
+        //    } else {
+        //        chkbox_select_all.checked = true;
+        //        if ('indeterminate' in chkbox_select_all) {
+        //            chkbox_select_all.indeterminate = true;
+        //        }
+        //    }
+        //}
+
+        //// Array holding selected row IDs
+        //var rows_selected = [];
+        //var Usertable = $('#datatableFormProc').DataTable({
+        //    "columns": [
+        //           { "data": "FormProcessID" },
+        //           { "data": "FormName" },
+        //           { "data": "ProcessName" }
+        //    ],
+        //    'columnDefs': [{
+        //        'targets': 0,
+        //        'searchable': false,
+        //        'orderable': false,
+        //        'width': '1%',
+        //        'className': 'dt-body-center',
+        //        'render': function (data, type, full, meta) {
+        //            return '<input type="checkbox">';
+        //        }
+        //    }],
+        //    'order': [[1, 'asc']],
+        //    'rowCallback': function (row, data, dataIndex) {
+        //        // Get row ID
+        //        var rowId = data["FormProcessID"];
+
+        //        // If row ID is in the list of selected row IDs
+        //        if ($.inArray(rowId, rows_selected) !== -1) {
+        //            $(row).find('input[type="checkbox"]').prop('checked', true);
+        //            $(row).addClass('selected');
+        //        }
+        //    }
+        //});
+
+        //// Handle click on checkbox
+        //$('#datatableFormProc tbody').on('click', 'input[type="checkbox"]', function (e) {
+        //    var $row = $(this).closest('tr');
+
+        //    // Get row data
+        //    var data = Usertable.row($row).data();
+
+        //    // Get row ID
+        //    var rowId = data["FormProcessID"];
+
+        //    // Determine whether row ID is in the list of selected row IDs
+        //    var index = $.inArray(rowId, rows_selected);
+
+        //    // If checkbox is checked and row ID is not in list of selected row IDs
+        //    if (this.checked && index === -1) {
+        //        rows_selected.push(rowId);
+
+        //        // Otherwise, if checkbox is not checked and row ID is in list of selected row IDs
+        //    } else if (!this.checked && index !== -1) {
+        //        rows_selected.splice(index, 1);
+        //    }
+
+        //    if (this.checked) {
+        //        $row.addClass('selected');
+        //    } else {
+        //        $row.removeClass('selected');
+        //    }
+
+        //    // Update state of "Select all" control
+        //    updateDataTableSelectAllCtrl(Usertable);
+
+        //    // Prevent click event from propagating to parent
+        //    e.stopPropagation();
+        //});
+
+        //// Handle click on table cells with checkboxes
+        //$('#datatableFormProc').on('click', 'tbody td, thead th:first-child', function (e) {
+        //    $(this).parent().find('input[type="checkbox"]').trigger('click');
+        //});
+
+        //// Handle click on "Select all" control
+        //$('thead input[name="select_all"]', Usertable.table().container()).on('click', function (e) {
+        //    if (this.checked) {
+        //        $('#datatableFormProc tbody input[type="checkbox"]:not(:checked)').trigger('click');
+        //    } else {
+        //        $('#datatableFormProc tbody input[type="checkbox"]:checked').trigger('click');
+        //    }
+
+        //    // Prevent click event from propagating to parent
+        //    e.stopPropagation();
+        //});
+
+        //// Handle table draw event
+        //Usertable.on('draw', function () {
+        //    // Update state of "Select all" control
+        //    updateDataTableSelectAllCtrl(Usertable);
+        //});
+
+
+        @*$(document).on("click",
+        "#btnAddRights",
+        function () {
+
+            rows_selected = [];
+            $("#dvdtFormProcess").show();
+            Usertable.search('').draw();
+            Usertable.clear().draw();
+
+            $.ajax({
+                url: '@Url.Action("GetSeccFormProcessToAddInRights", "SecUserInfo")',
+                contentType: "application/json;charset=utf-8",
+                type: 'POST',
+                dataType: 'json',
+                success: function (data) {
+
+                    if (data) {
+
+                        Usertable.clear();
+                        Usertable.rows.add(data).draw();
+
+                    }
+                    else if (data.length == 0) {
+
+                        swal({
+                            title: "Sorry!",
+                            text: "An Error Occured During Save!",
+                            type: "warning"
+                        });
+
+                    }
+
+                }
+            });
+        });*@
+
+
+        var $password = $('#Password');
+        var $confirmPassword = $('#ConfPassword');
+
+        // Hide hints by default on load
+        $("form span").hide();
+
+        // Check if entered password meets requirements (True or False)
+        function isPasswordValid() {
+            return $password.val().length > 0;
+        }
+
+        // Check if password fields match (True or False)
+        function arePasswordsMatching() {
+            return $password.val() === $confirmPassword.val();
+        }
+
+        // Check if passwords are both valid and matching (True or False)
+        function canSubmit() {
+            return isPasswordValid() && arePasswordsMatching();
+        }
+
+        // Hide hint if password valid, show if not valid
+        function passwordEvent() {
+            if (isPasswordValid()) {
+                $password.next().hide();
+            } else {
+                $password.next().show();
+            }
+        }
+
+        // Hide hint if both password fields match, show if fields do not match
+        function passwordConfirmation() {
+            if (arePasswordsMatching()) {
+                $confirmPassword.next().hide();
+            } else {
+                $confirmPassword.next().show();
+            }
+        }
+
+        // Enable submit button when passwords are both valid and matching
+        function enableSubmit() {
+
+            var isSaveVisible = $('#btnSaveUsrInfo').is(':visible');
+            var isUpdateVisible = $('#btnUpdateUsrInfo').is(':visible');
+
+            if (isSaveVisible == true)
+            {
+                $("#btnSaveUsrInfo").prop("disabled", !canSubmit());
+            }
+            else if (isUpdateVisible == true)
+            {
+                $("#btnUpdateUsrInfo").prop("disabled", !canSubmit());
+            }
+        }
+
+        $password.focus(passwordEvent).keyup(passwordEvent).keyup(passwordConfirmation).keyup(enableSubmit);
+
+        $confirmPassword.focus(passwordConfirmation).keyup(passwordConfirmation).keyup(enableSubmit);
+
+        //enableSubmit();
+
+    </script>
+}

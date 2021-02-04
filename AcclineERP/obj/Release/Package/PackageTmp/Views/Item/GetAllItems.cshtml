@@ -1,0 +1,140 @@
+﻿@model IEnumerable<App.Domain.ItemList>
+
+@{
+    ViewBag.Title = "Item List";
+    Layout = null;
+    int sl = 0;
+
+    var CompInfo = AcclineERP.Models.GetCompanyInfo.GetComInfo();
+    string CompanyAddress = ((CompInfo.Addr1 == null ? string.Empty : CompInfo.Addr1) + (CompInfo.Addr2 == null ? string.Empty : CompInfo.Addr2));
+}
+
+<script src="~/Scripts/jquery-1.9.1.min.js"></script>
+<script src="~/Scripts/Export.js"></script>
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/select2/select2.css" rel="stylesheet" type="text/css" />
+<link href="~/Css/FormDesign.css" rel="stylesheet" />
+
+<style>
+    hr {
+        background-color: black;
+        height: 0.5px;
+    }
+
+    /*body {
+    counter-reset: page_number;
+}*/
+
+/*#page-number:before {
+    counter-increment: page_number;
+    content: "Page " counter(page_number) " of Page " ;
+}*/
+</style>
+
+<div id="toReport" class="panel-body" style="margin: auto; text-align:center !important; width:800px; height:1150px; padding:60px">
+    <div class="panel-heading" style="text-align:center">
+        <div class="panel-title">
+            <label style="text-align:center !important; text-decoration: none; font-size:25px; font-weight:bold">@CompInfo.CompName</label><br>
+            <label style="text-align:center !important; text-decoration: none; font-size:23px; font-weight:normal"> @CompanyAddress</label><br>
+            @*<label style="text-align:center !important; text-decoration: none; font-size:23px; font-weight:normal">Phone: @CompInfo.Tel</label>*@<br>
+        </div>
+        <br />
+        <div class="panel-title">
+            <text style="text-align:center !important; text-decoration: none; font-size:20px; font-weight:bold">@ViewBag.Title</text>
+        </div>
+        
+    </div>
+    <hr />
+    <br />
+    
+    <div class="panel-body" style="text-align:center">
+        <table cellpadding="5" cellspacing="1" border="0" style="width:800px">
+            <thead style="height:300px">
+                <tr>
+                    <th style="width:80px; text-align:center">Sl</th>
+                    <th style="width:100px; text-align:left">Item Code</th>
+                    <th style="width:120px; text-align:left">Part No</th>
+                    <th style="width:230px; text-align:left">Item Name</th>
+                    <th style="width:150px; text-align:left">Item Type</th>
+                    <th style="width:120px; text-align:left">UOM</th>
+                </tr>
+                <tr>
+                    <th style="width:80px; text-align:center"></th>
+                    <th style="width:100px; text-align:left"></th>
+                    <th style="width:120px; text-align:left"></th>
+                    <th style="width:230px; text-align:left"></th>
+                    <th style="width:150px; text-align:left"></th>
+                    <th style="width:120px; text-align:left"></th>
+                </tr>
+                
+            </thead>
+            <tbody id="tbodyId">
+
+                @foreach (var item in Model)
+                {
+                    sl++;
+                    
+                    if (item.ItemCode == item.PartNo)
+                    {
+                        item.PartNo = " ";
+                    }
+                    else
+                    {
+                        item.PartNo = item.PartNo;
+                    }
+                    
+                    <tr>
+                        <td style="width:80px; text-align:center">
+                            @sl
+                        </td>
+                        <td style="width:100px; text-align:left">
+                            @Html.DisplayFor(modelItem => item.ItemCode)
+                        </td>
+                        <td style="width:120px; text-align:left">
+                            @Html.DisplayFor(modelItem => item.PartNo)
+                        </td>
+                        <td style="width:230px; text-align:left">
+                            @Html.DisplayFor(modelItem => item.ItemName)
+                        </td>
+                        <td style="width:150px; text-align:left">
+                            @Html.DisplayFor(modelItem => item.ItemType)
+                        </td>
+                        <td style="width:120px; text-align:left">
+                            @Html.DisplayFor(modelItem => item.UnitCode)
+                        </td>
+                    </tr>
+
+                }
+                
+            </tbody>
+
+
+
+        </table>
+    </div>
+
+</div>
+@*<div class="col-sm-10">
+    <br />
+    <br /><br />
+</div>*@
+@*<div class="panel-footer" style="text-align:right; width:850px">
+    <label style="font-size:13px">Print Date : @ViewBag.PrintDate</label>
+</div>*@
+
+@*<div class="panel-footer" style="text-align:left; width:850px">
+    <label style="font-size:13px">Page No : @ViewBag.PrintPage</label>
+</div>*@
+
+
+
+@*<div class="xxx"></div>
+
+<p id='page-number'>
+    <script type="application/javascript">
+        aaa = document.getElementsByClassName("xxx").length;
+        document.write(aaa);
+    </script>
+</p>*@

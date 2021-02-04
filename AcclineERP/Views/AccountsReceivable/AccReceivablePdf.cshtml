@@ -1,0 +1,112 @@
+﻿@model IEnumerable<App.Domain.AccountsReceivable>
+
+@{
+    ViewBag.Title = "Accounts Receivable Statement";
+    Layout = null;
+    decimal tOpenBal = 0.0m;
+    decimal tSoldAmt = 0.0m;
+    decimal tRcvdamt = 0.0m;
+    decimal tCloseBal = 0.0m;
+
+}
+
+<script src="~/Scripts/jquery-1.9.1.min.js"></script>
+<script src="~/Scripts/Export.js"></script>
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/select2/select2.css" rel="stylesheet" type="text/css" />
+<link href="~/Css/FormDesign.css" rel="stylesheet" />
+
+<style>
+    hr {
+        background-color: black;
+        height: 0.5px;
+    }
+</style>
+
+<div id="toReport" class="panel-body" style="margin: auto; text-align:center !important; width:800px; height:1150px; padding:60px">
+    <div class="panel-heading" style="text-align:center">
+        <div class="panel-title">
+            <text style="text-align:center !important; text-decoration: none; font-size:23px; font-weight:bold">TAHSIN AGRO</text>
+        </div>
+        <div class="panel-title">
+            <text style="text-align:center !important; text-decoration: none; font-size:20px; font-weight:bold">@ViewBag.Title</text>
+        </div>
+        <div class="cashDate">
+            <text style="text-align:center !important; text-decoration: none; font-size:15px; font-weight:bold">From : @ViewBag.fDate &nbsp;&nbsp; To: @ViewBag.tDate</text>
+        </div>
+    </div>
+    <hr />
+    
+    <br /><br /><br />
+    <div class="panel-body" style="width:100%; text-align:center">
+        <table cellpadding="2" cellspacing="2" border="0" style="width:750px">
+
+            <thead>
+                <tr>
+                    <th style="text-align:left; font-size:18px">Customer<hr /></th>
+                    <th style="text-align:center; font-size:18px">Opening Balance<hr /></th>
+                    <th style="text-align:center; font-size:18px">Sold Amount<hr /></th>
+                    <th style="text-align:center; font-size:18px">Received Amount<hr /></th>
+                    <th style="text-align:center; font-size:18px">Closing Balance<hr /></th>
+                </tr>
+                <tr style="width:30px">
+                    <th style="text-align:left"></th>
+                    <th style="text-align:center"></th>
+                    <th style="text-align:center"></th>
+                    <th style="text-align:center"></th>
+                    <th style="text-align:center"></th>
+                </tr>
+            </thead>
+            <tbody id="tbodyId">
+
+                @foreach (var item in Model)
+                {
+                    tOpenBal += Convert.ToDecimal(item.OpenBal);
+                    tSoldAmt += Convert.ToDecimal(item.SoldAmt);
+                    tRcvdamt += Convert.ToDecimal(item.RcvdAmt);
+                    tCloseBal += Convert.ToDecimal(item.CloseBal);
+
+                    <tr>
+                        <td style="text-align:left">
+                            @Html.DisplayFor(modelItem => item.CustName)
+                        </td>
+                        <td style="text-align:right">
+                            @Html.DisplayFor(modelItem => item.OpenBal)
+                        </td>
+                        <td style="text-align:right">
+                            @Html.DisplayFor(modelItem => item.SoldAmt)
+                        </td>
+                        <td style="text-align:right">
+                            @Html.DisplayFor(modelItem => item.RcvdAmt)
+                        </td>
+                        <td style="text-align:right">
+                            @Html.DisplayFor(modelItem => item.CloseBal)
+                        </td>
+
+                    </tr>
+
+                }
+                <tr>
+                    <th style="text-align:center"></th>
+                    <th style="text-align:right"><hr />@tOpenBal</th>
+                    <th style="text-align:right"><hr />@tSoldAmt</th>
+                    <th style="text-align:right"><hr />@tRcvdamt</th>
+                    <th style="text-align:right"><hr />@tCloseBal</th>
+                </tr>
+            </tbody>
+
+        </table>
+    </div>
+    
+</div>
+<div class="col-sm-10">
+    <br />
+    <br /><br />
+</div>
+<div class="panel-footer" style="text-align:right; width:850px">
+    <label style="font-size:13px">Print Date : @ViewBag.PrintDate</label>
+</div>
+
+

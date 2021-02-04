@@ -1,0 +1,189 @@
+﻿@model App.Domain.ViewModel.EmployeeVmodel
+@{
+    ViewBag.Title = "UserList";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-color panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">User List</h3>
+
+            </div>
+            <div class="panel-body">
+                <div class="row col-md-10">
+                    <div class="col-md-12">
+                        <br />
+                        <br />
+                        <table class="table table-bordered table-responsive" id="datatable">
+                            <thead>
+                                <tr>
+                                    
+                                    <th>Sl.</th>
+                                    <th>Employee Name</th>
+                                    <th>Email</th>
+                                    <th>Roles</th>
+                                    <th style="text-align:center;">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody style="text-align:center;">
+                                
+                                @foreach(var item in ViewBag.Items)
+                                { 
+                                    <tr>
+                                        <td>@item.SlNo</td>
+                                        <td>@item.Employee.UserName</td>
+                                        <td>@item.Employee.Email</td>
+                                        <td>@item.AllRoles</td>
+                                        <td>@*<a href="#" value="@item.Employee.Id" id="delete"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a> &ensp;*@
+                                        <a href="#" value="@item.Employee.Id" id="edit"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></a></td>
+                                    </tr>
+                                }
+                            </tbody>
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+
+        <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" id="editModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="panel panel-color panel-primary">
+                               
+                                <div class="panel-body">
+                                    <div class="row col-md-12">
+                                        <div class="col-md-12">
+                                            @Html.LabelFor(x => x.Employee.UserName, new { @class = "col-md-4" })
+                                            <div class="form-group col-md-8">
+                                                @Html.TextBoxFor(x => x.Employee.UserName, null, new { @class = "form-control col-md-6 select2", required = "required" })
+                                                @Html.ValidationMessageFor(x => x.Employee.UserName)
+                                            </div>
+                                        </div>
+                                        
+                                        @Html.HiddenFor(x => x.Employee.Id)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                   <div class="row">
+                       <div class="col-md-12">
+                           <div class="panel panel-color panel-primary">
+                               <div class="panel-heading">
+                                   <p>User Roles</p>
+                               </div>
+                               <div class="panel-body">
+                                  
+                                   <div class="checkbox checkbox-primary">
+                                       @{
+                                           int i = 0;
+
+                                           foreach (var role in ViewBag.Roles)
+                                           {
+
+                                               if (i % 2 == 0)
+                                               {
+                                                   <br />
+                                                   <div class="col-md-5">
+                                                       <input type="checkbox" id="@role" name="Roles" value="@role" />
+                                                       <label for="@role">@role</label>
+                                                   </div>
+                                               }
+                                               else
+                                               {
+                                                   <div class="col-md-5">
+                                                       <input type="checkbox" id="@role" name="Roles" value="@role" />
+                                                       <label for="@role">@role</label>
+                                                   </div>
+
+
+                                               }
+                                               i = i + 1;
+
+                                           }
+                                       }
+                                   </div>
+                                   <div class="row col-md-12">
+                                       
+                                       <div class="col-md-12" style="margin-left: 132px">
+                                           <label for="select2-chosen-1" class="col-md-6"></label>
+                                           <input type="button" value="Update" class="btn btn-primary" id="update" />
+                                           <input type="button" value="Close" class="btn btn-primary" id="close" />
+                                       </div>
+                                   </div>
+                               </div>
+                           </div>
+                       </div>
+                   </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            $('#datatable').DataTable();
+           
+            $(document).on('click', "#edit", function () {
+                var id = $(this).attr("value");
+                $.ajax({
+                    url: '@Url.Action("GetUserById", "Accounts")',
+                    contentType: "application/json;charset=utf-8",
+                    data: JSON.stringify({ 'id': id }),
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function (datas) {
+                        $.each(datas.Roles, function (index, item) {
+                            $('#'+item+'').prop('checked', true);
+                        });
+                        $("#Employee_UserName").val(datas.Employee.UserName);
+                        $("#Employee_Id").val(datas.Employee.Id);
+                        $("#editModal").Modal("show");
+                        
+                    }
+                });
+                $('#editModal').modal('show');
+                
+            });
+
+            $(document).on("click", "#close", function () {
+                $("#editModal").modal("hide");
+            });
+            $(document).on("click", "#update", function () {
+                var id = $("#Employee_Id").val();
+                var name = $("#Employee_UserName").val();
+                var seletedRole = [];
+                $("input:checkbox[name=Roles]:checked").each(function () {
+                    seletedRole.push($(this).val());
+                });
+                $.ajax({
+                    url: '@Url.Action("UpdateUser", "Accounts")',
+                    contentType: "application/json;charset=utf-8",
+                    data: JSON.stringify({ 'id': id,'name':name,'Roles':seletedRole }),
+                    type: 'POST',
+                    dataType: 'json',
+                    async:false,
+                    success: function (datas) {
+                        $("#editModal").modal("hide");
+                        swal({
+                            title: "Successfully Updated!",
+                            timer: 3000,
+                            showConfirmButton: true
+                        });
+                        location.reload();
+                    }
+                });
+            });
+        });
+    </script>
+}
+              

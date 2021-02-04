@@ -1,0 +1,171 @@
+﻿@model App.Domain.ViewModel.RptSearchVModel
+@{
+    ViewBag.Title = "StoreRpt";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using (Html.BeginForm("StoreRptPdf", "StoreRpt", FormMethod.Post, new { target="_blank" }))
+{
+    <div class="row">
+        <div class="col-md-10">
+            <div class="panel panel-color panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <text style="text-align:left !important; text-decoration: none">Store Report</text>
+                    </h3>
+                </div>
+                <div class="panel-body">
+
+                    <div class="form-group col-md-12" style=" text-align :left;">
+                        <div class="radio radio-inline" style="padding-left: 40px;">
+                            <input type="radio" value="1" class="StoreType" name="StoreType" id="issuStoreType">
+                            <label for="issuStoreType"> Issue </label>
+                        </div>
+                        <div class="radio radio-inline" style="padding-left: 50px;">
+                            <input type="radio" id="recvStoreType" name="StoreType" class="StoreType" value="2">
+                            <label for="recvStoreType"> Receive </label>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12" style="margin-left:110px; margin-top:10px" id="ddfBrCode">
+                        <label class="col-md-2" for="BrCode">Location</label>
+                        <div class="input-group form-group col-md-4">
+                            @Html.DropDownListFor(x => x.BranchCode, null, "All", new { @class = "form-control select2" })
+
+                        </div>
+                    </div>
+                    <div class="col-md-12" style="margin-left:110px; margin-top:10px" id="ddfItemCode">
+                        <label class="col-md-2 required">Receive Type</label>
+                        <div class="input-group form-group col-md-4">
+                            @Html.DropDownListFor(x => x.Source, null, "---- Select ----", new { @class = "form-control select2", @Value = ViewBag.Source })
+                        </div>
+                    </div>
+                    <div class="col-md-12" style="margin-left:110px; margin-top:20px">
+                        <label class="col-md-2" for="fDate">From Date</label>
+                        <div class="input-group form-group col-md-4">
+                            <input type="text" class="form-control datePage" id="fDate" name="fDate" value="@ViewBag.FyddFDate.ToShortDateString()">
+                            <span class="input-group-addon bg-primary b-0 text-white"><i class="ion-calendar"></i></span>
+                        </div>
+                    </div>
+                    <div class="col-md-12" style="margin-left:110px; margin-top:20px">
+                        <label class="col-md-2" for="tDate">To Date</label>
+                        <div class="input-group form-group col-md-4">
+                            <input type="text" class="form-control datePage" id="tDate" name="tDate" value="@ViewBag.FyddTDate.ToShortDateString()">
+                            <span class="input-group-addon bg-primary b-0 text-white"><i class="ion-calendar"></i></span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12" style="margin-left:150px; margin-top:20px">
+                        <div class="col-xs-12">
+                            <div class="input-group">
+
+                                <p style="color:red">
+                                    @ViewBag.Message
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-10">
+                        <br />
+                    </div>
+                    <div class="row col-md-12" style="text-align:end">
+                        <div class="col-md-8" style=" text-align:right">
+
+                            <input type="submit" value="Preview" class="btn btn-primary" id="submit" style="width:100px;" />
+                            <input type="button" value="Clear" class="btn btn-primary" id="clear" style="width:100px;" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+@section Scripts{
+
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script src="~/App_Themes/Theme1/plugins/select2/select2.min.js" type="text/javascript"></script>
+    <script src="~/App_Themes/Theme1/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.bootstrap.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.buttons.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/buttons.bootstrap.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/pdfmake.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/vfs_fonts.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/buttons.html5.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/buttons.print.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.fixedHeader.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.keyTable.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.responsive.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/responsive.bootstrap.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.scroller.min.js"></script>
+    <script type="text/javascript" src="../App_Themes/Theme1/plugins/parsleyjs/dist/parsley.min.js"></script>
+    <!-- Datatable init js -->
+    <script src="../App_Themes/Theme1/blue/assets/pages/datatables.init.js"></script>
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            $("#BranchCode").select2();
+            $("#ItemCode").select2();
+
+
+            $(document).on("change", "#ItemCode", function (e) {
+                if ($("#issuStoreType").is(":checked")) {
+                    isIssue();
+                }
+                if ($("#recvStoreType").is(":checked")) {
+                    isReceive();
+                }
+
+
+            });
+            function isReceive() {
+                $.ajax({
+                    type: "Get",
+                    contentType: "application/json;charset=utf-8",
+                    url: '@Url.Action("GetItemByQtyInTransit", "StoreTransfer")',
+                    data: { Item: $("#ItemCode").val() },
+                    dataType: 'json',
+                    success: function (item) {
+                        if (item == 0) {
+                            //alert("Data Not Found");
+                        }
+                        else {
+                            $("#ExQty").val(item.CurrQty);
+                            $("#Price").val(item.UnitPrice);
+                            $("#LotNo").val(item.LotNo);
+                            $("#HSCode").val(item.HSCode);
+                        }
+                    }
+                });
+            }
+            function isIssue() {
+                $.ajax({
+                    type: "Get",
+                    contentType: "application/json;charset=utf-8",
+                    url: '@Url.Action("GetItemByQtyPrice", "Receive")',
+                    data: { Item: $("#ItemCode").val(), LocNo: $("#FromLocCode").val() },
+                    dataType: 'json',
+                    success: function (item) {
+                        if (item == 0) {
+                            //alert("Data Not Found");
+                        }
+                        else {
+                            $("#ExQty").val(item.CurrQty);
+                            $("#Price").val(item.UnitPrice);
+                            $("#LotNo").val(item.LotNo);
+                            $("#HSCode").val(item.HSCode);
+                        }
+                    }
+                });
+
+            }
+
+
+
+        });
+    </script>
+}

@@ -1,0 +1,463 @@
+﻿@model App.Domain.VM_Adjustment
+@{
+    ViewBag.Title = "VM_Adjustment";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/select2/select2.css" rel="stylesheet" type="text/css" />
+<link href="~/Css/FormDesign.css" rel="stylesheet" />
+
+<style>
+    table.dataTable.select tbody tr,
+    table.dataTable thead th:first-child {
+        cursor: pointer;
+        text-align: center;
+    }
+
+    .form-control {
+        border: 1px solid #00ffff;
+    }
+
+    .required:after {
+        content: " *";
+        font-weight: bold;
+        color: red;
+    }
+
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    input[type=number] {
+        -moz-appearance: textfield;
+    }
+</style>
+
+<div class="row">
+    <div class="col-md-10">
+        <div class="panel panel-color panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    <text style="text-align:left !important; text-decoration: none;">Adjustment</text>
+                </h3>
+            </div>
+            <div class="panel-body">
+                <div class="col-md-12">
+
+                    <div class="col-md-6">
+                        <div class="col-md-12">
+                            <label class="col-md-4 required">Adjustment No</label>
+                            <div class="input-group form-group col-md-8">
+                                <input type="text" class="form-control" id="@Html.IdFor(x => x.AdjNo)" required="required" value="@ViewBag.vm_adjustmentno">
+                                <input type="hidden" id="AdjID" />
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="col-md-4 required"> Adjustment Date</label>
+                            <div class="input-group form-group col-md-8">
+                                <input type="text" class="form-control datePage" id="@Html.IdFor(x => x.AdjDate)" value="@DateTime.Today.ToShortDateString()">
+                                <span class="input-group-addon bg-primary b-0 text-white"><i class="ion-calendar"></i></span>
+
+                            </div>
+                        </div>
+                        <div class="form-group col-md-12">
+
+                            <label class="col-md-4 required">Adjustment Type</label>
+                            <fieldset style="padding:5px">
+                                <legend></legend>
+                                <div class="radio radio-inline" style="padding-left: 40px;">
+                                    <input type="radio" value="Increasing" name="AdjType" id="Inc">
+                                    <label for="Inc"> Increasing </label>
+                                </div>
+                                <div class="radio radio-inline" style="padding-left: 50px;">
+                                    <input type="radio" id="Dec" name="AdjType" value="Decreasing">
+                                    <label for="Dec"> Decreasing </label>
+                                </div>
+                            </fieldset>
+                        </div>
+
+                        <div class="col-md-12">
+                            <label class="col-md-4 required">Adjustment Head</label>
+                            <div class="input-group form-group col-md-8">
+                                @Html.DropDownListFor(x => x.AdjHead, null, "--- Select ---", new { @class = "form-control select2", required = "required", @Value = ViewBag.AdjHead })
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <label class="col-md-4 required">Adjustment Amount</label>
+                            <div class="input-group form-group col-md-8">
+                                <input type="number" class="form-control" id="@Html.IdFor(x => x.AdjAmount)" required="required">
+
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="col-md-4">Remarks</label>
+                            <div class="input-group form-group col-md-8">
+                                @Html.TextAreaFor(x => x.Remarks, new { @class = "form-control col-md-8 select2" })
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="col-sm-10"><br /><br /></div>
+                    <div class="col-md-8" style=" text-align:center;overflow:hidden;">
+                        <input type="button" value="Save" class="btn btn-primary" id="btnSave" style="width:100px;" />
+                        <input type="button" value="Update" class="btn btn-primary" id="btnUpdate" style="width:100px;" />
+                        <input type="button" value="Clear" class="btn btn-primary" id="btnClear" style="width:100px;" />
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-10">
+        <div class="panel panel-color panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">Adjustment List</h3>
+            </div>
+            <div class="panel-body">
+                <div class="row col-md-12">
+                    <br />
+                    <div class="row col-md-12" style="text-align:right">
+                        <input type="button" value="Reload" class="btn btn-primary" id="btnRefrash" />
+                    </div>
+
+                    <div class="col-md-12">
+                        <br />
+                        <br />
+                        <table class="table table-bordered table-responsive" id="datatable">
+                            <thead>
+                                <tr>
+                                    <th>Sl.</th>
+                                    <th>Adj No</th>
+                                    <th>Adj Type</th>
+                                    <th>Adj Head</th>
+                                    <th>Adj Amount</th>
+                                    <th>Remarks</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody style="text-align:center;">
+
+                                @if (ViewBag.AdjustmentList != null)
+                                {
+                                    int i = 0;
+                                    foreach (var item in ViewBag.AdjustmentList)
+                                    {
+                                        <tr>
+                                            @{
+                                        i++;
+                                            }
+                                            <td>@i</td>
+                                            <td>@item.AdjNo </td>
+                                            <td style="text-align:left;">@item.AdjType </td>
+                                            <td>@item.AdjHead </td>
+                                            <td>@item.AdjAmount  </td>
+                                            <td>@item.Remarks</td>
+                                            <td>
+                                                <a href="#" value="@item.AdjNo" id="edit"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></a>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script src="/App_Themes/Theme1/plugins/select2/select2.min.js"></script>
+    <script src="~/App_Themes/Theme1/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            var ispType = '@ViewBag.errMsg';
+            if (ispType != '') {
+                ispType = '@ViewBag.errMsg';
+            }
+            if (ispType == "P") {
+                alert("No view Permission for this User");
+            }
+
+            $('#datatable').DataTable();
+
+            var JsObject = {
+
+                AdjID: "",
+                AdjNo: "",
+                AdjDate: "",
+                AdjType: "",
+                AdjHead: "",
+                AdjAmount: "",
+                Remarks: ""
+            }
+
+            function setBindingfromScreen() {
+                JsObject.AdjID = $("#AdjID").val();
+                JsObject.AdjNo = $("#AdjNo").val();
+                JsObject.AdjDate = $("#AdjDate").val();
+                if ($("#Inc").is(":checked")) {
+                    JsObject.AdjType = $("#Inc").val();
+                }
+                if ($("#Dec").is(":checked")) {
+                    JsObject.AdjType = $("#Dec").val();
+                }
+                JsObject.AdjHead = $("#AdjHead").val();
+                JsObject.AdjAmount = $("#AdjAmount").val();
+                JsObject.Remarks = $("#Remarks").val();
+            }
+
+
+            $('#AdjHead').select2();
+            $("#btnUpdate").hide();
+
+            $(document).on("click", "#btnSave", function () {
+                $("#btnSave").prop("disabled", false);
+                setBindingfromScreen();
+                var validate = validateOnSave(JsObject);
+                if (validate != undefined) {
+                    alert(validate);
+                    return;
+                }
+
+                $.ajax({
+                    url: '@Url.Action("SaveVM_Adjustment", "VM_Adjustment")',
+                    contentType: "application/json;charset=utf-8",
+                    data: JSON.stringify({ VM_Adjustment: JsObject }),
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function (datas) {
+                        if (datas == 1) {
+                            $("#btnSave").prop("disabled", false);
+                            swal({
+                                title: "Ok",
+                                text: "Save Successfully!",
+                                type: "success"
+                            }, function () {
+                                clearVM_AdjustmentForm();
+                            });
+
+                        }
+                        else if (datas == "X") {
+                            swal({
+                                title: "Sorry",
+                                text: "No Save Permission for this User",
+                                type: "warning"
+                            });
+                        }
+                        else if (datas == 0) {
+                            swal(
+                                'Sorry!',
+                                'Something went wrong during the process!',
+                                'warning'
+                            );
+                            $("#btnSave").prop("disabled", false);
+                        }
+                        else {
+                            swal({
+                                title: "Sorry!",
+                                text: datas,
+                                type: "warning"
+                            });
+                        }
+
+                    }
+                });
+            });
+
+            function validateOnSave(validOrder) {
+                if (validOrder.AdjNo.trim() == "") {
+                    return "Adjustment No is required.";
+                }
+                if (validOrder.AdjDate.trim() == "") {
+                    return "Adjustment  Date is required.";
+                }
+
+
+                if (!$("#Inc").is(":checked") && !$("#Dec").is(":checked")) {
+                    return "Please select Adjustment type.";
+                }
+
+                if (!validOrder.AdjHead.trim().length) {
+                    return "Please select Adjustment Head.";
+                }
+
+                if (validOrder.AdjAmount.trim() == "" || validOrder.AdjAmount <= 0) {
+                    return "Amount is required.";
+                }
+            }
+
+            $("#AdjNo").keypress(function (e) {
+                if (e.which == 13) {
+                    $("#btnUpdate").show();
+                    $.ajax({
+                        url: '@Url.Action("GetVM_AdjustmentByAdjNo", "VM_Adjustment")',
+                        contentType: "application/json;charset=utf-8",
+                        data: { AdjNo: $("#AdjNo").val() },
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function (datas) {
+                            if (datas != null) {
+                                $("#AdjID").val(datas.AdjID);
+                                $("#AdjNo ").prop("disabled", true);
+                                if (moment(datas.AdjDate).format('MM/DD/YYYY') != moment('01/01/1900').format('MM/DD/YYYY')) {
+                                    $("#AdjDate ").datepicker("setDate", DateInDMYformat(datas.AdjDate));
+                                }
+                                if (datas.AdjType == "Increasing") {
+                                    $("#Inc").prop('checked', true)
+                                } else {
+                                    $("#Dec").prop('checked', true)
+                                }
+                                $("#AdjHead ").val(datas.AdjHead).trigger('change.select2');
+                                $("#AdjAmount").val(datas.AdjAmount);
+                                $("#Remarks  ").val(datas.Remarks);
+                                $("#btnSave").hide();
+                            }
+                        },
+                        error: function () {
+                            swal("Sorry!! This No doesn't exists.", "fail")
+                            $("#btnSave").hide();
+                        }
+                    });
+                }
+            });
+
+            $(document).on('click', "#edit", function () {
+                var id = $(this).attr("value");
+                $("#btnUpdate").show();
+                $.ajax({
+                    url: '@Url.Action("GetVM_AdjustmentByAdjNo", "VM_Adjustment")',
+                    contentType: "application/json;charset=utf-8",
+                    data: JSON.stringify({ AdjNo: id }),
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function (datas) {
+                        if (datas != null) {
+                            $("#AdjNo").prop("disabled", true);
+                            $("#AdjID").val(datas.AdjID);
+                            $("#AdjNo").val(datas.AdjNo);
+                            if (datas.AdjType == "Increasing") {
+                                $("#Inc").prop('checked', true)
+                            } else {
+                                $("#Dec").prop('checked', true)
+                            }
+                            if (moment(datas.AdjDate).format('MM/DD/YYYY') != moment('01/01/1900').format('MM/DD/YYYY')) {
+                                $("#AdjDate").datepicker("setDate", DateInDMYformat(datas.AdjDate));
+                            }
+                            $("#AdjHead").val(datas.AdjHead).trigger('change.select2');
+                            $("#AdjAmount").val(datas.AdjAmount);
+                            $("#Remarks").val(datas.Remarks);
+                            $("#btnSave").hide();
+                        }
+                    }
+                });
+                $("#btnSave").hide();
+            });
+
+            $(document).on("click", "#btnUpdate", function () {
+                $("#btnSave").prop("disabled", false);
+                setBindingfromScreen();
+                var validate = validateOnSave(JsObject);
+                if (validate != undefined) {
+                    alert(validate);
+                    return;
+                }
+
+                $.ajax({
+                    url: '@Url.Action("UpdateVM_Adjustment", "VM_Adjustment")',
+                    contentType: "application/json;charset=utf-8",
+                    data: JSON.stringify({ VM_Adjustment: JsObject }),
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function (datas) {
+                        if (datas == 1) {
+                            swal({
+                                title: "Ok",
+                                text: "Update Successfully!",
+                                type: "success"
+                            }, function () {
+                                clearVM_AdjustmentForm();
+                                $("#btnSave").prop("enable", false);
+
+                            });
+                        }
+                        else if (datas == "U") {
+                            swal({
+                                title: "Sorry",
+                                text: "No Update Permission for this User",
+                                type: "warning"
+                            });
+                        }
+                        else if (datas == 0) {
+                            swal(
+                                'Sorry!',
+                                'Something went wrong during the process!',
+                                'warning'
+                            );
+                            $("#btnSave").prop("disabled", false);
+                        }
+                        else {
+                            swal({
+                                title: "Sorry!",
+                                text: datas,
+                                type: "warning"
+                            });
+                        }
+
+                    }
+                });
+            });
+
+
+            $(document).on("click", "#btnClear", function () {
+                clearVM_AdjustmentForm();
+            });
+
+            $(document).on("click", "#btnRefrash", function () {
+                location.reload();
+            });
+
+            function clearVM_AdjustmentForm() {
+                $("#AdjDate ").val("@DateTime.Today.ToShortDateString()");
+                $("#AdjType ").val($('#Reason option:first-child').val()).trigger('change.select2');
+                $("#AdjHead ").val($('#Reason option:first-child').val()).trigger('change.select2');
+                $("#AdjAmount").val("");
+                $("#Remarks").val("");
+                $("#Inc").prop('checked', false);
+                $("#Dec").prop('checked', false);
+                $("#AdjNo ").prop("disabled", false);
+                $.ajax({
+                    url: '@Url.Action("GetNewVM_AdjustmentbyView", "VM_Adjustment")',
+                    contentType: "application/json;charset=utf-8",
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (datas) {
+
+                        $("#AdjNo").val(datas);
+                    }
+                });
+                $("#btnUpdate").hide();
+                $("#btnSave").show();
+            }
+
+
+        });
+    </script>
+}
+
+
+
+

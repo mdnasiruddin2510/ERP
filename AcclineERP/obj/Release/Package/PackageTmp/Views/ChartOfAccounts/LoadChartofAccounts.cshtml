@@ -1,0 +1,452 @@
+﻿@model IEnumerable<App.Domain.NewChart>
+@*@model App.Domain.NewChart
+    @using System.Web.UI.WebControls*@
+
+@{
+    ViewBag.Title = "Chart Of Accounts";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/select2/select2.css" rel="stylesheet" type="text/css" />
+<link href="~/Css/FormDesign.css" rel="stylesheet" />
+
+<style>
+    table.dataTable.select tbody tr,
+    table.dataTable thead th:first-child {
+        cursor: pointer;
+        text-align: center;
+    }
+
+    .form-control {
+        border: 1px solid #00ffff;
+    }
+
+    .required:after {
+        content: " *";
+        font-weight: bold;
+        color: red;
+    }
+
+    .btnNChart {
+        border-radius: 2px;
+        padding: 6px 6px;
+        font-size:14px
+    }
+
+    fieldset {
+        padding: 5px !important;
+    }
+
+        fieldset.scheduler-border {
+            border: solid 1px #DDD !important;
+            padding: 0 10px 10px 10px;
+            margin-bottom: 20px;
+            border-bottom: none;
+            width: inherit;
+        }
+
+    legend.scheduler-border {
+        width: auto !important;
+        border: none;
+        font-size: 14px;
+    }
+
+    .panel .panel-body {
+        padding: 10px !important;
+    }
+</style>
+@using (Html.BeginForm())
+{
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-color panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <text style="text-align:left !important; text-decoration: none;">Chart Of Accounts</text>
+                    </h3>
+                </div>
+                <div class="panel-body" style="margin-top:20px">
+
+                    <table width="100%">
+                        <tr class="col-md-12">
+                            <td class="col-md-6">
+                                <div class="modal fade in" id="modalAddNode" role="dialog" aria-hidden="true">
+                                    @Html.Partial("_AddNode")
+
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="panel panel-primary">
+                                        <div class="panel-heading">Chart</div>
+
+                                        <div class="panel-body">
+
+                                            <div id="tree"></div>
+                                            <div class="clearfix"></div>
+
+                                            <br />
+                                            <div>
+                                                <button id="btnDeleteTree" data-toggle="modal" class='btnNChart btn-warning'> Delete Tree <span class="glyphicon glyphicon-trash"></span> </button>
+                                                <button id="btnDeleteNode" data-toggle="modal" class='btnNChart btn-warning'> Delete Account <span class="glyphicon glyphicon-trash"></span> </button>
+                                                <button id="btnpopoverAddNode" data-toggle="modal" class='btnNChart btn-primary'> Add and Modify <span class="glyphicon glyphicon-plus"></span>  </button>
+                                                <a href="@Url.Action("GetNewChartPdf", "ChartOfAccounts")" , class="btnNChart btn-primary" target="_blank"> Preview <span class="glyphicon glyphicon-print"></span></a>
+                                                @*<button id="btnPreview" class="btn btn-primary" onclick="location.href='@Url.Action("GetNewChartPdf", "ChartOfAccounts")'"> Prient <span class="glyphicon glyphicon-print"></span> </button>*@
+                                                @*<label class="control-label" target="_blank">
+                                                        @Html.ActionLink(
+                                                        "Preview",
+                                                         "GetNewChartPdf",
+                                                         "ChartOfAccounts",
+                                                        new { values = "blank" },
+                                                        new { id = "btnPreview", }
+                                                            )
+                                                    </label>*@
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td style="vertical-align: top; text-align: left" class="col-md-6">
+                                <div>
+                                    <div class="note" id="pnlNote" groupingtext="Note" width="550px">
+                                        <fieldset>
+                                            <legend>Note</legend>
+                                            <div style="overflow-x: hidden; overflow: auto; height: 100%;">
+                                                <h5>1. Expand the left side by clicking on Plus Symbol.</h5>
+                                                <h5>2. Checked on item and press Add Account Button to entry new account under it.</h5>
+                                                <h5>3. Check modify to edit Name and Code if there any transaction of/under it.</h5>
+                                                <h5>4. You cannot delete any account if there any transaction of/under it.</h5>
+                                            </div>
+                                        </fieldset>
+
+                                    </div>
+                                </div>
+
+                            </td>
+                        </tr>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts{
+
+    <script src="~/Scripts/Tree/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/Gijgo/gijgo.js"></script>
+    <link href="~/Scripts/Gijgo/gijgo.css" rel="stylesheet" />
+    <script src="~/Scripts/Tree/jquery.js"></script>
+    <script src="~/Scripts/Tree/core.js" type="text/javascript"></script>
+    <link href="~/Scripts/Tree/core.css" rel="stylesheet" type="text/css" />
+    <link href="~/Scripts/Tree/checkbox.css" rel="stylesheet" />
+    <link href="~/Scripts/Tree/tree.css" rel="stylesheet" type="text/css" />
+    <script src="~/Scripts/Tree/checkbox.js"></script>
+    <script src="~/Scripts/Tree/tree.js"></script>
+
+
+    <script>
+        $(document).ready(function () {
+            var ispType = '@ViewBag.errMsg';
+            if (ispType != '') {
+                ispType = '@ViewBag.errMsg';
+            }
+            if (ispType == "P") {
+                alert("No View Permission for this User !");
+            }
+            var tree = "";
+            $.ajax({
+                type: 'get',
+                dataType: 'json',
+                cache: false,
+                url: '/ChartOfAccounts/GetHierarchy',
+                success: function (records, textStatus, jqXHR) {
+                    tree = $('#tree').tree({
+                        primaryKey: 'Id',
+                        dataSource: records,
+                        dragAndDrop: true,
+                        checkboxes: true,
+                        cascadeCheck: false,
+                        //iconsLibrary: 'glyphicons',
+                        iconsLibrary: 'fontawesome',
+                        //iconsLibrary: 'streamlineicons',
+
+                        //uiLibrary: 'jqueryui',
+                        uiLibrary: 'materialdesign',
+                        //uiLibrary: 'bootstrap'
+                        //Glyphicons Halflings glyphicons glyphicons-plus-sign
+                    });
+
+                    //delete node
+                    $('#btnDeleteNode, #btnDeleteTree').click(function (e) {
+                        e.preventDefault();
+                        var DelTree = this.id;
+                        var result = tree.getCheckedNodes();
+                        if (result != "") {
+                            swal({
+                                title: "Are you sure?",
+                                text: "You will not be able to recover this order data!",
+                                type: "warning",
+                                showCancelButton: true,
+                                confirmButtonColor: "#DD6B55",
+                                confirmButtonText: "Yes, delete it!",
+                                closeOnConfirm: true,
+                                closeOnCancel: true
+                            },
+                             function () {
+                                 $.ajax({
+                                     type: "POST",
+                                     url: "/ChartOfAccounts/DeleteNode",
+                                     data: { values: result.toString(), IsTree: DelTree },
+                                     dataType: "json",
+                                     success: function (data) {
+                                         alert(data.msg);
+                                         window.location.reload();
+
+                                     },
+                                     error: function (jqXHR, textStatus, errorThrown) {
+                                         alert('Error - ' + errorThrown);
+                                     },
+                                 });
+                             });
+                        }
+                        else {
+                            alert("Please select Node to delete..!!");
+                        }
+
+
+                    });
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert('Error - ' + errorThrown);
+                }
+            });
+
+            //====================== For File upload ========================
+            function checkfile(sender) {
+                var validExts = new Array(".xlsx", ".xls", ".csv", ".xml");
+                var fileExt = sender.value;
+                fileExt = fileExt.substring(fileExt.lastIndexOf('.'));
+                if (validExts.indexOf(fileExt) < 0) {
+                    document.getElementById("FileUpload").value = "";
+                    alert("Invalid file selected, valid files are of " +
+                                validExts.toString() + " types.");
+                    return false;
+                }
+                else return true;
+            }
+
+            $(document).on("click", "#btnImportNChart", function () {
+
+                var file = $('input[type=file]').prop('files')[0];
+
+                if (!file) {
+                    alert('The file is required.');
+                    event.preventDefault();
+                    return;
+                }
+
+                var Excelfile = $("#FileUpload").get(0).files;
+                var data = new FormData();
+                data.append("file", Excelfile[0]);
+                data.append("AcSyscode", $("#AcSyscode").val());
+
+                $.ajax({
+                    url: '@Url.Action("UploadExcel", "ChartOfAccounts")',
+                    contentType: false,
+                    data: data,
+                    type: 'POST',
+                    processData: false,
+                    success: function (data) {
+
+                        if (data == 0) {
+                            swal({
+                                title: "Ok",
+                                text: "All Information Saved Sucessfully!",
+                                type: "success"
+                            }, function () {
+                                window.location.reload();
+                            });
+
+                        }
+                        else if (data == 1) {
+
+                            swal({
+                                title: "Sorry!",
+                                text: "An Error Occured During Save",
+                                type: "warning"
+                            });
+
+                        }
+                        else if (data == 2) {
+
+                            swal({
+                                title: "Sorry!",
+                                text: "Upload Problem For File",
+                                type: "warning"
+                            });
+
+                        }
+                        else if (data.length > 1) {
+
+                            swal({
+                                title: "Sorry!",
+                                text: "File Content Problem : \n" + data,
+                                type: "warning"
+                            });
+
+                        }
+                        else if (data == "I") {
+
+                            swal({
+                                title: "Sorry",
+                                text: "No Import Permission for this User",
+                                type: "warning"
+                            });
+
+                        }
+                    }
+                });
+            });
+
+            //============================== End of file upload ========================================
+
+            $("#btnPreview").click(function () {
+                //Get the id of the selected item in dropdown
+                var result = tree.getCheckedNodes();
+                var id = result.toString();
+
+                //Replace the predifined QueryString param "xxx" with the "id"
+                this.href = this.href.replace("blank", id);
+            });
+
+            // show model popup to add new node in Tree
+            $('#btnpopoverAddNode').click(function (e) {
+                e.preventDefault();
+                var result = tree.getCheckedNodes();
+                if (result.length != 0) {
+                    $.ajax({
+                        type: "POST",
+                        url: "/ChartOfAccounts/GetCodeName",
+                        data: { values: result.toString() },
+                        dataType: "json",
+                        success: function (data) {
+                            if (data != "") {
+                                $("#AcName").prop("disabled", true);
+                                $("#Accode").prop("disabled", true);
+                                $("#AcName").val(data.AcName);
+                                $("#Accode").val(data.Accode);
+                                $("#NodeName").val(data.AcName);
+                                $("#AcSyscode").val(data.AcSyscode);
+                                $("#OldCode").val(data.OldCode);
+                                $("#modalAddNode").modal("show");
+                            }
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            alert('Error - ' + errorThrown);
+                        },
+                    });
+                } else {
+                    alert('Error : Please Select A/C Head.');
+                }
+            });
+            var IsModify = "Sa";
+            //Save data from PopUp
+            $(document).on("click", "#savenode", function (event) {
+                event.preventDefault();
+                //var formdata = $('#formaddNode').serializeArray();
+                forSave = {
+                    AcName: "", IsModifyFor: "", Accode: "", AcSyscode: "", NodeName: "", OldCode: "", NewOldCode: "", NewAcName: ""
+                };
+                forSave.AcName = $("#AcName").val();
+                forSave.Accode = $("#Accode").val();
+                forSave.AcSyscode = $("#AcSyscode").val();
+                forSave.NodeName = $("#NodeName").val();
+                forSave.OldCode = $("#OldCode").val();
+                forSave.NewOldCode = $("#NewOldCode").val();
+                forSave.NewAcName = $("#NewAcName").val();
+                forSave.IsModifyFor = IsModify;
+
+                if ($("#NewAcName").val() != "" || IsModify == 'Up') {
+                    $.ajax({
+                        type: "POST",
+                        url: "/ChartOfAccounts/AddNewNode",
+                        dataType: "json",
+                        data: forSave,
+                        success: function (response) {
+                            if (response.success == false) {
+                                swal({
+                                    title: "Sorry",
+                                    text: response.msg,
+                                    type: "warning"
+                                }, function () {
+                                    location.reload();
+                                });
+                            }
+                            else {
+                                $("#modalAddNode").modal("show");
+                                swal({
+                                    title: "Ok",
+                                    text: response.msg,
+                                    type: "success"
+                                }, function () {
+                                    $("#NewOldCode").val("");
+                                    $("#NewAcName").val("");
+                                });
+                            }
+                        },
+                        error: function (response) {
+                            alert('Exception found');
+                            //  $("#modalAddNode").modal("hide");
+                            window.location.reload();
+                        },
+                        complete: function () {
+                            //  $('.ajax-loader').css("visibility", "hidden");
+                        }
+                    });
+                } else {
+                    alert("A/C Name is Required.");
+                }
+
+            });
+
+            //Close PopUp
+            $(document).on("click", "#closePopup", function (e) {
+                e.preventDefault();
+                $("#modalAddNode").modal("hide");
+                $("#NewOldCode").val("");
+                $("#NewAcName").val("");
+                $("#NodeName").val("");
+                $("#IsModify").prop("checked", false);
+                location.reload();
+            });
+            $(document).on("click", "#closePopOver", function (e) {
+                e.preventDefault();
+                $("#modalAddNode").modal("hide");
+                $("#NewOldCode").val("");
+                $("#NewAcName").val("");
+                $("#NodeName").val("");
+                $("#IsModify").prop("checked", false);
+                location.reload();
+            });
+
+            //$('.rbtnnodetype').click(function (e) {
+            $('input[type="checkbox"]').click(function () {
+                if ($(this).is(':checked')) {
+                    $('.petenddiv').attr("class", "petenddiv ");
+                    $('.sNode').attr("class", "sNode hidden");
+                    IsModify = 'Up';
+                }
+                else {
+                    $('.petenddiv').attr("class", "petenddiv hidden");
+                    $('.sNode').attr("class", "sNode");
+                    IsModify = 'Sa';
+                }
+            });
+
+        });
+
+    </script>
+}

@@ -1,0 +1,1253 @@
+﻿@model App.Domain.ViewModel.StoreTransferVM
+@{
+    ViewBag.Title = "StoreTransfer";
+}
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/select2/select2.css" rel="stylesheet" type="text/css" />
+<link href="~/Css/FormDesign.css" rel="stylesheet" />
+<style>
+    table.dataTable.select tbody tr,
+    table.dataTable thead th:first-child {
+        cursor: pointer;
+    }
+
+    .form-control {
+        border: 1px solid #00ffff;
+    }
+
+    input#vat6p5 {
+        width: 25px;
+        height: 15px;
+        margin-top: 0px;
+    }
+
+    .col-md-12 {
+        padding: 0 !important;
+    }
+
+    .required:after {
+        content: " *";
+        font-weight: bold;
+        color: red;
+    }
+</style>
+@using (Html.BeginForm())
+{
+    <div class="row">
+        <div class="col-md-11">
+            <div class="panel panel-color panel-primary">
+                <div class="modal fade in" id="pView" role="dialog" aria-hidden="true">
+                    @Html.Partial("~/Views/Sales/CommonPV.cshtml")
+                </div>
+
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <text style="text-align:left !important; text-decoration: none;">Store Transfer</text>
+                        <text id="@Html.IdFor(x => x.BranchCode)" style="text-align:right !important; text-decoration: none; font-weight:bold; color:antiquewhite; font-size:medium; margin-left:560px">@ViewBag.branchCode</text>
+                    </h3>
+                </div>
+                <div class="panel-body">
+                    <div class="form-group col-md-12" style=" text-align :left;">
+                        <div class="radio radio-inline" style="padding-left: 40px;">
+                            <input type="radio" value="1" class="StoreType" name="StoreType" id="issuStoreType">
+                            <label for="issuStoreType"> Issue </label>
+                        </div>
+                        <div class="radio radio-inline" style="padding-left: 50px;">
+                            <input type="radio" id="recvStoreType" name="StoreType" class="StoreType" value="2">
+                            <label for="recvStoreType"> Receive </label>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="col-md-3" id="pnlIssuNo">
+                            <label class="col-md-5">Issue No</label>
+                            <div class="input-group form-group col-md-7" style="padding-left:1px;">
+                                <input type="text" class="form-control" id="IssueNo" name="IssueNo" value="@ViewBag.IssueNo" , required="required" />
+                                <input type="hidden" id="PreIssueNo">
+                            </div>
+                        </div>
+                        <div class="col-md-3" id="pnlRecvNo">
+                            <label class="col-md-5">Receive No</label>
+                            <div class="input-group form-group col-md-7" style="padding-left:1px;">
+                                <input type="text" class="form-control" id="RcvNo" name="RcvNo" value="@ViewBag.ReceiveNo" , required="required" />
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label class="col-md-4" id="issueLbl"></label>
+                            <div class="input-group form-group col-md-8">
+                                <input type="text" class="form-control datePage" id="@Html.IdFor(x => x.IssueDate)" value="@DateTime.Today.ToShortDateString()">
+                                <span class="input-group-addon bg-primary b-0 text-white"><i class="ion-calendar"></i></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6" id="pnlFromLoc">
+                            <label class="col-md-3 required">From Location</label>
+                            <div class="input-group form-group col-md-9">
+                                @Html.DropDownListFor(x => x.FromLocCode, null, new { @class = "form-control select2", @Value = ViewBag.FromLocCode })
+
+                                @Html.ValidationMessageFor(x => x.FromLocCode)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="col-md-3">
+                            <label class="col-md-5">Ref No</label>
+                            <div class="input-group form-group col-md-7">
+                                @Html.TextBoxFor(x => x.RefNo, new { @class = "form-control col-md-8 select2", required = "required" })
+                                @Html.ValidationMessageFor(x => x.RefNo)
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="col-md-4">Ref Date</label>
+                            <div class="input-group form-group col-md-8">
+                                <input type="text" class="form-control datePage" id="@Html.IdFor(x => x.RefDate)" value="@DateTime.Today.ToShortDateString()">
+                                <span class="input-group-addon bg-primary b-0 text-white"><i class="ion-calendar"></i></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6" id="pnlFromLoc">
+                            <label class="col-md-3 required">To Location</label>
+                            <div class="input-group form-group col-md-9">
+                                @Html.DropDownListFor(x => x.ToLocCode, null, new { @class = "form-control select2", @Value = ViewBag.ToLocCode })
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-12">
+                        <div class="col-md-6">
+                            <div class="col-md-12">
+                                <label class="col-md-3">Item Type</label>
+                                <div class="input-group form-group col-md-8">
+                                    @Html.DropDownListFor(x => x.ItemType, null, "---- Select ----", new { @class = "form-control select2", @Value = ViewBag.ItemType })
+
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-md-3 required">Item</label>
+                                <div class="input-group form-group col-md-8">
+                                    @Html.DropDownListFor(x => x.ItemCode, null, new { @class = "form-control select2", @Value = ViewBag.ItemCode })
+                                </div>
+                            </div>
+                            @if (ViewBag.MaintVAT == true)
+                            {
+                                <div class="col-md-12">
+                                    <label class="col-md-3">HS Code</label>
+                                    <div class="input-group form-group col-md-8">
+                                        @Html.TextBoxFor(x => x.HSCode, new { @class = "form-control col-md-8 select2", required = "required" })
+                                    </div>
+                                </div>
+                            }
+                            <div class="col-md-12">
+                                <div class="col-md-6">
+                                    <label class="col-md-6 required">Qty</label>
+                                    <div class="input-group form-group col-md-6">
+                                        @Html.TextBoxFor(x => x.Qty, new { @class = "form-control col-md-8 select2", required = "required" })
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="col-md-5">Existing Qty</label>
+                                    <div class="input-group form-group col-md-5">
+                                        @Html.TextBoxFor(x => x.ExQty, new { @class = "form-control col-md-8 select2", required = "required" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="col-md-6">
+                                    <label class="col-md-6 required">Price</label>
+                                    <div class="input-group form-group col-md-6">
+                                        @Html.TextBoxFor(x => x.Price, new { @class = "form-control col-md-8 select2", required = "required" })
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="col-md-5">Amount</label>
+                                    <div class="input-group form-group col-md-5">
+                                        @Html.TextBoxFor(x => x.Amount, new { @class = "form-control col-md-8 select2", required = "required" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="col-md-6">
+                                    <label class="col-md-6">Suplimentary Tax</label>
+                                    <div class="input-group form-group col-md-6">
+                                        @Html.TextBoxFor(x => x.SupTaxAmt, new { @class = "form-control col-md-8 select2", required = "required" })
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="col-md-5">VAT Amount</label>
+                                    <div class="input-group form-group col-md-5">
+                                        @Html.TextBoxFor(x => x.VATAmt, new { @class = "form-control col-md-8 select2", required = "required" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-md-3">Description</label>
+                                <div class="input-group form-group col-md-8">
+                                    @Html.TextBoxFor(x => x.Description, new { @class = "form-control col-md-8 select2", required = "required" })
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                @if (ViewBag.MaintLot == true)
+                                {
+                                    <div class="col-md-6">
+                                        <label class="col-md-6">Lot No</label>
+                                        <div class="input-group form-group col-md-6">
+                                            @Html.TextBoxFor(x => x.LotNo, new { @class = "form-control col-md-8 select2", required = "required" })
+                                        </div>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="col-md-6">
+                                        <label class="col-md-6"></label>
+                                        <div class="input-group form-group col-md-6">
+                                        </div>
+                                    </div>
+                                }                                
+                                <div class="col-md-5" style="text-align:right; margin-bottom:5px;">
+                                    <input type="button" class="btn btn-primary" value="Add" id="add" />
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-md-3 required" id="RecvIssuBy"></label>
+                                <div class="input-group form-group col-md-8">
+                                    @Html.DropDownListFor(x => x.IssueByCode, null, "--- Select ---", new { @class = "form-control select2", required = "required", @Value = ViewBag.IssueByCode })
+                                    @Html.ValidationMessageFor(x => x.IssueByCode)
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <label class="col-md-3 required">Approved By</label>
+                                <div class="input-group form-group col-md-8">
+                                    @Html.DropDownListFor(x => x.AppByCode, null, "---- Select ----", new { @class = "form-control col-md-8 select2", required = "required", @Value = ViewBag.AppByCode })
+                                    @Html.ValidationMessageFor(x => x.AppByCode)
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-md-3 required">Date</label>
+                                <div class="input-group form-group col-md-6">
+                                    <input type="text" class="form-control datePage" id="@Html.IdFor(x => x.AppDate)" value="@DateTime.Today.ToShortDateString()">
+                                    <span class="input-group-addon bg-primary b-0 text-white"><i class="ion-calendar"></i></span>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-md-3">Time</label>
+                                <div class="input-group form-group col-md-6">
+                                    <input type="text" class="form-control" disabled="disabled" placeholder="HH:MM:SS" id="@Html.IdFor(x => x.Time)" value="@ViewBag.Time" required="required">
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <label class="col-md-3"></label>
+                                <div class="col-md-8">
+                                    <input type="button" value="Save" class="btn btn-primary" id="save" style="width:100px;" />
+                                    <input type="button" value="Update" class="btn btn-primary" id="update" style="width:100px;" />
+                                    <input type="button" value="Clear" class="btn btn-primary" id="clear" style="width:100px;" />
+                                    @if (ViewBag.MaintVAT == true)
+                                    {
+                                        <span class="checkbox-button" style="float:right">
+                                            <input type="checkbox" name="vat6p5" class="checkbox-primary" required="required" id="vat6p5" />
+                                            <input type="button" class="btn-primary" value="VAT 6.5" id="btnVAT6p5" />
+                                        </span>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="col-md-12">
+                                <label class="col-md-3">Voucher No</label>
+                                <div class="input-group form-group col-md-6">
+                                    <input class="form-control" id="VchrNo" name="VchrNo" type="text" value="@ViewBag.VchrNo">
+                                    <span class="field-validation-valid" data-valmsg-for="VchrNo" data-valmsg-replace="true"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-12" style="margin-bottom:5px; border:1px solid; border-color:#adcceb; width:100%">
+                                <div class="row" style="padding:18px">
+                                    <div class="col-md-12">
+                                        <br />
+                                        <table class="table table-bordered table-responsive" id="datatable" style="width:100%;">
+                                            <thead>
+                                                <tr>
+                                                    <th width="5%">SL</th>
+                                                    <th width="20%">Code</th>
+                                                    <th width="40%">Item&nbsp;Name</th>
+                                                    <th width="15%">Qty</th>
+                                                    <th width="15%">UPrice</th>
+                                                    <th width="5%">Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="tbodyId"></tbody>
+                                        </table>
+                                        <br />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-md-3">Total Amount</label>
+                                <div class="input-group form-group col-md-6">
+                                    @Html.TextBoxFor(x => x.TotAmt, new { @class = "form-control col-md-8", required = "required" })
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-md-3">Total Suplimentary Tax</label>
+                                <div class="input-group form-group col-md-6">
+                                    @Html.TextBoxFor(x => x.TotSupTaxAmt, new { @class = "form-control col-md-8", required = "required" })
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-md-3">Total VAT Amount</label>
+                                <div class="input-group form-group col-md-6">
+                                    @Html.TextBoxFor(x => x.TotVATAmt, new { @class = "form-control col-md-8", required = "required" })
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-md-3">Remarks</label>
+                                <div class="input-group form-group col-md-8">
+                                    @Html.TextBoxFor(x => x.Remarks, new { @class = "form-control col-md-8 select2", required = "required" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @section scripts{
+        <script src="~/App_Themes/Theme1/plugins/select2/select2.min.js" type="text/javascript"></script>
+        <script src="~/App_Themes/Theme1/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+        <script src="../App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.js"></script>
+        <script src="../App_Themes/Theme1/plugins/datatables/dataTables.bootstrap.js"></script>
+        <script src="../App_Themes/Theme1/plugins/datatables/dataTables.buttons.min.js"></script>
+        <script src="../App_Themes/Theme1/plugins/datatables/buttons.bootstrap.min.js"></script>
+        <script src="../App_Themes/Theme1/plugins/datatables/pdfmake.min.js"></script>
+        <script src="../App_Themes/Theme1/plugins/datatables/vfs_fonts.js"></script>
+        <script src="../App_Themes/Theme1/plugins/datatables/buttons.html5.min.js"></script>
+        <script src="../App_Themes/Theme1/plugins/datatables/buttons.print.min.js"></script>
+        <script src="../App_Themes/Theme1/plugins/datatables/dataTables.fixedHeader.min.js"></script>
+        <script src="../App_Themes/Theme1/plugins/datatables/dataTables.keyTable.min.js"></script>
+        <script src="../App_Themes/Theme1/plugins/datatables/dataTables.responsive.min.js"></script>
+        <script src="../App_Themes/Theme1/plugins/datatables/responsive.bootstrap.min.js"></script>
+        <script src="../App_Themes/Theme1/plugins/datatables/dataTables.scroller.min.js"></script>
+        <script type="text/javascript" src="../App_Themes/Theme1/plugins/parsleyjs/dist/parsley.min.js"></script>
+        <!-- Datatable init js -->
+        <script src="../App_Themes/Theme1/blue/assets/pages/datatables.init.js"></script>
+        <script>
+            $(document).ready(function () {
+
+                function select2Focus() {
+                    var select2 = $(this).data('select2');
+                    setTimeout(function() {
+                        if (!select2.opened()) {
+                            select2.open();
+                        }
+                    }, 0);
+                }
+                $("input:text:visible:first").focus();
+                $("#update").hide();
+
+                $("#ExQty, #Amount, #TotAmt, #TotSupTaxAmt, #TotVATAmt, #HSCode, #vat6p5").prop("disabled", true);
+                //$("#Amount").prop("disabled", true);
+                //$("#TotAmt").prop("disabled", true);
+                //$("#TotSupTaxAmt").prop("disabled", true);
+                //$("#TotVATAmt").prop("disabled", true);
+                //$("#HSCode").prop("disabled", true);
+                //$("#vat6p5").prop("disabled", true);
+                $("#TotSupTaxAmt, #TotVATAmt").val(0);
+                $("#VATAmt, #SupTaxAmt").val(0);
+
+
+
+                $("#pnlFromLoc").show();
+                $("#pnlToLocCodeAll").show();
+                $("#pnlIssuNo").hide();
+                $("#pnlRecvNo").hide();
+                document.getElementById('issueLbl').innerHTML = 'Date';
+                document.getElementById('RecvIssuBy').innerHTML = 'Issued/Received By';
+                $("#FromLocCode").select2().one('select2-focus', select2Focus).on("select2-blur", function () {$(this).one('select2-focus', select2Focus)});
+                $("#ToLocCode").select2().one('select2-focus', select2Focus).on("select2-blur", function () {$(this).one('select2-focus', select2Focus)});
+                $("#IssueAppByCode").select2().one('select2-focus', select2Focus).on("select2-blur", function () {$(this).one('select2-focus', select2Focus)});
+                $("#IssueByCode").select2().one('select2-focus', select2Focus).on("select2-blur", function () {$(this).one('select2-focus', select2Focus)});
+                $("#ItemCode").select2().one('select2-focus', select2Focus).on("select2-blur", function () {$(this).one('select2-focus', select2Focus)});
+                $("#AppByCode").select2().one('select2-focus', select2Focus).on("select2-blur", function () {$(this).one('select2-focus', select2Focus)});
+                //$("#VchrNo").prop("disabled", true);
+                $("#ItemType").select2().one('select2-focus', select2Focus).on("select2-blur", function () {$(this).one('select2-focus', select2Focus)});
+
+                $("#Qty, #Price").on("keydown keyup", function () {
+                    $("#Amount").val(parseFloat($("#Qty").val()) * parseFloat($("#Price").val()));
+                });
+
+                $('#datatable').DataTable({
+                    "paging":   false,
+                    "ordering": false,
+                    "info":     false,
+                    "searching": false
+                });
+                var table = $('#datatable').dataTable();
+                $.ajax({
+                    url: '@Url.Action("GetNewVoucherNo", "Issue")',
+                    contentType: "application/json;charset=utf-8",
+                    data: { VType: 'STS', TrDate: $("#IssueDate").val() },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (datas) {
+                        $("#VchrNo").val(datas);
+                    }
+                });
+
+                $(document).on("click", "#newVchr", function () {
+                    $("#addModalButton").show();
+                    $.ajax({
+                        url: '@Url.Action("GetNewVoucherNo", "Issue")',
+                        contentType: "application/json;charset=utf-8",
+                        data: { VType: 'STS' },
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function (datas) {
+                            if (datas != 0) {
+                                $("#VchrNo").val(datas);
+                            }
+                        }
+                    })
+                });
+
+                $(document).on("click", "#btnVAT6p5", function (e) {
+                    var TransNo = $('#PreIssueNo').val();
+                    if ($("#vat6p5").prop("checked") == true) {
+                        window.open('@Url.Action("TransWiseVat6P5RptPdf", "VATRpt", null)?TransNo=' + TransNo);
+                    }
+                })
+
+                var loadInfo = {
+                    IssueNo: "",
+                    ReceiveNo: "",
+                    FromLocCode: "",
+                    ToLocCode: "",
+                    LocCode: "",
+                    IssueDate: "",
+                    RefNo: "",
+                    Accode: "",
+                    ItemCode: "",
+                    Description: "",
+                    Qty: "",
+                    ExQty: "",
+                    Price: "",
+                    LotNo: "",
+                    Time: "",
+                    RefDate: "",
+                    IssueAppByCode: "",
+                    IssueByCode: "",
+                    AppByCode: "",
+                    AppDate: "",
+                    StoreType: "",
+                    VchrNo: "",
+                    TotAmt: ""
+                };
+                function setOrder() {
+                    if ($("#issuStoreType").is(":checked")) {
+                        loadInfo.StoreType = $("#issuStoreType").val();
+                    }
+                    if ($("#recvStoreType").is(":checked")) {
+                        loadInfo.StoreType = $("#recvStoreType").val();
+                    }
+                    //loadInfo.StoreType = $("#StoreType").val();
+                    loadInfo.IssueNo = $("#IssueNo").val();
+                    loadInfo.ReceiveNo = $("#RcvNo").val();
+                    loadInfo.FromLocCode = $("#FromLocCode").val();
+                    loadInfo.ToLocCode = $("#ToLocCode").val();
+                    loadInfo.LocCode = $("#ToLocCode").val();
+                    loadInfo.IssueDate = $("#IssueDate").val();
+                    loadInfo.RefNo = $("#RefNo").val();
+                    loadInfo.Accode = $("#Accode").val();
+                    loadInfo.ItemCode = $("#ItemCode").val();
+                    loadInfo.Description = $("#Description").val();
+                    loadInfo.Qty = $("#Qty").val();
+                    loadInfo.ExQty = $("#ExQty").val();
+                    loadInfo.Price = $("#Price").val();
+                    loadInfo.LotNo = $("#LotNo").val();
+                    loadInfo.Time = $("#Time").val();
+                    loadInfo.RefDate = $("#RefDate").val();
+                    loadInfo.IssueAppByCode = $("#IssueAppByCode").val();
+                    loadInfo.IssueByCode = $("#IssueByCode").val();
+                    loadInfo.AppByCode = $("#AppByCode").val();
+                    loadInfo.AppDate = $("#AppDate").val();
+                    loadInfo.VchrNo = $("#VchrNo").val();
+                    loadInfo.TotAmt = $("#TotAmt").val();
+                    loadInfo.Remarks = $("#Remarks").val();
+                };
+
+                $("#RefNo").on('keydown', function (e) {
+                    if (e.which == 13 || e.which == 9) {
+                        $.ajax({
+                            url: '@Url.Action("GetAllByRefNo", "StoreTransfer")',
+                            contentType: "application/json;charset=utf-8",
+                            data: { refNo: $("#RefNo").val() },
+                            type: 'GET',
+                            dataType: 'json',
+                            success: function (datas) {
+
+                                if (datas.RcvNo == "undefined") {
+                                    alert("error")
+                                }
+                                else {
+
+                                    if (moment(datas.Main.IssueDate).format('MM/DD/YYYY') != moment('01/01/1900').format('MM/DD/YYYY')) {
+                                        $("#IssueDate").datepicker("setDate", DateInDMYformat(datas.Main.IssueDate));
+                                    }
+                                    $("#FromLocCode").val(datas.Main.ToLocCode).trigger('change.select2');
+                                    $("#ToLocCode").val(datas.Main.FromLocCode).trigger('change.select2');
+                                    $("#ItemCode").val(datas.Main.ItemCode).trigger('change.select2');
+                                    $("#Description").val(datas.Main.Description);
+                                    if (moment(datas.Main.RefDate).format('MM/DD/YYYY') != moment('01/01/1900').format('MM/DD/YYYY')) {
+                                        $("#RefDate").datepicker("setDate", DateInDMYformat(datas.Main.RefDate));
+                                    }
+                                    $("#Remarks").val(datas.Main.Remarks);
+                                    $("#IssueByCode").val(datas.Main.IssueByCode).trigger('change.select2');
+                                    $("#AppByCode").val(datas.Main.AppByCode).trigger('change.select2');
+                                    if (moment(datas.Main.IssDate).format('MM/DD/YYYY') != moment('01/01/1900').format('MM/DD/YYYY')) {
+                                        $("#AppDate").datepicker("setDate", DateInDMYformat(datas.Main.IssDate));
+                                    }
+
+
+                                    var table = $("#datatable").DataTable();
+                                    table.clear().draw();
+                                    orders = [];
+                                    if (datas.Details.length > 0) {
+                                        var j = 0;
+                                        $.each(datas.Details, function (index, data) {
+                                            j++;
+                                            data.Sl = j;
+                                            data.CurrQty = data.Qty;
+                                            orders.push(data);
+
+                                        });
+                                        isEdit = 1;
+                                        //PurpuseBySrcDest();
+                                        addOnTable();
+                                    }
+                                }
+
+                            },
+                            error: function () {
+                                swal("Sorry!! This no does not exist.", "fail")
+                            }
+                        });
+                    }
+                });
+
+                $(document).on("click", "#clear", function () {
+                    clearStorTransfer();
+                    //location.reload();
+                });
+
+
+                function clearStorTransfer() {
+                    $("#RcvDate").val("@DateTime.Today.ToShortDateString()");
+                    $("#IssueDate").val("@DateTime.Today.ToShortDateString()");
+                    $("#RefDate").val("@DateTime.Today.ToShortDateString()");
+                    $("#FromLocCode").val($('#FromLocCode option:first-child').val()).trigger('change.select2');
+                    $("#ToLocCode").val($('#ToLocCode option:first-child').val()).trigger('change.select2');
+                    $("#DesLocCode").val($('#DesLocCode option:first-child').val()).trigger('change.select2');
+                    $("#Accode").val($('#Accode option:first-child').val()).trigger('change.select2');
+                    $("#Source").val($('#Source option:first-child').val()).trigger('change.select2');
+                    $("#ItemType").val($('#ItemType option:first-child').val()).trigger('change.select2');
+                    $("#ItemCode").val($('#ItemCode option:first-child').val()).trigger('change.select2');
+                    $("#IssueByCode").val($('#IssueByCode option:first-child').val()).trigger('change.select2');
+                    $("#AppByCode").val($('#AppByCode option:first-child').val()).trigger('change.select2');
+                    $("#IssDate").val("@DateTime.Today.ToShortDateString()");
+                    $("#RefNo, #Amount, #Remarks, #Description").val("");
+                    $("#Qty").val("");
+                    $("#ExQty").val("");
+                    $("#Price").val("");
+                    $("#LotNo").val("");
+                    $("#TotAmt").val("");
+                    $("#TotSupTaxAmt, #TotVATAmt").val(0);
+
+
+                    $("#save").show();
+                    $("#update").hide();
+
+                    $.ajax({
+                        url: '@Url.Action("GenerateRecvNo", "StoreTransfer")',
+                        contentType: "application/json;charset=utf-8",
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function (datas) {
+                            $("#IssueNo").val(datas);
+                        }
+                    });
+
+                    $.ajax({
+                        url: '@Url.Action("GenerateIssueNo", "StoreTransfer")',
+                        contentType: "application/json;charset=utf-8",
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function (datas) {
+                            $("#ReceiveNo").val(datas);
+                        }
+                    });
+
+                    $.ajax({
+                        url: '@Url.Action("GetNewVoucherNo", "StoreTransfer")',
+                        contentType: "application/json;charset=utf-8",
+                        data: { VType: 'STS'},
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function (datas) {
+                            $("#VchrNo").val(datas);
+                        }
+                    });
+
+                    table.fnClearTable();
+
+                }
+
+
+                $(document).on("click", "#save", function () {
+                    setOrder();
+                    var validate = validateOnSave(loadInfo);
+                    if (validate != "") {
+                        alert(validate);
+                        return;
+                    }
+                    if (orders != 0) {
+                        $.ajax({
+                            url: '@Url.Action("SaveStoreTransfer", "StoreTransfer")',
+                            contentType: "application/json;charset=utf-8",
+                            data: JSON.stringify({ storeTreansferInfo: loadInfo, recvDetails: orders, issueDetails: orders, currentStock: orders }),
+                            type: 'POST',
+                            dataType: 'json',
+                            success: function (datas) {
+                                if (datas.Msg == "1") {
+                                    swal({
+                                        title: "Ok",
+                                        text: "Sucessfully Saved!",
+                                        type: "success"
+                                    }, function () {
+
+                                        if (datas.returnValue == '6.5') {
+                                            $("#vat6p5").prop("checked", true);
+                                            $("#PreIssueNo").val($("#IssueNo").val());
+                                        }
+                                        clearStorTransfer();
+                                    });
+                                    $("#save").prop("disabled", false);
+                                    orders = [];
+                                    $('#tbodyId').empty();
+
+                                }
+                                else if (datas == "X") {
+                                    swal({
+                                        title: "Sorry",
+                                        text: "No Save Permission for this User",
+                                        type: "warning"
+                                    });
+                                }
+                                else if (datas == 0) {
+                                    swal(
+                                        'Sorry!',
+                                        'Something went wrong during the save operation!',
+                                        'warning'
+                                    );
+                                    $("#save").prop("disabled", false);
+                                }
+                            }
+                        });
+                    } else {
+                        swal(
+                            'Sorry!',
+                            'Please Add item in the Table.!!!',
+                            'warning'
+                            );
+                    }
+                });
+
+
+                function validateOnSave(validOrder) {
+                    //if (!validOrder.StoreType.trim().length) {
+                    //    return "Store type is Required Field";
+                    //}
+                    if (!$("#issuStoreType").is(":checked") && !$("#recvStoreType").is(":checked")) {
+                        return "Please select store type.";
+                    }
+                    if (validOrder.FromLocCode == null || validOrder.FromLocCode == "") {
+                        return "Please select from location.";
+                    }
+                    if (validOrder.ToLocCode == null || validOrder.ToLocCode == "") {
+                        return "Please select to location";
+                    }
+                    if (!validOrder.AppByCode.trim().length) {
+                        return "Approved by is required";
+                    }
+
+                    return "";
+
+                }
+
+                //Comment Date : 24/09/2019 by Farhad
+                //$(document).on("change", "#FromLocCode", function(e){
+                //    $("#ItemCode").val("").change();
+                //})
+
+                $(document).on("change", ".StoreType", function () {
+
+                    setOrder();
+
+                    var order = { FromLocCode: "", ToLocCode: "", IssueByCode: "" };
+
+                    $.ajax({
+                        url: '@Url.Action("GetIssueRcvBy", "StoreTransfer")',
+                        contentType: "application/json;charset=utf-8",
+                        data: {
+                            IssueByCode: $(this).val()
+                        },
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function (data) {
+                            $('#IssueByCode').empty();
+                            $.each(data, function (index, value) {
+                                $('#IssueByCode').append($('<option>',
+                                    {
+                                        value: value.Value,
+                                        text: value.Text
+                                    })).select2();
+                            });
+                            $("#IssueByCode").val(order.IssueByCode).trigger('change');
+                            order.IssueByCode = "0";
+                        }
+                    });
+
+                    if ($(this).val() == "1") {
+                        $("#pnlFromLoc").show();
+                        $("#pnlFromLocAll").hide();
+                        $("#pnlToLocCodeAll").show()
+                        $("#pnlToLocCode").hide()
+                        $("#pnlRecvNo").hide();
+                        $("#pnlIssuNo").show()
+                        $("#pnlRecivedBy").hide();
+                        $("#pnlIssuedBy").show();
+                        document.getElementById('issueLbl').innerHTML = 'Issue Date';
+                        document.getElementById('RecvIssuBy').innerHTML = 'Issued By';
+
+
+                        $.ajax({
+                            url: '@Url.Action("GetFromLoctionToIssue", "StoreTransfer")',
+                            contentType: "application/json;charset=utf-8",
+                            data: {
+                                ToLocCode: $(this).val()
+                            },
+                            type: 'GET',
+                            dataType: 'json',
+                            success: function (data) {
+                                $('#ToLocCode').empty();
+                                $.each(data, function (index, value) {
+                                    $('#ToLocCode').append($('<option>',
+                                        {
+                                            value: value.Value,
+                                            text: value.Text
+                                        })).select2();
+                                });
+                                $("#ToLocCode").val(order.ToLocCode).trigger('change');
+                                order.ToLocCode = "0";
+                            }
+                        });
+
+                        $.ajax({
+                            url: '@Url.Action("GetToLoctionToIssue", "StoreTransfer")',
+                            contentType: "application/json;charset=utf-8",
+                            data: {
+                                StoreType: $(this).val()
+                            },
+                            type: 'GET',
+                            dataType: 'json',
+                            success: function (data) {
+                                $('#FromLocCode').empty();
+                                $.each(data, function (index, value) {
+                                    $('#FromLocCode').append($('<option>',
+                                        {
+                                            value: value.Value,
+                                            text: value.Text
+                                        })).select2();
+                                });
+                                $("#FromLocCode").val(order.FromLocCode).trigger('change');
+                                order.ToLocCode = "0";
+                            }
+                        });
+
+
+                    }
+                    else {
+                        //$("#pnlFromLoc").hide();
+                        //$("#pnlFromLocAll").show();
+                        //$("#pnlToLocCodeAll").hide()
+                        //$("#pnlToLocCode").show()
+                        $("#pnlRecvNo").show();
+                        $("#pnlIssuNo").hide()
+                        $("#pnlRecivedBy").show();
+                        $("#pnlIssuedBy").hide();
+                        document.getElementById('issueLbl').innerHTML = 'Receive Date';
+                        document.getElementById('RecvIssuBy').innerHTML = 'Received By';
+                        //var order = { FromLocCode: "", ToLocCode: "" };
+
+                        $.ajax({
+                            url: '@Url.Action("GetFromLoctionToRecv", "StoreTransfer")',
+                            contentType: "application/json;charset=utf-8",
+                            data: {
+                                ToLocCode: $(this).val()
+                            },
+                            type: 'GET',
+                            dataType: 'json',
+                            success: function (data) {
+                                $('#ToLocCode').empty();
+                                $.each(data, function (index, value) {
+                                    $('#ToLocCode').append($('<option>',
+                                        {
+                                            value: value.Value,
+                                            text: value.Text
+                                        })).select2();
+                                });
+                                $("#ToLocCode").val(order.ToLocCode).trigger('change');
+                                order.ToLocCode = "0";
+                            }
+                        });
+
+                        $.ajax({
+                            url: '@Url.Action("GetToLoctionToRecv", "StoreTransfer")',
+                            contentType: "application/json;charset=utf-8",
+                            data: {
+                                StoreType: $(this).val()
+                            },
+                            type: 'GET',
+                            dataType: 'json',
+                            success: function (data) {
+                                $('#FromLocCode').empty();
+                                $.each(data, function (index, value) {
+                                    $('#FromLocCode').append($('<option>',
+                                        {
+                                            value: value.Value,
+                                            text: value.Text
+                                        })).select2();
+                                });
+                                $("#FromLocCode").val(order.FromLocCode).trigger('change');
+                                order.ToLocCode = "0";
+                            }
+                        });
+
+                    }
+                });
+
+
+
+                $(document).on("change", "#ItemCode", function (e) {
+                    if ($("#issuStoreType").is(":checked")) {
+                        isIssue();
+                    }
+                    if ($("#recvStoreType").is(":checked")) {
+                        isReceive();
+                    }
+
+
+                });
+                function isReceive(){
+                    $.ajax({
+                        type: "Get",
+                        contentType: "application/json;charset=utf-8",
+                        url: '@Url.Action("GetItemByQtyInTransit", "StoreTransfer")',
+                        data: { Item: $("#ItemCode").val()},
+                        dataType: 'json',
+                        success: function (item) {
+                            if (item == 0) {
+                                //alert("Data Not Found");
+                            }
+                            else {
+                                $("#ExQty").val(item.CurrQty);
+                                $("#Price").val(item.UnitPrice);
+                                $("#LotNo").val(item.LotNo);
+                                $("#HSCode").val(item.HSCode);
+                            }
+                        }
+                    });
+                }
+                function isIssue(){
+                    $.ajax({
+                        type: "Get",
+                        contentType: "application/json;charset=utf-8",
+                        url: '@Url.Action("GetItemByQtyPrice", "Receive")',
+                        data: { Item: $("#ItemCode").val(), LocNo: $("#FromLocCode").val() },
+                        dataType: 'json',
+                        success: function (item) {
+                            if (item == 0) {
+                                //alert("Data Not Found");
+                            }
+                            else {
+                                $("#ExQty").val(item.CurrQty);
+                                $("#Price").val(item.UnitPrice);
+                                $("#LotNo").val(item.LotNo);
+                                $("#HSCode").val(item.HSCode);
+                            }
+                        }
+                    });
+
+                }
+
+
+
+                var orders = [];
+                $('#add').click(function () {
+                    if ($("#ItemCode").val() == "") {
+                        alert("Item is required.");
+                        return;
+                    }
+                    //if (parseFloat($("#ExQty").val()) < parseFloat($("#Qty").val()) || $("#Qty").val() < 0) {
+                    //    alert("Quantity is more then Ext Quantity.");
+                    //    return;
+                    //}
+
+                    addOnList();
+                    $("tbody#tbodyId tr:even").css({
+                        "background-color": "#e6e8e8"
+                    });
+                    clearItemInfo();
+
+                });
+                function clearItemInfo() {
+                    $("#Qty").val("");
+                    $("#ExQty").val("");
+                    $("#Price").val("");
+                    $("#Amount").val("");
+                    $("#SupTaxAmt").val("");
+                    $("#VATAmt").val("");
+                    $("#LotNo").val("");
+                    $("#HSCode").val("");
+                }
+
+                function addOnList() {
+                    var newAddList = [];
+                    var newAddListSl = 0;
+
+                    var IssueNo = $("#IssueNo").val();
+                    var RcvNo = $("#RcvNo").val();
+                    var LocCode = $("#ToLocCode option:selected").val();
+                    var ItemCode = $("#ItemCode option:selected").val();
+                    var Qty = parseFloat($("#Qty").val()).toFixed(2).replace(".", ",");
+                    var ExQty = parseFloat($("#ExQty").val()).toFixed(2).replace(".", ",");  
+                    var Price = parseFloat($("#Price").val()).toFixed(2).replace(".", ",");  
+                    var Amount = parseFloat($("#Amount").val()).toFixed(2).replace(".", ","); 
+                    var SupTaxAmt = parseFloat($("#SupTaxAmt").val()).toFixed(2).replace(".", ",") //$("#SupTaxAmt").val();
+                    var VATAmt = parseFloat($("#VATAmt").val()).toFixed(2).replace(".", ",") // $("#VATAmt").val();
+                    var LotNo = "01";
+                    if ($("#LotNo").val() != "") {
+                        LotNo = $("#LotNo").val();
+                    }
+                    //var LotNo = $("#LotNo").val();
+                    var ItemName = $('#ItemCode option:selected').text();
+
+                    if (Qty != "" ) { //&& (parseFloat(Qty.replace(",", "."))) <= (parseFloat(ExQty.replace(",", ".")))
+                        var item = {
+                            ItemCode: ItemCode, LotNo: LotNo, LocCode: LocCode,IssueNo:IssueNo,
+                            Sl: 0, ItemName: ItemName, RcvNo: RcvNo, ExQty: ExQty, Qty: Qty, CurrQty: Qty,
+                            Amount: Amount, Price:Price, VATAmt:VATAmt, SupTaxAmt:SupTaxAmt,UnitPrice:Price
+                        }
+                        //item.Sl = orders.length + 1
+                        //orders.push(item);
+                        const i = orders.findIndex(_item => _item.ItemCode === ItemCode && _item.LotNo === LotNo);
+                        if (i > -1)
+                        {
+                            var prevQty = parseInt(orders[i].Qty.replace(",", "."));
+                            CurrQty = prevQty + parseInt(CurrQty.replace(",", "."));
+                            item.Qty = CurrQty;
+                            item.CurrQty = CurrQty;
+                            orders[i] = item;
+                        }
+                        else
+                        {
+                            item.Sl = orders.length + 1;
+                            orders.push(item);
+                        }
+                        addOnTable();
+                    }
+                    else {
+                        swal(
+                             'Sorry!',
+                             'Existing quantity is more or less than current quantity.',
+                             'warning'
+                         );
+
+                    }
+                }
+                $(document).on('click', '#delete', function () {
+                    var id = $(this).attr("value");
+
+                    swal({
+                        title: "Are you sure?",
+                        text: "You will not be able to recover this order data!",
+                        type: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#DD6B55",
+                        confirmButtonText: "Yes, delete it!",
+                        closeOnConfirm: true
+                    },
+                     function () {
+                         deleteRow(id);
+                         addOnTable();
+                         swal("Deleted!", "Your imaginary file has been deleted.", "success");
+
+                     });
+                });
+                function deleteRow(sl) {
+                    var newOrder = [];
+                    var newSl = 0;
+
+                    $.each(orders, function (index, data) {
+
+                        if (data.Sl != sl) {
+                            newSl++;
+                            data.Sl = newSl;
+                            data.Id = 0;
+                            newOrder.push(data);
+                        }
+                    });
+                    orders = new Array();
+                    orders = newOrder;
+
+                }
+
+                function addOnTable() {
+                    $('#tbodyId').empty();
+                    var sl = 0;
+                    var TotAmt = 0;
+                    var TotSupTaxAmt = 0;
+                    var TotVATAmt = 0;
+                    $.each(orders, function (index, data) {
+                        sl = sl + 1;
+                        data.Sl = sl;
+                        $("#tbodyId").append("<tr><td>" + sl + "</td><td>"
+                                                           + data.ItemCode + "</td><td>"
+                                                           + data.ItemName + "</td><td>"
+                                                           + data.Qty.replace(",", ".") + "</td><td>"
+                                                           + data.Price.replace(",", ".") + "</td><td>"
+                                                          + '<a href="#" class="on-default remove-row deleteSup" data-id="' + sl + '" id="delete" value="' + sl + '"><i class="glyphicon glyphicon-trash"></i></a>' + "</td></tr>");
+                        TotAmt +=  parseFloat(data.Qty.replace(",", ".")) * parseFloat(data.Price.replace(",", "."));
+                        TotSupTaxAmt += parseFloat(data.SupTaxAmt.replace(",", "."));
+                        TotVATAmt += parseFloat(data.VATAmt.replace(",", "."));
+                    });
+                    $("#TotAmt").val(TotAmt.toFixed(2));
+                    $("#TotSupTaxAmt").val((isNaN(TotSupTaxAmt)) ? 0 :TotSupTaxAmt);
+                    $("#TotVATAmt").val((isNaN(TotVATAmt)) ? 0 :TotVATAmt);
+
+                }
+
+                //***************************** For Common Item Filtering option start *******************************
+                $(document).on("change", "#ItemType", function (e) {
+                    if ('@ViewBag.NoGrp' == 'False') {
+
+                        if ($("#ItemType option:selected").text() != "---- Select ----") {
+                            $("#pView").modal("show");
+                        }
+                        //for group load by itemtype.......
+                        $.ajax({
+                            url: '@Url.Action("LoadGroupInfoByItemType", "Sales")',
+                            contentType: "application/json;charset=utf-8",
+                            data: {
+                                ItemType: $("#ItemType").val()
+                            },
+                            type: 'GET',
+                            dataType: 'json',
+                            success: function (data) {
+                                $('#GroupID').empty();
+                                //data.insertBefore('<option>', { Value: "", text: "--- Select ---" });
+                                $.each(data, function (index, value) {
+                                    $('#GroupID').append($('<option>',
+                                        {
+                                            value: value.Value,
+                                            text: value.Text
+                                        })).select2();
+                                });
+                                //$("#GroupID").val(order.Purpose).trigger('change');
+                                //order.Purpose = "0";
+                            }
+                        });
+                    } else {
+                        //for Item load by itemtype.......
+                        $.ajax({
+                            url: '@Url.Action("LoadItemByItemType", "Sales")',
+                            contentType: "application/json;charset=utf-8",
+                            data: {
+                                ItemType: $("#ItemType").val()
+                            },
+                            type: 'GET',
+                            dataType: 'json',
+                            success: function (data) {
+                                $('#ItemCode').empty();
+                                $.each(data, function (index, value) {
+                                    $('#ItemCode').append($('<option>',
+                                        {
+                                            value: value.Value,
+                                            text: value.Text
+                                        })).select2();
+                                });
+                            }
+                        });
+                    }
+                })
+
+                //for sgroupinfo load by GroupID.......
+                $(document).on("change", "#GroupID", function (e) {
+                    if ('@ViewBag.OnlyGrp' == 'False') {
+
+                        $.ajax({
+                            url: '@Url.Action("LoadSGroupByGroupId", "Sales")',
+                            contentType: "application/json;charset=utf-8",
+                            data: {
+                                ItemType: $("#ItemType").val(), GroupID: $("#GroupID").val()
+                            },
+                            type: 'GET',
+                            dataType: 'json',
+                            success: function (data) {
+                                $('#SGroupID').empty();
+                                $.each(data, function (index, value) {
+                                    $('#SGroupID').append($('<option>',
+                                        {
+                                            value: value.Value,
+                                            text: value.Text
+                                        })).select2();
+                                });
+                            }
+                        });
+                    }
+                })
+
+
+                //for ssgroupinfo load by sGroupID.......
+                $(document).on("change", "#SGroupID", function (e) {
+                    if ('@ViewBag.SubSubGrp' == 'True') {
+                        $.ajax({
+                            url: '@Url.Action("LoadSSGroupInfo", "Sales")',
+                            contentType: "application/json;charset=utf-8",
+                            data: {
+                                ItemType: $("#ItemType").val(), GroupID: $("#GroupID").val(), SGroupID: $("#SGroupID").val()
+                            },
+                            type: 'GET',
+                            dataType: 'json',
+                            success: function (data) {
+                                $('#SSGroupID').empty();
+                                $.each(data, function (index, value) {
+                                    $('#SSGroupID').append($('<option>',
+                                        {
+                                            value: value.Value,
+                                            text: value.Text
+                                        })).select2();
+                                });
+                            }
+                        });
+                    }
+                })
+
+                //for ItmeInfo load by ssGroupID....... ItemType, GroupId, SGroupId, SSGroupId
+                $(document).on("click", "#btnOk", function (e) {
+                    $("#pView").modal("hide");
+
+                    if ('@ViewBag.OnlyGrp' == 'True') {
+                        //for Item load by GroupID.......
+                        $.ajax({
+                            url: '@Url.Action("LoadItemByGroupId", "Sales")',
+                            contentType: "application/json;charset=utf-8",
+                            data: {
+                                ItemType: $("#ItemType").val(), GroupID: $("#GroupID").val()
+                            },
+                            type: 'GET',
+                            dataType: 'json',
+                            success: function (data) {
+                                $('#ItemCode').empty();
+                                $.each(data, function (index, value) {
+                                    $('#ItemCode').append($('<option>',
+                                        {
+                                            value: value.Value,
+                                            text: value.Text
+                                        })).select2();
+                                });
+                            }
+                        });
+                    }
+
+                    if ('@ViewBag.GrpAndSubGrp' == 'True') {
+                        $.ajax({
+                            url: '@Url.Action("LoadItemBySGroupID", "Sales")',
+                            contentType: "application/json;charset=utf-8",
+                            data: {
+                                ItemType: $("#ItemType").val(), GroupID: $("#GroupID").val(), SGroupID: $("#SGroupID").val()
+                            },
+                            type: 'GET',
+                            dataType: 'json',
+                            success: function (data) {
+                                $('#ItemCode').empty();
+                                $.each(data, function (index, value) {
+                                    $('#ItemCode').append($('<option>',
+                                        {
+                                            value: value.Value,
+                                            text: value.Text
+                                        })).select2();
+                                });
+                                ClearComView();
+                            }
+                        });
+                    }
+
+                    if ('@ViewBag.SubSubGrp' == 'True') {
+                        $.ajax({
+                            url: '@Url.Action("LoadItemBySSGroupID", "Sales")',
+                            contentType: "application/json;charset=utf-8",
+                            data: {
+                                ItemType: $("#ItemType").val(), GroupID: $("#GroupID").val(), SGroupID: $("#SGroupID").val(), SSGroupID: $("#SSGroupID").val()
+                            },
+                            type: 'GET',
+                            dataType: 'json',
+                            success: function (data) {
+                                $('#ItemCode').empty();
+                                $.each(data, function (index, value) {
+                                    $('#ItemCode').append($('<option>',
+                                        {
+                                            value: value.Value,
+                                            text: value.Text
+                                        })).select2();
+                                });
+                                ClearComView();
+                            }
+                        });
+                    }
+                })
+
+                $(document).on("click", "#closePopOver", function (e) {
+                    e.preventDefault();
+                    jQuery("#ItemType option").filter(function () {
+                        return $.trim($(this).text()) == '---- Select ----'
+                    }).prop('selected', true).trigger('change.select2');
+
+                    $("#pView").modal("hide");
+                    ClearComView();
+                });
+
+                function ClearComView() {
+                    var Stext = '---- Select ----';
+
+                    jQuery("#GroupID option").filter(function () {
+                        return $.trim($(this).text()) == Stext
+                    }).prop('selected', true).trigger('change.select2');
+
+                    jQuery("#SGroupID option").filter(function () {
+                        return $.trim($(this).text()) == Stext
+                    }).prop('selected', true).trigger('change.select2');
+
+                    jQuery("#SSGroupID option").filter(function () {
+                        return $.trim($(this).text()) == Stext
+                    }).prop('selected', true).trigger('change.select2');
+                }
+                //***************************** For Common Item Filtering option start *******************************
+
+
+
+
+            }); //End of document ready...
+        </script>
+    }
+}

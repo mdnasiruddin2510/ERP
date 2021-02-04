@@ -1,0 +1,640 @@
+﻿@model App.Domain.OpenBal
+@{
+    ViewBag.Title = "GL_OpenBal";
+}
+
+<script src="~/App_Themes/Theme1/plugins/select2/select2.min.js" type="text/javascript"></script>
+<script src="~/App_Themes/Theme1/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+<link href="~/App_Themes/Theme1/plugins/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/Css/FormDesign.css" rel="stylesheet" />
+
+<style>
+   table.dataTable.select tbody tr,
+    table.dataTable thead th:first-child {
+        cursor: pointer;
+    }
+   .dataTables_scrollBody > table > thead > tr > th[class*="sort"]::after {
+        display: none;
+    }
+</style>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-color panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <text style="text-align:left !important; text-decoration: none;">GLOpening Balance</text>
+                        <text style="color:#1E3B2D;font-size:12px;margin-right:100px;" class="pull-right">@ViewBag.Status</text>
+                    </h3>
+                </div>
+                <div class="panel-body">
+
+
+                    <div class="col-md-12" style="margin-left:110px; margin-top:20px" id="ddfProjCode">
+                        <label class="col-md-2" for="ProjCode">Project</label>
+                        <div class="input-group form-group col-md-4">
+                            @Html.DropDownListFor(x => x.ProjCode, null, new { @class = "form-control select2", required = "required" })
+
+                        </div>
+                    </div>
+
+                    <div class="col-md-12" style="margin-left:110px; margin-top:20px" id="ddfBrCode">
+                        <label class="col-md-2" for="BrCode">Branch</label>
+                        <div class="input-group form-group col-md-4">
+                            @Html.DropDownListFor(x => x.BranchCode, null, new { @class = "form-control select2", required = "required" })
+
+                        </div>
+                    </div>
+
+
+                    <div class="col-md-12" style="margin-left:110px; margin-top:20px">
+                        <label class="col-md-2">Account Name</label>
+                        <div class="input-group form-group col-md-4">
+                            @Html.DropDownListFor(x => x.Accode, null, new { @class = "form-control select2", required = "required" })
+
+                        </div>
+                    </div>
+
+                    <div class="col-md-12" style="margin-left:110px; margin-top:20px">
+                        @Html.LabelFor(x => x.OpenBalance, new { @class = "col-md-2" })
+                        <div class="input-group form-group col-md-4">
+                            <input type="number" class="form-control  select2 " id="OpenBalance" name="OpenBalance" />
+
+                        </div>
+                    </div>
+
+
+                    <div class="row col-md-12">
+                        <div class="col-md-9" style="text-align:center">
+                            <input type="submit" class="btn btn-primary" value="Save" id="btnSaveOpnBal" />
+                            <input type="button" class="btn btn-primary" value="Update" id="btnUpdateOpnBal" />
+                            <input type="button" class="btn btn-primary" value="Clear" id="btnClearOpnBal" />
+                        </div>
+
+
+                        <div class="col-md-3">
+                            @{
+                                string UserName = Session["UserName"].ToString();
+                                AcclineERP.Models.RBACUser rUser = new AcclineERP.Models.RBACUser(UserName);
+                            }
+
+                            @{
+                                if (rUser.HasPermission("GL_OpenBal_Preview"))
+                                {
+                                    <a href="@Url.Action("GLOpenBalPreviewPdf", "GL_OpenBal")" target="_blank" class="btn btn-primary">Preview</a>
+                                }
+                            }
+
+                        </div>
+                    </div>
+                    <br />
+
+                    <div class="col-md-12">
+                        <div class="col-md-12" style="margin: 0 auto; width: 100%">
+                            <div class="row" style="margin-right:15px; margin-left:15px">
+                                <div class="col-md-12">
+                                    <br />
+                                    <table class="table table-bordered table-responsive" id="datatable-buttonsJV" cellspacing="0" style="width: 100%;">
+                                        <thead>
+                                            <tr>
+                                                <th>SL</th>
+                                                <th>Account Name</th>
+                                                <th>Account Code</th>
+                                                <th>Debit</th>
+                                                <th>Credit</th>
+                                                <th>Action</th>
+
+                                            </tr>
+                                        </thead>
+                                        <tfoot align="right">
+                                            <tr><th></th><th></th><th></th><th></th><th></th><th></th></tr>
+                                        </tfoot>
+                                    </table>
+                                    @*<hr style="margin-bottom: 1px !important; margin-top: 0 !important" /><br />*@
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+@section Scripts{
+    <script src="~/App_Themes/Theme1/plugins/select2/select2.min.js" type="text/javascript"></script>
+    <script src="~/App_Themes/Theme1/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.bootstrap.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.buttons.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/buttons.bootstrap.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/pdfmake.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/vfs_fonts.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/buttons.html5.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/buttons.print.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.fixedHeader.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.keyTable.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.responsive.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/responsive.bootstrap.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.scroller.min.js"></script>
+    <script type="text/javascript" src="../App_Themes/Theme1/plugins/parsleyjs/dist/parsley.min.js"></script>
+    <!-- Datatable init js -->
+    <script src="../App_Themes/Theme1/blue/assets/pages/datatables.init.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#OpenBalance").val("0");
+            $("#btnUpdateOpnBal").hide();
+            $("#Accode").select2();
+            @*------------ data table Properties -------------------------- *@
+
+
+
+            $('#datatable-buttonsJV').dataTable({
+                "scrollX": true,
+                "destroy": true,
+                "api": true,
+                "columns": [
+                           { "data": null, "bSortable": false },
+                           { "data": "AccName" },
+                           { "data": "Accode" },
+                           {
+                               "data": 'YrDrBal',
+                               render: function (data) {
+                                   if (data == 0) {
+                                       return ''
+                                   }
+                                   else {
+                                       return data
+                                   }
+
+                               }
+                           },
+                           {
+                               data: 'YrCrBal',
+                               render: function (data) {
+                                   if (data == 0) {
+                                       return ''
+                                   }
+                                   else {
+                                       return data
+
+                                   }
+
+                               }
+                           },
+                           {
+
+                               mRender: function (data, type, row) {
+                                   return '<a href="#" id="edit" class="btn btn-default">'
+                                           + '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span></a>&ensp;&ensp;'
+                                   + '<a href="#" class="on-default remove-row deleteSup largeSpace" data-id="1" id="delete" value="' + row.Id + '">'
+                                   + ' <i class="glyphicon glyphicon-trash"></i> </a>'
+                               }
+                           }
+                ],
+                "columnDefs": [
+                                   {
+                                       "targets": 0, // your case first column
+                                       width: 20,
+                                   },
+                                    {
+                                        "targets": 3, // your case first column
+                                        "className": "text-right",
+                                    },
+                                    {
+                                        "targets": 4,
+                                        "className": "text-right",
+
+                                    }
+                ],
+
+
+
+                "footerCallback": function (row, data, start, end, display) {
+                    var api = this.api(), data;
+
+                    // converting to interger to find total
+                    var intVal = function (i) {
+                        return typeof i === 'string' ?
+                            i.replace(/[\$,]/g, '') * 1 :
+                            typeof i === 'number' ?
+                            i : 0;
+                    };
+                    DrTotal = api
+                         .column(3)
+                         .data()
+                         .reduce(function (a, b) {
+                             return intVal(a) + intVal(b);
+                         }, 0);
+
+                    CrTotal = api
+                           .column(4)
+                           .data()
+                           .reduce(function (a, b) {
+                               return intVal(a) + intVal(b);
+                           }, 0);
+
+
+                    // Update footer by showing the total with the reference of the column index
+
+                    $(api.column(3).footer()).html(DrTotal.toFixed(2));
+                    $(api.column(4).footer()).html(CrTotal.toFixed(2));
+
+
+                    if (DrTotal != CrTotal) {
+                        $(api.column(3).footer()).css("backgroundColor", 'red');
+                        $(api.column(4).footer()).css("backgroundColor", 'red');
+                    }
+                    else {
+                        $(api.column(3).footer()).css("backgroundColor", 'white');
+                        $(api.column(4).footer()).css("backgroundColor", 'white');
+                    }
+                },
+
+                "fnCreatedRow": function (row, data, index) {
+                    $('td', row).eq(0).html(index + 1);
+                }
+            });
+
+
+
+            loadGridByVNo();
+
+
+            function loadGridByVNo() {
+                $.ajax({
+                    url: '@Url.Action("GetAllDataForOpenBalance", "GL_OpenBal")',
+                    contentType: "application/json;charset=utf-8",
+                    data: { Proj: $("#ProjCode option:selected").val(), BrCode: $("#BranchCode option:selected").val() },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+
+                        if (data.data.length >= 0) {
+                            var table = $('#datatable-buttonsJV').DataTable();
+                            table.clear();
+                            table.rows.add(data.data).draw();
+
+
+                        }
+
+                    }
+                });
+            }
+
+            $(document).on("change", "#ProjCode, #BranchCode", function () {
+                loadGridByVNo();
+            });
+
+            function validateAddDedOnSave(validGLOpenBal) {
+
+                //if (!validGLOpenBal.ProjCode == "") {
+                //    return "Project code is required.";
+                //}
+
+                //if (!validGLOpenBal.BranchCode == "") {
+                //    return "Branch code is Required";
+                //}
+
+                if (!validGLOpenBal.Accode.trim().length) {
+                    return "Account code is Required";
+                }
+
+                if (validGLOpenBal.OpenBalance == 0) {
+                    return "Please Enter a amount";
+                }
+                return "";
+            }
+            function setOpnBal() {
+
+                OpnBal.ProjCode = $("#ProjCode").val();
+                OpnBal.BranchCode = $("#BranchCode").val();
+                OpnBal.Accode = $("#Accode").val();
+                OpnBal.OpenBalance = $("#OpenBalance").val();
+                OpnBal.YrCrBal = 0;
+                OpnBal.YrDrBal = 0;
+                OpnBal.Budget = 0;
+                OpnBal.UnitCode = "000001";
+            }
+
+            function ClearOpnBalControls() {
+
+                $("#ProjCode").val($("#ProjCode ").val()).trigger('change.select2');
+                $("#BranchCode").val($("#BranchCode ").val()).trigger('change.select2');
+                $("#Accode").val($("#Accode").val()).trigger('change.select2');
+                $("#OpenBalance").val(" ");
+
+            }
+
+            function setOpnBalObj(objHC) {
+
+                OpnBal.ProjCode = objHC.ProjCode;
+                OpnBal.BranchCode = objHC.BranchCode;
+                OpnBal.Accode = objHC.Accode;
+                OpnBal.OpenBalance = objHC.OpenBalance;
+                OpnBal.Id = objHC.Id;
+
+            }
+            function setOpnBalFieldData(OpnBal) {
+
+                $("#ProjCode").val(OpnBal.ProjCode).trigger('change.select2');
+                $("#BranchCode").val(OpnBal.BranchCode).trigger('change.select2');
+                $("#Accode").val(OpnBal.Accode).trigger('change.select2');
+                $("#OpenBalance").val(OpnBal.OpenBalance);
+
+            }
+            var OpnBal = {
+
+                ProjCode: "",
+                BranchCode: "",
+                Accode: "",
+                OpenBalance: "",
+                Id: ""
+            };
+
+            @*------------save  data -------------------------- *@
+
+
+            $(document).on("click",
+            "#btnSaveOpnBal",
+            function () {
+                setOpnBal();
+                var validate = validateAddDedOnSave(OpnBal);
+                if (validate != "") {
+                    alert(validate);
+                    return;
+                }
+
+
+                $.ajax({
+                    url: '@Url.Action("SaveOpenBalance", "GL_OpenBal")',
+                    contentType: "application/json;charset=utf-8",
+                    data: JSON.stringify({ OpnBal: OpnBal }),
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function (data) {                         //save  data
+
+                        if (data == 1) {
+                            swal({
+                                title: "Ok",
+                                text: "All Information Saved Sucessfully!",
+                                type: "success"
+                            }, function () {
+
+                                loadGridByVNo();
+
+                                $("#btnSaveOpnBal").prop("disabled", false);
+                                //clearOpnBal();
+                                ClearOpnBalControls();
+                            });
+                        }
+                        else if (data == 0) {
+                            swal({
+                                title: "Sorry!",
+                                text: "An Error Occured During Save",
+                                type: "warning"
+                            });
+                            $("#btnSaveOpnBal").prop("disabled", false);
+                        }
+                        else if (data == 2) {                           //save  data
+                            swal({
+                                title: "Sorry!",
+                                text: "Data Already Exists",
+                                type: "warning"
+                            });
+                            $("#btnSaveOpnBal").prop("disabled", false);
+                        }
+                        else if (data == "X") {
+
+                            swal({
+                                title: "Sorry",
+                                text: "No Save Permission for this User",
+                                type: "warning"
+                            });
+
+                        }
+
+                    }
+                });
+            });
+            @*------------//update  data --------------------------*@
+
+
+            $(document).on("click",
+"#btnUpdateOpnBal",
+function () {
+
+    $("#btnUpdateOpnBal").hide();
+    $("#btnSaveOpnBal").show();
+    setOpnBal();
+    var validate = validateAddDedOnSave(OpnBal);
+    if (validate != "") {
+        alert(validate);
+        return;
+    }
+
+
+    $.ajax({
+        url: '@Url.Action("UpdateOpenBalance", "GL_OpenBal")',
+        contentType: "application/json;charset=utf-8",
+        data: JSON.stringify({ OpnBal: OpnBal }),
+        type: 'POST',
+        dataType: 'json',
+        success: function (data) {
+            if (data == 1) {
+
+                swal({
+                    title: "Ok",
+                    text: "All Information Updated Sucessfully!",
+                    type: "success"
+                }, function () {
+
+                    loadGridByVNo();
+
+                    $("#btnSaveOpnBal").prop("disabled", false);
+                    ClearOpnBalControls();
+                });
+
+            }
+            else if (data == 0) {
+
+                swal({
+                    title: "Sorry",
+                    text: "An Error Occured During Update",
+                    type: "warning"
+                }, function () {
+                    $("#btnSaveOpnBal").prop("disabled", false);
+                });
+
+            }
+            else if (data == 2) {
+
+                swal({
+                    title: "Sorry",
+                    text: "Data is InCorrect for Update",
+                    type: "warning"
+                }, function () {
+                    $("#btnSaveOpnBal").prop("disabled", false);
+                });
+
+            }
+            else if (data == "U") {
+
+                swal({
+                    title: "Sorry",
+                    text: "No Update Permission for this User",
+                    type: "warning"
+                });
+
+            }
+
+        }
+    });
+});
+
+
+            @*------------// edit  data --------------------------*@
+
+
+
+            $('body').on('click', '#edit', function () {
+
+                var table = $('#datatable-buttonsJV').DataTable();
+                var data = table.row($(this).closest('tr')).data();
+
+                var OpenBalId = data.Id;
+
+                $.ajax({
+                    url: '@Url.Action("GetOpenBalForEdit", "GL_OpenBal")',
+                    contentType: "application/json;charset=utf-8",
+                    data: { OpenBalId: OpenBalId },
+                    type: "GET",
+                    dataType: 'json',
+                    success: function (data) {
+
+
+                        if (data == 0) {
+
+                            swal({
+                                title: "Sorry!",
+                                text: "An Error Occured During Load!",
+                                type: "warning"
+                            });
+
+                            $("#btnSaveOpnBal").show();
+                            $("#btnUpdateOpnBal").hide();
+
+
+                        }
+                        else {
+
+
+                            if (!jQuery.isEmptyObject(data)) {
+
+
+                                data = $.parseJSON(data);
+
+                                $("#btnSaveOpnBal").hide();
+                                $("#btnUpdateOpnBal").show();
+
+                                setOpnBalObj(data);
+                                setOpnBalFieldData(data);
+
+                            }
+                            else {
+
+                                $("#btnSaveOpnBal").show();
+                                $("#btnUpdateOpnBal").hide();
+                            }
+
+
+                        }
+
+                    }
+                });
+
+            });
+
+
+            @*------------// delete  data --------------------------*@
+
+
+            $(document).on("click", "#delete", function () {
+                var value = $(this).attr("value");
+                //var Year = data.Year;
+                //delete  data
+                swal({
+                    title: "Are you sure?",
+                    text: "You will not be able to recover this data!",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "Yes, delete it!",
+                    closeOnConfirm: false,
+                    closeOnCancel: true
+                },
+                    function () {
+                        $.ajax({
+                            url: '@Url.Action("DeleteOpenBalance", "Gl_OpenBal")',
+                            contentType: "application/json;charset=utf-8",
+                            data: { OpenBalId: value },
+                            type: 'GET',
+                            dataType: 'json',
+                            success: function (datas) {
+                                // messege by the  value of datas
+
+                                if (datas == 0 || datas == 2) {
+                                    swal("Sorry!! Failed to delete this data.", "fail");
+                                }
+                                else if (datas == 1) {
+                                    swal({
+                                        title: "Ok",
+                                        text: "Sucessfully Delete!",
+                                        type: "success"
+                                    }, function () {
+                                        ClearOpnBalControls();
+                                        loadGridByVNo();
+
+                                    });
+                                }
+                                else if (datas == "D") {
+
+                                    swal({
+                                        title: "Sorry",
+                                        text: "No Delete Permission for this User",
+                                        type: "warning"
+                                    });
+
+                                }
+                            },
+                            error: function (datas) {
+                                swal("Sorry!! Failed to delete this data.", "fail")
+                            }
+                        });
+                    });
+            });
+
+
+
+            @*------------//clear  data --------------------------*@
+
+            $("#btnClearOpnBal").on("click", function () {
+
+                var table = $('#dtableOpenBalance').DataTable();
+                table.ajax.reload();
+                ClearOpnBalControls();
+            });
+
+        });//End
+    </script>
+}

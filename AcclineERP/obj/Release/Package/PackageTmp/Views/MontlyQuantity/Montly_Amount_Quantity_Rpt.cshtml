@@ -1,0 +1,255 @@
+﻿@model App.Domain.ViewModel.RptSearchVModel
+@{
+
+
+
+    ViewBag.Title = "Montly Quantity and Amount Report";
+}
+
+
+
+@using (Html.BeginForm("MontlyQuantityRptPdf2", "MontlyQuantity", FormMethod.Post, new { onsubmit = "return validation_radio()", target = "_blank" }))
+{
+    <div class="row">
+        <div class="col-md-10">
+            <div class="panel panel-color panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <text style="text-align:left !important; text-decoration: none">Monthwise Sales Statement</text>
+                    </h3>
+                </div>
+                <div class="panel-body">
+
+
+
+                    <div class="col-md-12" style="margin-left:110px; margin-top:10px" id="ddfProjCode">
+                        <label class="col-md-2" for="ProjCode">Project</label>
+                        <div class="input-group form-group col-md-4">
+                            @Html.DropDownListFor(x => x.projCode, null, new { @class = "form-control select2", @id = "projCode", @Value = ViewBag.ProjCode })
+                        </div>
+                    </div>
+                    <div class="col-md-12" style="margin-left:110px; margin-top:10px" id="ddfBrCode">
+                        <label class="col-md-2">Location</label>
+                        <div class="input-group form-group col-md-4">
+                            @Html.DropDownListFor(x => x.Location, null, "All", new { @class = "form-control select2", @id = "Location" })
+                        </div>
+                    </div>
+                    <div class="col-md-12" style="margin-left:110px; margin-top:10px" id="ddfBrCode">
+                        <label class="col-md-2" for="BrCode">Branch</label>
+                        <div class="input-group form-group col-md-4">
+                            @Html.DropDownListFor(x => x.BranchCode, null, "All", new { @class = "form-control select2", @id = "BranchCode" })
+                        </div>
+                    </div>
+                    <div class="col-md-12" style="margin-left:110px; margin-top:10px" id="ddfBrCode">
+                        <label class="col-md-2">Customer Name</label>
+                        <div class="input-group form-group col-md-4">
+                            @Html.DropDownListFor(x => x.CustomerName, null, "All", new { @class = "form-control select2", @id = "CustomerName" })
+                        </div>
+                    </div>
+                    <div class="col-md-12" style="margin-left:110px; margin-top:20px">
+                        <label class="col-md-2" for="fDate">From Date</label>
+                        <div class="input-group form-group col-md-4">
+                            <input type="text" class="form-control datePage" id="fDate" @*onchange="myFunction()"*@ name="fDate" value="@ViewBag.FyddFDate.ToShortDateString()" />
+                            <span class="input-group-addon bg-primary b-0 text-white"><i class="ion-calendar"></i></span>
+                        </div>
+                    </div>
+                    <div class="col-md-12" style="margin-left:110px; margin-top:20px">
+                        <label class="col-md-2" for="tDate">To Date</label>
+                        <div class="input-group form-group col-md-4">
+                            <input type="text" class="form-control datePage" id="tDate" @*onchange="myFunction()"*@ name="tDate" value="@ViewBag.FyddTDate.ToShortDateString()" />
+                            <span class="input-group-addon bg-primary b-0 text-white"><i class="ion-calendar"></i></span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12" style="margin-left:110px;">
+
+                        <label class="col-md-2" for="RptType"></label>
+                        <div class="col-md-6">
+                            <div id="X">
+                                <div class="radio">
+                                    <input type="radio" name="QtyAmt" value="Amount" id="Amount" />
+                                    <label for="Report">Amount </label>
+                                </div>
+                                <div class="radio">
+                                    <input type="radio" name="QtyAmt" value="Quantity" id="Quantity" />
+                                    <label for="Reports">Quantity </label>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    @*<div class="col-md-6" style="margin-left:110px; margin-top:20px">
+
+                        </div>*@
+
+                    <div class="col-md-12" style="margin-left:150px; margin-top:20px">
+                        <div class="col-xs-12">
+                            <div class="input-group">
+                                <p style="color:red">
+                                    @ViewBag.Message
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-10">
+                        <br />
+                    </div>
+                    <div class="row col-md-12" style="text-align:end">
+                        <div class="col-md-8" style=" text-align:right">
+                            <input type="submit" value="Preview" class="btn btn-primary" id="submit" style="width:100px;" />
+                            <input type="button" value="Clear" class="btn btn-primary" id="clear" style="width:100px;" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+@section Scripts{
+
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script src="~/App_Themes/Theme1/plugins/select2/select2.min.js" type="text/javascript"></script>
+    <script src="~/App_Themes/Theme1/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.bootstrap.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.buttons.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/buttons.bootstrap.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/pdfmake.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/vfs_fonts.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/buttons.html5.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/buttons.print.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.fixedHeader.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.keyTable.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.responsive.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/responsive.bootstrap.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.scroller.min.js"></script>
+    <script type="text/javascript" src="../App_Themes/Theme1/plugins/parsleyjs/dist/parsley.min.js"></script>
+    <!-- Datatable init js -->
+    <script src="../App_Themes/Theme1/blue/assets/pages/datatables.init.js"></script>
+
+    <script type="text/javascript">
+        function validation_radio() {
+
+            var x = $('#Amount').is(':checked');
+            var y = $('#Quantity').is(':checked');
+
+            if (!x && !y) {
+                alert("Please select Quantity or Amount");
+                return false;
+            }
+
+            if (x) QtyAmt = "Amount";
+            if (y) QtyAmt = "Quantity";
+            return true;
+            //var x = 0;
+            //if (x = 1)
+            //{
+            //    alert("Please select Quantity or Amount");
+            //    x = 0;
+            //    return false;
+            //}
+
+
+
+        };
+
+        $(document).ready(function () {
+
+            $('#ProjName').select2();
+            $("#BranchCode").select2();
+            $("#CustomerName").select2();
+            $("#Location").select2();
+
+
+
+
+
+
+            function validation_radio() {
+                alert("Please select Quantity or Amount redy");
+                return false;
+                //if (!$('#Amount').checked ) alert("Please select Quantity or Amount");
+                if (document.getElementById("Amount").checked = true) {
+                    QtyAmt = "Amount";
+                    //return true;
+                }
+                else if (document.getElementById("Quantity").checked = true) {
+                    //return true;
+                    QtyAmt = "";
+                }
+                else {
+                    alert("Please select Quantity or Amount functionvalid")
+                    return false;
+                }
+            };
+
+
+            $('#submitForm').submit(function () {
+                alert("Please select Quantity or Amount from id submit")
+            });
+
+
+
+
+
+            $(document).on("click", "#clear", function () {
+                location.reload();
+            });
+
+
+
+
+        });
+
+
+        //function myFunction() {
+        //    var fromDate = document.getElementById("fDate").value;
+        //    var ttDate = document.getElementById("ttDate").value;
+        //    var date2 = new Date(fromDate);
+        //    var q = "";
+        //    var date1 = new Date(document.getElementById("ttDate").value);
+
+        //    if (date1 < date2) {
+
+        //    }
+        //    else
+        //        alert('Form Date is less then to date');
+        //    //window.location.reload();
+        //}
+
+        @*$('#submit').click(function () {
+        var fromDate = $("#fDate").val();
+        var toDate = $("#tDate").val();
+        var projCode1 = $("#projCode").val();
+        var BrCode1 = $("#brCode").val();
+
+
+        var QtyAmt = "";
+        if (document.getElementById("Amount").checked = true) {
+            QtyAmt = "Amount";
+        }
+        else if (document.getElementById("Quantity").checked = true) {
+            QtyAmt = "Quantity";
+        }
+        else {
+            alert("Please select Quantity or Amount")
+        }
+
+            $.ajax({
+            url: "@(Url.Action("MontlyQuantityRptPdf2", "MontlyQuantity"))",
+            type: "POST",
+            data: { fDate: fromDate, tDate: toDate, ProjCode: projCode1, BranchCode: BrCode1, FinYear: '', QtyAmt: QtyAmt, ItemGroup: '' },
+            cache: false,
+            async: true,
+            success: function (data) {
+                //alert(data);
+            }
+        });
+    });*@
+
+
+
+    </script>
+}

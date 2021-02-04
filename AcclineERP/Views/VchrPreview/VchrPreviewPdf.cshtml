@@ -1,0 +1,232 @@
+﻿@model IEnumerable<App.Domain.ViewModel.VchrPreviewVM>
+@{
+    ViewBag.Title = "VchrPreviewPdf";
+    Layout = null;
+    decimal TotDrAmt = 0;
+    decimal TotCrAmt = 0;
+    var vHead = Model.Select(x => new { x.vchrno, x.vdate }).Distinct().ToList();
+    string VNo = vHead.Select(x => x.vchrno).First().ToString();
+    string vDate = vHead.Select(x => x.vdate).First().ToShortDateString();
+
+    var CompInfo = AcclineERP.Models.GetCompanyInfo.GetComInfo();
+    string CompanyAddress = ((CompInfo.Addr1 == null ? string.Empty : CompInfo.Addr1) + (CompInfo.Addr2 == null ? string.Empty : CompInfo.Addr2));
+}
+<script src="~/Scripts/jquery-1.9.1.min.js"></script>
+<script src="~/Scripts/Export.js"></script>
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/select2/select2.css" rel="stylesheet" type="text/css" />
+<link href="~/Css/FormDesign.css" rel="stylesheet" />
+
+<style>
+    hr {
+        background-color: black;
+        /*height: 0.5px;*/
+    }
+
+    body {
+        padding-right: 0px;
+        font-weight: bold;
+        font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+    }
+
+    .myinput[type="checkbox"]:before {
+        position: relative;
+        display: block;
+        width: 15px;
+        height: 15px;
+        border: 1px solid black;
+        content: "";
+        background: #FFF;
+    }
+
+    .border {
+        color: #335; /* Lighten up font color */
+        font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+        font-weight: 300;
+        border-collapse: collapse;
+        border-spacing: 0;
+    }
+
+    .tds {
+        /*border: 1px solid black;*/
+        font-weight: 500;
+        font-family: Arial;
+        border-right: hidden !important;
+    }
+    /* Make cells a bit taller */
+    .ths {
+        /*border: 1px solid black;*/
+        font-weight: 500;
+        font-family: Arial;
+    }
+
+    .th {
+        background: #F3F3F3; /* Light grey background */
+        font-weight: bold; /* Make sure they're bold */
+    }
+
+    .td {
+        background: #FAFAFA; /* Lighter grey background */
+        text-align: center; /* Center our text */
+    }
+
+    .breakhere {
+        page-break-after: always;
+    }
+</style>
+
+
+
+<div id="toReport" class="panel-body" style="margin: auto; text-align:center !important; width:800px; height:auto; padding:60px">
+    <div class="panel-heading" style="text-align:center">
+        <div class="panel-title">
+            <label style="text-align:center !important; text-decoration: none; font-size:25px; font-weight:bold">@CompInfo.CompName</label><br>
+            <label style="text-align:center !important; text-decoration: none; font-size:23px; font-weight:normal">@CompanyAddress</label><br>
+            @*<label style="text-align:center !important; text-decoration: none; font-size:23px; font-weight:normal">Phone: @CompInfo.Tel</label><br>*@
+        </div>
+        <div class="panel-title">
+            <text style="text-align:center !important; text-decoration: none; font-size:18px; ">@ViewBag.RptCap</text>
+        </div>
+        @if (ViewBag.HasBranch == true)
+        {
+            <div class="panel-title">
+                <text style="text-align:center !important; text-decoration: none; font-size:15px; ">Branch : @ViewBag.Branch</text>
+            </div>
+        }
+        @*<div class="cashDate">
+                <text style="text-align:center !important; text-decoration: none; font-size:15px; font-weight:bold">From : @ViewBag.fDate &nbsp;&nbsp; To: @ViewBag.tDate</text>
+            </div>*@
+
+    </div>
+    <hr />
+
+
+    <div class="panel-body" style="text-align:center">
+        <table class="table table-bordered table-responsive" id="datatable-buttons" style="width:100%;">
+            <thead>
+                <tr>
+                    <th>
+                        @*<div class="checkbox checkbox-primary" style="margin-top:0 !important">*@
+                        @*<input id="select_all" type="checkbox" name="select_all" /><label>All</label>*@
+                        @*  </div>*@
+                    </th>
+                </tr>
+            </thead>
+
+            @foreach (var itemv in Model.Select(x => new { x.vchrno, x.vdate }).Distinct().ToList())
+            {
+                TotDrAmt = 0;
+                TotCrAmt = 0;
+                <tr style="border: 1px solid !important;">
+                    <td colspan="6" style="border: 1px solid black;padding: 8px;">
+                        <table id="dtDemo" class="table table-bordered table-responsive">
+                            <tr class="col-md-12">
+                                @*<td><input id="PostOne" type="checkbox" name="PostOne" /><label></label></td>*@
+                                <td style="border: 0 white !important; font-size: 12px;"><label class="col-md-12 control-label">Voucher No : </label></td>
+                                <td><label class="col-md-12 control-label">@itemv.vchrno</label></td>
+                                <td style="border: 0 white !important; font-size: 12px;padding-left:170px"><label class="col-md-12 control-label">Date : </label></td>
+                                <td><label class="col-md-12 control-label">@itemv.vdate.ToShortDateString() </label></td>
+                                @*<td style="border: 0 white !important; font-size: 12px;padding-left:250px"><label class="col-md-12 control-label">Posted : </label></td>*@
+                                @*<td>
+                                        @if (itemv.Posted == true)
+                                        {
+                                            <label class="col-md-12 control-label">Yes</label>
+                                        }
+                                        else
+                                        {
+                                            <label class="col-md-12 control-label">No</label>
+                                        }
+                                    </td>*@
+                            </tr>
+
+                        </table>
+                        <br />
+                        <table class="table table-bordered table-responsive" id="tabledataInner" cellspacing="0" style="width: 100%;">
+
+                            <thead>
+                                <tr style="border-bottom: 1px solid; ">
+                                    <th style="font-size: 13px; text-align: left">@ViewBag.Col1Cap</th>
+                                    <th style="font-size: 13px; text-align: left">@ViewBag.Col2Cap</th>
+                                    <th style="font-size: 13px; text-align: left">@ViewBag.Col3Cap</th>
+                                    <th style="font-size: 13px; text-align: left">@ViewBag.Col4Cap</th>
+                                    <th style="font-size: 13px; text-align: left">@ViewBag.Col7Cap</th>
+                                    <th style="font-size: 13px; text-align: right">@ViewBag.Col5Cap</th>
+                                    <th style="font-size: 13px; text-align: right">@ViewBag.Col6Cap</th>
+                                </tr>
+                            </thead>
+
+                            <tbody id="tbodyId">
+
+                                @foreach (var item in Model.Where(x => x.vchrno == itemv.vchrno))
+                                {
+                                    <tr>
+                                        <td style="text-align: left; font-size: 12px;">
+                                            @Html.DisplayFor(modelItem => item.vchrno)
+                                        </td>
+                                        <td style="text-align: left; font-size: 12px">
+                                            @Html.DisplayFor(modelItem => item.vdate)
+                                        </td>
+                                        <td style="text-align: left; font-size: 12px">
+                                            @Html.DisplayFor(modelItem => item.acname)
+                                        </td>
+                                        <td style="text-align: left; font-size: 12px">
+                                            @Html.DisplayFor(modelItem => item.subname)
+                                        </td>
+                                        <td style="text-align: right; font-size: 12px">
+                                            @Html.DisplayFor(modelItem => item.narration)
+                                        </td>
+                                        <td style="text-align: right; font-size: 12px">
+                                            @Html.DisplayFor(modelItem => item.dramount)
+                                        </td>
+                                        <td style="text-align: right; font-size: 12px">
+                                            @Html.DisplayFor(modelItem => item.cramount)
+                                        </td>
+                                    </tr>
+                                    TotDrAmt += Convert.ToDecimal(item.dramount);
+                                    TotCrAmt += Convert.ToDecimal(item.cramount);
+                                }
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td style="text-align: right; font-size: 12px; border-top: 1px solid;"><b>@TotCrAmt</b><hr style="margin-bottom: 1px !important; margin-top: 0 !important" /><hr style="margin-bottom: 0 !important; margin-top: 0 !important" /></td>
+                                    <td style="text-align: right; font-size: 12px; border-top: 1px solid;"><b>@TotDrAmt</b><hr style="margin-bottom: 1px !important; margin-top: 0 !important" /><hr style="margin-bottom: 0 !important; margin-top: 0 !important" /></td>
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+                        <div class="col-md-12">
+                            <label class="col-md-12 control-label" style=" font-size:11px; text-align:left;">In Word : @ViewBag.InWordsAmt</label>
+                        </div>
+                        <br />
+                    </td>
+
+                </tr>
+
+            }
+        </table>
+
+    </div>
+
+</div>
+@*<div>
+        <label style="font-size:11px; text-align:left; margin-left:70px">In Word : @ViewBag.InWordsAmt</label>
+    </div>*@
+<br />
+<br />
+<div>
+    <text style="text-align:left !important;  font-size:15px; margin-left:70px; border-top:1px solid">Prepared By</text>
+    <text style="text-align:center !important;  font-size:15px; margin-left:200px;border-top:1px solid">Checked By</text>
+    <text style="text-align:right !important; font-size:15px;  margin-left:200px;border-top:1px solid">Approved By</text>
+</div>
+<br />
+@*<div class="panel-footer" style="width:850px ;margin-left:70px">
+        <label style="font-size:11px; text-align:left;">Print Date : @ViewBag.PrintDate</label>&emsp;
+        <i><label style="font-size:11px; text-align:right; margin-left:600px;">Page 1 of 1</label></i>
+    </div>*@
+

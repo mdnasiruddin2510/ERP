@@ -1,0 +1,147 @@
+﻿@model IEnumerable<App.Domain.CustWiseSummSaleRpt>
+
+@{
+    ViewBag.Title = "Customer-Wise Summary Sale Report";
+    Layout = null;
+    decimal tGSale = 0.0m;
+    var CompInfo = AcclineERP.Models.GetCompanyInfo.GetComInfo();
+    string CompanyAddress = ((CompInfo.Addr1 == null ? string.Empty : CompInfo.Addr1) + (CompInfo.Addr2 == null ? string.Empty : CompInfo.Addr2));
+}
+
+
+<script src="~/Scripts/jquery-1.9.1.min.js"></script>
+<script src="~/Scripts/Export.js"></script>
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/select2/select2.css" rel="stylesheet" type="text/css" />
+<link href="~/Css/FormDesign.css" rel="stylesheet" />
+
+<style>
+    hr {
+        background-color: black;
+        height: 0.5px;
+    }
+</style>
+
+<div id="toReport" class="panel-body" style="margin: auto; text-align:center !important; width:800px; height:1150px; padding:60px">
+    <div class="panel-heading" style="text-align:center">
+        <div class="panel-title">
+            <label style="text-align:center !important; text-decoration: none; font-size:27px; font-weight:bolder">@CompInfo.CompName</label><br>
+            <label style="text-align:center !important; text-decoration: none; font-size:25px; font-weight:bold">@CompanyAddress</label><br>
+            <label style="text-align: center !important; text-decoration: none; font-size: 25px; font-weight: bold">Phone: @CompInfo.Tel</label><br>
+            <label style="text-align: center !important; text-decoration: none; font-size: 25px; font-weight: bold">Email: <u>@CompInfo.Email</u></label><br>
+            <label style="text-align: center !important; text-decoration: none; font-size: 25px; font-weight: bold"><u>@ViewBag.Title</u></label><br>
+            <label style="text-align: center !important; text-decoration: none; font-size: 20px; font-weight: bold">Location : @ViewBag.Location</label><br>
+            <label style="text-align: center !important; text-decoration: none; font-size: 20px; font-weight: bold">From : @ViewBag.fDate &nbsp;&nbsp;&nbsp; To : @ViewBag.tDate</label><br>
+            
+        </div>
+        
+    </div>
+    <hr />
+
+    <br />
+    <br />
+    
+    <div class="panel-body" style="text-align:center">
+        
+        @*<div class="panel-sub-title" style="">
+            <h5 class="panel-sub-title" style="color:black; font-weight:bold;">
+                Location : @ViewBag.Location
+
+            </h5>
+        </div>*@
+        <br />
+        <div class="row col-md-12" style="text-align:center">
+            <div class="row">
+                <div class="col-md-11">
+                    <table class="table table-bordered table-responsive" id="datatable-buttons" style="width:800px; border:1px">
+                        <thead>
+                            <tr>
+                                <th style="font-size:18px; text-align:center">Customer Code</th>
+                                <th style="font-size: 18px; text-align: center">Customer Name</th>
+                                <th style="font-size: 18px; text-align: center">Sale Amount</th>
+                                <th style="font-size: 18px; text-align: center">Discount</th>
+                                <th style="font-size: 18px; text-align: center">Commission</th>
+                                <th style="font-size: 18px; text-align: center">VAT</th>
+                                <th style="font-size: 18px; text-align: center">Gross Sale</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbodyId">
+
+                            @foreach (var item in Model)
+                            {
+                                tGSale += Convert.ToDecimal(item.GrossSale);
+                                @*<tr class="hide_all" style="border-bottom-style:hidden; border-left-style:hidden; border-right-style:hidden">
+                                    <th style="font-size: 13px; text-align: center; border-right-style: hidden; ">Location : </th>
+                                    <th style="font-size: 13px; text-align: center; border-right-style: hidden">
+                                        @Html.DisplayFor(modelItem => item.LocCode)
+                                    </th>
+                                    <th style="font-size: 13px; text-align: center; border-right-style: hidden"></th>
+                                    <th style="font-size: 13px; text-align: center; border-right-style: hidden"></th>
+                                    <th style="font-size: 13px; text-align: center; border-right-style: hidden"></th>
+                                    <th style="font-size: 13px; text-align: right; border-right-style: hidden"></th>
+                                    <th style="font-size: 13px; text-align: right; border-right-style: hidden"></th>
+                                </tr>*@
+
+                                <tr>
+                                    <td style="text-align:center; font-size:16px">
+                                        @Html.DisplayFor(modelItem => item.SubCode)
+                                    </td>
+                                    <td style="text-align: left; font-size: 16px; ">
+                                        @Html.DisplayFor(modelItem => item.SubName)
+                                    </td>
+                                    <td style="text-align: right; font-size: 16px; ">
+                                        @Html.DisplayFor(modelItem => item.SaleAmount)
+                                    </td>
+                                    <td style="text-align: right; font-size: 16px; ">
+                                        @Html.DisplayFor(modelItem => item.Discount)
+                                    </td>
+                                    <td style="text-align: right; font-size: 16px; ">
+                                        @Html.DisplayFor(modelItem => item.Commission)
+                                    </td>
+                                    <td style="text-align: right; font-size: 16px; ">
+                                        @Html.DisplayFor(modelItem => item.VAT)
+                                    </td>
+                                    <td style="text-align: right; font-size: 16px; ">
+                                        @Html.DisplayFor(modelItem => item.GrossSale)
+                                    </td>
+                                </tr>
+
+                            }
+                            <tr class="hide_all" style="border-bottom-style:hidden; border-left-style:hidden; border-right-style:hidden">
+                                <th style="font-size: 17px; text-align: center; border-right-style: hidden; "></th>
+                                <th style="font-size: 17px; text-align: center; border-right-style: hidden"></th>
+                                <th style="font-size: 17px; text-align: center; border-right-style: hidden"></th>
+                                <th style="font-size: 17px; text-align: center; border-right-style: hidden"></th>
+                                <th style="font-size: 17px; text-align: center; border-right-style: hidden"></th>
+                                <th style="font-size: 17px; font:bold; text-align: right; border-right-style: hidden; ">Grand Total : </th>
+                                <th style="font-size: 17px; font: bold; text-align: right; border-right-style: hidden; "><span style="border-bottom: double 3px;">@tGSale</span></th>
+
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br />
+
+                </div>
+            </div>
+        </div>
+
+
+        <br />
+        <br />
+        
+    </div>
+
+    <div class="col-sm-10">
+            <br />
+            <br /><br />
+        </div>
+        @*<div class="panel-footer" style="text-align:right; width:850px">
+            <label style="font-size:13px">Print Date : @ViewBag.PrintDate</label>
+        </div>*@
+
+</div>
+
+
+

@@ -1,0 +1,265 @@
+﻿@model App.Domain.ViewModel.RptSearchVModel
+
+@{
+    ViewBag.Title = "Search";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using (Html.BeginForm("GetSummaryReport", "SummaryReport", FormMethod.Post, new { }))
+{
+    <div class="row">
+        <div class="col-md-10">
+            <div class="panel panel-color panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <text style="text-align:left !important; text-decoration: none">@ViewBag.RptCaption</text>
+                    </h3>
+                </div>
+                <div class="panel-body">
+                    <div class="col-md-12 hidden" style="margin-left:110px; margin-top:20px">
+                        <label class="col-md-2" for="LedgerTypeCode">Report Type</label>
+                        <div class="input-group form-group col-md-4">
+                            @Html.DropDownListFor(x => x.LedgerTypeCode, null, new { @class = "form-control select2", required = "required" })
+
+                        </div>
+                    </div>
+                    @if (ViewBag.RptCaption == "Trial Balance")
+                    {
+                    <div class="col-md-12" style="margin-left:110px; margin-top:20px" id="ddfBrCode">
+                        <label class="col-md-2" for="BrCode">Branch</label>
+                        <div class="input-group form-group col-md-4">
+                            @Html.DropDownListFor(x => x.BranchCode, null,"All", new { @class = "form-control select2", required = "required" })
+
+                        </div>
+                    </div>
+                    }
+                    @if (ViewBag.RptCaption == "Stock Summary")
+                    {
+                    <div class="col-md-12" style="margin-left:110px; margin-top:20px" id="ddfLocCode">
+                        <label class="col-md-2" for="LocCode">Location</label>
+                        <div class="input-group form-group col-md-4">
+                            @Html.DropDownListFor(x => x.LocCode, null, "All", new { @class = "form-control select2", required = "required" })
+
+                        </div>
+                    </div>
+                    }
+                    <div class="col-md-12" style="margin-left:110px; margin-top:20px">
+                        <label class="col-md-2" for="fDate">From Date</label>
+                        <div class="input-group form-group col-md-4">
+                            <input type="text" class="form-control datePage" id="fDate" name="fDate" value="@ViewBag.FyddFDate.ToShortDateString()">
+                            <span class="input-group-addon bg-primary b-0 text-white"><i class="ion-calendar"></i></span>
+
+                        </div>
+                    </div>
+                    <div class="col-md-12" style="margin-left:110px; margin-top:20px">
+                        <label class="col-md-2" for="tDate">To Date</label>
+                        <div class="input-group form-group col-md-4">
+                            <input type="text" class="form-control datePage" id="toDate" name="toDate" value="@ViewBag.FyddTDate.ToString()">
+                            <span class="input-group-addon bg-primary b-0 text-white"><i class="ion-calendar"></i></span>
+                        </div>
+                    </div>
+
+
+                    @*<div class="col-md-6" style="padding-left:17%">
+                            <div class="checkbox checkbox-primary">
+                                <input id="@Html.IdFor(x => x.Discardcntl)" type="checkbox"  onclick="myFunction()" name="discardcntl" /><label>Discard Control A/C</label>
+
+                            </div>
+                        </div>*@
+                    <div class="col-md-12">
+                        <div class="col-md-7" style="padding-left:35%">
+                            <div class="checkbox checkbox-primary">
+                                <input type="checkbox" name="DisControl" value="1" /><label>Control A/C</label> @*Discard*@
+
+                            </div>
+                        </div>
+
+                        @*<div class="col-md-4">
+                                <label class="col-md-6" for="Level">Level</label>
+                                <div class="input-group form-group col-md-4">
+                                    @Html.TextBoxFor(x => x.LevelNo, null, new { @class = "form-control select2"})
+
+                                </div>
+                            </div>*@
+
+                    </div>
+
+                    @*<div class="col-md-4" style="padding-left:17%">
+                            <div class="checkbox checkbox-primary">
+                                <input type="checkbox" name="DisTransection" value="0" /><label>Discard Transection A/C</label>
+
+                            </div>
+                        </div>*@
+                    @*<div class="col-md-4" style="padding-left:17%">
+                            <div class="checkbox checkbox-primary">
+                                <input type="checkbox" name="DisLevellen" value="3" /><label>Level No</label>
+
+                            </div>
+                        </div>*@
+
+                    @*<input type="checkbox" name="myCheckbox" checked="checked" value="true" />*@
+
+                    <div class="col-md-12" style="margin-left:150px; margin-top:20px">
+                        <div class="col-xs-12">
+                            <div class="input-group">
+
+                                <p style="color:red">
+                                    @ViewBag.Message
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-10">
+                        <br />
+                    </div>
+                    <div class="row col-md-12" style="text-align:end">
+                        <div class="col-md-8" style=" text-align:right">
+
+                            <input type="submit" value="Preview" class="btn btn-primary" id="submit" style="width:100px;" />
+                            <input type="button" value="Clear" class="btn btn-primary" id="clear" style="width:100px;" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+
+
+@section Scripts{
+
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script src="~/App_Themes/Theme1/plugins/select2/select2.min.js" type="text/javascript"></script>
+    <script src="~/App_Themes/Theme1/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.bootstrap.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.buttons.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/buttons.bootstrap.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/pdfmake.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/vfs_fonts.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/buttons.html5.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/buttons.print.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.fixedHeader.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.keyTable.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.responsive.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/responsive.bootstrap.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.scroller.min.js"></script>
+    <script type="text/javascript" src="../App_Themes/Theme1/plugins/parsleyjs/dist/parsley.min.js"></script>
+    <!-- Datatable init js -->
+    <script src="../App_Themes/Theme1/blue/assets/pages/datatables.init.js"></script>
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            //$('#LedgerTypeCode').select2();
+
+            $('#AccountCode').select2();
+
+            $("#BranchCode").select2();
+            $('#LocCode').select2();
+
+            $(document).on("click", "#clear", function () {
+                location.reload();
+            });
+
+
+            @*if ("@ViewBag.RptCaption" == "Stock Summary") {
+                $("#ddfBrCode").hide();
+            }*@
+
+            var RptCaption = getParameterByName('RptCaption');
+            if (RptCaption.length > 0) {
+                $("#LedgerTypeCode").val(RptCaption).trigger('change.select2');
+            }
+
+
+            function getParameterByName(name) {
+                name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+                var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+                results = regex.exec(location.search);
+                return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+            }
+
+        });
+
+
+
+
+
+        @*$('input[type="checkbox"]').click(function () {
+
+        var ischecked = $(this).is(':checked');
+        if (!ischecked)
+
+            var item = { fDate: "", tDate: "", LedgerTypeCode: "", AccountCode: "", BranchCode: "", Discardcntl: ""};
+
+
+        $.ajax({
+            url: '@Url.Action("GetSummaryReport", "SummaryReport")',
+            contentType: "application/json;charset=utf-8",
+            data: {
+                vmodel: item
+            },
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                $('#Source').empty();
+                $.each(data, function (index, value) {
+                    $('#Source').append($('<option>',
+                        {
+                            value: value.Value,
+                            text: value.Text
+                        })).select2();
+                });
+                $("#Source").val(order.Source).trigger('change');
+                order.Source = "0";
+            }
+        });
+
+
+    });*@
+
+
+        @*$('#submit').click(function () {
+            var data1 = $('#categorieOne').attr('inputValues');
+            $.ajax({
+                type: "Get",
+                // url: "SummaryReport\GetSummaryReport",
+                url: '@Url.Action("GetSummaryReport", "SummaryReport")',
+                data: { input1: data1 },
+            });
+
+        });*@
+
+
+        //$(document).on("click", "[type='checkbox']", function (e) {
+        //    if (this.checked) {
+        //        $(this).attr("value", "true");
+        //    } else {
+        //        $(this).attr("value", "false");
+        //    }
+        //});
+
+        //function myFunction() {
+        //    // Get the checkbox
+        //    var checkBox = document.getElementById("Discardcntl");
+        //    // Get the output text
+        //   // var text = document.getElementById("text");
+
+        //    // If the checkbox is checked, display the output text
+        //    if (checkBox.checked == true) {
+        //        text.style.display = "block";
+        //    } else {
+        //        text.style.display = "none";
+        //    }
+        //}
+
+    </script>
+}
+
+
+
+

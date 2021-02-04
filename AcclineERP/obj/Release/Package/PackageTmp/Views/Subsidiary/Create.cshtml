@@ -1,0 +1,867 @@
+﻿@model App.Domain.ViewModel.SubVModel
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/select2/select2.css" rel="stylesheet" type="text/css" />
+<link href="~/Css/FormDesign.css" rel="stylesheet" />
+
+<style>
+    table.dataTable.select tbody tr,
+    table.dataTable thead th:first-child {
+        cursor: pointer;
+        text-align: center;
+    }
+
+    .form-control {
+        border: 1px solid #00ffff;
+    }
+
+    .required:after {
+        content: " *";
+        font-weight: bold;
+        color: red;
+    }
+
+    fieldset {
+        border: solid 1px #b9b4b4 !important;
+        padding: 0 10px 10px 10px;
+        margin-bottom: 20px;
+        border-bottom: none;
+        width: inherit;
+    }
+
+    legend {
+        width: auto !important;
+        border: none;
+        font-size: 14px;
+    }
+</style>
+
+<div class="row">
+    <div class="col-md-10">
+        <div class="panel panel-color panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    <text style="text-align:left !important; text-decoration: none;">Subsidiary Information</text>
+                    <text style="color:#1E3B2D;font-size:12px;margin-right:100px;" class="pull-right">@ViewBag.Status</text>
+                </h3>
+            </div>
+            <div class="panel-body" style="margin-top:20px">
+
+
+                <div class="col-md-12">
+                    <div class="col-md-6">
+                        <div class="col-md-12">
+                            @Html.LabelFor(x => x.SubCode, new { @class = "col-md-4" })
+                            <div class="input-group form-group col-md-4">
+                                <input type="text" class="form-control" id="@Html.IdFor(x => x.SubCode)" required="required" value="@ViewBag.SubCode">
+                                @Html.HiddenFor(x => x.SubTypeExtID)
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            @Html.LabelFor(x => x.SubTitle, new { @class = "col-md-4 " })
+                            <div class="input-group form-group col-md-4">
+                                @Html.DropDownListFor(x => x.SubTitle, new SelectList(new List<SelectListItem> {
+                                new SelectListItem { Text = "Mr", Value = "Mr" },
+                                new SelectListItem { Text = "Md", Value = "Md" },
+                                new SelectListItem { Text = "Miss", Value = "Miss" },
+                                new SelectListItem { Text = "Mrs", Value = "Mrs" },
+                                new SelectListItem { Text = "M/S", Value = "M/S" } }, "Value", "Text", "M/S"), new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            @Html.LabelFor(x => x.SubGrp, new { @class = "col-md-4" })
+                            <div class="input-group form-group col-md-8">
+                                @Html.DropDownListFor(x => x.SubGrp, null, "Select Group", new { @class = "form-control select2", required = "required" })                                
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            @Html.LabelFor(x => x.SubName, new { @class = "col-md-4 required" })
+                            <div class="input-group form-group col-md-8">
+                                @Html.TextBoxFor(x => x.SubName, new { @class = "form-control", required = "required" })
+                                @Html.ValidationMessageFor(x => x.SubName)
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            @Html.LabelFor(x => x.SubType, new { @class = "col-md-4 required" })
+                            <div class="input-group form-group col-md-8">
+                                @Html.DropDownListFor(x => x.SubType, null, "Select Type", new { @class = "form-control select2", required = "required" })
+                                @Html.ValidationMessageFor(x => x.SubType)
+                            </div>
+                        </div>
+                        <div class="col-md-12" id="pnlSupp">
+                            <label class="col-md-4" for="SuppCategory">Category</label>
+                            <div class="input-group form-group col-md-8">
+                                @Html.DropDownListFor(x => x.SuppCategory, new SelectList(new List<SelectListItem> {
+                                new SelectListItem { Text = "Manufacturer", Value = "Manufacturer" },
+                                new SelectListItem { Text = "Trader", Value = "Trader" },
+                                new SelectListItem { Text = "Procurement provider", Value = "Procurement provider" }}, "Value", "Text", "Manufacturer"), new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="col-md-12" id="pnlCust">
+                            <label class="col-md-4" for="CustCategory">Category</label>
+                            <div class="input-group form-group col-md-8">
+                                @Html.DropDownListFor(x => x.CustCategory, new SelectList(new List<SelectListItem> {
+                                new SelectListItem { Text = "Whole Saler", Value = "Whole Saler" },
+                                new SelectListItem { Text = "Retailer", Value = "Retailer" } }, "Value", "Text", "Retailer"), new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            @Html.LabelFor(x => x.OpenBal, new { @class = "col-md-4" })
+                            <div class="input-group form-group col-md-8">
+                                @Html.TextBoxFor(x => x.OpenBal, new { @class = "form-control", required = "required" })
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="col-md-4">Opening Date</label>
+                            <div class="input-group form-group col-md-8">
+                                <input type="text" class="form-control datePage" id="@Html.IdFor(x => x.OpenDate)">
+                                <span class="input-group-addon bg-primary b-0 text-white"><i class="ion-calendar"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="col-md-12">
+                            <label class="col-md-4">Tel</label>
+                            <div class="form-group col-md-8">
+                                @Html.TextBoxFor(x => x.Tel, new { @class = "form-control", required = "required" })
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="col-md-4">Email</label>
+                            <div class="form-group col-md-8">
+                                @Html.TextBoxFor(x => x.SubEmail, new { @class = "form-control", required = "required" })
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="col-md-4">Fax</label>
+                            <div class="form-group col-md-8">
+                                @Html.TextBoxFor(x => x.Fax, new { @class = "form-control", required = "required" })
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            @Html.LabelFor(x => x.VATRegNo, new { @class = "col-md-4 " })
+                            <div class="form-group col-md-8">
+                                @Html.TextBoxFor(x => x.VATRegNo, new { @class = "form-control", required = "required" })
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="col-md-4">TIN</label>
+                            <div class="form-group col-md-8">
+                                @Html.TextBoxFor(x => x.TIN, new { @class = "form-control", required = "required" })
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="col-md-4">BIN</label>
+                            <div class="form-group col-md-8">
+                                @Html.TextBoxFor(x => x.BIN, new { @class = "form-control", required = "required" })
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            @Html.LabelFor(x => x.CountryCode, new { @class = "col-md-4 required" })
+                            <div class="form-group col-md-8">
+                                @Html.DropDownListFor(x => x.CountryCode, null, "Select Type", new { @class = "form-control select2", required = "required" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <fieldset>
+                            <legend style="background-color:#c7c7c7">Address & Contacts</legend>
+                            <div class="col-md-6">
+
+                                <div class="col-md-12">
+                                    <label class="col-md-4">Address</label>
+                                    <div class="form-group col-md-8">
+                                        @Html.TextBoxFor(x => x.SubAddress, new { @class = "form-control", required = "required" })
+                                    </div>
+                                </div>
+
+
+                                <div class="col-md-12">
+                                    @Html.LabelFor(x => x.PostCode, new { @class = "col-md-4 " })
+                                    <div class="form-group col-md-8">
+                                        @Html.TextBoxFor(x => x.PostCode, new { @class = "form-control", required = "required" })
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    @Html.LabelFor(x => x.ContPerson, new { @class = "col-md-4 " })
+                                    <div class="form-group col-md-8">
+                                        @Html.TextBoxFor(x => x.ContPerson, new { @class = "form-control", required = "required" })
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    @Html.LabelFor(x => x.Designation, new { @class = "col-md-4 " })
+                                    <div class="form-group col-md-8">
+                                        @Html.TextBoxFor(x => x.Designation, new { @class = "form-control", required = "required" })
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    @Html.LabelFor(x => x.Mobile, new { @class = "col-md-4 " })
+                                    <div class="form-group col-md-8">
+                                        @Html.TextBoxFor(x => x.Mobile, new { @class = "form-control", required = "required" })
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    @Html.LabelFor(x => x.ContEmail, new { @class = "col-md-4 " })
+                                    <div class="form-group col-md-8">
+                                        @Html.TextBoxFor(x => x.ContEmail, new { @class = "form-control", required = "required" })
+                                    </div>
+                                </div>
+                                <div class="col-md-12" style="text-align:right; padding-bottom:10px;">
+                                    <input type="button" class="btn btn-primary" value="Add" id="btnAddAddrCont" />
+                                </div>
+                            </div>
+                            <div class="col-sm-12 col-md-6">
+                                <div class="row col-sm-12 col-md-12" style="border:1px solid; border-color:#adcceb; width:100%">
+                                    <div class="row">
+                                        <div class="col-sm-12 col-md-12" style="padding:1px 18px 1px 18px">
+                                            <br />
+                                            <table class="table table-bordered table-responsive" id="tblAddrCont" style="width:100%">
+                                                <thead>
+                                                    <tr>
+                                                        <th width="5%">SL</th>
+                                                        <th width="20%">Address</th>
+                                                        <th width="40%">PostCode</th>
+                                                        <th width="10%">Person</th>
+                                                        <th width="15%">Designation</th>
+                                                        <th width="10%">Mobile</th>
+                                                        <th width="10%">Email</th>
+                                                        <th width="10%">Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="AddrContTbodyId"></tbody>
+
+                                            </table>
+                                            <br />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div class="col-md-8" style=" text-align:center;overflow:hidden; margin-top:20px;">
+                        <input type="button" value="Save" class="btn btn-primary" id="save" style="width:100px;" />
+                        <input type="button" value="Update" class="btn btn-primary" id="update" style="width:100px;" />
+                        <input type="button" value="Clear" class="btn btn-primary" id="clear" style="width:100px;" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-10">
+            <div class="panel panel-color panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Subsidiary List</h3>
+
+                </div>
+                <div class="panel-body">
+                    <div class="row col-md-12">
+                        <br />
+                        @using (Html.BeginForm("GetAllSubsidiary", "Subsidiary", FormMethod.Post, new
+                        { @*target = "_blank"*@ }))
+                        {
+                            <div class="row col-md-12" style="text-align:center">
+                                <input type="submit" value="Preview" class="btn btn-primary" id="preview" style="width:150px;" />
+                            </div>
+                        }
+                        <div class="col-md-12">
+                            <br />
+                            <br />
+                            <table class="table table-bordered table-responsive" id="datatable">
+                                <thead>
+                                    <tr>
+                                        <th>Sl.</th>
+                                        <th>Sub Code</th>
+                                        <th>Sub Name</th>
+                                        <th>Sub Type</th>
+                                        <th>Category</th>
+                                        <th style="text-align:center;">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody style="text-align:center;">
+
+                                    @if (ViewBag.Items != null)
+                                    {
+                                        int i = 0;
+                                        foreach (var item in ViewBag.Items)
+                                        {
+                                            <tr>
+                                                @{
+
+                                            i++;
+                                                }
+                                                <td>@i</td>
+                                                <td>@item.SubCode</td>
+                                                <td>@item.SubName</td>
+                                                <td>@item.SubType</td>
+                                                <td>@item.SubCategory</td>
+                                                <td>
+                                                    <a href="#" value="@item.SubCode" id="edit"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></a>
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts{
+
+
+    <script src="~/App_Themes/Theme1/plugins/select2/select2.min.js" type="text/javascript"></script>
+    <script src="~/App_Themes/Theme1/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.bootstrap.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.buttons.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/buttons.bootstrap.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/pdfmake.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/vfs_fonts.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/buttons.html5.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/buttons.print.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.fixedHeader.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.keyTable.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.responsive.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/responsive.bootstrap.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.scroller.min.js"></script>
+    <script type="text/javascript" src="../App_Themes/Theme1/plugins/parsleyjs/dist/parsley.min.js"></script>
+    <!-- Datatable init js -->
+    <script src="../App_Themes/Theme1/blue/assets/pages/datatables.init.js"></script>
+    <script>
+        $(document).ready(function () {
+            var ispType = '@ViewBag.errMsg';
+            if (ispType != '') {
+                ispType = '@ViewBag.errMsg';
+            }
+            if (ispType == "P") {
+                alert("No view Permission for this User");
+            }
+
+            $("#pnlCust").hide();
+            $("#pnlSupp").hide();
+            $(document).on("change", "#SubType", function (e) {
+                var SubType = $("#SubType").val();
+                if (SubType == 1) {
+                    $("#pnlCust").show();
+                    $("#pnlSupp").hide();
+                }
+                if (SubType == 2) {
+                    $("#pnlSupp").show();
+                    $("#pnlCust").hide();
+                }
+                if (SubType != 1 && SubType != 2) {
+                    $("#pnlCust").hide();
+                    $("#pnlSupp").hide();
+                }
+            })
+
+
+            var loadInfo = { SubType: "", SubName: "" }
+            function setOrder() {
+                loadInfo.SubType = $("#SubType").val();
+                loadInfo.SubName = $("#SubName").val();
+            }
+
+            $('#UnitCode').select2();
+            $('#SubType').select2();
+            $('#SubGrp').select2();
+            $('#CountryCode').select2();
+            $("#update").hide();
+
+
+            // For add GV/datatable
+            var table = $('#tblAddrCont').dataTable({
+                "paging": false,
+                "ordering": false,
+                "info": false,
+                "searching": false,
+                "scrollY": 200,
+                "scrollX": true
+            });
+            var isEdit = 0;
+            var orders = [];
+            $('#btnAddAddrCont').click(function () {
+                addOnRecvList();
+                $("tbody#AddrContTbodyId tr:even").css({
+                    "background-color": "#e6e8e8"
+                });
+                clearRecvItemInfo();
+            });
+            function clearRecvItemInfo() {
+                $("#SubAddress").val("");
+                $("#PostCode").val("");
+                $("#ContPerson").val("");
+                $("#Designation").val("");
+                $("#Mobile").val("");
+                $("#ContEmail").val("");
+            }
+
+            function addOnRecvList() {
+                var newAddList = [];
+                var newAddListSl = 0;
+
+                var SubAddress = $("#SubAddress").val();
+                var PostCode = $("#PostCode").val();
+                var ContPerson = $("#ContPerson").val();
+                var Designation = $("#Designation").val();
+                var Mobile = $("#Mobile").val();
+                var ContEmail = $("#ContEmail").val();
+
+                var item = {
+                    SubAddress: SubAddress, PostCode: PostCode, ContPerson: ContPerson, Designation: Designation, Mobile: Mobile,
+                    ContEmail: ContEmail, Sl: 0
+                }
+
+
+                //orders[i] = item;
+                if ($("#SubAddress").val() != "") {
+                    item.Sl = orders.length + 1;
+                    orders.push(item);
+                    addOnRecvTable();
+                } else {
+                    alert("Address is Required.");
+                    return;
+                }
+
+            }
+
+            function addOnRecvTable() {
+                $('#AddrContTbodyId').empty();
+                var sl = 0;
+                $.each(orders, function (index, data) {
+                    sl = sl + 1;
+                    data.Sl = sl;
+
+                    $("#AddrContTbodyId").append("<tr><td>" + sl + "</td><td>"
+                                                       + data.SubAddress + "</td><td>"
+                                                       + data.PostCode + "</td><td>"
+                                                       + data.ContPerson + "</td><td>"
+                                                       + data.Designation + "</td><td>"
+                                                       + data.Mobile + "</td><td>"
+                                                       + data.ContEmail + "</td><td>"
+                                                       + '<a href="#" class="on-default remove-row deleteSup" data-id="' + sl + '" id="AddrContdelete" value="' + sl + '"><i class="glyphicon glyphicon-trash"></i></a>' + "</td></tr>");
+
+                });
+            }
+
+
+            $(document).on('click', '#AddrContdelete', function () {
+                var id = $(this).attr("value");
+                swal({
+                    title: "Are you sure?",
+                    text: "You will not be able to recover this order data!",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "Yes, delete it!",
+                    closeOnConfirm: true
+                },
+                 function () {
+                     deleteRecvRow(id);
+                     addOnRecvTable();
+                     swal("Deleted!", "Your imaginary file has been deleted.", "success");
+
+                 });
+            });
+            function deleteRecvRow(sl) {
+                var newOrder = [];
+                var newSl = 0;
+
+                $.each(orders, function (index, data) {
+
+                    if (data.Sl != sl) {
+                        newSl++;
+                        data.Sl = newSl;
+                        data.Id = 0;
+                        newOrder.push(data);
+                    }
+                });
+                orders = new Array();
+                orders = newOrder;
+
+            }
+
+            // End GV/datatable
+
+            $(document).on("click", "#save", function () {
+                $("#save").prop("disabled", false);
+
+                setOrder();
+                var validate = validateOnSave(loadInfo);
+                if (validate != undefined) {
+                    alert(validate);
+                    return;
+                }
+
+                var item = { SubCode: "", SubName: "", SubType: "", SubGrp: "", SubTitle: "" }
+                var SubExt = {
+                    SubCode: "", SubCategory: "", SubAddress: "", SubEmail: "", Fax: "", OpenBal: "",
+                    OpenDate: "", VATRegNo: "", TIN: "", BIN: "", CountryCode: ""
+                }
+
+                item.SubCode = $("#SubCode").val();
+                item.SubName = $("#SubName").val();
+                item.SubType = $("#SubType").val();
+                item.SubGrp = $("#SubGrp").val();
+                item.SubTitle = $("#SubTitle").val();
+
+                SubExt.SubCode = $("#SubCode").val();
+                var SubType = $("#SubType").val();
+                if (SubType == 1) {
+                    SubExt.SubCategory = $("#CustCategory").val();
+                }
+                if (SubType == 2) {
+                    SubExt.SubCategory = $("#SuppCategory").val();
+                }
+                SubExt.SubAddress = $("#SubAddress").val();
+                SubExt.Tel = $("#Tel").val();
+                SubExt.SubEmail = $("#SubEmail").val();
+                SubExt.Fax = $("#Fax").val();
+                SubExt.OpenBal = parseFloat($("#OpenBal").val()).toFixed(2).replace(".", ",");  //$("#OpenBal").val();
+                SubExt.OpenDate = $("#OpenDate").val();
+                SubExt.VATRegNo = $("#VATRegNo").val();
+                SubExt.TIN = $("#TIN").val();
+                SubExt.BIN = $("#BIN").val();
+                SubExt.CountryCode = $("#CountryCode").val();
+
+                $.ajax({
+                    url: '@Url.Action("SaveSubsidary", "Subsidiary")',
+                    contentType: "application/json;charset=utf-8",
+                    data: JSON.stringify({ subsidiaryInfo: item, SubsisiaryExt: SubExt, SubsisiaryExtList: orders }),
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function (datas) {
+                        if (datas == 1) {
+                            swal({
+                                title: "Ok",
+                                text: "Save Successfully!",
+                                type: "success"
+                            }, function () {
+                                clearItemForm();
+                            });
+                            $("#save").prop("disabled", false);
+                        }
+                        else if (datas == "X") {
+                            swal({
+                                title: "Sorry",
+                                text: "No Save Permission for this User",
+                                type: "warning"
+                            });
+                        }
+                        else if (datas == 0) {
+                            swal(
+                                'Sorry!',
+                                'Something went wrong please try again!',
+                                'warning'
+                            );
+                            $("#save").prop("disabled", false);
+                        }
+                        else {
+                            swal("This item already exists!!! Please enter another item!!!", "fail")
+                        }
+
+                    }
+                });
+            });
+
+
+            $("#SubCode").on('keydown', function (e) {
+                if (e.which == 13 || e.which == 9) {
+                    $.ajax({
+                        url: '@Url.Action("GetAllBySubCode", "Subsidiary")',
+                        contentType: "application/json;charset=utf-8",
+                        data: { SubCode: $("#SubCode").val() },
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function (datas) {
+                            if (datas.SubCode == "undefined") {
+                                alert("error")
+                            }
+                            else {
+                                $("#SubName").val(datas.data.SubName);
+                                $("#SubType").val(datas.data.SubType.trim()).trigger('change.select2');
+                                if (datas.data.SubGrp != null) {
+                                    $("#SubGrp").val(datas.data.SubGrp.trim()).trigger('change.select2');
+                                }
+                                $("#SubCode").prop("disabled", true);
+                                var SubType = $("#SubType").val();
+                                if (SubType == 1) {
+                                    $("#pnlCust").show();
+                                    $("#pnlSupp").hide();
+                                    if (SubExt != []) {
+                                        $("#CustCategory").val(datas.SubExt[0].SubCategory.trim());
+                                    }
+                                }
+                                if (SubType == 2) {
+                                    $("#pnlSupp").show();
+                                    $("#SuppCategory").val(datas.SubExt[0].SubCategory.trim());
+                                    $("#pnlCust").hide();
+                                }
+                                if (SubType != 1 && SubType != 2) {
+                                    $("#pnlCust").hide();
+                                    $("#pnlSupp").hide();
+                                }
+                                $("#SubTitle").val(datas.data.SubTitle);
+                                if (datas.SubExt.length != 0) {
+                                    $("#SubTypeExtID").val(datas.SubExt[0].SubTypeExtID);
+                                    $("#Tel").val(datas.SubExt[0].Tel);
+                                    $("#SubEmail").val(datas.SubExt[0].SubEmail);
+                                    $("#Fax").val(datas.SubExt[0].Fax);
+                                    $("#OpenBal").val(datas.SubExt[0].OpenBal);
+                                    if (DateInDMYformat(datas.SubExt[0].OpenDate) != moment('01/01/1900').format('DD/MM/YYYY')) {
+                                        $("#OpenDate").datepicker("setDate", DateInDMYformat(datas.SubExt[0].OpenDate));
+                                    }
+                                    $("#VATRegNo").val(datas.SubExt[0].VATRegNo);
+                                    $("#TIN").val(datas.SubExt[0].TIN);
+                                    $("#BIN").val(datas.SubExt[0].BIN);
+                                    $("#CountryCode").val(datas.SubExt[0].CountryCode);
+                                }
+                                orders = [];
+                                if (datas.SubExt.length > 0) {
+                                    var j = 0;
+                                    $.each(datas.SubExt, function (index, data) {
+                                        j++;
+                                        data.Sl = j;
+                                        orders.push(data);
+
+                                    });
+                                    addOnRecvTable();
+                                }
+
+
+
+                                $("#update").show();
+                                $("#save").hide();
+                            }
+                        },
+                        error: function () {
+                            swal("Sorry!! Item does not exists.", "fail")
+                            $("#save").hide();
+                        }
+                    });
+                }
+            });
+
+            $(document).on("click", "#close", function () {
+                $("#editModal").modal("hide");
+            });
+            $(document).on("click", "#update", function () {
+                $("#save").prop("disabled", false);
+                var item = { SubCode: "", SubName: "", SubType: "", SubGrp: "", SubTitle: "" }
+                var SubExt = {
+                    SubCode: "", SubCategory: "", SubAddress: "", SubEmail: "", Fax: "", OpenBal: "",
+                    OpenDate: "", VATRegNo: "", TIN: "", BIN: "", CountryCode: ""
+                }
+
+                item.SubCode = $("#SubCode").val();
+                item.SubName = $("#SubName").val();
+                item.SubType = $("#SubType").val();
+                item.SubGrp = $("#SubGrp").val();
+                item.SubTitle = $("#SubTitle").val();
+
+                SubExt.SubCode = $("#SubCode").val();
+                var SubType = $("#SubType").val();
+                if (SubType == 1) {
+                    SubExt.SubCategory = $("#CustCategory").val();
+                }
+                if (SubType == 2) {
+                    SubExt.SubCategory = $("#SuppCategory").val();
+                }
+                SubExt.SubTypeExtID = $("#SubTypeExtID").val();
+                SubExt.SubAddress = $("#SubAddress").val();
+                SubExt.Tel = $("#Tel").val();
+                SubExt.SubEmail = $("#SubEmail").val();
+                SubExt.Fax = $("#Fax").val();
+                SubExt.OpenBal = parseFloat($("#OpenBal").val()).toFixed(2).replace(".", ",");
+                SubExt.OpenDate = $("#OpenDate").val();
+                SubExt.VATRegNo = $("#VATRegNo").val();
+                SubExt.TIN = $("#TIN").val();
+                SubExt.BIN = $("#BIN").val();
+                SubExt.CountryCode = $("#CountryCode").val();
+                $.ajax({
+                    url: '@Url.Action("UpdateSubsidiary", "Subsidiary")',
+                    contentType: "application/json;charset=utf-8",
+                    data: JSON.stringify({ subsidiaryInfo: item, SubExt: SubExt, SubsisiaryExtList: orders }),
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function (datas) {
+                        if (datas == 1) {
+                            swal({
+                                title: "Ok",
+                                text: "Successfully Updated!",
+                                type: "success"
+                            }, function () {
+                                clearItemForm();
+                            });
+                            $("#save").prop("disabled", false);
+                        }
+                        else if (datas == "U") {
+                            swal({
+                                title: "Sorry",
+                                text: "No Update Permission for this User",
+                                type: "warning"
+                            });
+                        }
+                        else if (datas == 0) {
+                            swal(
+                                'Sorry!',
+                                'Something went wrong please try again!',
+                                'warning'
+                            );
+                            $("#save").prop("disabled", false);
+                        }
+                    }
+
+                });
+
+            });
+
+            $(document).on("click", "#clear", function () {
+                clearItemForm();
+            });
+
+            function clearItemForm() {
+                $("#SubCode").val("");
+                $("#SubName").val("");
+                $("#SubType").val("").trigger('change.select2');
+                $("#SubGrp").val("").trigger('change.select2');
+                $("#SubCode").prop("disabled", false);
+                $("#SubAddress").val("");
+                $("#Tel").val("");
+                $("#SubEmail").val("");
+                $("#ContEmail").val("");
+                $("#Mobile").val("");
+                $("#Fax").val("");
+                $("#SubTitle").val('M/S').trigger('change.select2');
+                $("#OpenBal").val("");
+                $("#OpenDate").val("");
+                $("#VATRegNo").val("");
+                $("#TIN").val("");
+                $("#BIN").val("");
+                $("#ContPerson").val("");
+                $('#AddrContTbodyId').empty();
+                orders = [];
+
+                $.ajax({
+                    url: '@Url.Action("GetSubsiiaryCode", "Subsidiary")',
+                    contentType: "application/json;charset=utf-8",
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (datas) {
+
+                        $("#SubCode").val(datas);
+                    }
+                });
+                $("#update").hide();
+                $("#save").show();
+            }
+
+        });
+
+        $(document).ready(function () {
+            $('#datatable').DataTable();
+
+            $(document).on('click', "#edit", function () {
+                var id = $(this).attr("value");
+                $("#update").show();
+                $.ajax({
+                    url: '@Url.Action("GetSubsidiaryById", "Subsidiary")',
+                    contentType: "application/json;charset=utf-8",
+                    data: JSON.stringify({ SubCode: id }),
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function (datas) {
+                        $("#SubName").val(datas.SubName);
+                        $("#SubType").val(datas.SubType.trim()).trigger('change.select2');
+                        $("#SubGrp").val(datas.SubGrp.trim()).trigger('change.select2');
+                        $("#SubCode").prop("disabled", true);
+                        $("#SubCode").val(datas.SubCode);
+                        var SubType = $("#SubCategory").val();
+                        if (SubType == 1) {
+                            $("#pnlCust").show();
+                            $("#pnlSupp").hide();
+                            $("#CustCategory").val(datas.SubCategory.trim());
+                        }
+                        if (SubType == 2) {
+                            $("#pnlSupp").show();
+                            $("#SuppCategory").val(datas.SubCategory.trim());
+                            $("#pnlCust").hide();
+                        }
+                        if (SubType != 1 && SubType != 2) {
+                            $("#pnlCust").hide();
+                            $("#pnlSupp").hide();
+                        }
+                        if (DateInDMYformat(datas.OpenDate) != moment('01/01/1900').format('DD/MM/YYYY')) {
+                            $("#OpenDate").datepicker("setDate", DateInDMYformat(datas.OpenDate));
+                        }
+                        $("#OpenBal").val(datas.OpenBal);
+                        $("#VATRegNo").val(datas.VATRegNo);
+                        $("#BIN").val(datas.BIN);
+                        $("#TIN").val(datas.TIN);
+                        $("#CountryCode").val(datas.CountryCode);
+                        $("#SubTypeExtID").val(datas.SubTypeExtID);
+                        $("#SubAddress").val(datas.SubAddress);
+                        $("#Tel").val(datas.Tel);
+                        $("#Email").val(datas.SubEmail);
+                        $("#Fax").val(datas.Fax);
+                        $("#save").hide();
+
+                    }
+                });
+                $("#save").hide();
+
+            });
+
+
+            $(document).on("click", "#close", function () {
+                $("#editModal").modal("hide");
+            });
+            $(document).on("click", "#update", function () {
+                var id = $("#SubCode").val();
+                var seletedRole = [];
+                $.ajax({
+                    url: '@Url.Action("UpdateUser", "Subsidiary")',
+                    contentType: "application/json;charset=utf-8",
+                    data: JSON.stringify({ 'SubCode': SubCode, 'SubName': name }),
+                    type: 'POST',
+                    dataType: 'json',
+                    async: false,
+                    success: function (datas) {
+                        $("#editModal").modal("hide");
+                        swal({
+                            title: "Successfully Updated!",
+                            timer: 3000,
+                            showConfirmButton: true
+                        });
+                        location.reload();
+                    }
+                });
+            });
+        });
+
+        function validateOnSave(validOrder) {
+            if (!validOrder.SubName.trim().length) {
+                return "Sub Name is Required.";
+            }
+            if (!validOrder.SubType.trim().length) {
+                return "Please Select Sub Type.";
+            }
+        }
+
+    </script>
+}

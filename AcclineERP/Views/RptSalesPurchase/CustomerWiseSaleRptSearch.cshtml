@@ -1,0 +1,311 @@
+﻿@model App.Domain.ViewModel.CustWiseSaleRptSearchVModel
+@{
+    ViewBag.Title = "CustomerWiseSaleRptSearch";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/Css/FormDesign.css" rel="stylesheet" />
+
+@using (Html.BeginForm("GetCustomerWiseSaleSummaryRpt", "RptSalesPurchase", FormMethod.Post, new { }))
+{
+    <div class="row">
+        <div class="col-md-10">
+            <div class="panel panel-color panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <text style="text-align:left !important; text-decoration: none">Customer Wise Sale Report</text>
+                    </h3>
+                </div>
+                <div class="panel-body">
+                    <div class="col-md-12" style="margin-left:110px; margin-top:10px">
+
+                        @*<div class="col-md-4">
+                                <p style="float:right" id="loading"><img style="width:50px; height:50px" src="~/Images/load.gif" />please wait</p>
+                            </div>*@
+
+
+                    </div>
+                    
+                    <div class="col-md-12" style="margin-left:110px; margin-top:10px">
+                        <label class="col-md-2" for="BranchCode">Location</label>
+                        <div class="input-group form-group col-md-4">
+                            @Html.DropDownListFor(x => x.LocCode, null, "All", new { @class = "form-control select2", @Value = ViewBag.LocCode })
+
+                        </div>
+                    </div>
+
+                    <div class="col-md-12" style="margin-left:110px; margin-top:20px">
+                        <label class="col-md-2" for="fDate">From Date</label>
+                        <div class="input-group form-group col-md-4">
+                            <input type="text" class="form-control datePage" id="fDate" name="fDate" value="@DateTime.Today.ToShortDateString()">
+                            <span class="input-group-addon bg-primary b-0 text-white"><i class="ion-calendar"></i></span>
+                        </div>
+                    </div>
+                    <div class="col-md-12" style="margin-left:110px; margin-top:20px">
+                        <label class="col-md-2" for="tDate">To Date</label>
+                        <div class="input-group form-group col-md-4">
+                            <input type="text" class="form-control datePage" id="tDate" name="toDate" value="@DateTime.Today.ToShortDateString()">
+                            <span class="input-group-addon bg-primary b-0 text-white"><i class="ion-calendar"></i></span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12" style="margin-left:110px;">
+
+                        <label class="col-md-2" for="RptType"></label>
+                        <div class="col-md-6">
+                            <div id="X">
+                                <div class="radio">
+                                    <input type="radio" name="RptType" id="Report" checked value="1" />
+                                    <label for="Report">Summary </label>
+                                </div>
+                                <div class="radio">
+                                    <input type="radio" name="RptType" id="Reports" value="2" />
+                                    <label for="Reports">Details </label>
+                                </div>
+                            </div>
+                        </div>
+                       
+                    </div>
+
+                    <div class="col-md-12" style="margin-left:150px; margin-top:20px">
+                        <div class="col-xs-12">
+                            <div class="input-group">
+
+                                <p style="color:red">
+                                    @ViewBag.Message
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-10">
+                        <br />
+                    </div>
+                    <div class="row col-md-12" style="text-align:end">
+                        <div class="col-md-8" style=" text-align:right">
+
+                            <input type="submit" value="Preview" class="btn btn-primary" id="submit" style="width:100px;" />
+                            <input type="button" value="Clear" class="btn btn-primary" id="clear" style="width:100px;" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+
+
+@section Scripts{
+
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script src="~/App_Themes/Theme1/plugins/select2/select2.min.js" type="text/javascript"></script>
+    <script src="~/App_Themes/Theme1/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.bootstrap.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.buttons.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/buttons.bootstrap.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/pdfmake.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/vfs_fonts.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/buttons.html5.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/buttons.print.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.fixedHeader.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.keyTable.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.responsive.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/responsive.bootstrap.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.scroller.min.js"></script>
+    <script type="text/javascript" src="../App_Themes/Theme1/plugins/parsleyjs/dist/parsley.min.js"></script>
+    <!-- Datatable init js -->
+    <script src="../App_Themes/Theme1/blue/assets/pages/datatables.init.js"></script>
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $('#loading').hide();
+
+            $('#LocCode').select2();
+
+            //$("#X").hide();
+
+            function select2Focus() {
+                var select2 = $(this).data('select2');
+                setTimeout(function () {
+                    if (!select2.opened()) {
+                        select2.open();
+                    }
+                }, 0);
+            }
+
+            $("input:text:visible:first").focus();
+
+            $("#LocCode").select2().one('select2-focus', select2Focus).on("select2-blur", function () { $(this).one('select2-focus', select2Focus) });
+
+            @*var order = [];
+            $(document).on("change", "#LedgerTypeCode", function () {
+                var order = { AccountCode: "", ledgTypeCode: $("#LedgerTypeCode").val() };
+
+                $.ajax({
+                    url: '@Url.Action("GetAccountByLedgType", "Report")',
+                    contentType: "application/json;charset=utf-8",
+                    data: {
+                        ledgTypeCode: $("#LedgerTypeCode").val()
+                    },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        $('#AccountCode').empty();
+                        $.each(data, function (index, value) {
+                            $('#AccountCode').append($('<option>',
+                                {
+                                    value: value.Value,
+                                    text: value.Text
+                                })).select2();
+                        });
+                        $("#AccountCode").val(order.AccountCode).trigger('change');
+                        order.AccountCode = "0";
+                        //$('#loading').show();
+                    }
+                });
+            });*@
+
+            $(document).on("click", "#clear", function () {
+                location.reload();
+            });
+
+        });
+
+
+        @*$(document).on("change", '#@Html.IdFor(x => x.LedgerTypeCode)', function () {
+            if ($('#LedgerTypeCode option:selected').text() == "General Ledger") {
+
+                $('#X').show();
+                $('#loading').show();
+                $.ajax({
+                    url: '@Url.Action("GetAccountByControlType", "Report")',
+                    contentType: "application/json;charset=utf-8",
+                    data: {
+                        Transection: 1
+                    },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        $('#AccountCode').empty();
+                        $.each(data, function (index, value) {
+                            $('#AccountCode').append($('<option>',
+                                {
+                                    value: value.Value,
+                                    text: value.Text
+                                })).select2();
+                        });
+                        $('#loading').hide();
+                         $("#AccountCode").val(order.AccountCode).trigger('change');
+                         order.Source = "0";
+                    }
+                });
+
+            }
+            else {
+                $('#X').hide();
+            }
+
+
+        });*@
+
+
+
+
+
+        $('input[type="radio"]').click(function () {
+            if ($("#Report").is(":checked")) {
+                ischecked = $("#Report").val();
+                $('#loading').show();
+            }
+            if ($("#Reports").is(":checked")) {
+                ischecked = $("#Reports").val();
+                $('#loading').show();
+            }
+
+
+            @*var order = { AccountCode: "" };
+
+            $.ajax({
+                url: '@Url.Action("GetAccountByControlType", "Report")',
+                contentType: "application/json;charset=utf-8",
+                data: {
+                    Transection: $(this).val()
+                },
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    $('#AccountCode').empty();
+                    $.each(data, function (index, value) {
+                        $('#AccountCode').append($('<option>',
+                            {
+                                value: value.Value,
+                                text: value.Text
+                            })).select2();
+                    });
+                    $("#AccountCode").val(order.AccountCode).trigger('change');
+                    order.Source = "0";
+                    $('#loading').hide();
+                }
+            });*@
+        });
+
+        var loadInfo = {
+            SaleNo: "",
+            SaleDate: "",
+            RefNo: "",
+            CustCode: "",
+            Transport: "",
+            Labour: "",
+            IssueNo: "",
+
+            RefDate: "",
+            IssueDate: "",
+            LocCode: "",
+            BranchCode: "",
+            VATAmt: "",
+            Discount: "",
+            TotSaleAmt: "",
+            NetAmount: "",
+            PrevDue: "",
+            Remarks: "",
+            VchrNo: "",
+            AppBy: "",
+            IssueBy: ""
+        };
+
+        function setOrder() {
+            //loadInfo.RefNo = $("#RefNo").val();
+            loadInfo.IssueNo = $("#IssueNo").val();
+            loadInfo.CustCode = $("#CustCode").val();
+            loadInfo.Transport = $("#Transport").val();
+            loadInfo.Labour = $("#Labour").val();
+        }
+
+
+
+        function validateOnSave(validOrder) {
+
+            //if (!validOrder.RefNo.trim().length) {
+            //    return "Ref No is required.";
+            //}
+            if (!validOrder.IssueNo.trim().length) {
+                return "Challan No No is required.";
+            }
+            if (!validOrder.CustCode.trim().length) {
+                return "Customer is required.";
+            }
+            if (!validOrder.Transport.trim().length) {
+                return "Transport is required.";
+            }
+            if (!validOrder.Labour.trim().length) {
+                return "Labour is required.";
+            }
+            return "";
+        }
+
+    </script>
+}
+

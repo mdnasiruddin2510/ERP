@@ -1,0 +1,205 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{E4B39556-0995-444B-9223-DAF10A5BDACB}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Application.Interfaces</RootNamespace>
+    <AssemblyName>Application.Interfaces</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Rotativa">
+      <HintPath>..\packages\Rotativa.1.6.4\lib\net40\Rotativa.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Web.Mvc, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.4.0.30506.0\lib\net40\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Common\IBasicAppService.cs" />
+    <Compile Include="Common\ICommonAppService.cs" />
+    <Compile Include="Common\IReadOnlyAppService.cs" />
+    <Compile Include="Common\ITransactionAppService.cs" />
+    <Compile Include="IAcBRAppService.cs" />
+    <Compile Include="IAccountsReceivableAppService.cs" />
+    <Compile Include="IAdVGivenOPBLAppService.cs" />
+    <Compile Include="IBankInfoAppService.cs" />
+    <Compile Include="IBankReceiptAppService.cs" />
+    <Compile Include="IBalSheetRptAppService.cs" />
+    <Compile Include="ICompanyInfoAppService.cs" />
+    <Compile Include="IDepartmentAppService.cs" />
+    <Compile Include="IDesignationAppService.cs" />
+    <Compile Include="IGroupInfoAppService.cs" />
+    <Compile Include="IIM_InvACAppService.cs" />
+    <Compile Include="IMasterFormAppService.cs" />
+    <Compile Include="IMRAgainstAppService.cs" />
+    <Compile Include="IPackingListAppService.cs" />
+    <Compile Include="IPM_IssRecAppService.cs" />
+    <Compile Include="IPurRetDetailAppService.cs" />
+    <Compile Include="IRateChartAppService.cs" />
+    <Compile Include="ISaleRetDetailAppService.cs" />
+    <Compile Include="IPurRetMainhAppService.cs" />
+    <Compile Include="ISaleRetMainhAppService.cs" />
+    <Compile Include="IrptJobWiseVMAppService.cs" />
+    <Compile Include="ICustAdjustmentAppService.cs" />
+    <Compile Include="ICustAdjExtAppService.cs" />
+    <Compile Include="ICostLedgerAppService.cs" />
+    <Compile Include="ICustWiseSummSaleRptAppService.cs" />
+    <Compile Include="IOpeningStockAppService.cs" />
+    <Compile Include="IPayInvRecvAppService.cs" />
+    <Compile Include="IPurchaseMainAppService.cs" />
+    <Compile Include="ISGroupInfoAppService.cs" />
+    <Compile Include="ISSGroupInfoAppService.cs" />
+    <Compile Include="ItmpPurItemAppService.cs" />
+    <Compile Include="IPurchaseDetailAppService.cs" />
+    <Compile Include="IChequeArchiveAppService.cs" />
+    <Compile Include="IMoneyReceiptExtAppService.cs" />
+    <Compile Include="IMoneyReceiptAppService.cs" />
+    <Compile Include="IUnitInfoAppService.cs" />
+    <Compile Include="IVchrSetAppService.cs" />
+    <Compile Include="IDefACAppService.cs" />
+    <Compile Include="IChequeReceiptExtAppService.cs" />
+    <Compile Include="IChequeReceiptAppService.cs" />
+    <Compile Include="IDynaCapAppService.cs" />
+    <Compile Include="IPVchrTrackAppService.cs" />
+    <Compile Include="ISubsidiaryExtAppService.cs" />
+    <Compile Include="ICashBookAppService.cs" />
+    <Compile Include="ICommonPVVMAppService.cs" />
+    <Compile Include="IGsetAppService.cs" />
+    <Compile Include="IItemWiseDisVatAppService.cs" />
+    <Compile Include="IJarnalVoucherAppService.cs" />
+    <Compile Include="IJTrGrpAppService.cs" />
+    <Compile Include="ILedgerCaptionAppService.cs" />
+    <Compile Include="ILedgerTypeAppService.cs" />
+    <Compile Include="ILevelLenAppService.cs" />
+    <Compile Include="ILotDTAppService.cs" />
+    <Compile Include="IMinLevAppService.cs" />
+    <Compile Include="IOpenBalAppService.cs" />
+    <Compile Include="IItemListAppService.cs" />
+    <Compile Include="IOpnBalAppService.cs" />
+    <Compile Include="IProjInfoAppService.cs" />
+    <Compile Include="IPVchrDetailAppService.cs" />
+    <Compile Include="IPVchrMainAppService.cs" />
+    <Compile Include="IPVchrMainExtAppService.cs" />
+    <Compile Include="IReportLedgerAppService.cs" />
+    <Compile Include="ISalesDetailAppService.cs" />
+    <Compile Include="ISalesMainAppService.cs" />
+    <Compile Include="ISecFormListAppService.cs" />
+    <Compile Include="ISecFormProcessAppService.cs" />
+    <Compile Include="ISecFormRightAppService.cs" />
+    <Compile Include="ISecProcessListAppService.cs" />
+    <Compile Include="ISecUserGroupAppService.cs" />
+    <Compile Include="ISecUserInfoAppService.cs" />
+    <Compile Include="ISecUserInGroupAppService.cs" />
+    <Compile Include="ISubOpenBalAppService.cs" />
+    <Compile Include="ISubsidiaryCtrlAppService.cs" />
+    <Compile Include="ICashReceiptSubDetailsAppService.cs" />
+    <Compile Include="IExpenseSubDetailsAppService.cs" />
+    <Compile Include="ICashOperationAppService.cs" />
+    <Compile Include="ICashReceiptAppService.cs" />
+    <Compile Include="ICustomerLedgerAppService.cs" />
+    <Compile Include="IBankOperationAppService.cs" />
+    <Compile Include="IDepositToBankAppServie.cs" />
+    <Compile Include="IEmployeeFuncAppService.cs" />
+    <Compile Include="IExpenseAppService.cs" />
+    <Compile Include="IFuncSLAppService.cs" />
+    <Compile Include="IHORemitAppService.cs" />
+    <Compile Include="IIssRecSrcDestAppService.cs" />
+    <Compile Include="IBranchAppService.cs" />
+    <Compile Include="ICurrentStockAppService.cs" />
+    <Compile Include="IEmailConfigAppService.cs" />
+    <Compile Include="IEmployeeAppService.cs" />
+    <Compile Include="IFYDDAppService.cs" />
+    <Compile Include="IIssueDetailsAppService.cs" />
+    <Compile Include="IIssueMainAppService.cs" />
+    <Compile Include="IItemInfoAppService.cs" />
+    <Compile Include="IItemTypeAppService.cs" />
+    <Compile Include="ILocationAppService.cs" />
+    <Compile Include="INewChartAppService.cs" />
+    <Compile Include="IPaymentAppService.cs" />
+    <Compile Include="IReceiveAppService.cs" />
+    <Compile Include="IReceiveDetailsAppService.cs" />
+    <Compile Include="IRecPasswordAppService.cs" />
+    <Compile Include="ISubsidiaryInfoAppService.cs" />
+    <Compile Include="ISubsidiaryTypeAppService.cs" />
+    <Compile Include="ISummaryReportAppService.cs" />
+    <Compile Include="ISummaryReportTypeAppService.cs" />
+    <Compile Include="ISysSetAppService.cs" />
+    <Compile Include="ITransactionLogAppService.cs" />
+    <Compile Include="ITVchrDetailAppService.cs" />
+    <Compile Include="ITVchrMainAppService.cs" />
+    <Compile Include="IUnitAppService.cs" />
+    <Compile Include="IUserBranchAppService.cs" />
+    <Compile Include="IUserProfileAppService.cs" />
+    <Compile Include="IVchrDetailAppService.cs" />
+    <Compile Include="IVchrMainAppService.cs" />
+    <Compile Include="IVchrPreviewVMAppService.cs" />
+    <Compile Include="IVM_BINAppService.cs" />
+    <Compile Include="IvuItemInfoAppService.cs" />
+    <Compile Include="IWithdrawAppService.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\App.Domain\App.Domain.csproj">
+      <Project>{8c5df764-3858-4c07-9729-ab68c49ae77f}</Project>
+      <Name>App.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Data.Context\Data.Context.csproj">
+      <Project>{71d04fa7-3424-4c8f-ba0e-018653eeb924}</Project>
+      <Name>Data.Context</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="App_Browsers\qt.browser" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Rotativa\wkhtmltopdf.exe" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

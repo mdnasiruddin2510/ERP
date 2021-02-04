@@ -1,0 +1,112 @@
+﻿
+@*@model App.Domain.ItemInfo*@
+@model App.Domain.ViewModel.SalesVM
+<div class="modal-dialog">
+    <div class="modal-content">
+
+        <div class="panel panel-color panel-primary">
+            @*<button type="button"
+                        class="close"
+                        data-dismiss="modal"
+                        aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>*@
+            <div class="panel-heading">
+                <h3 class="panel-title">Common View</h3>
+            </div>
+
+        </div>
+        <div class="modal-body">
+            @using (Html.BeginForm("AddNewNode", "Sales", FormMethod.Post, new { @id = "CommonPV", @class = "form-horizontal", role = "form", enctype = "multipart/form-data" }))
+            {
+
+                <div class="panel-body">
+                    <div class="col-md-12">
+                        <label class="col-md-2 required">Item</label>
+                        <div class="input-group form-group col-md-9">
+                            @Html.HiddenFor(x => x.PL_ID)
+                            @Html.DropDownListFor(x => x.PL_Item, null, new { @class = "form-control select2", @Value = ViewBag.PL_Item })
+                        </div>
+                    </div>
+                   
+                    <div class="col-md-12">
+                        <label class="col-md-2 required">Pack Item</label>
+                        <div class="input-group form-group col-md-9">
+                            @Html.DropDownListFor(x => x.PackItemCode, null, new { @id ="PackItemCode", @class = "form-control select2", @Value = ViewBag.PackItemCode })
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="col-md-6">
+                            <label class="col-md-4 required">Pack Size</label>
+                            <div class="input-group form-group col-md-8">
+                                @Html.TextBoxFor(x => x.PL_PackSize, new { @class = "form-control col-md-8 select2", required = "required" })
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="col-md-4 required"> Number of Pack </label>
+                        <div class="input-group form-group col-md-8">
+                            @Html.TextBoxFor(x => x.PL_PackPcs, new { @class = "form-control col-md-8 select2", required = "required" })
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="col-md-4 required">Total Quantity</label>
+                        <div class="input-group form-group col-md-8">
+                            @Html.TextBoxFor(x => x.PL_TotalQty, new { @class = "form-control col-md-8 select2", required = "required" })
+                        </div>
+                    </div>
+
+
+                    <div class="col-md-6">
+                        <label class="col-md-4"></label>
+                        <div class="input-group form-group col-md-7">
+                            <input type="button" class="btn btn-primary" value="Add" id="btnPL_Add" style="margin-bottom:0px !important" />
+                            <input type="button" class="btn btn-primary" value="Update" id="btnPL_Update" style="margin-bottom:0px !important" />
+                        </div>
+                    </div>
+
+
+                    @*Packing list DataTable*@
+                    <div class="col-sm-12 col-md-12" style="margin-top: 10px; margin-bottom: 10px;">
+                        <div class="row col-sm-12 col-md-12" style="border:1px solid; border-color:#adcceb; width:100%">
+                            <div class="row">
+                                <div class="col-sm-12 col-md-12" style="padding:1px 18px 1px 18px">
+                                    <br />
+                                    <table class="table table-bordered table-responsive" id="PL_Dtable" style="width:100%">
+                                        <thead>
+                                            <tr>
+                                                <th width="5%">SL</th>
+                                                <th width="40%">Item </th>
+                                                <th width="5%">Packet </th>
+                                                <th width="5%">Pack&nbsp;Size</th>
+                                                <th width="5%"> Number of Pack</th>
+                                                <th width="5%">Total&nbsp;Qty.</th>
+                                                <th width="5%">Packet&nbsp;Lot</th>
+                                                <th width="5%">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tbodyId"></tbody>
+
+                                    </table>
+                                    <br />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row col-md-12">
+                        <div class="col-md-12">
+                            @*<input type="button" value="Create" class="btn btn-primary" id="btnPackListCreate" />*@
+                            <input type="button" value="Load" class="btn btn-primary" id="btnPackListLoad" />
+                            <input type="button" value="Close" class="btn btn-primary" id="btnPackListclose" />
+                        </div>
+                    </div>
+                </div>
+            }
+
+                </div>
+    </div>
+</div>
+

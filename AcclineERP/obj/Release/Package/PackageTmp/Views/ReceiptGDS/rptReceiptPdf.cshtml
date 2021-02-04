@@ -1,0 +1,106 @@
+﻿@model IEnumerable<App.Domain.ViewModel.Ageing>
+@{
+    ViewBag.Title = "Receipt";
+    Layout = null;
+    
+    decimal gt_op90to120 = 0.0m;
+    decimal gt_op12oabove = 0.0m;
+
+    var CompInfo = AcclineERP.Models.GetCompanyInfo.GetComInfo();
+    string CompanyAddress = ((CompInfo.Addr1 == null ? string.Empty : CompInfo.Addr1) + "," + (CompInfo.Addr2 == null ? string.Empty : CompInfo.Addr2));
+}
+
+<script src="~/Scripts/jquery-1.9.1.min.js"></script>
+<script src="~/Scripts/Export.js"></script>
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/select2/select2.css" rel="stylesheet" type="text/css" />
+<link href="~/Css/FormDesign.css" rel="stylesheet" />
+
+<style>
+    tr {
+        page-break-inside: avoid;
+    }
+
+    body {
+        padding-right: 0px;
+        font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+    }
+
+    .border {
+        color: #335; /* Lighten up font color */
+        font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+        font-weight: 300;
+        border-collapse: collapse;
+        border-spacing: 0;
+    }
+
+    .tds {
+        /*border: 1px solid black;*/
+        font-weight: 500;
+        font-family: Arial;
+        border-right: hidden !important;
+    }
+    /* Make cells a bit taller */
+    .ths {
+        /*border: 1px solid black;*/
+        font-weight: 500;
+        font-family: Arial;
+    }
+
+    .th {
+        background: #F3F3F3; /* Light grey background */
+        font-weight: bold; /* Make sure they're bold */
+    }
+
+    .td {
+        background: #FAFAFA; /* Lighter grey background */
+        text-align: center; /* Center our text */
+    }
+
+    .breakhere {
+        page-break-after: always;
+    }
+</style>
+
+
+<div id="toReport" class="panel-body" style="margin: 0px; text-align:center !important;  padding:0;">
+     
+   <div class="panel-heading" style="text-align:center">
+        <div class="panel-title">
+            <label style="text-align:center !important; text-decoration: none; font-size:15px; font-weight:bold"></label><br>
+            <label style="text-align:center !important; text-decoration: none; font-size:12px; font-weight:normal"></label><br>
+            @*<label style="text-align:center !important; text-decoration: none; font-size:12px; font-weight:normal">Phone: @CompInfo.Tel</label><br>*@
+        </div>
+        <div class="panel-title">
+            <text style="text-align:center !important; text-decoration: none; font-size:12px;font-family:'Arial Narrow'; font-weight:bold"></text>
+        </div>
+        <div class="cashDate">
+            <text style="text-align:center !important; text-decoration: none; font-size:11px;font-family:'Arial Narrow';"></text>
+        </div>
+     
+
+        <div>
+            <label style="text-align:center !important; text-decoration: none; font-size:12px; font-weight:bold"></label><br>
+        </div>
+       <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+    </div>
+    <div class="panel-body" style="text-align:left;margin: 150px;">
+        <text style="text-align:left !important; text-decoration: none; font-size:18px;font-family:'Arial Narrow';">
+
+            Received with thanks from Messrs--------------------------------------------------------<br /><br />
+            Tk.----------------------------- Taka--------------------------------------------------<br /><br />
+            ----------------------------------------------------------------------------------------<br /><br />
+            In Cash/vide cheque No. --------------------------------- Dated-------------------------<br /><br />
+            drawn on--------------------------------------------------------------------------------<br /><br />
+            subject to encashment of cheque in full/part payment of our Bill No.-------------------<br /><br />
+            dated-------<br /><br />
+
+        </text>
+
+    </div>
+    <br />
+    <br />
+    </div>
+

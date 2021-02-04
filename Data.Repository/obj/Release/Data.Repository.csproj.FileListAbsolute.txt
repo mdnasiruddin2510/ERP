@@ -1,0 +1,17 @@
+F:\Farhad\ASPL\trunk\AcclineERP\Data.Repository\bin\Release\Data.Repository.dll.config
+F:\Farhad\ASPL\trunk\AcclineERP\Data.Repository\bin\Release\Data.Repository.dll
+F:\Farhad\ASPL\trunk\AcclineERP\Data.Repository\bin\Release\Data.Repository.pdb
+F:\Farhad\ASPL\trunk\AcclineERP\Data.Repository\bin\Release\App.Domain.dll
+F:\Farhad\ASPL\trunk\AcclineERP\Data.Repository\bin\Release\Data.Context.dll
+F:\Farhad\ASPL\trunk\AcclineERP\Data.Repository\bin\Release\EntityFramework.dll
+F:\Farhad\ASPL\trunk\AcclineERP\Data.Repository\bin\Release\EntityFramework.SqlServer.dll
+F:\Farhad\ASPL\trunk\AcclineERP\Data.Repository\bin\Release\Microsoft.Practices.ServiceLocation.dll
+F:\Farhad\ASPL\trunk\AcclineERP\Data.Repository\bin\Release\App.Domain.pdb
+F:\Farhad\ASPL\trunk\AcclineERP\Data.Repository\bin\Release\Data.Context.pdb
+F:\Farhad\ASPL\trunk\AcclineERP\Data.Repository\bin\Release\EntityFramework.xml
+F:\Farhad\ASPL\trunk\AcclineERP\Data.Repository\bin\Release\EntityFramework.SqlServer.xml
+F:\Farhad\ASPL\trunk\AcclineERP\Data.Repository\bin\Release\Microsoft.Practices.ServiceLocation.pdb
+F:\Farhad\ASPL\trunk\AcclineERP\Data.Repository\bin\Release\Microsoft.Practices.ServiceLocation.xml
+F:\Farhad\ASPL\trunk\AcclineERP\Data.Repository\obj\Release\Data.Repository.csprojResolveAssemblyReference.cache
+F:\Farhad\ASPL\trunk\AcclineERP\Data.Repository\obj\Release\Data.Repository.dll
+F:\Farhad\ASPL\trunk\AcclineERP\Data.Repository\obj\Release\Data.Repository.pdb

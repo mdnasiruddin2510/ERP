@@ -1,0 +1,241 @@
+﻿@model IEnumerable<App.Domain.ViewModel.SalesCollectionStat>
+@{
+    ViewBag.Title = "Sales Collection Statement Report";
+    Layout = null;
+    decimal tOutAtBegAmt = 0.0m;
+    decimal tSales = 0.0m;
+    decimal tCollection = 0.0m;
+    decimal tAdjustment = 0.0m;
+    decimal tOutAtEnd = 0.0m;
+
+
+    decimal gtOutAtBegAmt = 0.0m;
+    decimal gtSales = 0.0m;
+    decimal gtCollection = 0.0m;
+    decimal gtAdjustment = 0.0m;
+    decimal gtOutAtEnd = 0.0m;
+
+    var CompInfo = AcclineERP.Models.GetCompanyInfo.GetComInfo();
+    string CompanyAddress = ((CompInfo.Addr1 == null ? string.Empty : CompInfo.Addr1) + "," + (CompInfo.Addr2 == null ? string.Empty : CompInfo.Addr2));
+}
+<script src="~/Scripts/jquery-1.9.1.min.js"></script>
+<script src="~/Scripts/Export.js"></script>
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/select2/select2.css" rel="stylesheet" type="text/css" />
+<link href="~/Css/FormDesign.css" rel="stylesheet" />
+
+<style>
+    tr {
+        page-break-inside: avoid;
+    }
+
+    body {
+        padding-right: 0px;
+        font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+    }
+
+    .border {
+        color: #335; /* Lighten up font color */
+        font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+        font-weight: 300;
+        border-collapse: collapse;
+        border-spacing: 0;
+    }
+
+    .tds {
+        /*border: 1px solid black;*/
+        font-weight: 500;
+        font-family: Arial;
+        border-right: hidden !important;
+    }
+    /* Make cells a bit taller */
+    .ths {
+        /*border: 1px solid black;*/
+        font-weight: 500;
+        font-family: Arial;
+    }
+
+    .th {
+        background: #F3F3F3; /* Light grey background */
+        font-weight: bold; /* Make sure they're bold */
+    }
+
+    .td {
+        background: #FAFAFA; /* Lighter grey background */
+        text-align: center; /* Center our text */
+    }
+
+    .breakhere {
+        page-break-after: always;
+    }
+
+    
+
+</style>
+
+<div id="toReport" class="panel-body" style="margin: auto; text-align:center !important; width:800px; height:1150px; padding:0;">
+    <div class="panel-heading" style="text-align:center">
+        <div class="panel-title">
+            <label style="text-align:center !important; text-decoration: none; font-size:15px; font-weight:bold">@CompInfo.CompName</label><br>
+            <label style="text-align:center !important; text-decoration: none; font-size:12px; font-weight:normal"> @CompanyAddress</label><br>
+            @*<label style="text-align:center !important; text-decoration: none; font-size:12px; font-weight:normal">Phone: @CompInfo.Tel</label><br>*@
+        </div>
+        <div class="panel-title">
+            <text style="text-align:center !important; text-decoration: none; font-size:12px;font-family:'Arial Narrow'; font-weight:bold">Sales & Collection Statement</text>
+        </div>
+        <div class="cashDate">
+            <text style="text-align:center !important; text-decoration: none; font-size:11px;font-family:'Arial Narrow';">From : @ViewBag.fDate &nbsp;&nbsp; To: @ViewBag.tDate</text>
+        </div>
+        <div>
+            <label style="text-align:center !important; text-decoration: none; font-size:12px; font-weight:bold">Branch: @ViewBag.BranchName</label><br>
+        </div>	
+        @*<div class="panel-title">
+                <text style="text-align:center !important; text-decoration: none; font-size:20px;font-family:'Arial Narrow'; font-weight:bold">@ViewBag.Criteria</text>
+            </div>*@
+    </div>
+    @*<hr style="border-bottom: 1px solid" />
+        <br />*@
+    @*<table cellpadding="5" cellspacing="1" border=1 frame=box rules=all style="width:100%">
+        </table>*@
+
+
+    <div class="panel-body" style="text-align:center">
+        <table cellpadding="5" cellspacing="1" border=1 frame=box rules=all style="width:100%">
+            <thead style=" overflow: visible !important;">
+                <tr>
+                    <th style="font-size:14px; font-family:'Arial Narrow'; text-align:center">SL No</th>
+                    <th style=" font-size: 14px; font-family: 'Arial Narrow'; text-align: center">Name of Customers</th>
+                    <th style=" font-size: 14px; font-family: 'Arial Narrow'; text-align: center">Outstanding at Begining</th>
+                    <th style=" font-size: 14px; font-family: 'Arial Narrow'; text-align: center">Sales</th>
+                    <th style=" font-size: 14px; font-family: 'Arial Narrow'; text-align: center">Collection</th>
+                    <th style=" font-size: 14px; font-family: 'Arial Narrow'; text-align: center">Adjustment</th>
+                    <th style=" font-size: 14px; font-family: 'Arial Narrow'; text-align: center">Outstanding at Ending</th>
+                </tr>
+                @*<tr>
+                    <text style="text-align:right !important; text-decoration: none; font-size:20px;font-family:'Arial Narrow'; font-weight:bold">Location: @ViewBag.BranchCode</text>
+                </tr>*@
+
+            </thead>
+            <tbody id="tbodyId" >
+
+                @{
+                    foreach (var item in Model.Select(s => s.custgroup).Distinct())
+                    {
+                        string od = "";
+                        string sales = "";
+                        string Collection = "";
+                        string Adjustment = "";
+                        string cb = "";
+                        <tr>
+                            <td style=" text-align: left; border-right: 0; font-weight: bold; font-size: 12px">
+                                Group:@item
+                            </td>
+                        </tr>
+                    int serialno=0;
+                        foreach (var i in Model.Where(a => a.custgroup.Equals(@item)))
+                        {
+                            serialno=serialno+1;
+                            <tr>
+                                <td style=" text-align:center; font-size:12px">
+                                    @serialno
+                                </td>
+                                <td style="text-align:left; font-size:12px">
+                                    @Html.DisplayFor(modelItem => i.custname)
+                                </td>
+                                <td style=" text-align:right; font-size:12px;">
+
+                                    @if (i.ob != 0)
+                                    {
+                                        @Html.DisplayFor(modelItem => i.ob)
+                                    }
+                                </td>
+                                <td style="text-align: right; font-size: 12px;">
+                                    
+                                    @if (i.sales != 0)
+                                    {
+                                        @Html.DisplayFor(modelItem => i.sales)
+                                    }
+                                </td>
+                                <td style=" text-align:right; font-size:12px;">
+                                    @if (i.Collection != 0)
+                                    {
+                                        @Html.DisplayFor(modelItem => i.Collection)
+                                    }
+                                </td>
+                                <td style=" text-align:right; font-size:12px;">
+                                    @if (i.Adjustment != 0)
+                                    {
+                                        @Html.DisplayFor(modelItem => i.Adjustment)
+                                    }
+                                </td>
+                                <td style=" text-align:right; font-size:12px;">
+                                    @if (i.cb != 0)
+                                    {
+                                        @Html.DisplayFor(modelItem => i.cb)
+                                    }
+                                </td>
+
+                            </tr>
+                            tOutAtBegAmt += Convert.ToDecimal(i.ob);
+                            tSales += Convert.ToDecimal(i.sales);
+                            tCollection += Convert.ToDecimal(i.Collection);
+                            tAdjustment += Convert.ToDecimal(i.Adjustment);
+                            tOutAtEnd += Convert.ToDecimal(i.cb);
+                        }
+                        <tr>
+
+                            @if (@tOutAtBegAmt == 0)
+                            {
+                                od = (@tOutAtBegAmt).ToString();
+                                sales = (@tSales).ToString();
+                                Collection = (@tCollection).ToString();
+                                Adjustment = @tAdjustment.ToString();
+                                cb = @tOutAtEnd.ToString();
+                            }
+                            else
+                            {
+                                od = (@tOutAtBegAmt).ToString();
+                                sales = (@tSales).ToString();
+                                Collection = (@tCollection).ToString();
+                                Adjustment = @tAdjustment.ToString();
+                                cb = @tOutAtEnd.ToString();
+                            }
+
+
+                            @*od = (@tOutAtBegAmt).ToString();
+                            sales = (@tSales).ToString();
+                            Collection = (@tCollection).ToString();
+                            Adjustment = @tAdjustment.ToString();
+                            cb = @tOutAtEnd.ToString();*@
+
+
+                            <th style=" "></th>
+                            <th style=" font-size: 12px; text-align: right"> Sub Total:</th>
+                            <th style=" font-size: 12px; text-align: right">@od</th>
+                            <th style=" font-size: 12px; text-align: right">@sales</th>
+                            <th style=" font-size: 12px; text-align: right">@Collection</th>
+                            <th style=" font-size: 12px; text-align: right">@Adjustment</th>
+                            <th style=" font-size: 12px; text-align: right">@cb</th>
+                        </tr>
+                            gtOutAtBegAmt += tOutAtBegAmt;
+                            gtSales += tSales;
+                            gtCollection += tCollection;
+                            gtAdjustment += tAdjustment;
+                            gtOutAtEnd += tOutAtEnd;
+
+                            tOutAtBegAmt = 0;
+                            tSales = 0;
+                            tCollection = 0;
+                            tAdjustment = 0;
+                            tOutAtEnd = 0;
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+    <br />
+    <br />
+    <p style="">Prepared by ................................          Checked by ................................          Approved by ................................</p>
+</div>

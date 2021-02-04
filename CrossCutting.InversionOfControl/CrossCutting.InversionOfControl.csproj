@@ -1,0 +1,147 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{315FE0E6-0A41-4E9F-A27D-414E1C209BF0}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>CrossCutting.InversionOfControl</RootNamespace>
+    <AssemblyName>CrossCutting.InversionOfControl</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="CommonServiceLocator.NinjectAdapter.Unofficial">
+      <HintPath>..\packages\CommonServiceLocator.NinjectAdapter.Unofficial.3.2.2.0\lib\Net40\CommonServiceLocator.NinjectAdapter.Unofficial.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.ServiceLocation">
+      <HintPath>..\packages\CommonServiceLocator.1.3\lib\portable-net4+sl5+netcore45+wpa81+wp8\Microsoft.Practices.ServiceLocation.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="Ninject">
+      <HintPath>..\packages\Ninject.3.2.2.0\lib\net45-full\Ninject.dll</HintPath>
+    </Reference>
+    <Reference Include="Ninject.Web.Common">
+      <HintPath>..\packages\Ninject.Web.Common.3.2.3.0\lib\net45-full\Ninject.Web.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Ninject.Web.Mvc">
+      <HintPath>..\packages\Ninject.MVC5.3.2.1.0\lib\net45-full\Ninject.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WebActivatorEx">
+      <HintPath>..\packages\WebActivatorEx.2.0\lib\net40\WebActivatorEx.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="IoC.cs" />
+    <Compile Include="Module\ApplicationNinjectModule.cs" />
+    <Compile Include="Module\DomainMappingModule.cs" />
+    <Compile Include="Module\InfrastructureNinjectModule.cs" />
+    <Compile Include="Module\RepositoryNinjectModule.cs" />
+    <Compile Include="Module\ServiceNinjectModule.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="bin\Release\CrossCutting.InversionOfControl.dll.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\App.Domain\App.Domain.csproj">
+      <Project>{8c5df764-3858-4c07-9729-ab68c49ae77f}</Project>
+      <Name>App.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Application.Interfaces\Application.Interfaces.csproj">
+      <Project>{e4b39556-0995-444b-9223-daf10a5bdacb}</Project>
+      <Name>Application.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Application.Services\Application.Services.csproj">
+      <Project>{ed3978ca-30ac-4f75-bcb3-41a956819a0a}</Project>
+      <Name>Application.Services</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Data.Context\Data.Context.csproj">
+      <Project>{71d04fa7-3424-4c8f-ba0e-018653eeb924}</Project>
+      <Name>Data.Context</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Data.Repository\Data.Repository.csproj">
+      <Project>{ffd8b43e-b2b3-4170-9f92-a7e8402cd4ee}</Project>
+      <Name>Data.Repository</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="bin\Debug\CrossCutting.InversionOfControl.dll" />
+    <Content Include="bin\Debug\CrossCutting.InversionOfControl.pdb" />
+    <Content Include="bin\Release\App.Domain.dll" />
+    <Content Include="bin\Release\App.Domain.pdb" />
+    <Content Include="bin\Release\Application.Interfaces.dll" />
+    <Content Include="bin\Release\Application.Interfaces.pdb" />
+    <Content Include="bin\Release\Application.Services.dll" />
+    <Content Include="bin\Release\Application.Services.pdb" />
+    <Content Include="bin\Release\CommonServiceLocator.NinjectAdapter.Unofficial.dll" />
+    <Content Include="bin\Release\CrossCutting.InversionOfControl.dll" />
+    <Content Include="bin\Release\CrossCutting.InversionOfControl.pdb" />
+    <Content Include="bin\Release\Data.Context.dll" />
+    <Content Include="bin\Release\Data.Context.pdb" />
+    <Content Include="bin\Release\Data.Repository.dll" />
+    <Content Include="bin\Release\Data.Repository.pdb" />
+    <Content Include="bin\Release\EntityFramework.dll" />
+    <Content Include="bin\Release\EntityFramework.SqlServer.dll" />
+    <Content Include="bin\Release\EntityFramework.SqlServer.xml" />
+    <Content Include="bin\Release\EntityFramework.xml" />
+    <Content Include="bin\Release\Microsoft.Practices.ServiceLocation.dll" />
+    <Content Include="bin\Release\Microsoft.Practices.ServiceLocation.pdb" />
+    <Content Include="bin\Release\Microsoft.Practices.ServiceLocation.xml" />
+    <Content Include="bin\Release\Microsoft.Web.Infrastructure.dll" />
+    <Content Include="bin\Release\Ninject.dll" />
+    <Content Include="bin\Release\Ninject.Web.Common.dll" />
+    <Content Include="bin\Release\Ninject.Web.Common.xml" />
+    <Content Include="bin\Release\Ninject.Web.Mvc.dll" />
+    <Content Include="bin\Release\Ninject.Web.Mvc.xml" />
+    <Content Include="bin\Release\Ninject.xml" />
+    <Content Include="bin\Release\WebActivatorEx.dll" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,0 +1,460 @@
+﻿@model App.Domain.VM_TrDep
+@{
+    ViewBag.Title = "Treasury Challan";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/select2/select2.css" rel="stylesheet" type="text/css" />
+<link href="~/Css/FormDesign.css" rel="stylesheet" />
+
+
+<style>
+    table.dataTable.select tbody tr,
+    table.dataTable thead th:first-child {
+        cursor: pointer;
+        text-align: center;
+    }
+
+    .form-control {
+        border: 1px solid #00ffff;
+    }
+
+    .required:after {
+        content: " *";
+        font-weight: bold;
+        color: red;
+    }
+
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    input[type=number] {
+        -moz-appearance: textfield;
+    }
+</style>
+
+<div class="row">
+    <div class="col-md-10">
+        <div class="panel panel-color panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    <text style="text-align:left !important; text-decoration: none;">Treasury Challan</text>
+                </h3>
+            </div>
+            <div class="panel-body">
+                <div class="col-md-12">
+
+                    <div class="col-md-6">
+                        <div class="col-md-12">
+                            @Html.LabelFor(x => x.TrDepNo, new { @class = "col-md-4" })
+                            <div class="input-group form-group col-md-8">
+                                <input type="text" class="form-control" id="@Html.IdFor(x => x.TrDepNo)" required="required" value="@ViewBag.TrDepNo">
+                                <input type="hidden" id="TrDepID" />
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            @Html.LabelFor(x => x.TrDepDate, new { @class = "col-md-4" })
+                            <div class="input-group form-group col-md-8">
+                                <input type="text" class="form-control datePage" id="@Html.IdFor(x => x.TrDepDate)" value="@DateTime.Today.ToShortDateString()">
+                                <span class="input-group-addon bg-primary b-0 text-white"><i class="ion-calendar"></i></span>
+
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            @Html.LabelFor(x => x.TrChallanNo, new { @class = "col-md-4" })
+                            <div class="input-group form-group col-md-8">
+                                <input type="text" class="form-control" id="@Html.IdFor(x => x.TrChallanNo)" required="required" value="">
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            @Html.LabelFor(x => x.Bank, new { @class = "col-md-4" })
+                            <div class="input-group form-group col-md-8">
+                                @Html.DropDownListFor(x => x.Bank, null, "--- Select ---", new { @class = "form-control select2", required = "required", @Value = ViewBag.Bank })
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            @Html.LabelFor(x => x.Branch, new { @class = "col-md-4" })
+                            <div class="input-group form-group col-md-8">
+                                <input type="text" class="form-control" id="@Html.IdFor(x => x.Branch)" required="required">
+
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            @Html.LabelFor(x => x.AccountCode, new { @class = "col-md-4" })
+                            <div class="input-group form-group col-md-8">
+                                @Html.DropDownListFor(x => x.AccountCode, null, "--- Select ---", new { @class = "form-control select2", required = "required", @Value = ViewBag.AccountCode })
+
+
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            @Html.LabelFor(x => x.Amount, new { @class = "col-md-4" })
+                            <div class="input-group form-group col-md-8">
+                                <input type="number" class="form-control" id="@Html.IdFor(x => x.Amount)" required="required">
+
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="col-md-4">Remarks</label>
+                            <div class="input-group form-group col-md-8">
+                                @Html.TextAreaFor(x => x.Remarks, new { @class = "form-control col-md-8 select2" })
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="col-sm-10"><br /><br /></div>
+                    <div class="col-md-8" style=" text-align:center;overflow:hidden;">
+                        <input type="button" value="Save" class="btn btn-primary" id="btnSave" style="width:100px;" />
+                        <input type="button" value="Update" class="btn btn-primary" id="btnUpdate" style="width:100px;" />
+                        <input type="button" value="Clear" class="btn btn-primary" id="btnClear" style="width:100px;" />
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-10">
+        <div class="panel panel-color panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">Treasury Challan List</h3>
+            </div>
+            <div class="panel-body">
+                <div class="row col-md-12">
+                    <br />
+                    <div class="row col-md-12" style="text-align:right">
+                        <input type="button" value="Reload" class="btn btn-primary" id="btnRefrash" />
+                    </div>
+
+                    <div class="col-md-12">
+                        <br />
+                        <br />
+                        <table class="table table-bordered table-responsive" id="datatable">
+                            <thead>
+                                <tr>
+                                    <th>Sl.</th>
+                                    <th>Department</th>
+                                    <th>Account</th>
+                                    <th>Challan&nbsp;No</th>
+                                    <th>Amount</th>
+                                    <th>Remarks</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody style="text-align:center;">
+
+                                @if (ViewBag.TrDepList != null)
+                                {
+                                    int i = 0;
+                                    foreach (var item in ViewBag.TrDepList)
+                                    {
+                                        <tr>
+                                            @{
+                                        i++;
+                                            }
+                                            <td>@i</td>
+                                            <td>@item.TrDepNo</td>
+                                            <td style="text-align:left;">@item.AccountCode</td>
+                                            <td style="text-align:left;">@item.TrChallanNo</td>
+                                            <td>@item.Amount</td>
+                                            <td>@item.Remarks</td>
+                                            <td>
+                                                <a href="#" value="@item.TrDepNo" id="edit"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></a>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <script src="/App_Themes/Theme1/plugins/select2/select2.min.js"></script>
+    <script src="~/App_Themes/Theme1/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            var ispType = '@ViewBag.errMsg';
+            if (ispType != '') {
+                ispType = '@ViewBag.errMsg';
+            }
+            if (ispType == "P") {
+                alert("No view Permission for this User");
+            }
+
+            $('#datatable').DataTable();
+
+            var  JsObject = {
+                TrDepID: "",
+                TrDepNo: "",
+                TrDepDate: "",
+                TrChallanNo: "",
+                Bank: "",
+                Branch: "",
+                AccountCode: "",
+                Amount: "",
+                Remarks: ""
+            }
+
+            function setBindingfromScreen() {
+                JsObject.TrDepID = $("#TrDepID").val();
+                JsObject.TrDepNo = $("#TrDepNo").val();
+                JsObject.TrDepDate = $("#TrDepDate").val();
+                JsObject.TrDepMonth = $("#TrDepMonth").val();
+                JsObject.TrDepYear = $("#TrDepYear").val();
+                JsObject.TrChallanNo = $("#TrChallanNo").val();
+                JsObject.Bank = $("#Bank").val();
+                JsObject.Branch = $("#Branch").val();
+                JsObject.AccountCode = $("#AccountCode").val();
+                JsObject.Amount = $("#Amount").val();
+                JsObject.Remarks = $("#Remarks").val();
+            }
+
+            $('#Bank').select2();
+            $('#AccountCode').select2();
+            $("#btnUpdate").hide();
+
+            $(document).on("click", "#btnSave", function () {
+                $("#btnSave").prop("disabled", false);
+                setBindingfromScreen();
+                var validate = validateOnSave( JsObject);
+                if (validate != undefined) {
+                    alert(validate);
+                    return;
+                }
+
+                $.ajax({
+                    url: '@Url.Action("SaveVM_TrDep", "VM_TreasuryChallan")',
+                    contentType: "application/json;charset=utf-8",
+                    data: JSON.stringify({ VM_TrDep: JsObject }),
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function (datas) {
+                        if (datas == 1) {
+                            $("#btnSave").prop("disabled", false);
+                            swal({
+                                title: "Ok",
+                                text: "Save Successfully!",
+                                type: "success"
+                            }, function () {
+                                clearTrDepForm();
+                            });
+
+                        }
+                        else if (datas == "X") {
+                            swal({
+                                title: "Sorry",
+                                text: "No Save Permission for this User",
+                                type: "warning"
+                            });
+                        }
+                        else if (datas == 0) {
+                            swal(
+                                'Sorry!',
+                                'Something went wrong during the process!',
+                                'warning'
+                            );
+                            $("#btnSave").prop("disabled", false);
+                        }
+                        else {
+                            swal({
+                                title: "Sorry!",
+                                text: datas,
+                                type: "warning"
+                            });
+                        }
+
+                    }
+                });
+            });
+
+            function validateOnSave(validOrder) {
+                if (validOrder.TrDepNo.trim() == "") {
+                    return "Department No is required.";
+                }
+                if (validOrder.TrDepDate.trim() == "") {
+                    return "Department Date is required.";
+                }
+                if (validOrder.TrChallanNo == "") {
+                    return "Challan No is required.";
+                }
+                if (!validOrder.Bank.trim().length) {
+                    return "Please select Bank.";
+                }
+                if (validOrder.Branch == "") {
+                    return "Please select Branch.";
+                }
+                if (!validOrder.AccountCode.trim().length) {
+                    return "Please select Account.";
+                }                
+                if (validOrder.Amount.trim() == "" || validOrder.Amount <= 0) {
+                    return "Amount is required.";
+                }
+            }
+
+            $("#TrDepNo").keypress(function (e) {
+                if (e.which == 13) {
+                    $("#btnUpdate").show();
+                    $.ajax({
+                        url: '@Url.Action("GetVM_TrDepByTrDepNo", "VM_TreasuryChallan")',
+                        contentType: "application/json;charset=utf-8",
+                        data: { TrDepNo: $("#TrDepNo").val() },
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function (datas) {
+                            if (datas != null) {
+                                $("#TrDepID").val(datas.TrDepID);
+                                $("#TrDepNo").prop("disabled", true);
+                                if (moment(datas.TrDepDate).format('MM/DD/YYYY') != moment('01/01/1900').format('MM/DD/YYYY')) {
+                                    $("#TrDepDate").datepicker("setDate", DateInDMYformat(datas.TrDepDate));
+                                }
+                                $("#AccountCode").val(datas.AccountCode).trigger('change.select2');
+                                $("#Bank").val(datas.Bank).trigger('change.select2');
+                                $("#Branch").val(datas.Branch);
+                                $("#TrChallanNo").val(datas.TrChallanNo);
+                                $("#Amount").val(datas.Amount);
+                                $("#Remarks").val(datas.Remarks);
+                                $("#btnSave").hide();
+                            }
+                        },
+                        error: function () {
+                            swal("Sorry!! This Note doesn't exists.", "fail")
+                            $("#btnSave").hide();
+                        }
+                    });
+                }
+            });
+
+            $(document).on('click', "#edit", function () {
+                var id = $(this).attr("value");
+                $("#btnUpdate").show();
+                $.ajax({
+                    url: '@Url.Action("GetVM_TrDepByTrDepNo", "VM_TreasuryChallan")',
+                    contentType: "application/json;charset=utf-8",
+                    data: JSON.stringify({ TrDepNo: id }),
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function (datas) {
+                        if (datas != null) {
+                            $("#TrDepNo").prop("disabled", true);
+                            $("#TrDepID").val(datas.TrDepID);
+                            $("#TrDepNo").val(datas.TrDepNo);
+                            if (moment(datas.TrDepDate).format('MM/DD/YYYY') != moment('01/01/1900').format('MM/DD/YYYY')) {
+                                $("#TrDepDate").datepicker("setDate", DateInDMYformat(datas.TrDepDate));
+                            }
+                            $("#AccountCode").val(datas.AccountCode).trigger('change.select2');
+                            $("#Bank").val(datas.Bank).trigger('change.select2');
+                            $("#Branch").val(datas.Branch);
+                            $("#TrChallanNo").val(datas.TrChallanNo);
+                            $("#Amount").val(datas.Amount);
+                            $("#Remarks").val(datas.Remarks);
+                            $("#btnSave").hide();
+                        }
+                    }
+                });
+                $("#btnSave").hide();
+            });
+
+            $(document).on("click", "#btnUpdate", function () {
+                $("#btnSave").prop("disabled", false);
+                setBindingfromScreen();
+                var validate = validateOnSave( JsObject);
+                if (validate != undefined) {
+                    alert(validate);
+                    return;
+                }
+
+                $.ajax({
+                    url: '@Url.Action("UpdateVM_TrDep", "VM_TreasuryChallan")',
+                    contentType: "application/json;charset=utf-8",
+                    data: JSON.stringify({ VM_TrDep: JsObject }),
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function (datas) {
+                        if (datas == 1) {
+                            swal({
+                                title: "Ok",
+                                text: "Update Successfully!",
+                                type: "success"
+                            }, function () {
+                                clearTrDepForm();
+                                $("#btnSave").prop("enable", false);
+
+                            });
+                        }
+                        else if (datas == "U") {
+                            swal({
+                                title: "Sorry",
+                                text: "No Update Permission for this User",
+                                type: "warning"
+                            });
+                        }
+                        else if (datas == 0) {
+                            swal(
+                                'Sorry!',
+                                'Something went wrong during the process!',
+                                'warning'
+                            );
+                            $("#btnSave").prop("disabled", false);
+                        }
+                        else {
+                            swal({
+                                title: "Sorry!",
+                                text: datas,
+                                type: "warning"
+                            });
+                        }
+
+                    }
+                });
+            });
+
+
+            $(document).on("click", "#btnClear", function () {
+                clearTrDepForm();
+            });
+
+            $(document).on("click", "#btnRefrash", function () {
+                location.reload();
+            });
+
+            function clearTrDepForm() {
+                $("#TrDepDate").val("@DateTime.Today.ToShortDateString()");
+                $("#AccountCode").val($('#AccountCode option:first-child').val()).trigger('change.select2');
+                $("#Bank").val($('#Bank option:first-child').val()).trigger('change.select2');
+                $("#TrChallanNo").val("");
+                $("#Branch").val("");
+                $("#Amount").val(0);
+                $("#Remarks").val("");
+
+                $("#TrDepNo").prop("disabled", false);
+                $.ajax({
+                    url: '@Url.Action("GetNewVM_TrDepbyView", "VM_TreasuryChallan")',
+                    contentType: "application/json;charset=utf-8",
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (datas) {
+
+                        $("#TrDepNo").val(datas);
+                    }
+                });
+                $("#btnUpdate").hide();
+                $("#btnSave").show();
+            }
+
+
+        });
+    </script>
+}

@@ -1,0 +1,716 @@
+﻿@model App.Domain.RateChart
+
+
+@{
+    ViewBag.Title = "RateChart";
+}
+
+<script src="~/App_Themes/Theme1/plugins/select2/select2.min.js" type="text/javascript"></script>
+<script src="~/App_Themes/Theme1/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+<link href="~/App_Themes/Theme1/plugins/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/Css/FormDesign.css" rel="stylesheet" />
+
+<style>
+    table.dataTable.select tbody tr,
+    table.dataTable thead th:first-child {
+        cursor: pointer;
+    }
+
+    .dataTables_scrollBody > table > thead > tr > th[class*="sort"]::after {
+        display: none;
+    }
+</style>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-color panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <text style="text-align:left !important; text-decoration: none;">Rate Chart</text>
+                        <text style="color:#1E3B2D;font-size:12px;margin-right:100px;" class="pull-right">@ViewBag.Status</text>
+                    </h3>
+                </div>
+                <div class="panel-body">
+
+                    <div class="col-md-12" style="margin-left:110px; margin-top:20px" id="ddfProjCode">
+                        <label class="col-md-2">Cust Group</label>
+                        <div class="input-group form-group col-md-4">
+                            @Html.DropDownListFor(x => x.CustGroup, null, new { @class = "form-control ", @id = "CustGroup", required = "required" })
+                            @Html.HiddenFor(x => x.RateChartId)
+                        </div>
+                    </div>
+                    <div class="col-md-12" style="margin-left:110px; margin-top:20px">
+                        <label class="col-md-2">Customer Type</label>
+                        <div class="input-group form-group col-md-4">
+                            @Html.DropDownListFor(x => x.CustType, null, new { @class = "form-control ", required = "required" })
+
+                        </div>
+                    </div>
+
+                    <div class="col-md-12" style="margin-left:110px; margin-top:20px">
+                        <label class="col-md-2">Customer Name</label>
+                        <div class="input-group form-group col-md-4">
+                            @Html.DropDownListFor(x => x.CustCode, null, new { @class = "form-control ", required = "required" })
+
+                        </div>
+                    </div>
+
+
+
+                    <div class="col-md-12" style="margin-left:110px; margin-top:20px">
+                        <label class="col-md-2">Item Name</label>
+                        <div class="input-group form-group col-md-4">
+                            @Html.DropDownListFor(x => x.ItemCode, null, "All", new { @class = "form-control ", required = "required" })
+
+                        </div>
+                    </div>
+
+                    <div class="col-md-12" style="margin-left:110px; margin-top:20px" id="divItemRate">
+                        <label class="col-md-2">Item Rate</label>
+                        <div class="input-group form-group col-md-4">
+                            @Html.TextBoxFor(x => x.ItemRate, null, new { @class = "form-control ", required = "required" })
+
+                        </div>
+                    </div>
+
+                    <div class="col-md-12" style="margin-left:110px; margin-top:20px" id="divCommPerc">
+                        <label class="col-md-2">Commision</label>
+                        <div class="input-group form-group col-md-4">
+                            @Html.TextBoxFor(x => x.CommPerc, null, new { @class = "form-control ", required = "required" })
+
+                        </div>
+                    </div>
+
+
+                    <div class="row col-md-12">
+                        <div class="col-md-9" style="text-align:center">
+                            <input type="submit" class="btn btn-primary" value="Save" id="btnSaveRateChart" />
+                            <input type="button" class="btn btn-primary" value="Load" id="btnLoadRateChart" />
+                            <input type="button" class="btn btn-primary" value="Update" id="btnUpdateRateChart" />
+                        </div>
+
+
+                        <div class="col-md-3">
+                            @{
+                                string UserName = Session["UserName"].ToString();
+                                AcclineERP.Models.RBACUser rUser = new AcclineERP.Models.RBACUser(UserName);
+                            }
+
+                            @{
+                                if (rUser.HasPermission("GL_RateChart_Preview"))
+                                {
+                                    <a href="@Url.Action("GLRateChartPreviewPdf", "RateChart")" target="_blank" class="btn btn-primary">Preview</a>
+                                }
+                            }
+
+                        </div>
+                    </div>
+                    <br />
+
+                    <div class="col-md-12">
+                        <div class="col-md-12" style="margin: 0 auto; width: 100%">
+                            <div class="row" style="margin-right:15px; margin-left:15px">
+                                <div class="col-md-12">
+                                    <br />
+                                    <table class="table table-bordered table-responsive" id="datatable-buttonsJV" cellspacing="0" style="width: 100%;">
+                                        <thead>
+                                            <tr>
+                                                <th>SL</th>
+                                                <th>Customer Name</th>
+                                                <th>Item Name</th>
+                                                <th>Item Rate</th>
+                                                <th>Comm%</th>
+                                                <th>RC</th>
+                                                <th>Action</th>
+
+                                            </tr>
+                                        </thead>
+                                        <tfoot align="right">
+                                            <tr><th></th><th></th><th></th><th></th><th></th><th></th></tr>
+                                        </tfoot>
+                                    </table>
+                                    @*<hr style="margin-bottom: 1px !important; margin-top: 0 !important" /><br />*@
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+@section Scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script src="~/App_Themes/Theme1/plugins/select2/select2.min.js" type="text/javascript"></script>
+    <script src="~/App_Themes/Theme1/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.bootstrap.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.buttons.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/buttons.bootstrap.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/pdfmake.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/vfs_fonts.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/buttons.html5.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/buttons.print.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.fixedHeader.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.keyTable.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.responsive.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/responsive.bootstrap.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.scroller.min.js"></script>
+    <script type="text/javascript" src="../App_Themes/Theme1/plugins/parsleyjs/dist/parsley.min.js"></script>
+    <!-- Datatable init js -->
+    <script src="../App_Themes/Theme1/blue/assets/pages/datatables.init.js"></script>
+
+    <script type="text/javascript">
+        var editor;
+        var RateChart = {
+            RateChartId: "",
+            CustCode: "",
+            ItemCode: "",
+            CommPerc: "",
+            ItemRate: "",
+            RC: "",
+            CustType: "",
+            CustGroup: "",
+            CustType: ""
+        };
+        var myTable = $('#datatable-buttonsJV').DataTable();
+
+        $(document).ready(function () {
+
+            $('#CustCode').select2();
+            $('#ItemCode').select2();
+            $('#CustGroup').select2();
+
+            $('#CustType').select2();
+
+
+            $("#btnUpdateRateChart").hide();
+            // $("#btnSaveRateChart").hide();
+
+            @*------------ data table Properties -------------------------- *@
+
+            $('#datatable-buttonsJV').dataTable({
+                "scrollX": true,
+                "destroy": true,
+                "api": true,
+                "columns": [
+                           { "data": null, "bSortable": false },
+                           { "data": "CustCode" },
+                           { "data": "ItemCode" },
+                           { "data": "ItemRate" },
+                           { "data": "CommPerc" },
+                           { "data": "RC" },
+                           {
+                               mRender: function (data, type, row) {
+                                   return '<a href="#" id="edit" class="btn btn-default">'
+                                           + '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span></a>&ensp;&ensp;'
+                                   + '<a href="#" class="on-default remove-row deleteSup largeSpace" data-id="1" id="delete" value="' + row.HolidayID + '">'
+                                   + ' <i class="glyphicon glyphicon-trash"></i> </a>'
+                               }
+                           }
+                ],
+
+
+                "fnCreatedRow": function (row, data, index) {
+                    $('td', row).eq(0).html(index + 1);
+                }
+            });
+
+            function loadGridByVNo() {
+                $.ajax({
+                    url: '@Url.Action("GetAllDataForRateChart", "RateChart")',
+                    contentType: "application/json;charset=utf-8",
+                    data: { CustCode: $("#CustCode option:selected").val(), ItemCode: $("#ItemCode option:selected").val() },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+
+                        if (data.data.length >= 0) {
+                            var table = $('#datatable-buttonsJV').DataTable();
+                            table.clear();
+                            table.rows.add(data.data).draw();
+                        }
+                    }
+                });
+            }
+
+            function showHiddenItemLevel() {
+                $("#divItemRate").show();
+                $("#divCommPerc").show();
+            };
+            function HideLevel() {
+                $("#divItemRate").hide();
+                $("#divCommPerc").hide();
+            };
+
+            function validateAddDedOnSave(validGLRateChart) {
+
+                if (!validGLRateChart.CustGroup.trim().length) {
+                    return "CustGroup  is required.";
+                }
+
+                if (validGLRateChart.CustCode.trim().length < 4) {
+                    return "CustCode  is required.";
+                }
+
+                if (validGLRateChart.ItemCode == "") {
+                    return "ItemCode is Required for  save";
+                }
+
+                if (!validGLRateChart.CustType.trim().length) {
+                    return "CustType is Required";
+                }
+
+                if (validGLRateChart.CommPerc == 0) {
+                    return "Please Enter a amount";
+                }
+                if (validGLRateChart.CommPerc == 0) {
+                    return "Please Enter a amount";
+                }
+
+
+                //if (parseFloat(validGLRateChart.RateChart).toFixed(2).replace(",", ".") < 0) {
+                //    return "Open Balance is Required";
+                //}
+
+                return "";
+            }
+
+            function validateAddDedOnLoad(validGLRateChart) {
+
+
+                if (parseFloat(validGLRateChart.ProjCode) < 0) {
+                    return "Project code is required.";
+                }
+
+                if (parseFloat(validGLRateChart.BranchCode) < 0) {
+                    return "Branch code is Required";
+                }
+
+                if (parseFloat(validGLRateChart.Accode) < 0) {
+                    return "Account code is Required";
+                }
+
+                if (validGLRateChart.CustCode.trim().length < 2) {
+                    return "CustCode  is required.";
+                }
+
+
+                //if (parseFloat(validGLRateChart.RateChart).toFixed(2).replace(",", ".") < 0) {
+                //    return "Open Balance is Required";
+                //}
+
+                return "";
+            }
+            function setRateChart() {
+                RateChart.RateChartId = $("#RateChartId").val();
+                RateChart.CustCode = $("#CustCode").val();
+                RateChart.CustType = $("#CustType").val();
+
+                RateChart.ItemCode = $("#ItemCode").val();
+                RateChart.CommPerc = $("#CommPerc").val();
+                RateChart.ItemRate = $("#ItemRate").val();
+                RateChart.CustGroup = $("#CustGroup").val();
+
+
+
+
+
+
+
+
+
+
+
+
+                //}
+            }
+
+            function setRateChartObj(objHC) {
+                RateChart.RateChartId = objHC.RateChartId;
+                RateChart.CustGroup = objHC.CustGroup;
+                RateChart.CustCode = objHC.CustCode;
+                RateChart.ItemCode = objHC.ItemCode;
+                RateChart.CommPerc = objHC.CommPerc;
+                RateChart.ItemRate = objHC.ItemRate;
+                RateChart.RC = objHC.RC;
+                RateChart.CustType = objHC.CustType;
+
+
+            }
+            function setRateChartFieldData(RateChart) {
+
+                $("#RateChartId ").val(RateChart.RateChartId);
+                $("#CustGroup").val(RateChart.CustGroup).trigger('change.select2');
+                $("#CustCode").val(RateChart.CustCode).trigger('change.select2');
+
+                $("#CustType").val(RateChart.CustType).trigger('change.select2');
+
+                $("#ItemCode").val(RateChart.ItemCode).trigger('change.select2');
+                $("#ItemRate").val(RateChart.ItemRate);
+                $("#CommPerc").val(RateChart.CommPerc);
+
+                //$("#CustGroup").prop("disabled", true);
+                //$("#CustCode").prop("disabled", true);
+                //$("#ItemCode").prop("disabled", true);
+
+
+
+
+            }
+
+            @*------------Load  data -------------------------- *@
+
+
+            $(document).on("click",
+            "#btnLoadRateChart",
+            function () {
+                setRateChart();
+                var validate = validateAddDedOnLoad(RateChart);
+                if (validate != "") {
+                    alert(validate);
+                    return;
+                }
+
+                loadGridByVNo();
+            })
+
+            @*------------//save data --------------------------*@
+
+
+
+            $(document).on("click",
+            "#btnSaveRateChart",
+            function () {
+                setRateChart();
+
+
+
+                var validate = validateAddDedOnSave(RateChart);
+                if (validate != "") {
+                    alert(validate);
+                    return;
+                }
+
+
+                $.ajax({
+                    url: '@Url.Action("Save", "RateChart")',
+                    contentType: "application/json;charset=utf-8",
+                    data: JSON.stringify({ RateChart: RateChart }),
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function (data) {                         //save  data
+                        if (data == 1) {
+                            swal({
+                                title: "Ok",
+                                text: "All Information Saved Sucessfully!",
+                                type: "success"
+                            }, function () {
+
+                                //loadGridByVNo();
+
+                                $("#btnSaveRateChart").prop("disabled", false);
+                                //clearRateChart();
+                                // ClearRateChartControls();
+                            });
+                        }
+                        else if (data == 0) {
+                            swal({
+                                title: "Sorry!",
+                                text: "An Error Occured During Save",
+                                type: "warning"
+                            });
+                            $("#btnSaveRateChart").prop("disabled", false);
+                        }
+                        else if (data == 2) {                           //save  data
+                            swal({
+                                title: "Sorry!",
+                                text: "Data Already Exists",
+                                type: "warning"
+                            });
+                            $("#btnSaveRateChart").prop("disabled", false);
+                        }
+                        else if (data == "X") {
+
+                            swal({
+                                title: "Sorry",
+                                text: "No Save Permission for this User",
+                                type: "warning"
+                            });
+
+                        }
+
+                    }
+                });
+            });
+
+
+
+
+            @*------------//update  data --------------------------*@
+
+
+
+
+
+
+
+
+
+            $(document).on("click",
+           "#btnUpdateRateChart",
+           function () {
+
+               $("#btnUpdateRateChart").hide();
+               $("#btnLoadRateChart").show();
+               HideLevel();
+               setRateChart();
+               var validate = validateAddDedOnSave(RateChart);
+               if (validate != "") {
+                   alert(validate);
+                   return;
+               }
+
+
+               $.ajax({
+                   url: '@Url.Action("UpdateRateChart", "RateChart")',
+                   contentType: "application/json;charset=utf-8",
+                   data: JSON.stringify({ RateChart: RateChart }),
+                   type: 'POST',
+                   dataType: 'json',
+                   success: function (data) {
+                       if (data == 1) {
+
+                           swal({
+                               title: "Ok",
+                               text: "All Information Updated Sucessfully!",
+                               type: "success"
+                           }, function () {
+
+                               loadGridByVNo();
+
+                               $("#btnLoadRateChart").prop("disabled", false);
+                               $("#CustGroup").prop("disabled", false);
+                               $("#CustCode").prop("disabled", false);
+                               $("#ItemCode").prop("disabled", false);
+                               //clearRateChart();
+                               // ClearRateChartControls();
+                           });
+
+                       }
+                       else if (data == 0) {
+
+                           swal({
+                               title: "Sorry",
+                               text: "An Error Occured During Update",
+                               type: "warning"
+                           }, function () {
+                               $("#btnLoadRateChart").prop("disabled", false);
+                           });
+
+                       }
+                       else if (data == 2) {
+
+                           swal({
+                               title: "Sorry",
+                               text: "Data is InCorrect for Update",
+                               type: "warning"
+                           }, function () {
+                               $("#btnLoadRateChart").prop("disabled", false);
+                           });
+
+                       }
+                       else if (data == "U") {
+
+                           swal({
+                               title: "Sorry",
+                               text: "No Update Permission for this User",
+                               type: "warning"
+                           });
+
+                       }
+
+                   }
+               });
+           });
+
+
+            @*------------// edit  data --------------------------*@
+
+
+
+            $('body').on('click', '#edit', function () {
+
+                $("#btnUpdateRateChart").show();
+                showHiddenItemLevel();
+                var table = $('#datatable-buttonsJV').DataTable();
+                var data = table.row($(this).closest('tr')).data();
+                var id = data.RateChartId;
+                $("#btnLoadRateChart").hide();
+                $("#btnSaveRateChart").hide();
+                $("#btnUpdateRateChart").show();
+
+                $.ajax({
+                    url: '@Url.Action("GetItemForEdit", "RateChart")',
+                    contentType: "application/json;charset=utf-8",
+                    data: { RateChartId: id },
+                    type: "GET",
+                    dataType: 'json',
+                    success: function (data) {
+
+
+                        if (data == 0) {
+
+                            swal({
+                                title: "Sorry!",
+                                text: "An Error Occured During Load!",
+                                type: "warning"
+                            });
+
+                            $("#btnLoadRateChart").show();
+
+
+
+                        }
+                        else {
+
+
+                            if (!jQuery.isEmptyObject(data)) {
+
+                                data = $.parseJSON(data);
+                                setRateChartFieldData(data);
+                                showHiddenItemLevel();
+                                //HideLevel();
+
+
+
+                            }
+                            else {
+
+                                $("#btnLoadRateChart").show();
+                                $("#btnUpdateRateChart").hide();
+                            }
+
+
+                        }
+
+                    }
+                });
+
+            });
+
+
+            @*------------// delete  data --------------------------*@
+
+
+            $(document).on("click", "#delete", function () {
+                var value = $(this).attr("value");
+                var table = $('#datatable-buttonsJV').DataTable();
+                var data = table.row($(this).closest('tr')).data();
+
+                var Id = data.RateChartId;
+                //delete  data
+                swal({
+                    title: "Are you sure?",
+                    text: "You will not be able to recover this data!",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "Yes, delete it!",
+                    closeOnConfirm: false,
+                    closeOnCancel: true
+                },
+                    function () {
+                        $.ajax({
+                            url: '@Url.Action("DeleteRateChart", "RateChart")',
+                            contentType: "application/json;charset=utf-8",
+                            data: { Id: Id },
+                            type: 'GET',
+                            dataType: 'json',
+                            success: function (datas) {
+
+                                if (datas == 0 || datas == 2) {
+                                    swal("Sorry!! Failed to delete this data.", "fail");
+                                }
+                                else if (datas == 1) {
+                                    swal({
+                                        title: "Ok",
+                                        text: "Sucessfully Delete!",
+                                        type: "success"
+                                    }, function () {
+
+                                        //ClearRateChartControls();
+                                        //clearRateChart();
+
+                                        //reload data table
+                                        loadGridByVNo();
+
+                                    });
+                                }
+                                else if (datas == "D") {
+
+                                    swal({
+                                        title: "Sorry",
+                                        text: "No Delete Permission for this User",
+                                        type: "warning"
+                                    });
+
+                                }
+
+
+
+
+                            },
+                            error: function (datas) {
+                                swal("Sorry!! Failed to delete this data.", "fail")
+                            }
+                        });
+                    });
+
+
+            });
+
+
+
+            @*------------//filter in  select customer  data --------------------------*@
+            @*$(document).on("change", "#CustCode ", function () {
+            $.ajax({
+                url: '@Url.Action("GetItemByCustCode", "RateChart")',
+                contentType: "application/json;charset=utf-8",
+                data: { CustCode: $('#CustCode option:selected').val() },
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    $('#ItemCode').empty();
+                    $.each(data, function (index, value) {
+                        $('#ItemCode').append($('<option>',
+                            {
+                                value: value.Value,
+                                text: value.Text
+                            }));
+                    });
+
+
+                }
+            });
+        });*@
+
+
+
+
+
+        });//End
+    </script>
+}

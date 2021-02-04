@@ -1,0 +1,853 @@
+﻿@model App.Domain.ViewModel.MoneyReceiptVM
+@{
+    ViewBag.Title = "CashMoneyReceipt";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/select2/select2.css" rel="stylesheet" type="text/css" />
+<link href="~/Css/FormDesign.css" rel="stylesheet" />
+
+<style>
+    table.dataTable.select tbody tr,
+    table.dataTable thead th:first-child {
+        cursor: pointer;
+    }
+
+    .dataTables_scrollBody > table > thead > tr > th[class*="sort"]::after {
+        display: none;
+    }
+
+    input#NetAmount, input#PrevDue, input#AdditionalAmt, input#DiscAmt, input#VATAmt, input#TotSaleAmt, input#NetSaleAmt {
+        text-align: right;
+    }
+
+    .form-control {
+        border: 1px solid #00ffff;
+    }
+
+    .required:after {
+        content: " *";
+        font-weight: bold;
+        color: red;
+    }
+
+    a#glPro {
+        color: darkblue;
+    }
+
+    a#GLEntries {
+        color: darkblue;
+    }
+
+    label.col-md-4 {
+        padding: 0px !important;
+    }
+
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    input[type=number] {
+        -moz-appearance: textfield;
+    }
+</style>
+
+@using (Html.BeginForm())
+{
+    <div class="row">
+        <div class="col-sm-11">
+            <div class="panel panel-color panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <text style="text-align:left !important; text-decoration: none;">Money Receipt (Cash)</text>
+                    </h3>
+                </div>
+                <div class="panel-body">
+                    <div class="input-group form-group col-md-12">
+                        <div class="col-md-5" style="text-align:right">
+                            <label class="col-md-3"></label>
+                            <label class="col-md-7 control-label" style="padding-left:initial; text-align:right">
+                                @Html.ActionLink(
+                                "Receipt Voucher waiting for Posting",
+                                "GetJournalVoucher",
+                                "CashMoneyReceipt",
+                                new { pageType = "blankDate" },
+                                new { id = "glPro", }
+                                )
+                            </label>
+                            <label class="col-md-1 control-label" style="padding-left:initial; padding-right:initial; text-align:left" id="CountNo">(@ViewBag.GLProvition)</label>
+                        </div>
+                        <div class="col-md-4" style="text-align:left">
+                            <label class="control-label" target="_blank">
+                                @Html.ActionLink(
+                                "List of Receipt Voucher",
+                                "GetGLEntries",
+                                "CashMoneyReceipt",
+                                new { Date = "blankDate" },
+                                new { id = "GLEntries", }
+                                )
+                            </label>
+                            <label>(@ViewBag.GLEntries)</label>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="col-md-4">
+                            <label class="col-md-4" style="margin-right: 15px;">Receipt SL</label>
+                            <div class="input-group form-group col-md-7">
+                                @Html.TextBoxFor(x => x.MRSL, new { @class = "form-control col-md-7 select2", required = "required", @Value = ViewBag.MRSL, disabled = "true" })
+                            </div>
+                        </div>
+                        <div class="col-md-4" id="ddfProjCode">
+                            <label class="col-md-3" for="ProjCode">Project</label>
+                            <div class="input-group form-group col-md-9">
+                                @Html.DropDownListFor(x => x.ProjCode, null, "---- Select ----", new { @class = "form-control select2", @Value = ViewBag.ProjCode })
+                            </div>
+                        </div>
+                        <div class="col-md-4" id="ddfBrCode">
+                            <label class="col-md-3" for="BrCode">Branch</label>
+                            <div class="input-group form-group col-md-8">
+                                @Html.DropDownListFor(x => x.BranchCode, null, "---- Select ----", new { @class = "form-control select2", @Value = ViewBag.BranchCode })
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="col-md-6">
+                            <label class="col-md-3 required">Receipt No</label>
+                            <div class="input-group form-group col-md-8">
+                                @Html.TextBoxFor(x => x.MRNo, new { @class = "form-control col-md-8 select2", required = "required" })
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="col-md-3 required">Receipt Date</label>
+                            <div class="input-group form-group col-md-8">
+                                <input type="text" class="form-control datePage" id="@Html.IdFor(x => x.MRDate)" value="@DateTime.Today.ToShortDateString()">
+                                <span class="input-group-addon bg-primary b-0 text-white"><i class="ion-calendar"></i></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="col-md-6">
+                            <label class="col-md-3 required">MR Against</label>
+                            <div class="input-group form-group col-md-8">
+                                @Html.DropDownListFor(x => x.MRAgainst, null, new { @class = "form-control select2", @Value = ViewBag.MRAgainst })
+                                @*@Html.DropDownListFor(x => x.Accode, null, new { @class = "form-control select2", @Value = ViewBag.Accode })*@
+
+
+
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="col-md-3 required">Receipt From</label>
+                            <div class="input-group form-group col-md-8">
+                                @Html.DropDownListFor(x => x.CustCode, null, "--- Select ---", new { @class = "form-control select2", @Value = ViewBag.CustCode })
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="col-md-6">
+                            <label class="col-md-3 required">Amount</label>
+                            <div class="input-group form-group col-md-8">
+                                @Html.TextBoxFor(x => x.Amount, new { @type = "number", @class = "form-control col-md-8 select2", required = "required" })
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="col-md-12 hidden" id="pnlVchrPost">
+                        <div class="col-md-6">
+                            <label class="col-md-3">Voucher No</label>
+                            <div class="input-group form-group col-md-8">
+                                @Html.TextBoxFor(x => x.VchrNo, new { @class = "form-control col-md-8 select2", required = "required", disabled = "true" })
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="col-md-3"></label>
+                            <div class="col-md-8 checkbox checkbox-primary">
+                                <input type="checkbox" name="Posted" class="Posted" value="Posted" id="Posted" /><label>Posted</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="col-md-6">
+                            <label class="col-md-3">Remarks</label>
+                            <div class="input-group form-group col-md-8">
+                                @Html.TextBoxFor(x => x.Remarks, new { @class = "form-control col-md-8 select2", required = "required" })
+                            </div>
+                        </div>
+                        @if (ViewBag.MaintJob == true)
+                        {
+                            <div class="col-sm-4">
+                                <label class="col-md-4">Job No</label>
+                                <div class="col-md-7 input-group form-group" style="padding-left: 15px !important;">
+                                    @Html.DropDownListFor(x => x.JobNo, null, "---- Select ----", new { @class = "form-control select2", @Value = ViewBag.JobNo })
+                                </div>
+                            </div>
+                            <div class="col-md-1">
+                                <input type="button" class="btn" value="Add Job" id="btnJob" />
+                            </div>
+                        }
+                    </div>
+
+
+                    <div class="col-md-12">
+                        <div class="col-md-8">
+                            <div class="col-md-5">
+                                <label class="col-md-6"></label>
+                                <div class="col-md-6 checkbox checkbox-primary">
+                                    <input type="checkbox" name="AdjWithBill" id="AdjWithBill" /><label>Adjust With Bill</label>
+                                </div>
+                            </div>
+                            <div class="col-md-7">
+                                <input type="button" value="Print" class="btn btn-primary" id="btnPreview" onclick="location.href='@Url.Action("GetMoneyReceiptPdf", "CashMoneyReceipt")?ReceiptNo=' + $('#MRNo').val()" />
+                                <input type="button" value="Save" class="btn btn-primary" id="btnSave" style="width:100px;" />
+                                <input type="button" value="Update" class="btn btn-primary hidden" id="btnUpdate" style="width:100px;" />
+                                <input type="button" value="Clear" class="btn btn-primary" id="btnClear" style="width:100px;" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-12 hidden" style="margin:10px 10px 10px 10px" id="pnlDT">
+                        <div class="row col-sm-12 col-md-12" style="border:1px solid; border-color:#adcceb; width:100%">
+                            <div class="row">
+                                <div class="col-sm-12 col-md-12" style="padding:1px 18px 1px 18px">
+                                    <br />
+                                    <table class="table table-bordered table-responsive" id="CashMoneyRecptDT" style="width:100%">
+                                        <thead>
+                                            <tr>
+                                                <th width="5%">SL</th>
+                                                <th width="10%">Bill&nbsp;No</th>
+                                                <th width="5%">Date</th>
+                                                <th width="5%">Amount</th>
+                                                <th width="5%">
+                                                    <input type="checkbox" id="chkSelectAll" style="text-align:center" name="select_all">&nbsp; Adjust All
+
+                                                </th>
+                                                <th width="3%">
+                                                    <input type="checkbox" id="chkPaidAll" style="text-align:center" name="select_all">&nbsp; Paid All
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tbodyId"></tbody>
+
+                                    </table>
+                                    <br />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" id="JobModal" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="panel panel-color panel-primary">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">Job Information</h3>
+
+                            </div>
+                            <div class="panel-body">
+                                <div class="clearfix">
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="col-md-3">Job No</label>
+                                    <div class="input-group form-group col-md-7">
+                                        <input type="text" class="form-control" id="nJobNo" name="nJobNo" />
+                                    </div>
+                                </div>
+                                <div class="col-md-10">
+                                    <div>
+                                        <div class="pull-right">
+                                            <input type="button" id="btnJobOk" value="Save" class="btn btn-primary" />
+                                            <input type="button" id="closeJob" value="Close" class="btn btn-primary" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+}
+
+@section scripts{
+    <script src="~/App_Themes/Theme1/plugins/select2/select2.min.js" type="text/javascript"></script>
+    <script src="~/App_Themes/Theme1/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.bootstrap.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.buttons.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/buttons.bootstrap.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/pdfmake.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/vfs_fonts.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/buttons.html5.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/buttons.print.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.fixedHeader.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.keyTable.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.responsive.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/responsive.bootstrap.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.scroller.min.js"></script>
+    <script type="text/javascript" src="../App_Themes/Theme1/plugins/parsleyjs/dist/parsley.min.js"></script>
+    <script src="../App_Themes/Theme1/blue/assets/pages/datatables.init.js"></script>
+    <script>
+
+        $(document).ready(function () {
+            var ispType = '@ViewBag.errMsg';
+            if (ispType != '') {
+                ispType = '@ViewBag.errMsg';
+            }
+            if (ispType == "VWP") {
+                alert("No Voucher waiting for posting Permission for this User");
+            } else if (ispType == "VL") {
+                alert("No List Of Receive vouchers Permission for this User");
+            }
+
+
+            function select2Focus() {
+                var select2 = $(this).data('select2');
+                setTimeout(function () {
+                    if (!select2.opened()) {
+                        select2.open();
+                    }
+                }, 0);
+            }
+
+            $("#CustCode").select2().one('select2-focus', select2Focus).on("select2-blur", function () { $(this).one('select2-focus', select2Focus) });
+            $("#MRAgainst").select2().one('select2-focus', select2Focus).on("select2-blur", function () { $(this).one('select2-focus', select2Focus) });
+            $("#JobNo").select2().one('select2-focus', select2Focus).on("select2-blur", function () { $(this).one('select2-focus', select2Focus) });
+
+
+            $('#AdjWithBill').click(function () {
+                setOrder();
+                var validate = validateOnAdj(loadInfo);
+                if (validate != "") {
+                    alert(validate);
+                    $("#AdjWithBill").prop("checked", false);
+                    return;
+                }
+
+                var credit = $("#AdjWithBill").prop("checked");
+                if (credit == true) {
+                    $('#pnlDT').attr("class", "col-sm-12 col-md-12");
+                    LoadDT();
+
+                } else {
+                    $('#pnlDT').attr("class", "col-sm-12 col-md-12 hidden");
+                }
+            });
+
+            // Handle click on "Select all" control
+            $('#chkSelectAll').on('click', function () {
+                // Get all rows with search applied
+                var table = $('#CashMoneyRecptDT').DataTable().data();
+                var rows = table.rows({ 'search': 'applied' }).column(4).nodes();
+                // Check/uncheck checkboxes for all rows in the table
+                $('input[type="checkbox"]', rows).prop('checked', this.checked);
+            });
+
+
+            // Handle click on "Is Paid" control
+            $('#chkPaidAll').on('click', function () {
+                // Get all rows with search applied
+                var table = $('#CashMoneyRecptDT').DataTable();
+                var rows = table.rows({ 'search': 'applied' }).column(5).nodes();
+                // Check/uncheck checkboxes for all rows in the table
+                $('input[type="checkbox"]', rows).prop('checked', this.checked);
+            });
+
+
+            $(document).on("click", "#btnJob", function () {
+                $("#JobModal").modal("show");
+            });
+            $(document).on("click", "#closeJob", function (e) {
+                e.preventDefault();
+                $('#JobModal').modal('hide');
+            });
+
+            $(document).on("click", "#btnJobOk", function (e) {
+                if ($("#nJobNo").val() != "") {
+                    $.ajax({
+                        url: '@Url.Action("LoadandSaveJob", "Sales")',
+                        contentType: "application/json;charset=utf-8",
+                        data: {
+                            nJobNo: $("#nJobNo").val()
+                        },
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function (data) {
+                            $('#JobNo').empty();
+                            //data.insertBefore('<option>', { Value: "", text: "--- Select ---" });
+                            $.each(data, function (index, value) {
+                                $('#JobNo').append($('<option>',
+                                    {
+                                        value: value.Value,
+                                        text: value.Text
+                                    })).select2();
+                            });
+                            $('#JobModal').modal('hide');
+                            $("#nJobNo").val("");
+                        }
+                    });
+                }
+                else {
+                    alert("Job No is required.");
+                    return;
+                }
+
+            })
+
+
+            function clearMR() {
+                $("#MRNo").prop("disabled", false);
+                $("#MRDate").val("@DateTime.Today.ToShortDateString()");
+                $("#ProjCode").val($('#ProjCode option:first-child').val()).trigger('change.select2');
+                $("#BranchCode").val($('#BranchCode option:first-child').val()).trigger('change.select2');
+                $("#CustCode").val($('#CustCode option:first-child').val()).trigger('change.select2');
+                $("#MRAgainst").val($('#MRAgainst option:first-child').val()).trigger('change.select2');
+                $("#JobNo").val($('#JobNo option:first-child').val()).trigger('change.select2');
+                $("#MRNo").val("");
+                $("#Amount").val("");
+                $("#VchrNo").prop("disabled", true);
+                $("#Posted").prop("chacked", false);
+                $('#pnlVchrPost').attr("class", "col-md-12 hidden");
+                $('#pnlDT').attr("class", "col-sm-12 col-md-12 hidden");
+                $("#AdjWithBill").prop("checked", false);
+                isEdit = 0;
+
+                $('#btnUpdate').attr("class", "btn btn-primary hidden");
+                $("#btnSave").show();
+
+                $.ajax({
+                    url: '@Url.Action("GetRecvNo", "CashMoneyReceipt")',
+                    contentType: "application/json;charset=utf-8",
+                    data: { branchCode: $("#BranchCode").val(), ProjCode: $("#ProjCode").val() },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (datas) {
+                        $("#MRSL").val(datas);
+                    }
+                })
+            }
+
+
+
+
+            $(document).on("change", "#CustCode, #MRAgainst", function () {
+                $("#AdjWithBill").prop("checked", false);
+                $('#pnlDT').attr("class", "col-sm-12 col-md-12 hidden");
+            });
+
+
+
+
+            var isEdit = 0;
+            var loadInfo = {
+                MRSL: "",
+                ProjCode: "",
+                BranchCode: "",
+                MRNo: "",
+                JobNo: "",
+                MRDate: "",
+                CustCode: "",
+                Amount: "",
+                MRAgainst: "",
+                VchrNo: "",
+                Posted: "",
+                AdjWithBill: "",
+                Remarks: ""
+            };
+
+            function setOrder() {
+                loadInfo.MRSL = $("#MRSL").val();
+                loadInfo.ProjCode = $("#ProjCode").val();
+                loadInfo.BranchCode = $("#BranchCode").val();
+                loadInfo.JobNo = $("#JobNo").val();
+                loadInfo.MRNo = $("#MRNo").val();
+                loadInfo.MRDate = $("#MRDate").val();
+                loadInfo.CustCode = $("#CustCode").val();
+                loadInfo.Amount = parseFloat($("#Amount").val()).toFixed(2).replace(".", ",");
+                loadInfo.MRAgainst = $("#MRAgainst").val();
+                loadInfo.VchrNo = $("#VchrNo").val();
+                loadInfo.Posted = $("#Posted").val();
+                loadInfo.AdjWithBill = $("#AdjWithBill").prop("checked");
+                loadInfo.Remarks = $("#Remarks").val();
+            }
+            var AdjBills = [];
+            $(document).on("click", "#btnSave", function () {
+                AdjBills = [];
+                setOrder();
+                var validate = validateOnSave(loadInfo);
+                if (validate != "") {
+                    alert(validate);
+                    return;
+                }
+
+
+
+                var dtable = $('#CashMoneyRecptDT').DataTable();
+                var rowCount = $('#CashMoneyRecptDT >tbody >tr').length;
+                var rows = $(dtable.$('input[type="checkbox"]').map(function () {
+                    return $(this).closest('tr');
+                }));
+
+                rows.each(function (i, value) {
+                    if (i % 2 == 1) {
+
+                        var item = { SaleNo: "", Amount: "", IsPaid_mre: 0, IsAdjust_mre: 0 }
+                        var rowId = value[0].cells[1].innerText;
+                        item.Amount = value[0].cells[3].innerText;
+                        item.SaleNo = rowId;
+
+                        var cln = value[0].lastChild.cellIndex;
+                        item.IsAdjust_mre = value[0].childNodes[cln - 1].childNodes[0].checked;
+                        item.IsPaid_mre = value[0].childNodes[cln].childNodes[0].checked;
+                        if (item.IsAdjust_mre) { AdjBills.push(item); }
+
+                    }
+
+
+                });
+
+
+                $.ajax({
+                    url: '@Url.Action("SaveCashMR", "CashMoneyReceipt")',
+                    contentType: "application/json;charset=utf-8",
+                    data: JSON.stringify({ MrVM: loadInfo, AdjBills: AdjBills }),
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function (datas) {
+                        if (datas == 1) {
+                            swal({
+                                title: "Ok",
+                                text: "Successfully Saved.",
+                                type: "success"
+                            },
+                            function () {
+                                clearMR();
+                                $.ajax({
+                                    url: '@Url.Action("GetGlPCountN", "CashMoneyReceipt")',
+                                    contentType: "application/json;charset=utf-8",
+                                    data: { VType: 'CR' },
+                                    type: 'GET',
+                                    dataType: 'json',
+                                    success: function (datas) {
+                                        $("#CountNo").html("(" + datas + ")");
+                                    }
+                                })
+                                AdjBills = [];
+                            });
+
+                            $('#tbodyId').empty();
+
+
+                        }
+                        else if (datas == "X") {
+                            swal({
+                                title: "Sorry",
+                                text: "No Save Permission for this User!",
+                                type: "warning"
+                            });
+                        }
+                        else if (datas == 3) {
+                            swal({
+                                title: "Sorry",
+                                text: "This Receipt No already exist!",
+                                type: "warning"
+                            });
+                        }
+                        else if (datas == 0) {
+                            swal({
+                                title: "Sorry",
+                                text: "An error occurred during the save!",
+                                type: "warning"
+                            });
+                        }
+                    }
+                });
+            });
+
+
+            $(document).on("change", "#BranchCode, #ProjCode", function () {
+                $.ajax({
+                    url: '@Url.Action("GetRecvNo", "CashMoneyReceipt")',
+                    contentType: "application/json;charset=utf-8",
+                    data: { branchCode: $("#BranchCode").val(), ProjCode: $("#ProjCode").val() },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (datas) {
+                        $("#MRSL").val(datas);
+                    }
+                })
+            });
+
+            $("#MRNo").on("keydown", function (e) {
+                if (e.which == 13 || e.which == 9) {
+                    $.ajax({
+                        url: '@Url.Action("GetAllByMRNo", "CashMoneyReceipt")',
+                        contentType: "application/json;charset=utf-8",
+                        data: { MRNo: $("#MRNo").val() },
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function (datas) {
+                            if (datas.GetMR == null) {
+                                //swal("Sorry!! This MR no does not exist.", "fail")
+                            }
+                            else {
+                                $("#MRNo").prop("disabled", true);
+                                $("#MRSL").val(datas.GetMR.MRSL);
+                                $("#ProjCode").val(datas.GetMR.ProjCode).trigger('change.select2');
+                                if (moment(datas.GetMR.MRDate).format('MM/DD/YYYY') != moment('01/01/1900').format('MM/DD/YYYY')) {
+                                    $("#MRDate").datepicker("setDate", DateInDMYformat(datas.GetMR.MRDate));
+                                }
+                                $("#BranchCode").val(datas.GetMR.BranchCode.trim()).trigger('change.select2');
+                                $("#Amount").val(datas.GetMR.MRAmount);
+                                $("#CustCode").val(datas.GetMR.CustCode).trigger('change.select2');
+                                $("#MRAgainst").val(datas.GetMR.MRAgainst).trigger('change.select2');
+                                $("#VchrNo").val(datas.GetMR.VchrNo);
+                                $("#Remarks").val(datas.GetMR.Remarks);
+                                $("#JobNo").val(datas.GetMR.JobNo).trigger('change');
+                                if (datas.GetMR.Posted == true) {
+                                    $("#Posted").prop("checked", true);
+                                }
+                                $('#pnlVchrPost').attr("class", "col-md-12");
+                                $("#btnSave").hide();
+                                //$("#btnUpdate").show();
+                                $('#btnUpdate').attr("class", "btn btn-primary");
+
+                                if (datas.GetMR.AdjWithBill == true) {
+                                    isEdit = 1;
+                                    $("#AdjWithBill").prop("checked", true);
+                                    $('#pnlDT').attr("class", "col-sm-12 col-md-12");
+                                    LoadDT();
+                                    //$('#btnUpdate').attr("class", "btn btn-primary hidden");
+                                }
+
+                            }
+                        },
+                        error: function () {
+                            swal("Sorry!! This MR no does not exist.", "fail")
+                        }
+                    });
+                }
+            });
+
+
+            $("#btnClear").on("click", function () {
+                clearMR();
+            });
+
+
+            function validateOnSave(validOrder) {
+
+                if (validOrder.MRNo == "") {
+                    return "Receipt No is required";
+                }
+                if (validOrder.MRDate.trim() == "0") {
+                    return "Receipt Date is Required";
+                }
+                if (validOrder.MRAgainst == "") {
+                    return "MR Against is Required";
+                }
+                if (validOrder.CustCode == "") {
+                    return "Receipt From is required";
+                }
+
+                if (validOrder.Amount == "" || validOrder.Amount <= 0) {
+                    return "Amount is required";
+                }
+                var Pddllen = $("#MRAgainst > option").length;
+                if (Pddllen >= 2) {
+                    if (validOrder.MRAgainst == "0") {
+                        return "GL A/C is required";
+                    }
+                }
+
+
+                return "";
+
+            }
+
+            function validateOnAdj(validOrderAdj) {
+
+                if (validOrderAdj.CustCode == "") {
+                    return "Receipt From is required";
+                }
+                if (validOrderAdj.MRAgainst == "") {
+                    return "MR Against is Required";
+                }
+                if (validOrderAdj.Amount == "" || validOrderAdj.Amount <= 0) {
+                    return "Amount is required";
+                }
+                return "";
+            }
+
+
+            var Pddllen = $("#MRAgainst > option").length;
+            if (Pddllen <= 2) {
+                $('#pnlGLAc').hide();
+            }
+
+
+            function LoadDT() {
+
+                $('#CashMoneyRecptDT').dataTable({
+                    "scrollY": 200,
+                    "scrollX": true,
+                    "destroy": true,
+                    "crossDomain": true,
+                    "ajax": {
+                        "url": "../CashMoneyReceipt/GetAdjBills",
+                        "type": "GET",
+                        "datatype": "json",
+                        "data": { CustCode: $("#CustCode").val(), MRAgainst: $("#MRAgainst option:selected").text(), Amount: $("#Amount").val(), isEdit: isEdit }
+
+                    },
+
+                    "columns": [
+                               { "data": null, "bSortable": false },
+                               { "data": "SaleNo" },
+                               {
+                                   "data": "SaleDate", "type": "date ",
+                                   "render": function (value) {
+                                       if (value === null) return "";
+
+                                       var pattern = /Date\(([^)]+)\)/;
+                                       var results = pattern.exec(value);
+                                       var dt = new Date(parseFloat(results[1]));
+
+                                       return dt.getDate() + "/" + (dt.getMonth() + 1) + "/" + dt.getFullYear();
+                                   }
+                               },
+                               { "data": "BillAmount" },
+                               {
+                                   "data": "IsPaid",
+                                   "render": function (data, type, full, meta) {
+                                       return '<input type="checkbox" ' + (data == true ? ' checked="checked"' : '') + '>';
+                                   }, "bSortable": false
+                               },
+                               {
+                                   "data": "Paid",
+                                   "render": function (data, type, full, meta) {
+                                       return '<input type="checkbox" ' + (data == true ? ' checked="checked"' : '') + '>';
+                                   }, "bSortable": false
+                               }
+                    ],
+                    order: [0, 'asc'],
+                    select: {
+                        style: 'os'
+                    },
+                    "columnDefs": [
+                                {
+                                    "targets": 2,
+                                    "className": "text-center",
+                                },
+                                {
+                                    "targets": 3,
+                                    "className": "text-right",
+                                }], fixedColumns: true,
+
+                    "fnCreatedRow": function (row, data, index) {
+                        $('td', row).eq(0).html(index + 1);
+                    }
+                });
+            }
+
+            $.ajax({
+                url: '@Url.Action("GetNewVoucherNo", "CashReceipt")',
+                contentType: "application/json;charset=utf-8",
+                data: { VType: 'CR' },
+                type: 'GET',
+                dataType: 'json',
+                success: function (datas) {
+                    $("#VchrNo").val(datas);
+                }
+            });
+
+            //For GLEntries
+            $("#GLEntries").click(function () {
+                //Get the id of the selected item in dropdown
+                var SaleDate = moment($('#MRDate').val(), 'DD/MM/YYYY').format('MM/DD/YYYY').toString();
+
+                var id = SaleDate + '&pageType=COR';
+                //Replace the predifined QueryString param "xxx" with the "id"
+                this.href = this.href.replace("blankDate", id);
+            });
+
+
+            $("#glPro").click(function () {
+                //Get the id of the selected item in dropdown
+                var id = 'COR';
+
+                //Replace the predifined QueryString param "xxx" with the "id"
+                this.href = this.href.replace("blankDate", id);
+            });
+
+
+            $(document).on("click", "#btnUpdate", function () {
+                setOrder();
+                var validate = validateOnSave(loadInfo);
+                if (validate != "") {
+                    alert(validate);
+                    return;
+                }
+
+                $.ajax({
+                    url: '@Url.Action("UpdateCashMR", "CashMoneyReceipt")',
+                    contentType: "application/json;charset=utf-8",
+                    data: JSON.stringify({ MrVM: loadInfo }),
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function (datas) {
+                        if (datas == 1) {
+                            swal({
+                                title: "Ok",
+                                text: "Successfully Updated.",
+                                type: "success"
+                            },
+                            function () {
+                                clearMR();
+                            });
+                            //$('#tbodyId').empty();
+                        }
+                        else if (datas == "U") {
+                            swal({
+                                title: "Sorry",
+                                text: "No Update Permission for this User!",
+                                type: "warning"
+                            });
+                        }
+                        else if (datas == 3) {
+                            swal(
+                            'Sorry!',
+                            'This MR already posted!',
+                            'warning'
+                            );
+                            //$("#btnUpdate").prop("disabled", true);
+                        }
+                    }
+                });
+            });
+
+
+
+        }); //End Ready
+
+    </script>
+}

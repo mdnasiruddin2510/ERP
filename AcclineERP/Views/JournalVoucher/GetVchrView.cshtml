@@ -1,0 +1,154 @@
+﻿@model IEnumerable<App.Domain.ViewModel.GetVchrViewVM>
+@{
+    ViewBag.Title = "GetVchrView";
+    double Sumtotal = 0;
+}
+
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/select2/select2.css" rel="stylesheet" type="text/css" />
+<link href="~/Css/FormDesign.css" rel="stylesheet" />
+
+<style>
+    table.dataTable.select tbody tr,
+    table.dataTable thead th:first-child {
+        cursor: pointer;
+    }
+
+    .form-control {
+        border: 1px solid #00ffff;
+    }
+
+    .required:after {
+        content: " *";
+        font-weight: bold;
+        color: red;
+    }
+
+    .largeSpace {
+        margin-right: 13px;
+        margin-left: 9px;
+    }
+</style>
+
+@using (Html.BeginForm())
+{
+    <div class="column">
+        <div class="col-md-11">
+            <div class="panel panel-color panel-primary" style="padding-bottom: 0 !important">
+                <div class="panel-heading">
+                    <div class="panel-title">
+                        <text style="text-align:left !important; text-decoration: none;">@ViewBag.VchrNo : Details View</text>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="column">
+            <div class="col-md-11">
+                <div class="panel panel-color panel-primary">
+                    <div class="panel-body">
+                        <div class="row col-md-12" style="text-align:center;">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <table class="table table-bordered table-responsive" id="datatable-buttons" style="width:100%;">
+                                        <thead>
+                                            <tr>
+                                                <th>
+                                                </th>
+                                            </tr>
+                                        </thead>
+
+                                        <tr>
+                                            <td colspan="12">
+
+                                                <table class="table table-bordered table-responsive" id="tabledataInner" cellspacing="0" style="width: 100%;">
+
+                                                    <thead>
+                                                        <tr style="border-bottom: 1px solid; background: #78b9f1">
+                                                            <th style="font-size: 13px; text-align: center">TranType</th>
+                                                            <th style="font-size: 13px; text-align: center">TranNo</th>
+                                                            <th style="font-size: 13px; text-align: center">Tran Date</th>
+                                                            <th style="font-size: 13px; text-align: center">From&nbsp;<br />Location</th>
+                                                            <th style="font-size: 13px; text-align: center">Accode</th>
+                                                            <th style="font-size: 13px; text-align: center">AcName</th>
+                                                            <th style="font-size: 13px; text-align: center">Code</th>
+                                                            <th style="font-size: 13px; text-align: center">ItemDesc</th>
+                                                            <th style="font-size: 13px; text-align: center">Qty</th>
+                                                            <th style="font-size: 13px; text-align: center">Unit Price</th>
+                                                            <th style="font-size: 13px; text-align: center">Total</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="tbodyId">
+
+                                                        @foreach (var item in Model)
+                                                        {
+                                                            double total = item.Quantity * item.UnitPrice;
+                                                            <tr>
+                                                                <td style="text-align: center; font-size: 12px;">
+                                                                    @Html.DisplayFor(modelItem => item.TranType)
+                                                                </td>
+                                                                <td style="text-align: center; font-size: 12px">
+                                                                    @Html.DisplayFor(modelItem => item.TranNo)
+                                                                </td>
+                                                                <td style="text-align: center; font-size: 12px">
+                                                                    <label>@item.TrDate.ToString("MM/dd/yyyy") </label>
+                                                                    @*@Html.DisplayFor(modelItem => item.TrDate)*@
+                                                                </td>
+                                                                <td style="text-align: center; font-size: 12px">
+                                                                    @Html.DisplayFor(modelItem => item.FromLocation)
+                                                                </td>
+                                                                <td style="text-align: center; font-size: 12px">
+                                                                    @Html.DisplayFor(modelItem => item.Accode)
+                                                                </td>
+                                                                <td style="text-align: center; font-size: 12px">
+                                                                    @Html.DisplayFor(modelItem => item.AcName)
+                                                                </td>
+                                                                <td style="text-align: center; font-size: 12px">
+                                                                    @Html.DisplayFor(modelItem => item.ItemCode)
+                                                                </td>
+                                                                <td style="text-align: center; font-size: 12px">
+                                                                    @Html.DisplayFor(modelItem => item.ItemDesc)
+                                                                </td>
+                                                                <td style="text-align: center; font-size: 12px">
+                                                                    @Html.DisplayFor(modelItem => item.Quantity)
+                                                                </td>
+                                                                <td style="text-align: right; font-size: 12px">
+                                                                    @Html.DisplayFor(modelItem => item.UnitPrice)
+                                                                </td>
+                                                                <td style="text-align: right; font-size: 12px">
+                                                                    @Html.DisplayFor(modelItem => total)
+                                                                </td>
+                                                            </tr>
+                                                            Sumtotal += total;
+                                                            
+                                                        }
+                                                        <tr>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td style="text-align: right; font-size: 12px; border-top: 1px solid;"><b>@Sumtotal</b></td>
+                                                        </tr>
+                                                    </tbody>
+
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}

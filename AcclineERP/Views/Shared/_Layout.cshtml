@@ -1,0 +1,978 @@
+﻿@*@model App.Domain.Branch*@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    @{
+        var CompInfo = AcclineERP.Models.GetCompanyInfo.GetComInfo();
+    }
+    <link rel="shortcut icon" href="~/Images/Basic/logo.gif">
+    <title>@ViewBag.Title - @CompInfo.CompName</title>
+
+    @*@Scripts.Render("~/App_Themes/Theme1/blue/assets/js/jquery.min.js")*@
+    @Scripts.Render("~/Scripts/jq.js")
+
+    @*@Scripts.Render("~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.js")*@
+    <link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/App_Themes/Theme1/plugins/datatables/buttons.bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/App_Themes/Theme1/plugins/datatables/fixedHeader.bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/App_Themes/Theme1/plugins/datatables/responsive.bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/App_Themes/Theme1/plugins/datatables/scroller.bootstrap.min.css" rel="stylesheet" type="text/css" />
+
+    <link href="~/App_Themes/Theme1/blue/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="~/App_Themes/Theme1/plugins/switchery/switchery.min.css" rel="stylesheet" />
+    <link href="~/App_Themes/Theme1/plugins/jquery-circliful/css/jquery.circliful.css" rel="stylesheet" type="text/css" />
+    <!--<link href="~/App_Themes/Theme1/blue/assets/css/bootstrap.min.css" rel="stylesheet" />-->
+
+    <link href="~/App_Themes/Theme1/blue/assets/css/core.css" rel="stylesheet" type="text/css">
+    <link href="~/App_Themes/Theme1/blue/assets/css/icons.css" rel="stylesheet" type="text/css">
+    <link href="~/App_Themes/Theme1/blue/assets/css/components.css" rel="stylesheet" type="text/css">
+    <link href="~/App_Themes/Theme1/blue/assets/css/pages.css" rel="stylesheet" type="text/css">
+    <link href="~/App_Themes/Theme1/blue/assets/css/menu.css" rel="stylesheet" type="text/css">
+    <link href="~/App_Themes/Theme1/blue/assets/css/responsive.css" rel="stylesheet" type="text/css">
+    <script src="~/App_Themes/Theme1/blue/assets/js/modernizr.min.js"></script>
+    <link href="~/App_Themes/Theme1/plugins/select2/select2.css" rel="stylesheet" type="text/css" />
+    <link href="~/Css/FormDesign.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body class="fixed-left">
+
+    <div id="wrapper">
+
+        <!-- Top Bar Start -->
+        <div class="topbar">
+            <!-- LOGO -->
+            <div class="topbar-left">
+                <div class="text-center">
+                    <a href="" class="logo"><i class="md md-equalizer"></i> <span>@CompInfo.ShortName</span> </a>
+                    @*<text id="@Html.IdFor(x => x.BranchCode)" style="text-align:end !important; text-decoration: none; font-weight:bold; color:darkred; font-size:medium; margin-left:450px">@ViewBag.BranchCode</text>*@
+                </div>
+            </div>
+            <!-- Navbar -->
+            @{
+                string UserName = Session["UserName"].ToString();
+                AcclineERP.Models.RBACUser rUser = new AcclineERP.Models.RBACUser(UserName);
+                Session["IM"] = rUser.HasModule().IM;
+
+            }
+            <div class="navbar navbar-default" role="navigation">
+                <div class="container">
+                    <div class="">
+                        <div class="pull-left">
+                            <button class="button-menu-mobile open-left waves-effect">
+                                <i class="md md-menu"></i>
+                            </button>
+                            <span class="clearfix"></span>
+                        </div>
+                        <div class="Product-logo">
+                            <img src="~/Images/AcclineHeadingLogo.png" class="logo-lg" style="height: 40px;" />
+                        </div>
+                    </div>
+                </div>
+                <!--/.nav-collapse -->
+            </div>
+        </div>
+    </div>
+    <!-- Top Bar End -->
+    <!-- ========== Left Sidebar Start ========== -->
+    <div class="left side-menu">
+        <div class="sidebar-inner slimscrollleft">
+            <div id="sidebar-menu">
+                <ul style="height: 620px; overflow: auto">
+
+
+                    @{
+                        <li class="has_sub">
+                            @{
+                                if (rUser.HasPermissionToMenu("Home"))
+                                {
+                                    @Html.ActionLink("Home", "Index", "Home")
+                                }
+                            }
+
+
+                        </li>
+                        if (rUser.HasModule().GL == true)
+                        {
+                            <li>
+                                <a href="javascript:void(0);" class="waves-effect waves-primary">
+                                    <span>Cash & Bank</span>
+                                    <span class="menu-arrow"></span>
+                                </a>
+                                <ul class="list-unstyled">
+                                    @{
+                            if (rUser.HasPermissionToMenu("CashOperation"))
+                            {
+                                @*
+                        <li>@Html.ActionLink("Cash Operation", "CashOperation", "CashOperation", null, new { id = "rptCumlBal" })</li>*@
+                                        <li>@Html.ActionLink("Cash Operation", "CashOperation", "CashOperation")</li>
+                            }
+                            if (rUser.HasPermissionToMenu("BankOperation"))
+                            {
+                                <li>@Html.ActionLink("Bank Operation", "TakeDecision", "BankOperation")</li>
+
+                            }
+                            if (rUser.HasPermissionToMenu("RptCashBook"))
+                            {
+                                <li>@Html.ActionLink("Books", "Search", "CashBook")</li>
+                            }
+                                    }
+
+
+                                </ul>
+                            </li>
+                        }
+
+                        if (rUser.HasPermissionToMenu("AccountsReceivable") && rUser.HasModule().AR == true) //
+                        {
+                            <li>
+                                <a href="javascript:void(0);" class="waves-effect waves-primary">
+                                    <span>Accounts Receivables</span>
+                                    <span class="menu-arrow"></span>
+                                </a>
+                                <ul class="list-unstyled">
+                                    @{
+                            if (rUser.HasPermissionToMenu("Sales"))
+                            {
+                                <li>@Html.ActionLink("Sales", "Sales", "Sales")</li>
+                            }
+
+                            <li>
+                                <a href="javascript:void(0);" class="waves-effect waves-primary">
+                                    <span>Money Receipt</span>
+                                    <span class="menu-arrow"></span>
+                                </a>
+                                <ul class="list-unstyled">
+                                    @{
+                            if (rUser.HasPermissionToMenu("MoneyReceiptCash"))
+                            {
+                                <li>@Html.ActionLink("Money Receipt (Cash)", "CashMoneyReceipt", "CashMoneyReceipt")</li>
+                            }
+                            if (rUser.HasPermissionToMenu("MoneyReceiptCheque"))
+                            {
+                                <li>@Html.ActionLink("Money Receipt (Cheque)", "ChequeReceipts", "ChequeReceipts")</li>
+                            }
+                            if (rUser.HasPermissionToMenu("MoneyReceiptOnline"))
+                            {
+                                <li>@Html.ActionLink("Money Receipt (Online)", "OnlineMoneyReceipt", "OnlineMoneyReceipt")</li>
+                            }
+
+                                    }
+                                </ul>
+                            </li>
+                            if (rUser.HasPermissionToMenu("SalesReturn"))
+                            {
+                                <li>@Html.ActionLink("Sales Return", "SalesReturn", "SalesReturn")</li>
+                            }
+                            if (rUser.HasPermissionToMenu("CustAdjustment"))
+                            {
+                                <li>@Html.ActionLink("Customer Adjustment", "CustAdjustment", "CustAdjustment")</li>
+                            }
+                            @*<li style="height: 300px; overflow: auto">
+                                <a href="javascript:void(0);" class="waves-effect waves-primary">
+                                    <span>AR Reports</span>
+                                    <span class="menu-arrow"></span>
+                                </a>
+                                <ul class="list-unstyled">
+                                    @{*@
+
+                            if (rUser.HasPermissionToMenu("SalesStatementRpt"))
+                            {
+                                <li>@Html.ActionLink("Sales Statement (Summary)", "SalesStatementRpt", "SalesStatement")</li>
+                            }
+                            if (rUser.HasPermissionToMenu("CustomerWiseSalesStatementRpt"))
+                            {
+                                <li>@Html.ActionLink("Customer Wise Sales Statement", "CustomerWiseSalesStatementRpt", "CustomerWiseSalesStatement")</li>
+                            }
+                            if (rUser.HasPermissionToMenu("ItemWiseSalesStatementRpt"))
+                            {
+                                <li>@Html.ActionLink("Item Wise Sales Statement", "ItemWiseSalesStatementRpt", "ItemWiseSalesStatement")</li>
+                            }
+                            if (rUser.HasPermissionToMenu("SalesCollectionStatRpt"))
+                            {
+                                <li>@Html.ActionLink("Sales & Collection Statement", "SalesCollectionStatRpt", "SalesCollectionStat")</li>
+                            }
+                            if (rUser.HasPermissionToMenu("AgeingRpt"))
+                            {
+                                <li>@Html.ActionLink("Ageing", "AgeingRpt", "Ageing")</li>
+                            }
+                            if (rUser.HasPermissionToMenu("CollectionStatementRpt"))
+                            {
+                                <li>@Html.ActionLink("Collection Statement", "CollectionStatementRpt", "CollectionStatement")</li>
+                            }
+                            if (rUser.HasPermissionToMenu("Montly_Amount_Quantity_Rpt"))
+                            {
+                                <li>@Html.ActionLink("Monthwise Sales Statement", "Montly_Amount_Quantity_Rpt", "MontlyQuantity")</li>
+                            }
+                            if (rUser.HasPermissionToMenu("SalesCollectionComparisonSearch"))
+                            {
+                                <li>@Html.ActionLink("Sales Collection Comparison", "SalesCollectionComparisonSearch", "rptSalesCollectionComparison")</li>
+                            }
+
+                            if (rUser.HasPermissionToMenu("Sample_GiftRptSearch"))
+                            {
+                                <li>@Html.ActionLink("Sample Gift ", "Sample_GiftRptSearch", "Sample_Gift")</li>
+                            }
+
+                            if (rUser.HasPermissionToMenu("PendingSearch"))
+                            {
+                                <li>@Html.ActionLink("Encashment Pending Report", "PendingSearch", "Pending")</li>
+                            }
+                            if (rUser.HasPermissionToMenu("AgeingReport(Marketing)"))
+                            {
+                                <li>@Html.ActionLink("Ageing Report (Marketing)", "Sales_CollectionSearch", "rptSales_Collection")</li>
+                            }
+                            if (rUser.HasPermissionToMenu("ReceiptGDSRpt"))
+                            {
+                                <li>@Html.ActionLink("Receipt (GDS)", "ReceiptRpt", "ReceiptGDS")</li>
+                            }
+                            if (rUser.HasPermissionToMenu("CustomerLedgerGDS"))
+                            {
+                                <li>@Html.ActionLink("Customer Ledger (gds) ", "Search", "CustomerLedgerGDS")</li>
+                            }
+                            if (rUser.HasPermissionToMenu("CustomerLedger"))
+                            {
+                                <li>@Html.ActionLink("Customer Ledger", "Search", "CustomerLedger")</li>
+                            }
+                            if (rUser.HasPermissionToMenu("CustomerWiseRateChartRpt"))
+                            {
+                                <li>@Html.ActionLink("Customer Wise Rate Chart", "CustomerWiseRateChartRpt", "CustomerWiseRateChart")</li>
+                            }
+                            if (rUser.HasPermissionToMenu("salesF1"))
+                            {
+                                <li>@Html.ActionLink("sales F1", "salesF1", "salesF1")</li>
+                            }
+                                    @*}
+                                </ul>
+                            </li>*@
+
+
+
+
+                                    }
+                                </ul>
+                            </li>
+                        }
+                        if (rUser.HasPermissionToMenu("AccountsPayable") && rUser.HasModule().AP == true)
+                        {
+
+                            <li>
+                                <a href="javascript:void(0);" class="waves-effect waves-primary">
+                                    <span>Accounts Payables</span>
+                                    <span class="menu-arrow"></span>
+                                </a>
+                                <ul class="list-unstyled">
+                                    @{
+                            if (rUser.HasPermissionToMenu("Purchase"))
+                            {
+                                <li>@Html.ActionLink("Purchase", "Purchase", "Purchase")</li>
+                            }
+                            if (rUser.HasPermissionToMenu("PurchaseReturn"))
+                            {
+                                <li>@Html.ActionLink("Purchase Return", "PurchaseReturn", "PurchaseReturn")</li>
+                            }
+                                    }
+
+                                </ul>
+                            </li>
+                        }
+                        if (rUser.HasPermissionToMenu("Store") && rUser.HasModule().IM == true)
+                        {
+                            <li>
+                                <a href="javascript:void(0);" class="waves-effect waves-primary">
+                                    <span>Store</span>
+                                    <span class="menu-arrow"></span>
+                                </a>
+                                <ul class="list-unstyled">
+                                    @{
+                            if (rUser.HasPermissionToMenu("Receive"))
+                            {
+                                <li>@Html.ActionLink("Receive", "Index", "Receive")</li>
+
+                            }
+                            if (rUser.HasPermissionToMenu("Issue"))
+                            {
+                                <li>@Html.ActionLink("Issue", "Issue", "Issue")</li>
+
+                            }
+                            if (rUser.HasPermissionToMenu("IssueRecvInfo"))
+                            {
+                                <li>@Html.ActionLink("Issue Receive Information", "IssueRecvInfo", "IssueRecvInfo")</li>
+
+                            }
+                            if (rUser.HasPermissionToMenu("StoreTransfer"))
+                            {
+                                <li>@Html.ActionLink("Store Transfer", "StoreTransfer", "StoreTransfer")</li>
+
+                            }
+                            if (rUser.HasPermissionToMenu("Item"))
+                            {
+                                <li>@Html.ActionLink("Find a Item", "SearchItem", "Item")</li>
+                            }
+                            if (rUser.HasPermissionToMenu("StoreRpt"))
+                            {
+                                <li>@Html.ActionLink("Store/Stock", "StoreRpt", "StoreRpt")</li>
+                            }
+                            if (rUser.HasPermissionToMenu("ProductionRpt"))
+                            {
+                                <li>@Html.ActionLink("Production Report", "ProductionRpt", "ProductionRpt")</li>
+                            }
+                            if (rUser.HasPermissionToMenu("Requisition"))
+                            {
+                                @Html.ActionLink("Stock Requisition", "Requisition", "Requisition")
+                            }
+                            if (rUser.HasPermissionToMenu("StockSummary"))
+                            {
+                                <li>@Html.ActionLink("Stock Summary", "Search", "SummaryReport", null, new { id = "rptStockSumm" })</li>
+                            }
+                            if (rUser.HasPermissionToMenu("StoreLedgerRpt"))
+                            {
+                                <li>@Html.ActionLink("Store Ledger", "StockLedgerRpt", "StockLedgerRpt")</li>
+                            }
+                                    }
+                                </ul>
+
+                            </li>
+                        }
+
+                        if (rUser.HasPermissionToMenu("VAT"))
+                        {
+
+                            <li>
+                                <a href="javascript:void(0);" class="waves-effect waves-primary">
+                                    <span>VAT</span>
+                                    <span class="menu-arrow"></span>
+                                </a>
+                                <ul class="list-unstyled">
+
+                                    <li>
+                                        <a href="javascript:void(0);" class="waves-effect waves-primary">
+                                            <span>VAT Report</span>
+                                            <span class="menu-arrow"></span>
+                                        </a>
+                                        <ul class="list-unstyled">
+                                            @{
+
+                                                @*if (rUser.HasPermissionToMenu("VAT"))
+                                        {
+                                        <li>@Html.ActionLink("Direct Print", "PrintView", "VATRpt")</li>
+                                        }*@
+
+                            if (rUser.HasPermissionToMenu("VAT"))
+                            {
+                                <li>@Html.ActionLink("Vat 4.3", "Vat4P3Rpt", "VATRpt")</li>
+                                                <li>@Html.ActionLink("Vat 6.1", "VatRpt", "VATRpt")</li>
+                                                <li>@Html.ActionLink("Vat 6.2", "Vat6P2Rpt", "VATRpt")</li>
+                                                <li>@Html.ActionLink("Vat 6.2.1", "Vat6P2P1Rpt", "VATRpt")</li>
+                                                <li>@Html.ActionLink("Vat 6.3", "Vat6P3Rpt", "VATRpt")</li>
+                                                <li>@Html.ActionLink("Vat 6.5", "Vat6P5Rpt", "VATRpt")</li>
+                                                <li>@Html.ActionLink("Vat 6.9.1_1", "Vat6P9P1_1Rpt", "VATRpt")</li>
+                                                <li>@Html.ActionLink("Vat 6.10", "Vat6P10Rpt", "VATRpt")</li>
+                                                <li>@Html.ActionLink("Vat 6.4", "Vat6P4Rpt", "VATRpt")</li>
+                                                <li>@Html.ActionLink("Vat 6.6", "Vat6P6Rpt", "VATRpt")</li>
+                                                <li>@Html.ActionLink("Vat 6.7", "Vat6P7Rpt", "VATRpt")</li>
+                                                <li>@Html.ActionLink("Vat 6.8", "Vat6P8Rpt", "VATRpt")</li>
+                                                <li>@Html.ActionLink("Vat 9.1(Ka)", "Vat9P1_SF_KaRpt", "VATRpt")</li>
+                                                <li>@Html.ActionLink("Vat 9.1(Ka 2)", "Vat9P1_SF_Ka_2_Rpt", "VATRpt")</li>
+                            }
+                                            }
+                                        </ul>
+                                    </li>
+
+                                    @{
+                            if (rUser.HasPermissionToMenu("VAT"))
+                            {
+                                <li>@Html.ActionLink("Cost Sheet", "Vat4P3", "VM_4P3")</li>
+                            }
+                            if (rUser.HasPermissionToMenu("VAT"))
+                            {
+                                <li>@Html.ActionLink("Dr Note", "VM_DrNote", "VM_DrNote")</li>
+                            }
+                            if (rUser.HasPermissionToMenu("VAT"))
+                            {
+                                <li>@Html.ActionLink("Cr Note", "VM_CrNote", "VM_CrNote")</li>
+                            }
+                            if (rUser.HasPermissionToMenu("VAT"))
+                            {
+                                <li>@Html.ActionLink("VDS on Payment", "VM_VDS_Payment", "VM_VDS_Payment")</li>
+                            }
+                            if (rUser.HasPermissionToMenu("VAT"))
+                            {
+                                <li>@Html.ActionLink("VDS on Receipt", "VM_VDS_Receipt", "VM_VDS_Receipt")</li>
+                            }
+                            if (rUser.HasPermissionToMenu("VAT"))
+                            {
+                                <li>@Html.ActionLink("Treasury Challan", "VM_TreasuryChallan", "VM_TreasuryChallan")</li>
+                            }
+                            if (rUser.HasPermissionToMenu("VAT"))
+                            {
+                                <li>@Html.ActionLink("Adjustment", "VM_Adjustment", "VM_Adjustment")</li>
+                            }
+                                    }
+                                </ul>
+
+                            </li>
+                        }
+
+                        <li>
+                            <a href="javascript:void(0);" class="waves-effect waves-primary">
+                                <span>General Ledger</span>
+                                <span class="menu-arrow"></span>
+                            </a>
+                            <ul class="list-unstyled">
+                                @{
+                                    if (rUser.HasPermissionToMenu("GLVoucher"))
+                                    {
+                                        <li>@Html.ActionLink("Journal Voucher", "GLVoucher", "GLVoucher")</li>
+                                    }
+                                    if (rUser.HasPermissionToMenu("RptVoucherPreview"))
+                                    {
+                                        <li>@Html.ActionLink("Voucher Preview", "SearchVoucher", "VchrPreview")</li>
+
+                                    }
+                                    if (rUser.HasPermissionToMenu("RptListOfTransaction"))
+                                    {
+                                        <li>@Html.ActionLink("List Of Transaction", "Search", "ListOfTransaction")</li>
+
+                                    }
+                                    if (rUser.HasPermissionToMenu("RptGeneralLedger"))
+                                    {
+                                        <li>@Html.ActionLink("Ledger", "Search", "Report")</li>
+                                    }
+                                    if (rUser.HasPermissionToMenu("RptTrialBalance"))
+                                    {
+                                        <li>@Html.ActionLink("Trial Balance", "Search", "SummaryReport", null, new { id = "rptTBProcess" })</li>
+                                    }
+                                    if (rUser.HasPermissionToMenu("RptJobWiseRecPay"))
+                                    {
+                                        <li>@Html.ActionLink("Job Wise Receipt & Payment", "JobWiseRecPay", "JobWiseRecPay")</li>
+                                    }
+                                    if (rUser.HasPermissionToMenu("RptJobWiseIncExp"))
+                                    {
+                                        <li>@Html.ActionLink("Job Income & Expence", "JobWiseIncExp", "JobWiseIncExp")</li>
+                                    }
+                                    if (rUser.HasPermissionToMenu("RptScheduleInfo"))
+                                    {
+                                        <li>@Html.ActionLink("Schedule Report", "ScheduleRpt", "ScheduleRpt")</li>
+                                    }
+                                    if (rUser.HasPermissionToMenu("RptIncomeAndExpenditureAC"))
+                                    {
+                                        <li>@Html.ActionLink("Income Statement", "IncomeExpenditure", "IncomeExpenditure")</li>
+                                    }
+                                    if (rUser.HasPermissionToMenu("RptBalanceSheet"))
+                                    {
+                                        <li>@Html.ActionLink("Balance Sheet", "BalSheetRpt", "BalSheetRpt", null, new { id = "rptBalanceSheet" })</li>
+                                    }
+
+
+                                }
+                            </ul>
+                        </li>
+
+                        <li>
+                            <a href="javascript:void(0);" class="waves-effect waves-primary">
+                                <span>Master Data</span>
+                                <span class="menu-arrow"></span>
+                            </a>
+                            <ul class="list-unstyled">
+                                @{
+                                    if (rUser.HasPermissionToMenu("InvoiceCancel"))
+                                    {
+                                        @Html.ActionLink("Cancel", "InvoiceCancel", "InvoiceCancel")
+                                    }
+                                    if (rUser.HasPermissionToMenu("GL_OpenBal"))
+                                    {
+                                        @Html.ActionLink("GL_Open Balance", "GL_OpenBal", "GL_OpenBal")
+                                    }
+                                    if (rUser.HasPermissionToMenu("Subsidiary"))
+                                    {
+                                        @Html.ActionLink("Subsidiary", "Create", "Subsidiary")
+                                    }
+                                    if (rUser.HasPermissionToMenu("Item"))
+                                    {
+                                        <li>@Html.ActionLink("Item", "Item", "Item")</li>
+                                    }
+                                    if (rUser.HasPermissionToMenu("ChartOfAccounts"))
+                                    {
+                                        @Html.ActionLink("Chart Of Accounts", "LoadChartofAccounts", "ChartOfAccounts")
+                                    }
+                                    if (rUser.HasPermissionToMenu("RateChart"))
+                                    {
+                                        @Html.ActionLink("Rate Chart", "RateChart", "RateChart")
+                                    }
+                                    if (rUser.HasPermissionToMenu("BranchWiseCashBank"))
+                                    {
+                                        @Html.ActionLink("Cash & Bank Setting", "BranchWiseCashBank", "BranchWiseCashBank")
+                                    }
+                                    if (rUser.HasPermissionToMenu("Group"))
+                                    {
+                                        <li>@Html.ActionLink("Group", "Group", "Group")</li>
+                                    }
+                                    if (rUser.HasPermissionToMenu("MRAgainst"))
+                                    {
+                                        <li>@Html.ActionLink("MR Against", "MRAgainst", "MRAgainst")</li>
+                                    }
+                                    if (rUser.HasPermissionToMenu("CompanyInfo"))
+                                    {
+                                        <li>@Html.ActionLink("Company Information", "CompanyInfo", "CompanyInfo")</li>
+                                    }
+                                    if (rUser.HasPermissionToMenu("DynamicCaption"))
+                                    {
+                                        <li>@Html.ActionLink("Dynamic Caption", "DynamicCaption", "DynamicCaption")</li>
+                                    }
+                                    if (rUser.HasPermissionToMenu("IssRecSrcDest"))
+                                    {
+                                        <li>@Html.ActionLink("Issue Receive Source Destination", "IssRecSrcDest", "IssRecSrcDest")</li>
+                                    }
+                                    if (rUser.HasPermissionToMenu("UserBranch"))
+                                    {
+                                        <li>@Html.ActionLink("User Branch", "UserBranch", "UserBranch")</li>
+                                    }
+
+                                }
+                            </ul>
+
+                        </li>
+                        if (rUser.HasPermissionToMenu("Security"))
+                        {
+                            <li class="has_sub">
+                                <a href="javascript:void(0);" class="waves-effect waves-primary">
+                                    <span>Security</span>
+                                    <span class="menu-arrow"></span>
+                                </a>
+
+                                <ul class="list-unstyled">
+                                    @{
+                            if (rUser.HasPermissionToMenu("SecUserInfo"))
+                            {
+                                <li>@Html.ActionLink("User Info", "SecUserInfo", "SecUserInfo")</li>
+                            }
+                            if (rUser.HasPermissionToMenu("SecUserGroup"))
+                            {
+                                <li>@Html.ActionLink("Group Info", "SecUserGroup", "SecUserGroup")</li>
+                            }
+                            if (rUser.HasPermissionToMenu("SecFormRight"))
+                            {
+                                <li>@Html.ActionLink("Form Rights", "SecFormRight", "SecFormRight")</li>
+                            }
+                                    }
+                                </ul>
+                            </li>
+                        }
+                        if (rUser.HasPermissionToMenu("ManageData"))
+                        {
+                            <li class="has_sub">
+                                <a href="javascript:void(0);" class="waves-effect waves-primary">
+                                    <span>Manage Data</span>
+                                    <span class="menu-arrow"></span>
+                                </a>
+                                <ul class="list-unstyled">
+                                    @{
+                            if (rUser.HasPermissionToMenu("MasterInformation"))
+                            {
+                                <li>@Html.ActionLink("Master Info.", "MasterInformation", "MasterInformation")</li>
+                            }
+                            if (rUser.HasPermissionToMenu("BackupDB"))
+                            {
+                                <li>@Html.ActionLink("Backup", "BackupDB", "BackupDB")</li>
+                            }
+                            if (rUser.HasPermissionToMenu("VMBIN"))
+                            {
+                                <li>@Html.ActionLink("BIN Info.", "VMBIN", "VMBIN")</li>
+                            }
+                            @*
+                    <li>@Html.ActionLink("Sync", "", "")</li>
+                    <li>@Html.ActionLink("Backup", "", "")</li>
+                    <li>@Html.ActionLink("Restore", "", "")</li>*@
+                                    }
+                                </ul>
+                            </li>
+                        }
+                    }
+                </ul>
+
+                <div class="clearfix"></div>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+        <div class="user-detail">
+            <div class="dropup">
+                <a href="#" class="dropdown-toggle profile" data-toggle="dropdown" aria-expanded="true">
+                    @{
+                        var path = "~/Images/user.png";
+
+                    }
+                    <img src="@Url.Content(path)" alt="user-img" class="img-circle">
+                    <span class="user-info-span">
+                        <h5 class="m-t-0 m-b-0"> @Session["UserName"]</h5>
+
+
+                    </span>
+
+                </a>
+                <ul class="dropdown-menu">
+                    <li>
+                        @{
+                            <a href="@Url.Action("logoff", "SecUserLogin" )">
+                                <i class="md md-settings-power"></i> Sign Out
+                            </a>
+                            if (rUser.HasPermissionToMenu("ERPSetting"))
+                            {
+                            <a href="http://192.168.0.107:210/">
+                                <i class="md md-settings"></i> ERP Settings
+                            </a>
+                            }
+                        }
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- Left Sidebar End -->
+    <!-- ============================================================== -->
+    <!-- Start right Content here -->
+    <!-- ============================================================== -->
+
+    <div class="content-page">
+        <div class="content">
+            <div class="container">
+                @RenderBody()
+            </div>
+        </div>
+
+
+        <footer class="footer text-right">
+            @*<div>
+                    <p>&copy; @DateTime.Now.Year - Data Head Private Limited</p>
+                </div>*@
+
+            <div class="col-md-12">
+                <div class="col-md-6">
+                    <p>&copy; @DateTime.Now.Year - Data Head Private Limited</p>
+                </div>
+                <div class="col-md-6">
+                    <p style="text-align:right"> Published:11/30/2019 10:30:26 AM</p>
+                </div>
+
+            </div>
+        </footer>
+
+    </div>
+
+
+
+    <!-- /Right-bar -->
+    </div>
+
+    @RenderSection("scripts", required: false)
+    <script>
+        var resizefunc = [];
+
+        var ProjCode = "";
+        var BrCode = "";
+        var DeptCode = "";
+        var UnitCode = "";
+
+        var IsProjShwn = true;
+        var IsBrShwn = true;
+        var IsDeptShwn = true;
+        var IsUnitShwn = true;
+
+        $.ajax({
+            url: '@Url.Action("GetDynaSysSet", "GLVoucher")',
+            contentType: "application/json;charset=utf-8",
+            data: {},
+            type: "GET",
+            dataType: 'json',
+            success: function (data) {
+                if (data == 0) {
+                    alert("System Settings Not Found");
+                }
+                else {
+
+                    dojob(data);
+                }
+            }
+        });
+
+        function dojob(DsSet) {
+
+            var EmpText = DsSet.DynaCap.Emp;
+            var CodeText = DsSet.DynaCap.Code;
+            var ProjText = DsSet.DynaCap.Proj;
+            var BranchText = DsSet.DynaCap.Branch;
+            var DeptText = DsSet.DynaCap.Dept;
+            var UnitText = DsSet.DynaCap.Unit;
+            var DesgText = DsSet.DynaCap.Desig;
+            var DistText = DsSet.DynaCap.Dist;
+            var DivisionText = DsSet.DynaCap.Division;
+            var PostText = DsSet.DynaCap.Post;
+
+            var HasProj = DsSet.SysSet.HasProject;
+            var HasBranch = DsSet.SysSet.HasBranch;
+            var HasDept = DsSet.SysSet.HasDept;
+            var HasUnit = DsSet.SysSet.HasUnit;
+
+            var McodeTxt = "";
+            var PcodeTxt = "";
+
+            var Pddllen = $("#ProjCode > option").length;
+            var BRddllen = $("#BrCode > option").length;
+            var DPddllen = $("#DeptCode > option").length;
+            var UTddllen = $("#UnitCode > option").length;
+
+            if (EmpText.length > 0 && CodeText.length > 0) {
+                McodeTxt = EmpText + " " + CodeText;
+            }
+            if (ProjText.length > 0) {
+                $("label[for='ProjCode']").text(ProjText);
+                $('#thDProject').html(ProjText);
+                $('#thD2Project').html(ProjText);
+
+                //ShowDynDataTableColumns(ProjText);
+            }
+            if (BranchText.length > 0) {
+                $("label[for='BrCode']").text(BranchText);
+                $("#thDBranch").html(BranchText);
+                $("#thD2Branch").html(BranchText);
+
+                //ShowDynDataTableColumns(BranchText);
+
+            }
+            if (DeptText.length > 0) {
+                $("label[for='DeptCode']").text(DeptText);
+                $("#thDDepartment").html(DeptText);
+                $("#thD1Department").html(DeptText);
+                $("#thD2Department").html(DeptText);
+
+                //ShowDynDataTableColumns(DeptText);
+
+            }
+            if (UnitText.length > 0) {
+                $("label[for='UnitCode']").text(UnitText);
+                $("#thDUnit").html(UnitText);
+                //ShowDynDataTableColumns(UnitText);
+            }
+            if (DesgText.length > 0) {
+                $("label[for='DesgCode']").text(DesgText);
+                $("label[for='PrevDesigCode']").text(DesgText);
+                $("#thDDesignation").html(DesgText);
+                $("#thD1Designation").html(DesgText);
+                $("#thD2Designation").html(DesgText);
+            }
+            if (PostText != undefined > 0 && CodeText != undefined > 0) {
+                PcodeTxt = PostText + " " + CodeText;
+                $("label[for='PostCode']").text(PcodeTxt);
+            }
+            if (DistText != undefined) {
+                $("label[for='DistID']").text(DistText);
+            }
+            if (DivisionText != undefined) {
+                $("label[for='DivID']").text(DivisionText);
+            }
+
+
+            if (Pddllen == 2 || HasProj == false) {
+                $("#ddfProjCode").hide();
+                ProjCode = "01";
+                IsProjShwn = false;
+                HideDynDataTableColumns(ProjText);
+                //HideDynDataTableColumns(ProjText);
+
+            }
+            if (BRddllen == 2 || HasBranch == false) {
+                $("#ddfBrCode").hide();
+                BrCode = "001";
+                IsBrShwn = false;
+                HideDynDataTableColumns(BranchText);
+                //HideDynDataTableColumns(BranchText);
+
+            }
+            if (DPddllen == 2 || HasDept == false) {
+                $("#ddfDeptCode").hide();
+                DeptCode = "01";
+                IsDeptShwn = false;
+                HideDynDataTableColumns(DeptText);
+                //HideDynDataTableColumns(DeptText);
+
+            }
+            if (UTddllen == 2 || HasUnit == false) {
+                $("#ddfUnitCode").hide();
+                UnitCode = "000001";
+                IsUnitShwn = false;
+                HideDynDataTableColumns(UnitText);
+                //HideDynDataTableColumns(UnitText);
+            }
+
+        }
+
+
+        $('a[id^=rpt]').on('click', function () {
+            switch (this.id) {
+                case "rptBalanceSheet":
+                    var RptCaption = this.id;
+                    this.href = "../BalSheetRpt/BalSheetRpt?RptCaption=rptcap";
+                    this.href = this.href.replace("rptcap", RptCaption);
+                    //alert(this.id);
+                    break;
+                case "rptJournalVoucher":
+                    var RptCaption = this.id;
+                    this.href = "../ListOfTransaction/Search?RptCaption=rptcap";
+                    this.href = this.href.replace("rptcap", RptCaption);
+                    //alert(this.id);
+                    break;
+                case "rptTBProcess":
+                    var RptCaption = this.id;
+                    this.href = "../SummaryReport/Search?RptCaption=rptcap";
+                    this.href = this.href.replace("rptcap", RptCaption);
+                    //alert(this.id);
+                    break;
+                case "rptStockSumm":
+                    var RptCaption = this.id;
+                    this.href = "../SummaryReport/Search?RptCaption=rptcap";
+                    this.href = this.href.replace("rptcap", RptCaption);
+                    //alert(this.id);
+                    break;
+            }
+        });
+
+        jQuery(".datePage").datepicker({
+            autoclose: true,
+            todayHighlight: true,
+            format: 'dd/mm/yyyy',
+            language: "pt-BR",
+            changeMonth: true,
+            changeYear: true,
+            onSelect: function () {
+                selectedDate = $.datepicker.formatDate("dd/mm/yyyy", $(this).datepicker('getDate'));
+            }
+        });
+
+        function DateInDMYformat(InDate) {
+
+            if (InDate == null)
+                return "";
+
+            var dateString = InDate.substr(6);
+
+            var Cdate = new Date(parseInt(dateString));
+            Cdate.setHours(Cdate.getHours() - Cdate.getTimezoneOffset() / 60);
+
+            var month = Cdate.getMonth() + 1;
+            var day = Cdate.getDate();
+            var year = Cdate.getFullYear();
+            var date = day + "/" + month + "/" + year;
+            return date;
+        }
+
+        function DateInMDYformat(InDate) {
+
+            if (InDate == null)
+                return "";
+
+            var dateString = InDate.substr(6);
+
+            var Cdate = new Date(parseInt(dateString));
+            Cdate.setHours(Cdate.getHours() - Cdate.getTimezoneOffset() / 60);
+
+            var month = Cdate.getMonth() + 1;
+            var day = Cdate.getDate();
+            var year = Cdate.getFullYear();
+            var date = month + "/" + day + "/" + year;
+            return date;
+        }
+
+        function HideDynDataTableColumns(ColumnText) {
+
+            var tables = $.fn.dataTable.tables();
+
+
+            for (var i = 0, max = tables.length; i < max; i += 1) {
+
+                var currTable = tables[i];
+                var DTable = $('#' + currTable.id + '');
+
+
+                var Index = 0;
+                var ClmIndex = -1;
+
+                DTable.DataTable().columns().every(function () {
+                    var data = this.header().innerHTML;
+                    if (data == ColumnText) {
+                        ClmIndex = Index;
+                        return false;
+                    }
+                    Index++;
+                });
+
+                if (ClmIndex > -1) {
+                    DTable.DataTable().column(ClmIndex).visible(false);
+                }
+
+            }
+
+        }
+
+        function ShowDynDataTableColumns(ColumnText) {
+
+            var tables = $.fn.dataTable.tables();
+
+            for (var i = 0, max = tables.length; i < max; i += 1) {
+
+                var currTable = tables[i];
+                var DTable = $('#' + currTable.id + '');
+
+                var elem = $('th').filter(function () {
+                    return $(this).text().trim() == ColumnText;
+                });
+                var row_index_first = elem.index();
+
+                if (row_index_first >= 0) {
+                    //DTable.DataTable().column(row_index_first).visible(true);
+                }
+
+            }
+        }
+
+
+    </script>
+    <!-- Plugins -->
+    @Scripts.Render("~/App_Themes/Theme1/blue/assets/js/bootstrap.min.js")
+
+    @Scripts.Render("~/App_Themes/Theme1/blue/assets/js/fastclick.js ")
+
+    @Scripts.Render("~/App_Themes/Theme1/blue/assets/js/wow.min.js ")
+
+
+    @Scripts.Render("~/App_Themes/Theme1/plugins/moment/moment.js")
+
+    @Scripts.Render("~/App_Themes/Theme1/plugins/parsleyjs/dist/parsley.min.js")
+    @Scripts.Render("~/App_Themes/Theme1/blue/assets/js/jquery.core.js ")
+    @Scripts.Render("~/App_Themes/Theme1/blue/assets/js/jquery.app.js ")
+
+
+    <script src="/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="/App_Themes/Theme1/plugins/datatables/dataTables.bootstrap.js"></script>
+    <script src="/App_Themes/Theme1/plugins/datatables/dataTables.buttons.min.js"></script>
+    <script src="/App_Themes/Theme1/plugins/datatables/buttons.bootstrap.min.js"></script>
+    <script src="/App_Themes/Theme1/plugins/datatables/pdfmake.min.js"></script>
+    <script src="/App_Themes/Theme1/plugins/datatables/vfs_fonts.js"></script>
+    <script src="/App_Themes/Theme1/plugins/datatables/buttons.html5.min.js"></script>
+    <script src="/App_Themes/Theme1/plugins/datatables/buttons.print.min.js"></script>
+    <script src="/App_Themes/Theme1/plugins/datatables/dataTables.fixedHeader.min.js"></script>
+    <script src="/App_Themes/Theme1/plugins/datatables/dataTables.keyTable.min.js"></script>
+    <script src="/App_Themes/Theme1/plugins/datatables/dataTables.responsive.min.js"></script>
+    <script src="/App_Themes/Theme1/plugins/datatables/responsive.bootstrap.min.js"></script>
+    <script src="/App_Themes/Theme1/plugins/datatables/dataTables.scroller.min.js"></script>
+    <script type="text/javascript" src="/App_Themes/Theme1/plugins/parsleyjs/dist/parsley.min.js"></script>
+    <!-- Datatable init js -->
+    <script src="/App_Themes/Theme1/blue/assets/pages/datatables.init.js"></script>
+
+    <!-- Sweet.js -->
+    <link href="/App_Themes/Theme1/plugins/bootstrap-sweetalert/sweet-alert.css" rel="stylesheet" />
+    <script src="/App_Themes/Theme1//plugins/bootstrap-sweetalert/sweet-alert.min.js"></script>
+    <script src="/App_Themes/Theme1/blue/assets/pages/jquery.sweet-alert.init.js"></script>
+
+</body>
+</html>

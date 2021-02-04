@@ -1,0 +1,105 @@
+﻿@model App.Domain.ViewModel.RptSearchVModel
+@{
+    ViewBag.Title = "CustomerWiseRateChartRpt";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using (Html.BeginForm("CustomerWiseRateChartRptPdf", "CustomerWiseRateChart", FormMethod.Post, new { }))
+{
+    <div class="row">
+        <div class="col-md-10">
+            <div class="panel panel-color panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <text style="text-align:left !important; text-decoration: none">Customer Wise Rate Chart Report</text>
+                    </h3>
+                </div>
+                <div class="panel-body">
+                    @*<div class="col-md-12" style="margin-left:110px; margin-top:10px" id="ddfBrCode">
+                        <label class="col-md-2" for="BrCode">Branch</label>
+                        <div class="input-group form-group col-md-4">
+                            @Html.DropDownListFor(x => x.BranchCode, null, "All", new { @class = "form-control select2", @id = "BranchCode" })
+
+                        </div>
+                    </div>
+                    <div class="col-md-12" style="margin-left:110px; margin-top:10px" id="ddfBrCode">
+                        <label class="col-md-2" for="LocCode">Location</label>
+                        <div class="input-group form-group col-md-4">
+                            @Html.DropDownListFor(x => x.LocCode, null, "Select Location", new { @class = "form-control select2", @id = "LocCode" })
+
+                        </div>*@
+                    @*</div>*@
+                    <div class="col-md-12" style="margin-left:110px; margin-top:10px" id="ddfBrCode">
+                        <label class="col-md-2" for="SubCode">Customer</label>
+                        <div class="input-group form-group col-md-4">
+                            @Html.DropDownListFor(x => x.SubCode, null, "---Select---", new { @class = "form-control select2", @id = "SubCode" })
+
+                        </div>
+                    </div>
+
+                    <div class="col-md-12" style="margin-left:150px; margin-top:20px">
+                        <div class="col-xs-12">
+                            <div class="input-group">
+
+                                <p style="color:red">
+                                    @ViewBag.Message
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-10">
+                        <br />
+                    </div>
+                    <div class="row col-md-12" style="text-align:end">
+                        <div class="col-md-8" style=" text-align:right">
+
+                            <input type="submit" value="Preview" class="btn btn-primary" id="submit" style="width:100px;" />
+                            <input type="button" value="Clear" class="btn btn-primary" id="clear" style="width:100px;" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+@section Scripts{
+
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script src="~/App_Themes/Theme1/plugins/select2/select2.min.js" type="text/javascript"></script>
+    <script src="~/App_Themes/Theme1/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.bootstrap.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.buttons.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/buttons.bootstrap.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/pdfmake.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/vfs_fonts.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/buttons.html5.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/buttons.print.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.fixedHeader.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.keyTable.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.responsive.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/responsive.bootstrap.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.scroller.min.js"></script>
+    <script type="text/javascript" src="../App_Themes/Theme1/plugins/parsleyjs/dist/parsley.min.js"></script>
+    <!-- Datatable init js -->
+    <script src="../App_Themes/Theme1/blue/assets/pages/datatables.init.js"></script>
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            $('#LocCode').select2();
+
+            $("#BranchCode").select2();
+            $("#SubCode").select2();
+
+
+
+        });
+
+
+
+    </script>
+}

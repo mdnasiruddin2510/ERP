@@ -1,0 +1,262 @@
+﻿@model IEnumerable<App.Domain.ViewModel.SalesStatementVM>
+@{
+    ViewBag.Title = "Sales Statement Report";
+    Layout = null;
+    decimal tSalesAmt = 0.0m;
+    decimal tDiscount=0.0m;
+    decimal tVat=0.0m;
+    decimal tTransport=0.0m;
+    decimal tLabour=0.0m;
+    decimal tNetAmt=0.0m;
+    
+    var CompInfo = AcclineERP.Models.GetCompanyInfo.GetComInfo();
+    string CompanyAddress = ((CompInfo.Addr1 == null ? string.Empty : CompInfo.Addr1) + "," + (CompInfo.Addr2 == null ? string.Empty : CompInfo.Addr2));
+}
+
+<script src="~/Scripts/jquery-1.9.1.min.js"></script>
+<script src="~/Scripts/Export.js"></script>
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/select2/select2.css" rel="stylesheet" type="text/css" />
+<link href="~/Css/FormDesign.css" rel="stylesheet" />
+
+<style>
+    tr {
+        page-break-inside: avoid;
+    }
+
+    body {
+        padding-right: 0px;
+        font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+    }
+
+    .border {
+        color: #335; /* Lighten up font color */
+        font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+        font-weight: 300;
+        border-collapse: collapse;
+        border-spacing: 0;
+    }
+
+    .tds {
+        /*border: 1px solid black;*/
+        font-weight: 500;
+        font-family: Arial;
+        border-right: hidden !important;
+    }
+    /* Make cells a bit taller */
+    .ths {
+        /*border: 1px solid black;*/
+        font-weight: 500;
+        font-family: Arial;
+    }
+
+    .th {
+        background: #F3F3F3; /* Light grey background */
+        font-weight: bold; /* Make sure they're bold */
+    }
+
+    .td {
+        background: #FAFAFA; /* Lighter grey background */
+        text-align: center; /* Center our text */
+    }
+
+    .breakhere {
+        page-break-after: always;
+    }
+</style>
+
+<div id="toReport" class="panel-body" style="margin: auto; text-align:center !important; width:800px; height:1150px; padding:60px">
+    <div class="panel-heading" style="text-align:center">
+        <div class="panel-title">
+            <label style="text-align:center !important; text-decoration: none; font-size:25px; font-weight:bold">@CompInfo.CompName</label><br>
+            <label style="text-align:center !important; text-decoration: none; font-size:23px; font-weight:normal"> @CompanyAddress</label><br>
+            @*<label style="text-align:center !important; text-decoration: none; font-size:23px; font-weight:normal">Phone: @CompInfo.Tel</label><br>*@
+        </div>
+        <div class="panel-title">
+            <text style="text-align:center !important; text-decoration: none; font-size:20px;font-family:'Arial Narrow'; font-weight:bold">Sales Statement (Summary)</text>
+        </div>
+        <div class="cashDate">
+            <text style="text-align:center !important; text-decoration: none; font-size:15px;font-family:'Arial Narrow';">From : @ViewBag.fDate &nbsp;&nbsp; To: @ViewBag.tDate</text>
+        </div>
+
+
+        <div>
+            <label style="text-align:center !important; text-decoration: none; font-size:12px; font-weight:bold">Branch: @ViewBag.BranchName</label><br>
+        </div>
+
+        <div class="panel-title">
+            <text style="text-align:center !important; text-decoration: none; font-size:20px;font-family:'Arial Narrow'; font-weight:bold">@ViewBag.Criteria</text>
+        </div>
+      
+    </div>
+    <hr style="border-bottom: 1px solid" />
+    <br />
+    @*<table cellpadding="5" cellspacing="1" border=1 frame=box rules=all style="width:100%">
+    </table>*@
+
+
+    <div class="panel-body" style="text-align:center">
+        <table cellpadding="5" cellspacing="0" border=1 frame=box rules=all style="width:100%">
+            <thead style="height:300px; overflow: visible !important;">
+                <tr>
+                    <th style="width:70px;font-size:14px; font-family:'Arial Narrow'; text-align:center">Sale Date</th>
+                    <th style=" font-size: 14px; font-family: 'Arial Narrow'; text-align: center">Sale No</th>
+                    <th style=" font-size: 14px; font-family: 'Arial Narrow'; text-align: center">Customer</th>
+                    <th style=" font-size: 14px; font-family: 'Arial Narrow'; text-align: center">Sale amount</th>
+                    <th style=" font-size: 14px; font-family: 'Arial Narrow'; text-align: center">Discount</th>
+                    <th style=" font-size: 14px; font-family: 'Arial Narrow'; text-align: center">Vat</th>
+                    <th style=" font-size: 14px; font-family: 'Arial Narrow'; text-align: center">Transport</th>
+                    <th style=" font-size: 14px; font-family: 'Arial Narrow'; text-align: center">Labour</th>
+                    <th style=" font-size: 14px; font-family: 'Arial Narrow'; text-align: center">Gross Amount</th>
+                </tr>
+
+            </thead>
+            <tbody id="tbodyId">
+
+                @foreach (var item in Model)
+                {
+
+                    <tr>
+                        <td style="width: 70px; text-align:left; font-size:12px">
+                            @*@Html.DisplayFor(modelItem => item.SaleDate)*@
+                            @item.SaleDate.ToString("dd-MMM-yyyy")
+                        </td>
+                        <td style=" text-align:left; font-size:12px">
+                            @Html.DisplayFor(modelItem => item.SaleNo)
+                        </td>
+                        <td style=" text-align:left; font-size:12px;">
+                            @Html.DisplayFor(modelItem => item.Customer)
+                        </td>
+                        <td style=" text-align:right; font-size:12px">
+                            @Html.DisplayFor(modelItem => item.SaleAmount)
+                        </td>
+                        <td style="text-align:right; font-size:12px">
+                            @Html.DisplayFor(modelItem => item.Discount)
+                        </td>
+                        <td style=" text-align:right; font-size:12px;">
+                            @Html.DisplayFor(modelItem => item.VAT)
+                        </td>
+                        <td style=" text-align:right; font-size:12px;">
+                            @Html.DisplayFor(modelItem => item.Transport)
+                        </td>
+                        <td style=" text-align:right; font-size:12px;">
+                            @Html.DisplayFor(modelItem => item.Labour)
+                        </td>
+                        <td style=" text-align:right; font-size:12px;">
+                            @Html.DisplayFor(modelItem => item.NetAmount)
+                        </td>
+                    </tr>
+                    tSalesAmt += Convert.ToDecimal(item.SaleAmount);
+                    tDiscount += Convert.ToDecimal(item.Discount);
+                    tVat += Convert.ToDecimal(item.VAT);
+                    tTransport += Convert.ToDecimal(item.Transport);
+                    tLabour += Convert.ToDecimal(item.Labour);
+                    tNetAmt += Convert.ToDecimal(item.NetAmount);
+                }
+                @*<tr>
+                    <th style="width:90px; text-align:center"></th>
+                    <th style="width:110px; text-align:left"></th>
+                    <th style="width:100px; text-align:right">@Convert.ToDecimal(@tSalesAmt).ToString("#,##0.00")<hr style="margin-bottom: 3px !important; margin-top: 0 !important;border-bottom: 1px solid" /><hr style="margin-bottom: 3px !important; margin-top: 0 !important;border-bottom: 1px solid" /></th>
+                    <th style="width:100px; text-align:right">@Convert.ToDecimal(@tDiscount).ToString("#,##0.00")<hr style="margin-bottom: 3px !important; margin-top: 0 !important;border-bottom: 1px solid" /><hr style="margin-bottom: 3px !important; margin-top: 0 !important;border-bottom: 1px solid" /></th>
+                    <th style="width:100px; text-align:right">@Convert.ToDecimal(@tVat).ToString("#,##0.00")<hr style="margin-bottom: 3px !important; margin-top: 0 !important;border-bottom: 1px solid" /><hr style="margin-bottom: 3px !important; margin-top: 0 !important;border-bottom: 1px solid" /></th>
+                    <th style="width:100px; text-align:right">@Convert.ToDecimal(@tTransport).ToString("#,##0.00")<hr style="margin-bottom: 3px !important; margin-top: 0 !important;border-bottom: 1px solid" /><hr style="margin-bottom: 3px !important; margin-top: 0 !important;border-bottom: 1px solid" /></th>
+                    <th style="width:100px; text-align:right">@Convert.ToDecimal(@tLabour).ToString("#,##0.00")<hr style="margin-bottom: 3px !important; margin-top: 0 !important;border-bottom: 1px solid" /><hr style="margin-bottom: 3px !important; margin-top: 0 !important;border-bottom: 1px solid" /></th>
+                    <th style="width:100px; text-align:right">@Convert.ToDecimal(@tNetAmt).ToString("#,##0.00")<hr style="margin-bottom: 3px !important; margin-top: 0 !important;border-bottom: 1px solid" /><hr style="margin-bottom: 3px !important; margin-top: 0 !important;border-bottom: 1px solid" /></th>
+                </tr>*@
+                <tr>
+                    <th style=""></th>
+                    <th style=""></th>
+                    <th style=" text-align:Center">Sub Total:</th>
+                    <th style=" text-align:right">@Convert.ToDecimal(@tSalesAmt).ToString("#,##0.00")</th>
+                    <th style=" text-align:right">@Convert.ToDecimal(@tDiscount).ToString("#,##0.00")</th>
+                    <th style=" text-align:right">@Convert.ToDecimal(@tVat).ToString("#,##0.00")</th>
+                    <th style=" text-align:right">@Convert.ToDecimal(@tTransport).ToString("#,##0.00")</th>
+                    <th style=" text-align:right">@Convert.ToDecimal(@tLabour).ToString("#,##0.00")</th>
+                    <th style=" text-align:right">@Convert.ToDecimal(@tNetAmt).ToString("#,##0.00")</th>
+                </tr>
+            </tbody>
+
+
+
+        </table>
+    </div>
+
+        @*<div class="panel-body" style="text-align:center">
+        <table cellpadding="5" cellspacing="1" border=1 frame=box rules=all style="width:100%">
+            <thead style="height:300px; overflow: visible !important;">
+                <tr>
+                    <th style="width:135px; font-size:14px; font-family:'Arial Narrow'; text-align:left">Sale Date</th>
+                    <th style="width:100px; font-size:14px; font-family:'Arial Narrow'; text-align:left">Sale No</th>
+                    <th style="width:145px; font-size:14px; font-family:'Arial Narrow'; text-align:left">Customer</th>
+                    <th style="width:130px; font-size:14px; font-family:'Arial Narrow'; text-align:left">Sale amount</th>
+                    <th style="width:80px; font-size:14px; font-family:'Arial Narrow'; text-align:left">Discount</th>
+                    <th style="width:70px; font-size:14px; font-family:'Arial Narrow'; text-align:left">Vat</th>
+                    <th style="width:90px; font-size:14px; font-family:'Arial Narrow'; text-align:left">Transport</th>
+                    <th style="width:90px; font-size:14px; font-family:'Arial Narrow'; text-align:left">Labour</th>
+                    <th style="width:130px; font-size:14px; font-family:'Arial Narrow'; text-align:left">Net Amount</th>
+                </tr>
+                <tr>
+                    <text style="text-align:left !important; text-decoration: none; font-size:20px;font-family:'Arial Narrow'; font-weight:bold">Location: @ViewBag.BranchCode</text>
+                </tr>
+            </thead>
+        </table>
+        <table cellpadding="5" cellspacing="1" border=1 frame=box rules=all style="width:100%">
+            <thead style="height:300px; overflow:visible !important;">
+                <tr>
+                    <th style="width:135px; font-size:13px; text-align:right">@ViewBag.Col1Cap</th>
+                    <th style="width:100px; font-size:13px; text-align:right">@ViewBag.Col2Cap</th>
+                    <th style="width:145px; font-size:13px; text-align:right">@ViewBag.Col3Cap</th>
+                    <th style="width:130px; font-size:13px; text-align:right">@ViewBag.Col3Cap</th>
+                    <th style="width:80px; font-size:13px; text-align:right">@ViewBag.Col4Cap</th>
+                    <th style="width:70px; font-size:13px; text-align:right">@ViewBag.Col5Cap</th>
+                    <th style="width:90px;font-size:13px; text-align:right">@ViewBag.Col6Cap</th>
+                    <th style="width:90px; font-size:13px; text-align:right">@ViewBag.Col1Cap</th>
+                    <th style="width:130px; font-size:13px; text-align:right">@ViewBag.Col2Cap</th>
+
+                </tr>
+            </thead>
+            <tbody id="tbodyId">
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td style="width:90px; text-align:center; font-size:12px">
+                            @Html.DisplayFor(modelItem => item.SaleDate)
+                        </td>
+                        <td style="width:110px; text-align:left; font-size:12px">
+                            @Html.DisplayFor(modelItem => item.SaleNo)
+                        </td>
+                        <td style="width:100px; text-align:right; font-size:12px;">
+                            @Html.DisplayFor(modelItem => item.Customer)
+                        </td>
+                        <td style="width:100px; text-align:right; font-size:12px">
+                            @Html.DisplayFor(modelItem => item.SaleAmount)
+                        </td>
+                        <td style="width:100px; text-align:right; font-size:12px">
+                            @Html.DisplayFor(modelItem => item.Discount)
+                        </td>
+                        <td style="width:100px; text-align:right; font-size:12px;">
+                            @Html.DisplayFor(modelItem => item.Transport)
+                        </td>
+                        <td style="width:100px; text-align:right; font-size:12px;">
+                            @Html.DisplayFor(modelItem => item.Labour)
+                        </td>
+                        <td style="width:100px; text-align:right; font-size:12px;">
+                            @Html.DisplayFor(modelItem => item.NetAmount)
+                        </td>
+                    </tr>
+                    
+                }
+            </tbody>
+            
+        </table>
+        @*<table cellpadding="5" cellspacing="1" border=0 style="width:800px">
+                <thead style="height:300px; display:table-row-group">
+                    
+                </thead>
+            </table>*@
+</div>
+
+
+

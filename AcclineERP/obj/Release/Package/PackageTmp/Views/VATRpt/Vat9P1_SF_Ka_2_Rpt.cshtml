@@ -1,0 +1,159 @@
+﻿@model App.Domain.ViewModel.RptSearchVModel
+
+@{
+    ViewBag.Title = "VATRpt";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+@using (Html.BeginForm("TransWiseVat9P1_SF_Ka_2_RptPdf", "VATRpt", FormMethod.Post, new { }))
+{
+    <div class="row">
+        <div class="col-md-10">
+            <div class="panel panel-color panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <text style="text-align:left !important; text-decoration: none;">VAT 9.1 SF KA (2) </text>
+                        <text style="color:#1E3B2D;font-size:12px;margin-right:100px;" class="pull-right">@ViewBag.Status</text>
+                    </h3>
+                </div>
+                <div class="panel-body">
+
+
+                    <div class="col-md-12" style="margin-left:110px; margin-top:20px" id="ddfProjCode">
+                        <label class="col-md-2" for="ProjCode">Project</label>
+                        <div class="input-group form-group col-md-4">
+                            @Html.DropDownListFor(x => x.projCode, null, new { @class = "form-control select2", required = "required" })
+
+                        </div>
+                    </div>
+
+                    <div class="col-md-12" style="margin-left:110px; margin-top:20px" id="ddfBrCode">
+                        <label class="col-md-2" for="BrCode">Branch</label>
+                        <div class="input-group form-group col-md-4">
+                            @Html.DropDownListFor(x => x.BranchCode, null, new { @class = "form-control select2", required = "required" })
+
+                        </div>
+                    </div>
+
+
+
+                    <div class="col-md-12" style="margin-left:110px; margin-top:20px">
+                        @Html.LabelFor(x => x.Month, new { @class = "col-md-2" })
+                        <div class="input-group form-group col-md-4">
+                            <input type="text" class="form-control  select2 " id="Month" name="Month"  required="required"  />
+
+                        </div>
+                    </div>
+
+                    <div class="col-md-12" style="margin-left:110px; margin-top:20px">
+                        @Html.LabelFor(x => x.Year, new { @class = "col-md-2" })
+                        <div class="input-group form-group col-md-4">
+                            <input type="text" class="form-control  select2 " id="Year" name="Year" required="required" />
+
+                        </div>
+                    </div>
+                    <div class="col-md-12" style="margin-left:110px; margin-top:20px">
+                        <label class="col-md-2" for="fDate">From Date</label>
+                        <div class="input-group form-group col-md-4">
+                            <input type="text" class="form-control datePage" id="fDate" name="fDate" value="@ViewBag.FyddFDate.ToShortDateString()">
+                            <span class="input-group-addon bg-primary b-0 text-white"><i class="ion-calendar"></i></span>
+                        </div>
+                    </div>
+                    <div class="col-md-12" style="margin-left:110px; margin-top:20px">
+                        <label class="col-md-2" for="tDate">To Date</label>
+                        <div class="input-group form-group col-md-4">
+                            <input type="text" class="form-control datePage" id="tDate" name="tDate" value="@ViewBag.FyddTDate.ToShortDateString()">
+                            <span class="input-group-addon bg-primary b-0 text-white"><i class="ion-calendar"></i></span>
+                        </div>
+                    </div>
+
+                    @*<div class="col-md-12" style="margin-left:110px; margin-top:20px">
+                        @Html.LabelFor(x => x.fDate, new { @class = "col-md-2", required = "required" })
+                        <div class="input-group form-group col-md-4">
+                            <input type="text" class="form-control datePage" id="fDate" name="fDate">
+                            <span class="input-group-addon bg-primary b-0 text-white"><i class="ion-calendar"></i></span>
+                        </div>
+                    </div>
+
+
+
+
+                    <div class="col-md-12" style="margin-left:110px; margin-top:20px">
+                        @Html.LabelFor(x => x.tDate, new { @class = "col-md-2", required = "required" })
+                        <div class="input-group form-group col-md-4">
+                            <input type="text" class="form-control datePage" id="tDate" name="tDate">
+                            <span class="input-group-addon bg-primary b-0 text-white"><i class="ion-calendar"></i></span>
+                        </div>
+                    </div>*@
+
+
+
+                    <div class="row col-md-12">
+                        <div class="col-md-12" style=" text-align:center">
+                            <input type="submit" name="command" value="Preview" class="btn btn-primary" id="submit" style="width:100px;" />
+                        </div>
+
+
+                        <div class="col-md-3">
+                            @{
+    string UserName = Session["UserName"].ToString();
+    AcclineERP.Models.RBACUser rUser = new AcclineERP.Models.RBACUser(UserName);
+
+
+                            }
+
+                            @{
+    if (rUser.HasPermission("GL_OpnBal_Preview"))
+    {
+        <a href="@Url.Action(" glopenbalpreviewpdf", "GL_OpenBal" )" target="_blank" class="btn btn-primary">Preview</a>
+    }
+                            }
+
+                        </div>
+                    </div>
+                    <br />
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+
+
+@section Scripts{
+
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script src="/App_Themes/Theme1/plugins/select2/select2.min.js"></script>
+    <script src="~/App_Themes/Theme1/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            $('#CustCode').select2();
+
+            jQuery("#fDate").datepicker({
+                autoclose: true,
+                todayHighlight: true
+            });
+
+            jQuery("#tDate").datepicker({
+                autoclose: true,
+                todayHighlight: true
+            });
+
+
+        });
+
+    </script>
+}
+
+
+
+

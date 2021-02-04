@@ -1,0 +1,162 @@
+﻿@model IEnumerable<App.Domain.SummaryReport>
+
+@{
+    ViewBag.Title = "Summary Report";
+    Layout = null;
+    decimal TotDrAmt = 0; 
+    decimal TotCrAmt = 0;
+    decimal ToCBDebit = 0;
+    decimal TotOBDebit = 0;
+    var CompInfo = AcclineERP.Models.GetCompanyInfo.GetComInfo();
+    string CompanyAddress = ((CompInfo.Addr1 == null ? string.Empty : CompInfo.Addr1) + (CompInfo.Addr2 == null ? string.Empty : CompInfo.Addr2));
+
+}
+
+<script src="~/Scripts/jquery-1.9.1.min.js"></script>
+<script src="~/Scripts/Export.js"></script>
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/select2/select2.css" rel="stylesheet" type="text/css" />
+<link href="~/Css/FormDesign.css" rel="stylesheet" />
+
+<style>
+    hr {
+        background-color: black;
+        height: 0.5px;
+    }
+    tr {
+        page-break-inside: avoid;
+    }
+</style>
+
+<div id="toReport" class="panel-body" style="margin: auto; text-align:center !important; width:100%; height:1150px ">
+    <div class="panel-heading" style="text-align:center">
+        <div class="panel-title">
+            <label style="text-align:center !important; text-decoration: none; font-size:25px; font-weight:bold">@CompInfo.CompName</label><br>
+            <label style="text-align:center !important; text-decoration: none; font-size:23px; font-weight:normal"> @CompanyAddress</label><br>
+            @*<label style="text-align:center !important; text-decoration: none; font-size:23px; font-weight:normal">Phone: @CompInfo.Tel</label>*@<br>
+        </div>
+        <div class="panel-title">
+            <text style="text-align:center !important; text-decoration: none; font-size:23px; font-weight:bold">@ViewBag.RptCap</text>
+        </div>
+        <div class="panel-title">
+            <text style="text-align:center !important; text-decoration: none; font-size:20px; font-weight:bold">Location : @ViewBag.Location</text>
+        </div>
+        <div class="cashDate">
+            <text style="text-align:center !important; text-decoration: none; font-size:15px; font-weight:bold">From : @ViewBag.fDate &nbsp;&nbsp; To: @ViewBag.tDate</text>
+        </div>
+    </div>
+    <hr />
+
+    <br />
+    <div class="column">
+        <div class="col-md-12">
+            <div class="panel panel-color panel-primary">
+                <div class="panel-body">
+                    <br />
+                    <div class="row col-md-12" style="text-align:center; margin-left:40px">
+                        <div class="row">
+                            <div class="col-md-11">
+                                @{
+                                    List<string> st = new List<string>();
+                                    foreach (var item in Model)
+                                    {
+                                        var SubCode = item.Ctrl_SubCode;
+                                        int indx = SubCode.IndexOf("(");
+                                        int Lindx = SubCode.IndexOf(")");
+                                        int len = Lindx - indx;
+                                        var str = SubCode.Substring(indx + 1, len - 1);
+                                        st.Add(str);
+
+                                    }
+                                    var itemp = st.Distinct().ToList();
+                                }
+
+                                @foreach (var mp in itemp)
+                                {
+                                    <div style="float:left; font-size:15px; "><b> @Html.DisplayFor(modelItem => mp)</b> </div><br />
+                                    TotOBDebit = 0;
+                                    TotDrAmt = 0;
+                                    TotCrAmt = 0;
+                                    ToCBDebit = 0;
+                                    <table class="table table-bordered table-responsive" id="datatable-buttons">
+                                        <thead>
+                                            <tr>
+
+                                                <th style="font-size:13px; text-align:center">@ViewBag.Col1Cap</th>
+                                                <th style="font-size:13px; text-align:center">@ViewBag.Col2Cap</th>
+                                                <th style="font-size:13px; text-align:center">@ViewBag.Col3Cap</th>
+                                                <th style="font-size:13px; text-align:center">@ViewBag.Col4Cap</th>
+                                                <th style="font-size:13px; text-align:center">@ViewBag.Col5Cap</th>
+                                                <th style="font-size:13px; text-align:center">@ViewBag.Col6Cap</th>
+
+                                            </tr>
+                                        </thead>
+
+
+                                        <tbody id="tbodyId">
+
+                                            @foreach (var item in Model.Where(x => x.Ctrl_SubCode.Contains('(' + mp + ')')))
+                                            {
+
+                                                var SubCode = item.Ctrl_SubCode;
+                                                var str = SubCode.Substring(0, 5);
+                                                <tr>
+                                                    <td style="text-align:left; font-size:12px">
+                                                        @Html.DisplayFor(modelItem => str)
+                                                    </td>
+                                                    <td style="text-align:left; font-size:12px">
+                                                        @Html.DisplayFor(modelItem => item.Ctrl_SubName)
+                                                    </td>
+                                                    <td style="text-align:right; font-size:12px">
+                                                        @Html.DisplayFor(modelItem => item.OBDebit)
+                                                    </td>
+
+                                                    <td style="text-align:right; font-size:12px">
+                                                        @Html.DisplayFor(modelItem => item.Debit)
+                                                    </td>
+                                                    <td style="text-align:right; font-size:12px">
+                                                        @Html.DisplayFor(modelItem => item.Credit)
+                                                    </td>
+                                                    <td style="text-align:right; font-size:12px">
+                                                        @Html.DisplayFor(modelItem => item.CBDebit)
+                                                    </td>
+                                                </tr>
+                                                TotOBDebit += Convert.ToDecimal(item.OBDebit);
+                                                TotDrAmt += Convert.ToDecimal(item.Credit);
+                                                TotCrAmt += Convert.ToDecimal(item.Debit);
+                                                ToCBDebit += Convert.ToDecimal(item.CBDebit);
+                                            }
+
+                                            <tr>
+                                                <td style="border-right: hidden !important;border-bottom: hidden !important; border-left:hidden !important;"></td>
+                                                <td style="border-right: hidden !important;border-bottom: hidden !important; border-left:hidden !important;"></td>
+                                                <td class="tds" style="text-align: right; width:130px; font-size: 12px; border-top: 1px solid;border-bottom: hidden !important;border-right: hidden !important;"><b>@TotOBDebit</b><hr style="margin-bottom: 3px !important; margin-top: 0 !important" /><hr style="margin-bottom: 0 !important; margin-top: 0 !important" /></td>
+                                                <td class="tds" style="text-align: right; width:100px;  font-size: 12px; border-top: 1px solid;border-bottom: hidden !important;border-right: hidden !important;"><b>@TotCrAmt</b><hr style="margin-bottom: 3px !important; margin-top: 0 !important" /><hr style="margin-bottom: 0 !important; margin-top: 0 !important" /></td>
+                                                <td class="tds" style="text-align: right; width:100px;  font-size: 12px; border-top: 1px solid;border-bottom: hidden !important;border-right: hidden !important;"><b>@TotDrAmt</b><hr style="margin-bottom: 3px !important; margin-top: 0 !important" /><hr style="margin-bottom: 0 !important; margin-top: 0 !important" /></td>
+                                                <td class="tds" style="text-align: right; width:130px;  font-size: 12px; border-top: 1px solid;border-bottom: hidden !important;border-right: hidden !important;"><b>@ToCBDebit</b><hr style="margin-bottom: 3px !important; margin-top: 0 !important" /><hr style="margin-bottom: 0 !important; margin-top: 0 !important" /></td>
+                                            </tr>
+
+                                        </tbody>
+
+                                    </table>
+                                }
+                                <br />
+                                <br />
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+

@@ -1,0 +1,299 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="ASPL_DEMOModelStoreContainer" CdmEntityContainer="ASPLEntities">
+    <EntitySetMapping Name="CostLedgers">
+      <EntityTypeMapping TypeName="ASPL_DEMOModel.CostLedger">
+        <MappingFragment StoreEntitySet="CostLedger">
+          <ScalarProperty Name="RecId" ColumnName="RecId" />
+          <ScalarProperty Name="LocNo" ColumnName="LocNo" />
+          <ScalarProperty Name="ItemCode" ColumnName="ItemCode" />
+          <ScalarProperty Name="TrDate" ColumnName="TrDate" />
+          <ScalarProperty Name="RecQty" ColumnName="RecQty" />
+          <ScalarProperty Name="RecRate" ColumnName="RecRate" />
+          <ScalarProperty Name="RecTotal" ColumnName="RecTotal" />
+          <ScalarProperty Name="IssQty" ColumnName="IssQty" />
+          <ScalarProperty Name="IssRate" ColumnName="IssRate" />
+          <ScalarProperty Name="IssTotal" ColumnName="IssTotal" />
+          <ScalarProperty Name="BalQty" ColumnName="BalQty" />
+          <ScalarProperty Name="BalRate" ColumnName="BalRate" />
+          <ScalarProperty Name="BalTotal" ColumnName="BalTotal" />
+          <ScalarProperty Name="UpdSrc" ColumnName="UpdSrc" />
+          <ScalarProperty Name="UpdSrcNo" ColumnName="UpdSrcNo" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="CurrentStocks">
+      <EntityTypeMapping TypeName="ASPL_DEMOModel.CurrentStock">
+        <MappingFragment StoreEntitySet="CurrentStock">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="LocCode" ColumnName="LocCode" />
+          <ScalarProperty Name="LotNo" ColumnName="LotNo" />
+          <ScalarProperty Name="ItemCode" ColumnName="ItemCode" />
+          <ScalarProperty Name="CurrQty" ColumnName="CurrQty" />
+          <ScalarProperty Name="UnitPrice" ColumnName="UnitPrice" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="CustWiseSummSaleRpts">
+      <EntityTypeMapping TypeName="ASPL_DEMOModel.CustWiseSummSaleRpt">
+        <MappingFragment StoreEntitySet="CustWiseSummSaleRpt">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="SubCode" ColumnName="SubCode" />
+          <ScalarProperty Name="SubName" ColumnName="SubName" />
+          <ScalarProperty Name="LocCode" ColumnName="LocCode" />
+          <ScalarProperty Name="SaleAmount" ColumnName="SaleAmount" />
+          <ScalarProperty Name="Discount" ColumnName="Discount" />
+          <ScalarProperty Name="Commission" ColumnName="Commission" />
+          <ScalarProperty Name="VAT" ColumnName="VAT" />
+          <ScalarProperty Name="GrossSale" ColumnName="GrossSale" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="IssueDetails">
+      <EntityTypeMapping TypeName="ASPL_DEMOModel.IssueDetail">
+        <MappingFragment StoreEntitySet="IssueDetails">
+          <ScalarProperty Name="ItemType" ColumnName="ItemType" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="IssueNo" ColumnName="IssueNo" />
+          <ScalarProperty Name="ItemCode" ColumnName="ItemCode" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="Qty" ColumnName="Qty" />
+          <ScalarProperty Name="Price" ColumnName="Price" />
+          <ScalarProperty Name="ExQty" ColumnName="ExQty" />
+          <ScalarProperty Name="LotNo" ColumnName="LotNo" />
+          <ScalarProperty Name="SubCode" ColumnName="SubCode" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="IssueMains">
+      <EntityTypeMapping TypeName="ASPL_DEMOModel.IssueMain">
+        <MappingFragment StoreEntitySet="IssueMain">
+          <ScalarProperty Name="EntrySrcNo" ColumnName="EntrySrcNo" />
+          <ScalarProperty Name="EntrySrc" ColumnName="EntrySrc" />
+          <ScalarProperty Name="IssueNo" ColumnName="IssueNo" />
+          <ScalarProperty Name="IssueDate" ColumnName="IssueDate" />
+          <ScalarProperty Name="FromLocCode" ColumnName="FromLocCode" />
+          <ScalarProperty Name="ToLocCode" ColumnName="ToLocCode" />
+          <ScalarProperty Name="DesLocCode" ColumnName="DesLocCode" />
+          <ScalarProperty Name="Accode" ColumnName="Accode" />
+          <ScalarProperty Name="IssueToSubCode" ColumnName="IssueToSubCode" />
+          <ScalarProperty Name="JobNo" ColumnName="JobNo" />
+          <ScalarProperty Name="RefNo" ColumnName="RefNo" />
+          <ScalarProperty Name="RefDate" ColumnName="RefDate" />
+          <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+          <ScalarProperty Name="IssueByCode" ColumnName="IssueByCode" />
+          <ScalarProperty Name="AppByCode" ColumnName="AppByCode" />
+          <ScalarProperty Name="IssTime" ColumnName="IssTime" />
+          <ScalarProperty Name="IssDate" ColumnName="IssDate" />
+          <ScalarProperty Name="Amount" ColumnName="Amount" />
+          <ScalarProperty Name="FinYear" ColumnName="FinYear" />
+          <ScalarProperty Name="GLPost" ColumnName="GLPost" />
+          <ScalarProperty Name="IsReceived" ColumnName="IsReceived" />
+          <ScalarProperty Name="BranchCode" ColumnName="BranchCode" />
+          <ScalarProperty Name="cashReceiptStatus" ColumnName="cashReceiptStatus" />
+          <ScalarProperty Name="StoreLocCode" ColumnName="StoreLocCode" />
+          <ScalarProperty Name="VchrNo" ColumnName="VchrNo" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ItemInfoes">
+      <EntityTypeMapping TypeName="ASPL_DEMOModel.ItemInfo">
+        <MappingFragment StoreEntitySet="ItemInfo">
+          <ScalarProperty Name="TaxHeadingNo" ColumnName="TaxHeadingNo" />
+          <ScalarProperty Name="ItemCode" ColumnName="ItemCode" />
+          <ScalarProperty Name="ItemType" ColumnName="ItemType" />
+          <ScalarProperty Name="ItemName" ColumnName="ItemName" />
+          <ScalarProperty Name="OpenBal" ColumnName="OpenBal" />
+          <ScalarProperty Name="PartNo" ColumnName="PartNo" />
+          <ScalarProperty Name="UnitCode" ColumnName="UnitCode" />
+          <ScalarProperty Name="DetUnitCode" ColumnName="DetUnitCode" />
+          <ScalarProperty Name="Price" ColumnName="Price" />
+          <ScalarProperty Name="PackSize" ColumnName="PackSize" />
+          <ScalarProperty Name="PackItemCode" ColumnName="PackItemCode" />
+          <ScalarProperty Name="AltItemCode" ColumnName="AltItemCode" />
+          <ScalarProperty Name="Ratio" ColumnName="Ratio" />
+          <ScalarProperty Name="RetailPrice" ColumnName="RetailPrice" />
+          <ScalarProperty Name="Prod_Ser" ColumnName="Prod_Ser" />
+          <ScalarProperty Name="HSCode" ColumnName="HSCode" />
+          <ScalarProperty Name="ROLevel" ColumnName="ROLevel" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ItemMaps">
+      <EntityTypeMapping TypeName="ASPL_DEMOModel.ItemMap">
+        <MappingFragment StoreEntitySet="ItemMap">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="ItemTypeCode" ColumnName="ItemTypeCode" />
+          <ScalarProperty Name="GroupID" ColumnName="GroupID" />
+          <ScalarProperty Name="SGroupID" ColumnName="SGroupID" />
+          <ScalarProperty Name="SSGroupID" ColumnName="SSGroupID" />
+          <ScalarProperty Name="ItemCode" ColumnName="ItemCode" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="SalesDetails">
+      <EntityTypeMapping TypeName="ASPL_DEMOModel.SalesDetail">
+        <MappingFragment StoreEntitySet="SalesDetail">
+          <ScalarProperty Name="ExtUPrice" ColumnName="ExtUPrice" />
+          <ScalarProperty Name="ExtQty" ColumnName="ExtQty" />
+          <ScalarProperty Name="SalesDetailID" ColumnName="SalesDetailID" />
+          <ScalarProperty Name="SalesMainID" ColumnName="SalesMainID" />
+          <ScalarProperty Name="ItemCode" ColumnName="ItemCode" />
+          <ScalarProperty Name="LotNo" ColumnName="LotNo" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="SaleQty" ColumnName="SaleQty" />
+          <ScalarProperty Name="UnitPrice" ColumnName="UnitPrice" />
+          <ScalarProperty Name="VATPerc" ColumnName="VATPerc" />
+          <ScalarProperty Name="VATAmt" ColumnName="VATAmt" />
+          <ScalarProperty Name="DiscPerc" ColumnName="DiscPerc" />
+          <ScalarProperty Name="DiscAmt" ColumnName="DiscAmt" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="SecUserInfoes">
+      <EntityTypeMapping TypeName="ASPL_DEMOModel.SecUserInfo">
+        <MappingFragment StoreEntitySet="SecUserInfo">
+          <ScalarProperty Name="UserID" ColumnName="UserID" />
+          <ScalarProperty Name="UserName" ColumnName="UserName" />
+          <ScalarProperty Name="Password" ColumnName="Password" />
+          <ScalarProperty Name="Email" ColumnName="Email" />
+          <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tmpAddedItems">
+      <EntityTypeMapping TypeName="ASPL_DEMOModel.tmpAddedItem">
+        <MappingFragment StoreEntitySet="tmpAddedItem">
+          <ScalarProperty Name="ExtUPrice" ColumnName="ExtUPrice" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="SaleNo" ColumnName="SaleNo" />
+          <ScalarProperty Name="ItemCode" ColumnName="ItemCode" />
+          <ScalarProperty Name="LotNo" ColumnName="LotNo" />
+          <ScalarProperty Name="ItemName" ColumnName="ItemName" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="Qty" ColumnName="Qty" />
+          <ScalarProperty Name="ExtQty" ColumnName="ExtQty" />
+          <ScalarProperty Name="UnitPrice" ColumnName="UnitPrice" />
+          <ScalarProperty Name="Vat" ColumnName="Vat" />
+          <ScalarProperty Name="Discount" ColumnName="Discount" />
+          <ScalarProperty Name="VatPerc" ColumnName="VatPerc" />
+          <ScalarProperty Name="DiscPerc" ColumnName="DiscPerc" />
+          <ScalarProperty Name="Amount" ColumnName="Amount" />
+          <ScalarProperty Name="EntrySl" ColumnName="EntrySl" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <FunctionImportMapping FunctionImportName="rptCustomerWiseSummarySales" FunctionName="ASPL_DEMOModel.Store.rptCustomerWiseSummarySales">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="ASPL_DEMOModel.rptCustomerWiseSummarySales_Result">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="SubCode" ColumnName="SubCode" />
+          <ScalarProperty Name="SubName" ColumnName="SubName" />
+          <ScalarProperty Name="LocCode" ColumnName="LocCode" />
+          <ScalarProperty Name="SaleAmount" ColumnName="SaleAmount" />
+          <ScalarProperty Name="Discount" ColumnName="Discount" />
+          <ScalarProperty Name="Commission" ColumnName="Commission" />
+          <ScalarProperty Name="VAT" ColumnName="VAT" />
+          <ScalarProperty Name="GrossSale" ColumnName="GrossSale" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="CustWiseSummSale" FunctionName="ASPL_DEMOModel.Store.rptCustomerWiseSummarySales">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="ASPL_DEMOModel.CustWiseSummSale_Result">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="SubCode" ColumnName="SubCode" />
+          <ScalarProperty Name="SubName" ColumnName="SubName" />
+          <ScalarProperty Name="LocCode" ColumnName="LocCode" />
+          <ScalarProperty Name="SaleAmount" ColumnName="SaleAmount" />
+          <ScalarProperty Name="Discount" ColumnName="Discount" />
+          <ScalarProperty Name="Commission" ColumnName="Commission" />
+          <ScalarProperty Name="VAT" ColumnName="VAT" />
+          <ScalarProperty Name="GrossSale" ColumnName="GrossSale" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <EntitySetMapping Name="SalesMains">
+      <EntityTypeMapping TypeName="ASPL_DEMOModel.SalesMain">
+        <MappingFragment StoreEntitySet="SalesMain">
+          <ScalarProperty Name="CustInvSl" ColumnName="CustInvSl" />
+          <ScalarProperty Name="ca_bk_op" ColumnName="ca_bk_op" />
+          <ScalarProperty Name="Accode" ColumnName="Accode" />
+          <ScalarProperty Name="IsPaid" ColumnName="IsPaid" />
+          <ScalarProperty Name="ReceiptAmt" ColumnName="ReceiptAmt" />
+          <ScalarProperty Name="ReceiptNo" ColumnName="ReceiptNo" />
+          <ScalarProperty Name="IssueBy" ColumnName="IssueBy" />
+          <ScalarProperty Name="AppBy" ColumnName="AppBy" />
+          <ScalarProperty Name="VchrNo" ColumnName="VchrNo" />
+          <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+          <ScalarProperty Name="PrevDue" ColumnName="PrevDue" />
+          <ScalarProperty Name="NetAmount" ColumnName="NetAmount" />
+          <ScalarProperty Name="TotSaleAmt" ColumnName="TotSaleAmt" />
+          <ScalarProperty Name="Discount" ColumnName="Discount" />
+          <ScalarProperty Name="Labour" ColumnName="Labour" />
+          <ScalarProperty Name="Transport" ColumnName="Transport" />
+          <ScalarProperty Name="VATAmt" ColumnName="VATAmt" />
+          <ScalarProperty Name="BranchCode" ColumnName="BranchCode" />
+          <ScalarProperty Name="ProjCode" ColumnName="ProjCode" />
+          <ScalarProperty Name="LocCode" ColumnName="LocCode" />
+          <ScalarProperty Name="CustCode" ColumnName="CustCode" />
+          <ScalarProperty Name="IssueDate" ColumnName="IssueDate" />
+          <ScalarProperty Name="IssueNo" ColumnName="IssueNo" />
+          <ScalarProperty Name="RefDate" ColumnName="RefDate" />
+          <ScalarProperty Name="RefNo" ColumnName="RefNo" />
+          <ScalarProperty Name="JobNo" ColumnName="JobNo" />
+          <ScalarProperty Name="SaleDate" ColumnName="SaleDate" />
+          <ScalarProperty Name="SaleNo" ColumnName="SaleNo" />
+          <ScalarProperty Name="SalesMainID" ColumnName="SalesMainID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="SysSets">
+      <EntityTypeMapping TypeName="ASPL_DEMOModel.SysSet">
+        <MappingFragment StoreEntitySet="SysSet">
+          <ScalarProperty Name="MaintPacking" ColumnName="MaintPacking" />
+          <ScalarProperty Name="ActualBasis" ColumnName="ActualBasis" />
+          <ScalarProperty Name="CashBasis" ColumnName="CashBasis" />
+          <ScalarProperty Name="RateChart" ColumnName="RateChart" />
+          <ScalarProperty Name="OnlyVAT" ColumnName="OnlyVAT" />
+          <ScalarProperty Name="HasSale" ColumnName="HasSale" />
+          <ScalarProperty Name="SubSubGrp" ColumnName="SubSubGrp" />
+          <ScalarProperty Name="GrpAndSubGrp" ColumnName="GrpAndSubGrp" />
+          <ScalarProperty Name="OnlyGrp" ColumnName="OnlyGrp" />
+          <ScalarProperty Name="NoGrp" ColumnName="NoGrp" />
+          <ScalarProperty Name="IsSubsidiaryCtrl" ColumnName="IsSubsidiaryCtrl" />
+          <ScalarProperty Name="HasRemittance" ColumnName="HasRemittance" />
+          <ScalarProperty Name="OnlyGL" ColumnName="OnlyGL" />
+          <ScalarProperty Name="MakeRecvAuto" ColumnName="MakeRecvAuto" />
+          <ScalarProperty Name="MakeChallanAuto" ColumnName="MakeChallanAuto" />
+          <ScalarProperty Name="OpenDate" ColumnName="OpenDate" />
+          <ScalarProperty Name="Stockedcheck" ColumnName="Stockedcheck" />
+          <ScalarProperty Name="MaintVAT" ColumnName="MaintVAT" />
+          <ScalarProperty Name="MaintLot" ColumnName="MaintLot" />
+          <ScalarProperty Name="MaintJob" ColumnName="MaintJob" />
+          <ScalarProperty Name="InvoiceFormat" ColumnName="InvoiceFormat" />
+          <ScalarProperty Name="MRConv" ColumnName="MRConv" />
+          <ScalarProperty Name="VchrLen" ColumnName="VchrLen" />
+          <ScalarProperty Name="autovouaftersave" ColumnName="autovouaftersave" />
+          <ScalarProperty Name="ShowJobName" ColumnName="ShowJobName" />
+          <ScalarProperty Name="RecurringVoucher" ColumnName="RecurringVoucher" />
+          <ScalarProperty Name="BudgetAllocation" ColumnName="BudgetAllocation" />
+          <ScalarProperty Name="MaintOldCode" ColumnName="MaintOldCode" />
+          <ScalarProperty Name="AlwaysMultiple" ColumnName="AlwaysMultiple" />
+          <ScalarProperty Name="HeadWiseNarration" ColumnName="HeadWiseNarration" />
+          <ScalarProperty Name="MultiFinYear" ColumnName="MultiFinYear" />
+          <ScalarProperty Name="HasParty" ColumnName="HasParty" />
+          <ScalarProperty Name="HasUnit" ColumnName="HasUnit" />
+          <ScalarProperty Name="HasDept" ColumnName="HasDept" />
+          <ScalarProperty Name="HasBranch" ColumnName="HasBranch" />
+          <ScalarProperty Name="HasProject" ColumnName="HasProject" />
+          <ScalarProperty Name="VouSlTypeWise" ColumnName="VouSlTypeWise" />
+          <ScalarProperty Name="NotProfit" ColumnName="NotProfit" />
+          <ScalarProperty Name="ConsolidatedCash" ColumnName="ConsolidatedCash" />
+          <ScalarProperty Name="Budget" ColumnName="Budget" />
+          <ScalarProperty Name="SysId" ColumnName="SysId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

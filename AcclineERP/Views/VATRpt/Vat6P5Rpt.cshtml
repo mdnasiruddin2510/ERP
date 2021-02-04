@@ -1,0 +1,48 @@
+﻿
+@model App.Domain.ViewModel.RptSearchVModel
+@{
+    ViewBag.Title = "Vat6P5Rpt";
+}
+
+@using (Html.BeginForm("TransWiseVat6P5RptPdf", "VATRpt", FormMethod.Post, new { }))
+{
+    <div class="row">
+        <div class="col-md-10">
+            <div class="panel panel-color panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <text style="text-align:left !important; text-decoration: none"> VAT 6.5</text>
+                    </h3>
+                </div>
+                <div class="panel-body">
+                    <div class="col-md-12" style="margin-left:110px; margin-top:10px">
+                        <label class="col-md-2">Trans No </label>
+                        <div class="input-group form-group col-md-4">
+                            <input type="text" class="form-control" id="TransNo" name="TransNo">
+                        </div>
+                    </div>
+                    <div class="col-md-12" style="margin-left:150px; margin-top:20px">
+                        <div class="col-xs-12">
+                            <div class="input-group">
+
+                                <p style="color:red">
+                                    @ViewBag.Message
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-10">
+                        <br />
+                    </div>
+                    <div class="row col-md-12" style="text-align:end">
+                        <div class="col-md-8" style=" text-align:right">                           
+                            <input type="submit" name="command" value="Preview" class="btn btn-primary" id="submit" style="width:100px;" />
+                            <input type="submit" name="command" value="Print" class="btn btn-primary" id="submit" style="width:100px;" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}

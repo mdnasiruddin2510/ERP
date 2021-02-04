@@ -1,0 +1,292 @@
+﻿@model App.Domain.ViewModel.CancelInfoVM
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .form-control {
+        border: 1px solid #00ffff;
+    }
+
+    fieldset {
+        display: block;
+        margin-left: 2px;
+        margin-right: 2px;
+        padding-top: 0.35em;
+        padding-bottom: 0.625em;
+        padding-left: 0.75em;
+        padding-right: 0.75em;
+        border: 2px groove;
+    }
+    legend {
+        display: block;
+        padding-left: 2px;
+        padding-right: 2px;
+        border: none;
+    }
+    /*.modal-footer {
+        text-align:center;
+    }*/
+    
+</style>
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title></title>
+</head>
+<body>
+
+    @using (Html.BeginForm())
+    {
+
+        <div class="row">
+            <div class="col-md-10">
+                <div class="panel panel-color panel-primary">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                            <text style="text-align:left !important; text-decoration: none;">Cancel</text>
+                        </h3>
+                    </div>
+                    <div class="panel-body">
+
+                        <div class="col-md-12">
+                            <div class="col-md-6">
+                                <div class="col-md-3">
+
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="col-md-3 required">Cancel Type</label>
+                                    <div class="input-group form-group col-md-9">
+                                        @Html.DropDownListFor(x => x.CancelType, null, "---- Select ----", new { @class = "form-control select2", @Value = ViewBag.CancelType })
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="col-md-3 required">Transection No</label>
+                                    <div class="input-group form-group col-md-9">
+                                        @Html.TextBoxFor(x => x.TransectionNo, new { @class = "form-control" })
+
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <div class="col-md-3">
+                                    </div>
+                                    <div class="col-md-12" style="text-align:right">
+                                        <input type="button" value="Submit" class="btn btn-primary" id="btnSubmit" style="width:100px;" />
+                                        @*<input type="submit" value="Submit" id="btnSubmit" class="btn btn-primary" style="width:100px;margin-right:0px;" />*@
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="col-md-6">
+                                <fieldset>
+                                    <legend>Summery</legend>
+
+
+                                    <div class="col-md-12">
+                                        <label class="col-md-3 required">Invoice No </label>
+                                        <div class="input-group form-group col-md-9">
+                                            <input id="InvoiceNo" type="text" class="input-group col-md-9" disabled />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <label class="col-md-3 required">Date</label>
+                                        <div class="input-group form-group col-md-9">
+                                            <input type="text" class="form-control datePage" id="@Html.IdFor(x => x.Date)" disabled>
+                                            <span class="input-group-addon bg-primary b-0 text-white"><i class="ion-calendar"></i></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-12">
+                                        <label class="col-md-3 required">Amount</label>
+                                        <div class="input-group form-group col-md-9">
+                                            <input id="Amount" type="text" class="input-group col-md-9" disabled />
+                                        </div>
+                                    </div>
+
+                                </fieldset>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="col-md-12">
+                                <div class="col-md-3">
+                                    <input type="button" value="Cancel" class="btn btn-primary" id="invoiceCancelButton" style="border:1px solid; border-color:#adcceb; width:100%" />
+                                    @*<button type="submit" id="invoiceCancelButton" class="btn btn-default" style="border:1px solid; border-color:#adcceb; width:59%" onclick='showMessage()'>Cancel</button>*@
+                                </div>
+                                <div class="col-md-3">
+                                    <button type="submit" class="btn btn-primary" style="border:1px solid; border-color:#adcceb; width:100%">Clear</button>
+                                </div>
+                            </div>
+                        </div>
+                        <fieldset>
+                            <legend>Warning Message</legend>
+                            <div class="col-md-4 warning">
+                                <p><strong>Warning! Your invoice will be saved !!!</strong> </p>
+                            </div>
+                        </fieldset>
+
+
+
+                        <div id="confirm" class=" modal-dialog modal" tabindex="-1" role="dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Are you sure?</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>Your Invoice will be saved in Archive</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="btndelete">Yes</button>
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    </body>
+</html>
+
+
+@section scripts{
+    <script src="~/App_Themes/Theme1/plugins/select2/select2.min.js" type="text/javascript"></script>
+    <script src="~/App_Themes/Theme1/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+
+            function select2Focus() {
+                var select2 = $(this).data('select2');
+                setTimeout(function () {
+                    if (!select2.opened()) {
+                        select2.open();
+                    }
+                }, 0);
+            }
+
+            $("input:text:visible:first").focus();
+            $("#CustGrpId").select2().one('select2-focus', select2Focus).on("select2-blur", function () { $(this).one('select2-focus', select2Focus) });
+
+
+
+            $(document).on('click', '#invoiceCancelButton', function () {
+                var id = $(this).attr("value");
+                setOrder();
+                var validate = validateOnSave(loadInfo);
+                if (validate != "") {
+                    alert(validate);
+                    return;
+                }
+                swal({
+                    title: "Are you sure?",
+                    text: "You will not be able to recover this order data!",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#28A5D4",
+                    confirmButtonText: "Yes, delete it!",
+                    closeOnConfirm: true
+                },
+                 function () {
+                     $('#confirm').modal({
+                         backdrop: 'static',
+
+                         keyboard: false
+                     }).one('click', '#Yes', function (e) {
+                         alert("Are you sure?");
+                     });
+
+                 });
+            });
+
+            var loadInfo = { InvoiceNo: "", CancelType: "" }
+            function setOrder() {
+                loadInfo.InvoiceNo = $("#InvoiceNo").val();
+                loadInfo.CancelType = $("#CancelType").val();
+            }
+
+            function validateOnSave(validOrder) {
+
+                if (validOrder.InvoiceNo == "") {
+                    return "Invoice No is required.";
+                }
+                if (!validOrder.CancelType.trim().length) {
+                    return "Cancel Type is required.";
+                }
+                return "";
+            }
+
+
+            //Save.......................................
+
+            $(document).on("click", "#btndelete", function () {
+                
+                $.ajax({
+                    url: '@Url.Action("PostCancel", "InvoiceCancel")',
+                    contentType: "application/json;charset=utf-8",
+                    data: JSON.stringify({ InvoiceNo: $('#InvoiceNo').val(), CancelType: $('#CancelType').val() }),
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function (datas) {
+                        if (datas == "C") {
+                            swal({
+                                title: "Sorry",
+                                text: "No Cancel Permission for this User",
+                                type: "warning"
+                            });
+                        }
+                        else {
+                            swal("Good job!", datas, "info");
+                        }
+                    }//success
+                });//ajax
+            });
+
+
+
+            //Update-----------------------------------------
+            $(document).on("click", "#btnSubmit", function () {
+                if ($('#CancelType').val() == "") {
+                    alert("Cancel Type is required.");
+                    return;
+                }
+                if ($('#TransectionNo').val() == "") {
+                    alert("Transection No is required.");
+                    return;
+                }
+
+                $.ajax({
+                    url: '@Url.Action("GetAllBySaleNo", "InvoiceCancel", "")',
+                    contentType: "application/json;charset=utf-8",
+                    data: { saleNo: $("#TransectionNo").val(), CancelType: $('#CancelType').val() },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (datas) {
+                        if (datas != null) {
+                        
+                            $("#InvoiceNo").val(datas.MRSL);
+                            $("#Amount").val(datas.MRAmount);
+                            if (moment(datas.MRDate).format('MM/DD/YYYY') != moment('01/01/1900').format('MM/DD/YYYY')) {
+                                $("#Date").datepicker("setDate", DateInDMYformat(datas.MRDate));
+                            }                       
+                        }
+                        
+                    }//success
+                });//ajax
+
+
+            });
+        });//READY FN
+    </script>
+}

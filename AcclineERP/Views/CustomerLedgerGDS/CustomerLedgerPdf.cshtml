@@ -1,0 +1,170 @@
+﻿@model IEnumerable<App.Domain.ViewModel.CustomerLedgerVM>
+
+@{
+    ViewBag.Title = "Customer Ledger ";
+
+    var yearlyData = ViewBag.yearlyDataV;
+    Layout = null;
+    var CompInfo = AcclineERP.Models.GetCompanyInfo.GetComInfo();
+    string CompanyAddress = ((CompInfo.Addr1 == null ? string.Empty : CompInfo.Addr1) + "," + (CompInfo.Addr2 == null ? string.Empty : CompInfo.Addr2));
+}
+
+<script src="~/Scripts/jquery-1.9.1.min.js"></script>
+<script src="~/Scripts/Export.js"></script>
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/select2/select2.css" rel="stylesheet" type="text/css" />
+<link href="~/Css/FormDesign.css" rel="stylesheet" />
+
+
+<style>
+    tr {
+        page-break-inside: avoid;
+    }
+
+    body {
+        padding-right: 0px;
+        font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+    }
+
+    .border {
+        color: #335; /* Lighten up font color */
+        font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+        font-weight: 300;
+        border-collapse: collapse;
+        border-spacing: 0;
+    }
+
+    .tds {
+        /*border: 1px solid black;*/
+        font-weight: 500;
+        font-family: Arial;
+        border-right: hidden !important;
+    }
+    /* Make cells a bit taller */
+    .ths {
+        /*border: 1px solid black;*/
+        font-weight: 500;
+        font-family: Arial;
+    }
+
+    .th {
+        background: #F3F3F3; /* Light grey background */
+        font-weight: bold; /* Make sure they're bold */
+    }
+
+    .td {
+        background: #FAFAFA; /* Lighter grey background */
+        text-align: center; /* Center our text */
+    }
+
+    .breakhere {
+        page-break-after: always;
+    }
+</style>
+
+<div id="toReport" class="panel-body" style="margin:initial; text-align:center !important;padding:10px">
+    <div class="panel-heading" style="text-align:center">
+        <div class="panel-title">
+            <label style="text-align:center !important; text-decoration: none; font-size:25px; font-weight:bold">@CompInfo.CompName</label><br>
+            <label style="text-align:center !important; text-decoration: none; font-size:23px; font-weight:normal"> @CompanyAddress</label><br>
+            @*<label style="text-align:center !important; text-decoration: none; font-size:23px; font-weight:normal">Phone: @CompInfo.Tel</label><br>*@
+        </div>
+        <div class="panel-title">
+            <text style="text-align:center !important; text-decoration: none; font-size:20px;font-family:'Arial Narrow'; font-weight:bold">@ViewBag.Title</text>
+        </div>
+        <div class="cashDate">
+            <text style="text-align:center !important; text-decoration: none; font-size:15px;font-family:'Arial Narrow';">From : @ViewBag.fDate &nbsp;&nbsp; To: @ViewBag.tDate  &nbsp;&nbsp;</text>
+        </div>
+        <div>
+            <label style="text-align:center !important; text-decoration: none; font-size:12px; font-weight:bold">Customer : @ViewBag.Customer</label><br>
+        </div>
+
+    </div>
+    <hr style="border-bottom: 1px solid" />
+    <br />
+
+    <div class="panel-body" style="text-align:center">
+        <table cellpadding="5" cellspacing="5" border=1 frame=box rules=all style="width:100%">
+            <thead>
+                <tr>
+                    <th style=" font-size: 14px; width:10%; font-family: 'Arial Narrow'; text-align: center" rowspan="2"> Date	</th>
+
+                    <th style=" font-size: 14px; font-family: 'Arial Narrow'; text-align: center" colspan="3"> Refference No	</th>
+                    <th style=" font-size: 14px; font-family: 'Arial Narrow'; text-align: center" rowspan="2"> Particulars</th>
+                    <th style=" font-size: 14px; font-family: 'Arial Narrow'; text-align: center" rowspan="2"> Sold Amount</th>
+                    <th style=" font-size: 14px; font-family: 'Arial Narrow'; text-align: center" rowspan="2"> Received Amount</th>
+
+                    <th style=" font-size: 14px; font-family: 'Arial Narrow'; text-align: center" rowspan="2"> Adjusted Amount</th>
+                    <th style=" font-size: 14px; font-family: 'Arial Narrow'; text-align: center" rowspan="2"> Return Amount</th>
+                    <th style=" font-size: 14px; font-family: 'Arial Narrow'; text-align: center" rowspan="2"> Closing Balance</th>
+                    <th style=" font-size: 14px; font-family: 'Arial Narrow'; text-align: center" rowspan="2"> Due Amount in Sale</th>
+                </tr>
+
+
+                <tr>
+
+                    <th style=" font-size: 14px; font-family: 'Arial Narrow'; text-align: center" colspan="1"> Invoice No</th>
+                    <th style=" font-size: 14px; font-family: 'Arial Narrow'; text-align: center" colspan="1"> M/R No</th>
+                    <th style=" font-size: 14px; font-family: 'Arial Narrow'; text-align: center" colspan="1"> AcclineNo</th>
+
+                </tr>
+
+            </thead>
+            <tbody id="tbodyId">
+                @{
+
+                    var sl = 0;
+
+                    foreach (var item in Model)
+                    {
+
+                        sl = sl + 1;
+                        <tr>
+
+                            <td style=" text-align:left; font-size:12px">
+                                @item.TrDare.ToString("dd-MM-yyyy")
+                            </td>
+
+                            <td style="text-align:right; font-size:12px">
+                                @item.InvNo
+                            </td>
+                            <td style=" text-align:right; font-size:12px;">
+                                @item.MrNo
+                            </td>
+                            <td style=" text-align:right; font-size:12px">
+                                @item.AcclineNo
+                            </td>
+                            <td style=" text-align:right; font-size:12px;">
+                                @item.TrType
+                            <td style=" text-align:right; font-size:12px;">
+                                @item.SaleAmt
+                            </td>
+                            <td style=" text-align:right; font-size:12px;">
+                                @item.MrAmt
+                            </td>
+
+                            <td style=" text-align:right; font-size:12px;">
+                                @item.AdjAmt
+                            </td>
+                            <td style=" text-align:right; font-size:12px;">
+                                @item.RetAmt
+                            </td>
+
+                            <td style=" text-align:right; font-size:12px;">
+                                @item.Closing
+                            </td>
+                            <td style=" text-align:right; font-size:12px;"></td>
+
+                        </tr>
+                    }
+
+                }
+
+            </tbody>
+
+        </table>
+    </div>
+
+</div>

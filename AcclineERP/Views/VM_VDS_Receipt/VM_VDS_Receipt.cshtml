@@ -1,0 +1,495 @@
+﻿@model App.Domain.VM_VDS_Receipt
+@{
+    ViewBag.Title = "VDS Receipt";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/select2/select2.css" rel="stylesheet" type="text/css" />
+<link href="~/Css/FormDesign.css" rel="stylesheet" />
+
+<style>
+    table.dataTable.select tbody tr,
+    table.dataTable thead th:first-child {
+        cursor: pointer;
+        text-align: center;
+    }
+
+    .form-control {
+        border: 1px solid #00ffff;
+    }
+
+    .required:after {
+        content: " *";
+        font-weight: bold;
+        color: red;
+    }
+
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    input[type=number] {
+        -moz-appearance: textfield;
+    }
+</style>
+
+<div class="row">
+    <div class="col-md-10">
+        <div class="panel panel-color panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    <text style="text-align:left !important; text-decoration: none;">VDS Receipt</text>
+                </h3>
+            </div>
+            <div class="panel-body">
+                <div class="col-md-12">
+
+                    <div class="col-md-6">
+
+                        <div class="col-md-12">
+                            <label class="col-md-4 required">Receipt No</label>
+                            <div class="input-group form-group col-md-8">
+                                <input type="text" class="form-control" id="@Html.IdFor(x => x.VDS_ReceiptNo)" required="required" value="@ViewBag.VDS_ReceiptNo">
+                                <input type="hidden" id="VDS_RID" />
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="col-md-4 required">Customer name</label>
+                            <div class="input-group form-group col-md-8">
+                                <input type="text" class="form-control" id="@Html.IdFor(x => x.Cust_name)" required="required">
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="col-md-4 required">Customer Address</label>
+                            <div class="input-group form-group col-md-8">
+                                <input type="text" class="form-control" id="@Html.IdFor(x => x.Cust_Addr)" required="required">
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="col-md-4 required">Customer BIN</label>
+                            <div class="input-group form-group col-md-8">
+                                <input type="text" class="form-control" id="@Html.IdFor(x => x.Cust_BIN)" required="required">
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="col-md-4 required">TotalValue</label>
+                            <div class="input-group form-group col-md-8">
+                                <input type="number" class="form-control" id="@Html.IdFor(x => x.TotalValue)" required="required">
+
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="col-md-4 required">VAT Deduct</label>
+                            <div class="input-group form-group col-md-8">
+                                <input type="text" class="form-control" id="@Html.IdFor(x => x.VAT_Deduct)" required="required">
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="col-md-4 required">Challan No</label>
+                            <div class="input-group form-group col-md-8">
+                                <input type="text" class="form-control" id="@Html.IdFor(x => x.Challan_No)" required="required">
+
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="col-md-4 required">Challan Date</label>
+                            <div class="input-group form-group col-md-8">
+                                <input type="text" class="form-control datePage" id="@Html.IdFor(x => x.Challan_Dt)" value="@DateTime.Today.ToShortDateString()">
+                                <span class="input-group-addon bg-primary b-0 text-white"><i class="ion-calendar"></i></span>
+
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="col-md-4 required">Account</label>
+                            <div class="input-group form-group col-md-8">
+                                @Html.DropDownListFor(x => x.AccountCode, null, "--- Select ---", new { @class = "form-control select2", required = "required", @Value = ViewBag.AccountCode })
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <label class="col-md-4">Remarks</label>
+                            <div class="input-group form-group col-md-8">
+                                @Html.TextAreaFor(x => x.Remarks, new { @class = "form-control col-md-8 select2" })
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="col-sm-10"><br /><br /></div>
+                    <div class="col-md-8" style=" text-align:center;overflow:hidden;">
+                        <input type="button" value="Save" class="btn btn-primary" id="btnSave" style="width:100px;" />
+                        <input type="button" value="Update" class="btn btn-primary" id="btnUpdate" style="width:100px;" />
+                        <input type="button" value="Clear" class="btn btn-primary" id="btnClear" style="width:100px;" />
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-10">
+        <div class="panel panel-color panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">Receipt List</h3>
+            </div>
+            <div class="panel-body">
+                <div class="row col-md-12">
+                    <br />
+                    <div class="row col-md-12" style="text-align:right">
+                        <input type="button" value="Reload" class="btn btn-primary" id="btnRefrash" />
+                    </div>
+
+                    <div class="col-md-12">
+                        <br />
+                        <br />
+                        <table class="table table-bordered table-responsive" id="datatable">
+                            <thead>
+                                <tr>
+                                    <th>Sl.</th>
+                                    <th>Receipt No</th>
+                                    <th>Cust Name</th>
+                                    <th>Account</th>
+                                    <th>Challan</th>
+                                    <th>Total Amount</th>
+                                    <th>Remarks</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody style="text-align:center;">
+
+                                @if (ViewBag.ReceiptList != null)
+                                {
+                                    int i = 0;
+                                    foreach (var item in ViewBag.ReceiptList)
+                                    {
+                                        <tr>
+                                            @{
+                                        i++;
+                                            }
+                                            <td>@i</td>
+                                            <td>@item.VDS_ReceiptNo</td>
+                                            <td style="text-align:left;">@item.Cust_name</td>
+                                            <td style="text-align:left;">@item.AccountCode</td>
+                                            <td style="text-align:left;">@item.Challan_No</td>
+                                            <td>@item.TotalValue</td>
+                                            <td>@item.Remarks</td>
+                                            <td>
+                                                <a href="#" value="@item.VDS_ReceiptNo" id="edit"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></a>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts{
+    <script src="/App_Themes/Theme1/plugins/select2/select2.min.js"></script>
+    <script src="~/App_Themes/Theme1/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+    <script>
+    $(document).ready(function () {
+        var ispType = '@ViewBag.errMsg';
+        if (ispType != '') {
+            ispType = '@ViewBag.errMsg';
+        }
+        if (ispType == "P") {
+            alert("No view Permission for this User");
+        }
+
+        $('#datatable').DataTable();
+
+        var loadInfo = {
+            VDS_RID: "",
+            VDS_ReceiptNo: "",
+            Cust_name: "",
+            Cust_Addr: "",
+            Cust_BIN: "",
+            TotalValue: "",
+            VAT_Deduct: "",
+            Challan_No: "",
+            Challan_Dt: "",
+            AccountCode: "",
+            Remarks: ""
+        }
+
+        function setOrder() {
+            loadInfo.VDS_RID = $("#VDS_RID").val();
+            loadInfo.VDS_ReceiptNo = $("#VDS_ReceiptNo").val();
+            loadInfo.Cust_name = $("#Cust_name").val();
+            loadInfo.Cust_Addr = $("#Cust_Addr").val();
+            loadInfo.Cust_BIN = $("#Cust_BIN").val();
+            loadInfo.TotalValue = $("#TotalValue").val();
+            loadInfo.VAT_Deduct = $("#VAT_Deduct").val();
+            loadInfo.Challan_No = $("#Challan_No").val();
+            loadInfo.Challan_Dt = $("#Challan_Dt").val();
+            loadInfo.AccountCode = $("#AccountCode").val();
+            loadInfo.Remarks = $("#Remarks").val();
+        }
+        $('#AccountCode').select2();
+        $("#btnUpdate").hide();
+
+        $(document).on("click", "#btnSave", function () {
+            $("#btnSave").prop("disabled", false);
+            setOrder();
+            var validate = validateOnSave(loadInfo);
+            if (validate != undefined) {
+                alert(validate);
+                return;
+            }
+
+            $.ajax({
+                url: '@Url.Action("SaveVDS_Receipt", "VM_VDS_Receipt")',
+                contentType: "application/json;charset=utf-8",
+                data: JSON.stringify({ VDS_Receipt: loadInfo }),
+                type: 'POST',
+                dataType: 'json',
+                success: function (datas) {
+                    if (datas == 1) {
+                        $("#btnSave").prop("disabled", false);
+                        swal({
+                            title: "Ok",
+                            text: "Save Successfully!",
+                            type: "success"
+                        }, function () {
+                            clearVDS_ReceiptForm();
+                        });
+
+                    }
+                    else if (datas == "X") {
+                        swal({
+                            title: "Sorry",
+                            text: "No Save Permission for this User",
+                            type: "warning"
+                        });
+                    }
+                    else if (datas == 0) {
+                        swal(
+                            'Sorry!',
+                            'Something went wrong during the process!',
+                            'warning'
+                        );
+                        $("#btnSave").prop("disabled", false);
+                    }
+                    else {
+                        swal({
+                            title: "Sorry!",
+                            text: datas,
+                            type: "warning"
+                        });
+                    }
+
+                }
+            });
+        });
+
+        function validateOnSave(validOrder) {
+            if (validOrder.VDS_ReceiptNo.trim() == "") {
+                return "Receipt No is required.";
+            }
+            if (validOrder.Cust_name.trim() == "") {
+                return "Customer name is required.";
+            }
+            if (validOrder.Cust_Addr.trim() == "") {
+                return "Customer Address is required.";
+            }
+            if (validOrder.Cust_BIN.trim() == "") {
+                return "Customer BIN is required.";
+            }
+            if (validOrder.TotalValue.trim() == "" || validOrder.TotalValue <= 0) {
+                return "Total Amount is required.";
+            }
+            if (validOrder.VAT_Deduct.trim() == "" || validOrder.VAT_Deduct <= 0) {
+                return "VAT Deduct is required.";
+            }
+            if (validOrder.Challan_No.trim() == "") {
+                return "Challan No is required.";
+            }
+            if (validOrder.Challan_Dt.trim() == "") {
+                return "Challan Date is required.";
+            }
+            if (!validOrder.AccountCode.trim().length) {
+                return "Please select Account.";
+            }
+
+        }
+
+        $("#VDS_ReceiptNo").keypress(function (e) {
+            if (e.which == 13) {
+                $("#btnUpdate").show();
+                $.ajax({
+                    url: '@Url.Action("GetVDS_ReceiptByVDS_ReceiptNo", "VM_VDS_Receipt")',
+                    contentType: "application/json;charset=utf-8",
+                    data: { VDS_ReceiptNo: $("#VDS_ReceiptNo").val() },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (datas) {
+                        if (datas != null) {
+                            $("#VDS_ReceiptNo").prop("disabled", true);
+                            $("#Challan_No").val(datas.Challan_No);
+                            $("#Cust_name").val(datas.Cust_name);
+                            $("#Cust_Addr").val(datas.Cust_Addr);
+                            $("#Cust_BIN").val(datas.Cust_BIN);
+                            if (moment(datas.Challan_Dt).format('MM/DD/YYYY') != moment('01/01/1900').format('MM/DD/YYYY')) {
+                                $("#Challan_Dt").datepicker("setDate", DateInDMYformat(datas.Challan_Dt));
+                            }
+                            $("#AccountCode").val(datas.AccountCode).trigger('change.select2');
+                            $("#VAT_Deduct").val(datas.VAT_Deduct);
+                            $("#TotalValue").val(datas.TotalValue);
+                            $("#Remarks").val(datas.Remarks);
+                            $("#btnSave").hide();
+                        }
+                    },
+                    error: function () {
+                        swal("Sorry!! This Note doesn't exists.", "fail")
+                        $("#btnSave").hide();
+                    }
+                });
+            }
+        });
+
+        $(document).on('click', "#edit", function () {
+            var id = $(this).attr("value");
+            $("#btnUpdate").show();
+            $.ajax({
+                url: '@Url.Action("GetVDS_ReceiptByVDS_ReceiptNo", "VM_VDS_Receipt")',
+                contentType: "application/json;charset=utf-8",
+                data: JSON.stringify({ VDS_ReceiptNo: id }),
+                type: 'POST',
+                dataType: 'json',
+                success: function (datas) {
+                    if (datas != null) {
+                        $("#VDS_ReceiptNo").prop("disabled", true);
+                        $("#VDS_RID").val(datas.VDS_RID);
+                        $("#VDS_ReceiptNo").val(datas.VDS_ReceiptNo);
+                        $("#Cust_name").val(datas.Cust_name);
+                        $("#Cust_Addr").val(datas.Cust_Addr);
+                        $("#Cust_BIN").val(datas.Cust_BIN);
+                        if (moment(datas.Challan_Dt).format('MM/DD/YYYY') != moment('01/01/1900').format('MM/DD/YYYY')) {
+                            $("#Challan_Dt").datepicker("setDate", DateInDMYformat(datas.Challan_Dt));
+                        }
+                        $("#AccountCode").val(datas.AccountCode).trigger('change.select2');
+                        $("#Challan_No").val(datas.Challan_No);
+                        $("#VAT_Deduct").val(datas.VAT_Deduct);
+                        $("#TotalValue").val(datas.TotalValue);
+                        $("#Remarks").val(datas.Remarks);
+                        $("#btnSave").hide();
+                    }
+                }
+            });
+            $("#btnSave").hide();
+        });
+
+        $(document).on("click", "#btnUpdate", function () {
+            $("#btnSave").prop("disabled", false);
+            setOrder();
+            var validate = validateOnSave(loadInfo);
+            if (validate != undefined) {
+                alert(validate);
+                return;
+            }
+
+            $.ajax({
+                url: '@Url.Action("UpdateVDS_Receipt", "VM_VDS_Receipt")',
+                contentType: "application/json;charset=utf-8",
+                data: JSON.stringify({ VDS_Receipt: loadInfo }),
+                type: 'POST',
+                dataType: 'json',
+                success: function (datas) {
+                    if (datas == 1) {
+                        swal({
+                            title: "Ok",
+                            text: "Update Successfully!",
+                            type: "success"
+                        }, function () {
+                            clearVDS_ReceiptForm();
+                            $("#btnSave").prop("enable", false);
+
+                        });
+                    }
+                    else if (datas == "U") {
+                        swal({
+                            title: "Sorry",
+                            text: "No Update Permission for this User",
+                            type: "warning"
+                        });
+                    }
+                    else if (datas == 0) {
+                        swal(
+                            'Sorry!',
+                            'Something went wrong during the process!',
+                            'warning'
+                        );
+                        $("#btnSave").prop("disabled", false);
+                    }
+                    else {
+                        swal({
+                            title: "Sorry!",
+                            text: datas,
+                            type: "warning"
+                        });
+                    }
+
+                }
+            });
+        });
+
+
+        $(document).on("click", "#btnClear", function () {
+            clearVDS_ReceiptForm();
+        });
+
+        $(document).on("click", "#btnRefrash", function () {
+            location.reload();
+        });
+
+        function clearVDS_ReceiptForm() {
+            $("#Challan_Dt").val("@DateTime.Today.ToShortDateString()");
+            $("#AccountCode").val($('#AccountCode option:first-child').val()).trigger('change.select2');
+            $("#Challan_No").val("");
+            $("#Cust_name").val("");
+            $("#Cust_Addr").val("");
+            $("#Cust_BIN").val("");
+            $("#VAT_Deduct").val(0);
+            $("#TotalValue").val(0);
+            $("#Remarks").val("");
+
+            $("#VDS_ReceiptNo").prop("disabled", false);
+            $.ajax({
+                    url: '@Url.Action("GetNewVDS_ReceiptbyView", "VM_VDS_Receipt")',
+                    contentType: "application/json;charset=utf-8",
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (datas) {
+                        $("#VDS_ReceiptNo").val(datas);
+                    }
+                });
+            $("#btnUpdate").hide();
+            $("#btnSave").show();
+        }
+
+
+    });
+    </script>
+}
+
+
+
+
+
+
+
+

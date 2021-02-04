@@ -1,0 +1,198 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{FFD8B43E-B2B3-4170-9F92-A7E8402CD4EE}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Data.Repository</RootNamespace>
+    <AssemblyName>Data.Repository</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.ServiceLocation">
+      <HintPath>..\packages\CommonServiceLocator.1.3\lib\portable-net4+sl5+netcore45+wpa81+wp8\Microsoft.Practices.ServiceLocation.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Class1.cs" />
+    <Compile Include="Dapper\Common\Repository.cs" />
+    <Compile Include="EntityFramework\AcBRRepository.cs" />
+    <Compile Include="EntityFramework\AccountsReceivableRepository.cs" />
+    <Compile Include="EntityFramework\AdVGivenOPBLRepository.cs" />
+    <Compile Include="EntityFramework\BalSheetRptRepository.cs" />
+    <Compile Include="EntityFramework\CompanyInfoRepository.cs" />
+    <Compile Include="EntityFramework\DepartmentRepository.cs" />
+    <Compile Include="EntityFramework\DesignationRepository.cs" />
+    <Compile Include="EntityFramework\GroupInfoRepository.cs" />
+    <Compile Include="EntityFramework\IM_InvACRepository.cs" />
+    <Compile Include="EntityFramework\MasterFormRepository.cs" />
+    <Compile Include="EntityFramework\MRAgainstRepository.cs" />
+    <Compile Include="EntityFramework\PackingListRepository.cs" />
+    <Compile Include="EntityFramework\PM_IssRecRepository.cs" />
+    <Compile Include="EntityFramework\PurRetDetailRepository.cs" />
+    <Compile Include="EntityFramework\PurRetMainRepository.cs" />
+    <Compile Include="EntityFramework\RateChartRepository.cs" />
+    <Compile Include="EntityFramework\SaleRetMainRepository.cs" />
+    <Compile Include="EntityFramework\SaleRetDetailRepository.cs" />
+    <Compile Include="EntityFramework\rptJobWiseVMRepository.cs" />
+    <Compile Include="EntityFramework\CustAdjustmentRepository.cs" />
+    <Compile Include="EntityFramework\CustAdjExtRepository.cs" />
+    <Compile Include="EntityFramework\CostLedgerRepository.cs" />
+    <Compile Include="EntityFramework\CustWiseSummSaleRptRepository.cs" />
+    <Compile Include="EntityFramework\OpeningStockRepository.cs" />
+    <Compile Include="EntityFramework\PayInvRecvRepository.cs" />
+    <Compile Include="EntityFramework\PurchaseMainRepository.cs" />
+    <Compile Include="EntityFramework\SGroupInfoRepository.cs" />
+    <Compile Include="EntityFramework\SSGroupInfoRepository.cs" />
+    <Compile Include="EntityFramework\tmpPurItemRepository.cs" />
+    <Compile Include="EntityFramework\PurchaseDetailRepository.cs" />
+    <Compile Include="EntityFramework\ChequeArchiveRepository.cs" />
+    <Compile Include="EntityFramework\MoneyReceiptExtRepository.cs" />
+    <Compile Include="EntityFramework\MoneyReceiptRepository.cs" />
+    <Compile Include="EntityFramework\UnitInfoRepository.cs" />
+    <Compile Include="EntityFramework\VchrSetRepository.cs" />
+    <Compile Include="EntityFramework\DefACRepository.cs" />
+    <Compile Include="EntityFramework\ChequeReceiptRepository.cs" />
+    <Compile Include="EntityFramework\ChequeReceiptExtRepository.cs" />
+    <Compile Include="EntityFramework\DynaCapRepository.cs" />
+    <Compile Include="EntityFramework\PVchrTrackRepository.cs" />
+    <Compile Include="EntityFramework\SubsidiaryExtRepository.cs" />
+    <Compile Include="EntityFramework\ItemWiseDisVatVMRepository.cs" />
+    <Compile Include="EntityFramework\BankInfoRepository.cs" />
+    <Compile Include="EntityFramework\BankReceiptRepository.cs" />
+    <Compile Include="EntityFramework\CashBookRepository.cs" />
+    <Compile Include="EntityFramework\CommonPVVMRepository.cs" />
+    <Compile Include="EntityFramework\GsetRepository.cs" />
+    <Compile Include="EntityFramework\JarnalVoucherRepository.cs" />
+    <Compile Include="EntityFramework\JTrGrpRepository.cs" />
+    <Compile Include="EntityFramework\LedgerCaptionRepository.cs" />
+    <Compile Include="EntityFramework\LedgerTypeRepository.cs" />
+    <Compile Include="EntityFramework\LevelLenRepository.cs" />
+    <Compile Include="EntityFramework\LotDTRepository.cs" />
+    <Compile Include="EntityFramework\MinLevRepository.cs" />
+    <Compile Include="EntityFramework\OpenBalRepository.cs" />
+    <Compile Include="EntityFramework\ItemListRepository.cs" />
+    <Compile Include="EntityFramework\OpnBalRepository.cs" />
+    <Compile Include="EntityFramework\ProjInfoRepository.cs" />
+    <Compile Include="EntityFramework\PVchrDetailRepository.cs" />
+    <Compile Include="EntityFramework\PVchrMainExtRepository.cs" />
+    <Compile Include="EntityFramework\PVchrMainRepository.cs" />
+    <Compile Include="EntityFramework\ReportLedgerRepository.cs" />
+    <Compile Include="EntityFramework\SalesDetailRepository.cs" />
+    <Compile Include="EntityFramework\SalesMainRepository.cs" />
+    <Compile Include="EntityFramework\SecFormListRepository.cs" />
+    <Compile Include="EntityFramework\SecFormProcessRepository.cs" />
+    <Compile Include="EntityFramework\SecFormRightRepository.cs" />
+    <Compile Include="EntityFramework\SecProcessListRepository.cs" />
+    <Compile Include="EntityFramework\SecUserGroupRepository.cs" />
+    <Compile Include="EntityFramework\SecUserInfoRepository.cs" />
+    <Compile Include="EntityFramework\SecUserInGroupRepository.cs" />
+    <Compile Include="EntityFramework\SubOpenBalRepository.cs" />
+    <Compile Include="EntityFramework\SubsidiaryCtrlRepository.cs" />
+    <Compile Include="EntityFramework\CashReceiptSubDetailsRepository.cs" />
+    <Compile Include="EntityFramework\ExpenseSubDetailsRepository.cs" />
+    <Compile Include="EntityFramework\CashOperationRepository.cs" />
+    <Compile Include="EntityFramework\CashReceiptRepository.cs" />
+    <Compile Include="EntityFramework\CustomerLedgerRepository.cs" />
+    <Compile Include="EntityFramework\BankOperationRepository.cs" />
+    <Compile Include="EntityFramework\BranchRepository.cs" />
+    <Compile Include="EntityFramework\Common\CommonSearchRepo.cs" />
+    <Compile Include="EntityFramework\Common\Repository.cs" />
+    <Compile Include="EntityFramework\CurrentStockRepository.cs" />
+    <Compile Include="EntityFramework\DepositToBankRepository.cs" />
+    <Compile Include="EntityFramework\EmailConfigRepository.cs" />
+    <Compile Include="EntityFramework\ExpenseRepository.cs" />
+    <Compile Include="EntityFramework\FuncSLRepository.cs" />
+    <Compile Include="EntityFramework\HORemitRepository.cs" />
+    <Compile Include="EntityFramework\IssRecSrcDestRepository.cs" />
+    <Compile Include="EntityFramework\EmployeeFuncRepository.cs" />
+    <Compile Include="EntityFramework\EmployeeRepository.cs" />
+    <Compile Include="EntityFramework\FYDDRepository.cs" />
+    <Compile Include="EntityFramework\IssueDetailsRepository.cs" />
+    <Compile Include="EntityFramework\IssueMainRepository.cs" />
+    <Compile Include="EntityFramework\IteminfoRepository.cs" />
+    <Compile Include="EntityFramework\ItemTypeRepository.cs" />
+    <Compile Include="EntityFramework\LocationRepository.cs" />
+    <Compile Include="EntityFramework\NewChartRepository.cs" />
+    <Compile Include="EntityFramework\PaymentRepository.cs" />
+    <Compile Include="EntityFramework\ReceiveDetailsRepository.cs" />
+    <Compile Include="EntityFramework\ReceiveRepository.cs" />
+    <Compile Include="EntityFramework\RecPasswordRepository.cs" />
+    <Compile Include="EntityFramework\SubsidiaryInfoRepository.cs" />
+    <Compile Include="EntityFramework\SubsidiaryTypeRepository.cs" />
+    <Compile Include="EntityFramework\SummaryReportRepository.cs" />
+    <Compile Include="EntityFramework\SummaryReportTypeRepository.cs" />
+    <Compile Include="EntityFramework\SysSetRepository.cs" />
+    <Compile Include="EntityFramework\TransactionLogRepository.cs" />
+    <Compile Include="EntityFramework\TVchrDetailRepository.cs" />
+    <Compile Include="EntityFramework\TVchrMainRepository.cs" />
+    <Compile Include="EntityFramework\UnitRepository.cs" />
+    <Compile Include="EntityFramework\UserBranchRepository.cs" />
+    <Compile Include="EntityFramework\UserProfileRepository.cs" />
+    <Compile Include="EntityFramework\VchrDetailRepository.cs" />
+    <Compile Include="EntityFramework\VchrMainRepository.cs" />
+    <Compile Include="EntityFramework\VchrPreviewVMRepository.cs" />
+    <Compile Include="EntityFramework\VM_BINRepository.cs" />
+    <Compile Include="EntityFramework\vuItemInfoRepository.cs" />
+    <Compile Include="EntityFramework\WithdrawRepository.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\App.Domain\App.Domain.csproj">
+      <Project>{8C5DF764-3858-4C07-9729-AB68C49AE77F}</Project>
+      <Name>App.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Data.Context\Data.Context.csproj">
+      <Project>{71d04fa7-3424-4c8f-ba0e-018653eeb924}</Project>
+      <Name>Data.Context</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

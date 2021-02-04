@@ -1,0 +1,282 @@
+D:\PostOffice\trunk\ShahcementWeb\CrossCutting.InversionOfControl\bin\Release\CrossCutting.InversionOfControl.dll.config
+D:\PostOffice\trunk\ShahcementWeb\CrossCutting.InversionOfControl\bin\Release\CrossCutting.InversionOfControl.dll
+D:\PostOffice\trunk\ShahcementWeb\CrossCutting.InversionOfControl\bin\Release\CrossCutting.InversionOfControl.pdb
+D:\PostOffice\trunk\ShahcementWeb\CrossCutting.InversionOfControl\bin\Release\App.Domain.dll
+D:\PostOffice\trunk\ShahcementWeb\CrossCutting.InversionOfControl\bin\Release\Application.Interfaces.dll
+D:\PostOffice\trunk\ShahcementWeb\CrossCutting.InversionOfControl\bin\Release\Application.Services.dll
+D:\PostOffice\trunk\ShahcementWeb\CrossCutting.InversionOfControl\bin\Release\CommonServiceLocator.NinjectAdapter.Unofficial.dll
+D:\PostOffice\trunk\ShahcementWeb\CrossCutting.InversionOfControl\bin\Release\Data.Context.dll
+D:\PostOffice\trunk\ShahcementWeb\CrossCutting.InversionOfControl\bin\Release\Data.Repository.dll
+D:\PostOffice\trunk\ShahcementWeb\CrossCutting.InversionOfControl\bin\Release\EntityFramework.dll
+D:\PostOffice\trunk\ShahcementWeb\CrossCutting.InversionOfControl\bin\Release\EntityFramework.SqlServer.dll
+D:\PostOffice\trunk\ShahcementWeb\CrossCutting.InversionOfControl\bin\Release\Microsoft.Practices.ServiceLocation.dll
+D:\PostOffice\trunk\ShahcementWeb\CrossCutting.InversionOfControl\bin\Release\Microsoft.Web.Infrastructure.dll
+D:\PostOffice\trunk\ShahcementWeb\CrossCutting.InversionOfControl\bin\Release\Ninject.dll
+D:\PostOffice\trunk\ShahcementWeb\CrossCutting.InversionOfControl\bin\Release\Ninject.Web.Common.dll
+D:\PostOffice\trunk\ShahcementWeb\CrossCutting.InversionOfControl\bin\Release\Ninject.Web.Mvc.dll
+D:\PostOffice\trunk\ShahcementWeb\CrossCutting.InversionOfControl\bin\Release\WebActivatorEx.dll
+D:\PostOffice\trunk\ShahcementWeb\CrossCutting.InversionOfControl\bin\Release\App.Domain.pdb
+D:\PostOffice\trunk\ShahcementWeb\CrossCutting.InversionOfControl\bin\Release\Application.Interfaces.pdb
+D:\PostOffice\trunk\ShahcementWeb\CrossCutting.InversionOfControl\bin\Release\Application.Services.pdb
+D:\PostOffice\trunk\ShahcementWeb\CrossCutting.InversionOfControl\bin\Release\Data.Context.pdb
+D:\PostOffice\trunk\ShahcementWeb\CrossCutting.InversionOfControl\bin\Release\Data.Repository.pdb
+D:\PostOffice\trunk\ShahcementWeb\CrossCutting.InversionOfControl\bin\Release\EntityFramework.xml
+D:\PostOffice\trunk\ShahcementWeb\CrossCutting.InversionOfControl\bin\Release\EntityFramework.SqlServer.xml
+D:\PostOffice\trunk\ShahcementWeb\CrossCutting.InversionOfControl\bin\Release\Microsoft.Practices.ServiceLocation.pdb
+D:\PostOffice\trunk\ShahcementWeb\CrossCutting.InversionOfControl\bin\Release\Microsoft.Practices.ServiceLocation.xml
+D:\PostOffice\trunk\ShahcementWeb\CrossCutting.InversionOfControl\bin\Release\Ninject.xml
+D:\PostOffice\trunk\ShahcementWeb\CrossCutting.InversionOfControl\bin\Release\Ninject.Web.Common.xml
+D:\PostOffice\trunk\ShahcementWeb\CrossCutting.InversionOfControl\bin\Release\Ninject.Web.Mvc.xml
+D:\PostOffice\trunk\ShahcementWeb\CrossCutting.InversionOfControl\obj\Release\CrossCutting.InversionOfControl.csprojResolveAssemblyReference.cache
+D:\PostOffice\trunk\ShahcementWeb\CrossCutting.InversionOfControl\obj\Release\CrossCutting.InversionOfControl.dll
+D:\PostOffice\trunk\ShahcementWeb\CrossCutting.InversionOfControl\obj\Release\CrossCutting.InversionOfControl.pdb
+D:\Mukta\Tahsin Agro\trunk\Tahsin Agro\CrossCutting.InversionOfControl\bin\Release\CrossCutting.InversionOfControl.dll.config
+D:\Mukta\Tahsin Agro\trunk\Tahsin Agro\CrossCutting.InversionOfControl\bin\Release\CrossCutting.InversionOfControl.dll
+D:\Mukta\Tahsin Agro\trunk\Tahsin Agro\CrossCutting.InversionOfControl\bin\Release\CrossCutting.InversionOfControl.pdb
+D:\Mukta\Tahsin Agro\trunk\Tahsin Agro\CrossCutting.InversionOfControl\bin\Release\App.Domain.dll
+D:\Mukta\Tahsin Agro\trunk\Tahsin Agro\CrossCutting.InversionOfControl\bin\Release\Application.Interfaces.dll
+D:\Mukta\Tahsin Agro\trunk\Tahsin Agro\CrossCutting.InversionOfControl\bin\Release\Application.Services.dll
+D:\Mukta\Tahsin Agro\trunk\Tahsin Agro\CrossCutting.InversionOfControl\bin\Release\CommonServiceLocator.NinjectAdapter.Unofficial.dll
+D:\Mukta\Tahsin Agro\trunk\Tahsin Agro\CrossCutting.InversionOfControl\bin\Release\Data.Context.dll
+D:\Mukta\Tahsin Agro\trunk\Tahsin Agro\CrossCutting.InversionOfControl\bin\Release\Data.Repository.dll
+D:\Mukta\Tahsin Agro\trunk\Tahsin Agro\CrossCutting.InversionOfControl\bin\Release\EntityFramework.dll
+D:\Mukta\Tahsin Agro\trunk\Tahsin Agro\CrossCutting.InversionOfControl\bin\Release\EntityFramework.SqlServer.dll
+D:\Mukta\Tahsin Agro\trunk\Tahsin Agro\CrossCutting.InversionOfControl\bin\Release\Microsoft.Practices.ServiceLocation.dll
+D:\Mukta\Tahsin Agro\trunk\Tahsin Agro\CrossCutting.InversionOfControl\bin\Release\Microsoft.Web.Infrastructure.dll
+D:\Mukta\Tahsin Agro\trunk\Tahsin Agro\CrossCutting.InversionOfControl\bin\Release\Ninject.dll
+D:\Mukta\Tahsin Agro\trunk\Tahsin Agro\CrossCutting.InversionOfControl\bin\Release\Ninject.Web.Common.dll
+D:\Mukta\Tahsin Agro\trunk\Tahsin Agro\CrossCutting.InversionOfControl\bin\Release\Ninject.Web.Mvc.dll
+D:\Mukta\Tahsin Agro\trunk\Tahsin Agro\CrossCutting.InversionOfControl\bin\Release\WebActivatorEx.dll
+D:\Mukta\Tahsin Agro\trunk\Tahsin Agro\CrossCutting.InversionOfControl\bin\Release\App.Domain.pdb
+D:\Mukta\Tahsin Agro\trunk\Tahsin Agro\CrossCutting.InversionOfControl\bin\Release\Application.Interfaces.pdb
+D:\Mukta\Tahsin Agro\trunk\Tahsin Agro\CrossCutting.InversionOfControl\bin\Release\Application.Services.pdb
+D:\Mukta\Tahsin Agro\trunk\Tahsin Agro\CrossCutting.InversionOfControl\bin\Release\Data.Context.pdb
+D:\Mukta\Tahsin Agro\trunk\Tahsin Agro\CrossCutting.InversionOfControl\bin\Release\Data.Repository.pdb
+D:\Mukta\Tahsin Agro\trunk\Tahsin Agro\CrossCutting.InversionOfControl\bin\Release\EntityFramework.xml
+D:\Mukta\Tahsin Agro\trunk\Tahsin Agro\CrossCutting.InversionOfControl\bin\Release\EntityFramework.SqlServer.xml
+D:\Mukta\Tahsin Agro\trunk\Tahsin Agro\CrossCutting.InversionOfControl\bin\Release\Microsoft.Practices.ServiceLocation.pdb
+D:\Mukta\Tahsin Agro\trunk\Tahsin Agro\CrossCutting.InversionOfControl\bin\Release\Microsoft.Practices.ServiceLocation.xml
+D:\Mukta\Tahsin Agro\trunk\Tahsin Agro\CrossCutting.InversionOfControl\bin\Release\Ninject.xml
+D:\Mukta\Tahsin Agro\trunk\Tahsin Agro\CrossCutting.InversionOfControl\bin\Release\Ninject.Web.Common.xml
+D:\Mukta\Tahsin Agro\trunk\Tahsin Agro\CrossCutting.InversionOfControl\bin\Release\Ninject.Web.Mvc.xml
+D:\Mukta\Tahsin Agro\trunk\Tahsin Agro\CrossCutting.InversionOfControl\obj\Release\CrossCutting.InversionOfControl.csprojResolveAssemblyReference.cache
+D:\Mukta\Tahsin Agro\trunk\Tahsin Agro\CrossCutting.InversionOfControl\obj\Release\CrossCutting.InversionOfControl.dll
+D:\Mukta\Tahsin Agro\trunk\Tahsin Agro\CrossCutting.InversionOfControl\obj\Release\CrossCutting.InversionOfControl.pdb
+D:\Mukta\Projects\TahsinAgroProject\Tahsin Agro\trunk\Tahsin Agro\CrossCutting.InversionOfControl\bin\Release\CrossCutting.InversionOfControl.dll.config
+D:\Mukta\Projects\TahsinAgroProject\Tahsin Agro\trunk\Tahsin Agro\CrossCutting.InversionOfControl\bin\Release\CrossCutting.InversionOfControl.dll
+D:\Mukta\Projects\TahsinAgroProject\Tahsin Agro\trunk\Tahsin Agro\CrossCutting.InversionOfControl\bin\Release\CrossCutting.InversionOfControl.pdb
+D:\Mukta\Projects\TahsinAgroProject\Tahsin Agro\trunk\Tahsin Agro\CrossCutting.InversionOfControl\bin\Release\App.Domain.dll
+D:\Mukta\Projects\TahsinAgroProject\Tahsin Agro\trunk\Tahsin Agro\CrossCutting.InversionOfControl\bin\Release\Application.Interfaces.dll
+D:\Mukta\Projects\TahsinAgroProject\Tahsin Agro\trunk\Tahsin Agro\CrossCutting.InversionOfControl\bin\Release\Application.Services.dll
+D:\Mukta\Projects\TahsinAgroProject\Tahsin Agro\trunk\Tahsin Agro\CrossCutting.InversionOfControl\bin\Release\CommonServiceLocator.NinjectAdapter.Unofficial.dll
+D:\Mukta\Projects\TahsinAgroProject\Tahsin Agro\trunk\Tahsin Agro\CrossCutting.InversionOfControl\bin\Release\Data.Context.dll
+D:\Mukta\Projects\TahsinAgroProject\Tahsin Agro\trunk\Tahsin Agro\CrossCutting.InversionOfControl\bin\Release\Data.Repository.dll
+D:\Mukta\Projects\TahsinAgroProject\Tahsin Agro\trunk\Tahsin Agro\CrossCutting.InversionOfControl\bin\Release\EntityFramework.dll
+D:\Mukta\Projects\TahsinAgroProject\Tahsin Agro\trunk\Tahsin Agro\CrossCutting.InversionOfControl\bin\Release\EntityFramework.SqlServer.dll
+D:\Mukta\Projects\TahsinAgroProject\Tahsin Agro\trunk\Tahsin Agro\CrossCutting.InversionOfControl\bin\Release\Microsoft.Practices.ServiceLocation.dll
+D:\Mukta\Projects\TahsinAgroProject\Tahsin Agro\trunk\Tahsin Agro\CrossCutting.InversionOfControl\bin\Release\Microsoft.Web.Infrastructure.dll
+D:\Mukta\Projects\TahsinAgroProject\Tahsin Agro\trunk\Tahsin Agro\CrossCutting.InversionOfControl\bin\Release\Ninject.dll
+D:\Mukta\Projects\TahsinAgroProject\Tahsin Agro\trunk\Tahsin Agro\CrossCutting.InversionOfControl\bin\Release\Ninject.Web.Common.dll
+D:\Mukta\Projects\TahsinAgroProject\Tahsin Agro\trunk\Tahsin Agro\CrossCutting.InversionOfControl\bin\Release\Ninject.Web.Mvc.dll
+D:\Mukta\Projects\TahsinAgroProject\Tahsin Agro\trunk\Tahsin Agro\CrossCutting.InversionOfControl\bin\Release\WebActivatorEx.dll
+D:\Mukta\Projects\TahsinAgroProject\Tahsin Agro\trunk\Tahsin Agro\CrossCutting.InversionOfControl\bin\Release\App.Domain.pdb
+D:\Mukta\Projects\TahsinAgroProject\Tahsin Agro\trunk\Tahsin Agro\CrossCutting.InversionOfControl\bin\Release\Application.Interfaces.pdb
+D:\Mukta\Projects\TahsinAgroProject\Tahsin Agro\trunk\Tahsin Agro\CrossCutting.InversionOfControl\bin\Release\Application.Services.pdb
+D:\Mukta\Projects\TahsinAgroProject\Tahsin Agro\trunk\Tahsin Agro\CrossCutting.InversionOfControl\bin\Release\Data.Context.pdb
+D:\Mukta\Projects\TahsinAgroProject\Tahsin Agro\trunk\Tahsin Agro\CrossCutting.InversionOfControl\bin\Release\Data.Repository.pdb
+D:\Mukta\Projects\TahsinAgroProject\Tahsin Agro\trunk\Tahsin Agro\CrossCutting.InversionOfControl\bin\Release\EntityFramework.xml
+D:\Mukta\Projects\TahsinAgroProject\Tahsin Agro\trunk\Tahsin Agro\CrossCutting.InversionOfControl\bin\Release\EntityFramework.SqlServer.xml
+D:\Mukta\Projects\TahsinAgroProject\Tahsin Agro\trunk\Tahsin Agro\CrossCutting.InversionOfControl\bin\Release\Microsoft.Practices.ServiceLocation.pdb
+D:\Mukta\Projects\TahsinAgroProject\Tahsin Agro\trunk\Tahsin Agro\CrossCutting.InversionOfControl\bin\Release\Microsoft.Practices.ServiceLocation.xml
+D:\Mukta\Projects\TahsinAgroProject\Tahsin Agro\trunk\Tahsin Agro\CrossCutting.InversionOfControl\bin\Release\Ninject.xml
+D:\Mukta\Projects\TahsinAgroProject\Tahsin Agro\trunk\Tahsin Agro\CrossCutting.InversionOfControl\bin\Release\Ninject.Web.Common.xml
+D:\Mukta\Projects\TahsinAgroProject\Tahsin Agro\trunk\Tahsin Agro\CrossCutting.InversionOfControl\bin\Release\Ninject.Web.Mvc.xml
+D:\Mukta\Projects\TahsinAgroProject\Tahsin Agro\trunk\Tahsin Agro\CrossCutting.InversionOfControl\obj\Release\CrossCutting.InversionOfControl.csprojResolveAssemblyReference.cache
+D:\Mukta\Projects\TahsinAgroProject\Tahsin Agro\trunk\Tahsin Agro\CrossCutting.InversionOfControl\obj\Release\CrossCutting.InversionOfControl.dll
+D:\Mukta\Projects\TahsinAgroProject\Tahsin Agro\trunk\Tahsin Agro\CrossCutting.InversionOfControl\obj\Release\CrossCutting.InversionOfControl.pdb
+E:\National Tea\National Tea\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\CrossCutting.InversionOfControl.dll.config
+E:\National Tea\National Tea\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\CrossCutting.InversionOfControl.dll
+E:\National Tea\National Tea\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\CrossCutting.InversionOfControl.pdb
+E:\National Tea\National Tea\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\App.Domain.dll
+E:\National Tea\National Tea\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Application.Interfaces.dll
+E:\National Tea\National Tea\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Application.Services.dll
+E:\National Tea\National Tea\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Data.Context.dll
+E:\National Tea\National Tea\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Data.Repository.dll
+E:\National Tea\National Tea\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\App.Domain.pdb
+E:\National Tea\National Tea\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Application.Interfaces.pdb
+E:\National Tea\National Tea\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Application.Services.pdb
+E:\National Tea\National Tea\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Data.Context.pdb
+E:\National Tea\National Tea\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Data.Repository.pdb
+E:\National Tea\National Tea\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\EntityFramework.xml
+E:\National Tea\National Tea\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\EntityFramework.SqlServer.xml
+E:\National Tea\National Tea\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Microsoft.Practices.ServiceLocation.pdb
+E:\National Tea\National Tea\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Microsoft.Practices.ServiceLocation.xml
+E:\National Tea\National Tea\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Ninject.xml
+E:\National Tea\National Tea\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Ninject.Web.Common.xml
+E:\National Tea\National Tea\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Ninject.Web.Mvc.xml
+E:\National Tea\National Tea\trunk\NationalTea\CrossCutting.InversionOfControl\obj\Release\CrossCutting.InversionOfControl.csprojResolveAssemblyReference.cache
+E:\National Tea\National Tea\trunk\NationalTea\CrossCutting.InversionOfControl\obj\Release\CrossCutting.InversionOfControl.dll
+E:\National Tea\National Tea\trunk\NationalTea\CrossCutting.InversionOfControl\obj\Release\CrossCutting.InversionOfControl.pdb
+F:\New folder\National Tea\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\CrossCutting.InversionOfControl.dll.config
+F:\New folder\National Tea\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\CrossCutting.InversionOfControl.dll
+F:\New folder\National Tea\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\CrossCutting.InversionOfControl.pdb
+F:\New folder\National Tea\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\App.Domain.dll
+F:\New folder\National Tea\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Application.Interfaces.dll
+F:\New folder\National Tea\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Application.Services.dll
+F:\New folder\National Tea\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Data.Context.dll
+F:\New folder\National Tea\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Data.Repository.dll
+F:\New folder\National Tea\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\System.Web.Mvc.dll
+F:\New folder\National Tea\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\App.Domain.pdb
+F:\New folder\National Tea\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Application.Interfaces.pdb
+F:\New folder\National Tea\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Application.Services.pdb
+F:\New folder\National Tea\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Data.Context.pdb
+F:\New folder\National Tea\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Data.Repository.pdb
+F:\New folder\National Tea\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\EntityFramework.xml
+F:\New folder\National Tea\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\EntityFramework.SqlServer.xml
+F:\New folder\National Tea\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Microsoft.Practices.ServiceLocation.pdb
+F:\New folder\National Tea\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Microsoft.Practices.ServiceLocation.xml
+F:\New folder\National Tea\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Ninject.xml
+F:\New folder\National Tea\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Ninject.Web.Common.xml
+F:\New folder\National Tea\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Ninject.Web.Mvc.xml
+F:\New folder\National Tea\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\System.Web.Mvc.xml
+F:\New folder\National Tea\trunk\NationalTea\CrossCutting.InversionOfControl\obj\Release\CrossCutting.InversionOfControl.csprojResolveAssemblyReference.cache
+F:\New folder\National Tea\trunk\NationalTea\CrossCutting.InversionOfControl\obj\Release\CrossCutting.InversionOfControl.dll
+F:\New folder\National Tea\trunk\NationalTea\CrossCutting.InversionOfControl\obj\Release\CrossCutting.InversionOfControl.pdb
+D:\National Tea 160418\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\CrossCutting.InversionOfControl.dll.config
+D:\National Tea 160418\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\CrossCutting.InversionOfControl.dll
+D:\National Tea 160418\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\CrossCutting.InversionOfControl.pdb
+D:\National Tea 160418\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\App.Domain.dll
+D:\National Tea 160418\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Application.Interfaces.dll
+D:\National Tea 160418\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Application.Services.dll
+D:\National Tea 160418\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Data.Context.dll
+D:\National Tea 160418\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Data.Repository.dll
+D:\National Tea 160418\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\App.Domain.pdb
+D:\National Tea 160418\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Application.Interfaces.pdb
+D:\National Tea 160418\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Application.Services.pdb
+D:\National Tea 160418\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Data.Context.pdb
+D:\National Tea 160418\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Data.Repository.pdb
+D:\National Tea 160418\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\EntityFramework.xml
+D:\National Tea 160418\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\EntityFramework.SqlServer.xml
+D:\National Tea 160418\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Microsoft.Practices.ServiceLocation.pdb
+D:\National Tea 160418\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Microsoft.Practices.ServiceLocation.xml
+D:\National Tea 160418\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Ninject.xml
+D:\National Tea 160418\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Ninject.Web.Common.xml
+D:\National Tea 160418\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Ninject.Web.Mvc.xml
+D:\National Tea 160418\trunk\NationalTea\CrossCutting.InversionOfControl\obj\Release\CrossCutting.InversionOfControl.csprojResolveAssemblyReference.cache
+D:\National Tea 160418\trunk\NationalTea\CrossCutting.InversionOfControl\obj\Release\CrossCutting.InversionOfControl.dll
+D:\National Tea 160418\trunk\NationalTea\CrossCutting.InversionOfControl\obj\Release\CrossCutting.InversionOfControl.pdb
+D:\NT\ASPL 20-09-18\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\CrossCutting.InversionOfControl.dll.config
+D:\NT\ASPL 20-09-18\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\CrossCutting.InversionOfControl.dll
+D:\NT\ASPL 20-09-18\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\CrossCutting.InversionOfControl.pdb
+D:\NT\ASPL 20-09-18\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\App.Domain.dll
+D:\NT\ASPL 20-09-18\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Application.Interfaces.dll
+D:\NT\ASPL 20-09-18\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Application.Services.dll
+D:\NT\ASPL 20-09-18\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Data.Context.dll
+D:\NT\ASPL 20-09-18\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Data.Repository.dll
+D:\NT\ASPL 20-09-18\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\App.Domain.pdb
+D:\NT\ASPL 20-09-18\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Application.Interfaces.pdb
+D:\NT\ASPL 20-09-18\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Application.Services.pdb
+D:\NT\ASPL 20-09-18\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Data.Context.pdb
+D:\NT\ASPL 20-09-18\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Data.Repository.pdb
+D:\NT\ASPL 20-09-18\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\EntityFramework.xml
+D:\NT\ASPL 20-09-18\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\EntityFramework.SqlServer.xml
+D:\NT\ASPL 20-09-18\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Microsoft.Practices.ServiceLocation.pdb
+D:\NT\ASPL 20-09-18\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Microsoft.Practices.ServiceLocation.xml
+D:\NT\ASPL 20-09-18\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Ninject.xml
+D:\NT\ASPL 20-09-18\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Ninject.Web.Common.xml
+D:\NT\ASPL 20-09-18\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Ninject.Web.Mvc.xml
+D:\NT\ASPL 20-09-18\trunk\NationalTea\CrossCutting.InversionOfControl\obj\Release\CrossCutting.InversionOfControl.csprojResolveAssemblyReference.cache
+D:\NT\ASPL 20-09-18\trunk\NationalTea\CrossCutting.InversionOfControl\obj\Release\CrossCutting.InversionOfControl.dll
+D:\NT\ASPL 20-09-18\trunk\NationalTea\CrossCutting.InversionOfControl\obj\Release\CrossCutting.InversionOfControl.pdb
+D:\Farhad 28-10-18\ASPL 20-09-18\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\CrossCutting.InversionOfControl.dll.config
+D:\Farhad 28-10-18\ASPL 20-09-18\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\CrossCutting.InversionOfControl.dll
+D:\Farhad 28-10-18\ASPL 20-09-18\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\CrossCutting.InversionOfControl.pdb
+D:\Farhad 28-10-18\ASPL 20-09-18\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\App.Domain.dll
+D:\Farhad 28-10-18\ASPL 20-09-18\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Application.Interfaces.dll
+D:\Farhad 28-10-18\ASPL 20-09-18\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Application.Services.dll
+D:\Farhad 28-10-18\ASPL 20-09-18\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Data.Context.dll
+D:\Farhad 28-10-18\ASPL 20-09-18\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Data.Repository.dll
+D:\Farhad 28-10-18\ASPL 20-09-18\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\App.Domain.pdb
+D:\Farhad 28-10-18\ASPL 20-09-18\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Application.Interfaces.pdb
+D:\Farhad 28-10-18\ASPL 20-09-18\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Application.Services.pdb
+D:\Farhad 28-10-18\ASPL 20-09-18\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Data.Context.pdb
+D:\Farhad 28-10-18\ASPL 20-09-18\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Data.Repository.pdb
+D:\Farhad 28-10-18\ASPL 20-09-18\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\EntityFramework.xml
+D:\Farhad 28-10-18\ASPL 20-09-18\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\EntityFramework.SqlServer.xml
+D:\Farhad 28-10-18\ASPL 20-09-18\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Microsoft.Practices.ServiceLocation.pdb
+D:\Farhad 28-10-18\ASPL 20-09-18\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Microsoft.Practices.ServiceLocation.xml
+D:\Farhad 28-10-18\ASPL 20-09-18\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Ninject.xml
+D:\Farhad 28-10-18\ASPL 20-09-18\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Ninject.Web.Common.xml
+D:\Farhad 28-10-18\ASPL 20-09-18\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Ninject.Web.Mvc.xml
+D:\Farhad 28-10-18\ASPL 20-09-18\trunk\NationalTea\CrossCutting.InversionOfControl\obj\Release\CrossCutting.InversionOfControl.csprojResolveAssemblyReference.cache
+D:\Farhad 28-10-18\ASPL 20-09-18\trunk\NationalTea\CrossCutting.InversionOfControl\obj\Release\CrossCutting.InversionOfControl.dll
+D:\Farhad 28-10-18\ASPL 20-09-18\trunk\NationalTea\CrossCutting.InversionOfControl\obj\Release\CrossCutting.InversionOfControl.pdb
+D:\Farhad 06032019\Farhad\ASPL\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\CrossCutting.InversionOfControl.dll.config
+D:\Farhad 06032019\Farhad\ASPL\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\CrossCutting.InversionOfControl.dll
+D:\Farhad 06032019\Farhad\ASPL\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\CrossCutting.InversionOfControl.pdb
+D:\Farhad 06032019\Farhad\ASPL\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\App.Domain.dll
+D:\Farhad 06032019\Farhad\ASPL\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Application.Interfaces.dll
+D:\Farhad 06032019\Farhad\ASPL\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Application.Services.dll
+D:\Farhad 06032019\Farhad\ASPL\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Data.Context.dll
+D:\Farhad 06032019\Farhad\ASPL\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Data.Repository.dll
+D:\Farhad 06032019\Farhad\ASPL\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\App.Domain.pdb
+D:\Farhad 06032019\Farhad\ASPL\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Application.Interfaces.pdb
+D:\Farhad 06032019\Farhad\ASPL\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Application.Services.pdb
+D:\Farhad 06032019\Farhad\ASPL\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Data.Context.pdb
+D:\Farhad 06032019\Farhad\ASPL\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Data.Repository.pdb
+D:\Farhad 06032019\Farhad\ASPL\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\EntityFramework.xml
+D:\Farhad 06032019\Farhad\ASPL\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\EntityFramework.SqlServer.xml
+D:\Farhad 06032019\Farhad\ASPL\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Microsoft.Practices.ServiceLocation.pdb
+D:\Farhad 06032019\Farhad\ASPL\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Microsoft.Practices.ServiceLocation.xml
+D:\Farhad 06032019\Farhad\ASPL\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Ninject.xml
+D:\Farhad 06032019\Farhad\ASPL\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Ninject.Web.Common.xml
+D:\Farhad 06032019\Farhad\ASPL\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Ninject.Web.Mvc.xml
+D:\Farhad 06032019\Farhad\ASPL\trunk\NationalTea\CrossCutting.InversionOfControl\obj\Release\CrossCutting.InversionOfControl.csprojResolveAssemblyReference.cache
+D:\Farhad 06032019\Farhad\ASPL\trunk\NationalTea\CrossCutting.InversionOfControl\obj\Release\CrossCutting.InversionOfControl.dll
+D:\Farhad 06032019\Farhad\ASPL\trunk\NationalTea\CrossCutting.InversionOfControl\obj\Release\CrossCutting.InversionOfControl.pdb
+F:\Farhad\ASPL\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\CrossCutting.InversionOfControl.dll.config
+F:\Farhad\ASPL\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\CrossCutting.InversionOfControl.dll
+F:\Farhad\ASPL\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\CrossCutting.InversionOfControl.pdb
+F:\Farhad\ASPL\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\App.Domain.dll
+F:\Farhad\ASPL\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Application.Interfaces.dll
+F:\Farhad\ASPL\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Application.Services.dll
+F:\Farhad\ASPL\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Data.Context.dll
+F:\Farhad\ASPL\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Data.Repository.dll
+F:\Farhad\ASPL\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\App.Domain.pdb
+F:\Farhad\ASPL\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Application.Interfaces.pdb
+F:\Farhad\ASPL\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Application.Services.pdb
+F:\Farhad\ASPL\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Data.Context.pdb
+F:\Farhad\ASPL\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Data.Repository.pdb
+F:\Farhad\ASPL\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\EntityFramework.xml
+F:\Farhad\ASPL\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\EntityFramework.SqlServer.xml
+F:\Farhad\ASPL\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Microsoft.Practices.ServiceLocation.pdb
+F:\Farhad\ASPL\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Microsoft.Practices.ServiceLocation.xml
+F:\Farhad\ASPL\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Ninject.xml
+F:\Farhad\ASPL\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Ninject.Web.Common.xml
+F:\Farhad\ASPL\trunk\NationalTea\CrossCutting.InversionOfControl\bin\Release\Ninject.Web.Mvc.xml
+F:\Farhad\ASPL\trunk\NationalTea\CrossCutting.InversionOfControl\obj\Release\CrossCutting.InversionOfControl.csprojResolveAssemblyReference.cache
+F:\Farhad\ASPL\trunk\NationalTea\CrossCutting.InversionOfControl\obj\Release\CrossCutting.InversionOfControl.dll
+F:\Farhad\ASPL\trunk\NationalTea\CrossCutting.InversionOfControl\obj\Release\CrossCutting.InversionOfControl.pdb
+F:\Farhad\ASPL\trunk\AcclineERP\CrossCutting.InversionOfControl\bin\Release\CrossCutting.InversionOfControl.dll.config
+F:\Farhad\ASPL\trunk\AcclineERP\CrossCutting.InversionOfControl\bin\Release\CrossCutting.InversionOfControl.dll
+F:\Farhad\ASPL\trunk\AcclineERP\CrossCutting.InversionOfControl\bin\Release\CrossCutting.InversionOfControl.pdb
+F:\Farhad\ASPL\trunk\AcclineERP\CrossCutting.InversionOfControl\bin\Release\App.Domain.dll
+F:\Farhad\ASPL\trunk\AcclineERP\CrossCutting.InversionOfControl\bin\Release\Application.Interfaces.dll
+F:\Farhad\ASPL\trunk\AcclineERP\CrossCutting.InversionOfControl\bin\Release\Application.Services.dll
+F:\Farhad\ASPL\trunk\AcclineERP\CrossCutting.InversionOfControl\bin\Release\Data.Context.dll
+F:\Farhad\ASPL\trunk\AcclineERP\CrossCutting.InversionOfControl\bin\Release\Data.Repository.dll
+F:\Farhad\ASPL\trunk\AcclineERP\CrossCutting.InversionOfControl\bin\Release\App.Domain.pdb
+F:\Farhad\ASPL\trunk\AcclineERP\CrossCutting.InversionOfControl\bin\Release\Application.Interfaces.pdb
+F:\Farhad\ASPL\trunk\AcclineERP\CrossCutting.InversionOfControl\bin\Release\Application.Services.pdb
+F:\Farhad\ASPL\trunk\AcclineERP\CrossCutting.InversionOfControl\bin\Release\Data.Context.pdb
+F:\Farhad\ASPL\trunk\AcclineERP\CrossCutting.InversionOfControl\bin\Release\Data.Repository.pdb
+F:\Farhad\ASPL\trunk\AcclineERP\CrossCutting.InversionOfControl\bin\Release\EntityFramework.xml
+F:\Farhad\ASPL\trunk\AcclineERP\CrossCutting.InversionOfControl\bin\Release\EntityFramework.SqlServer.xml
+F:\Farhad\ASPL\trunk\AcclineERP\CrossCutting.InversionOfControl\bin\Release\Microsoft.Practices.ServiceLocation.pdb
+F:\Farhad\ASPL\trunk\AcclineERP\CrossCutting.InversionOfControl\bin\Release\Microsoft.Practices.ServiceLocation.xml
+F:\Farhad\ASPL\trunk\AcclineERP\CrossCutting.InversionOfControl\bin\Release\Ninject.xml
+F:\Farhad\ASPL\trunk\AcclineERP\CrossCutting.InversionOfControl\bin\Release\Ninject.Web.Common.xml
+F:\Farhad\ASPL\trunk\AcclineERP\CrossCutting.InversionOfControl\bin\Release\Ninject.Web.Mvc.xml
+F:\Farhad\ASPL\trunk\AcclineERP\CrossCutting.InversionOfControl\obj\Release\CrossCutting.InversionOfControl.csprojResolveAssemblyReference.cache
+F:\Farhad\ASPL\trunk\AcclineERP\CrossCutting.InversionOfControl\obj\Release\CrossCutting.InversionOfControl.dll
+F:\Farhad\ASPL\trunk\AcclineERP\CrossCutting.InversionOfControl\obj\Release\CrossCutting.InversionOfControl.pdb

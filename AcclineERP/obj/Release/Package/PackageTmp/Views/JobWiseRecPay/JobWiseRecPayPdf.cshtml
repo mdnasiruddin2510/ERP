@@ -1,0 +1,162 @@
+﻿@model IEnumerable<App.Domain.ViewModel.rptJobWiseVM>
+@{
+    ViewBag.Title = "JobWiseRecPayPdf";
+    Layout = null;
+    double TotCrAmt = 0;
+    double TotDrAmt = 0;
+    var CompInfo = AcclineERP.Models.GetCompanyInfo.GetComInfo();
+    string CompanyAddress = ((CompInfo.Addr1 == null ? string.Empty : CompInfo.Addr1) + (CompInfo.Addr2 == null ? string.Empty : CompInfo.Addr2));
+}
+
+<script src="~/Scripts/jquery-1.9.1.min.js"></script>
+<script src="~/Scripts/Export.js"></script>
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/select2/select2.css" rel="stylesheet" type="text/css" />
+<link href="~/Css/FormDesign.css" rel="stylesheet" />
+
+<style>
+    hr {
+        background-color: black;
+        height: 0.5px;
+    }
+
+    tr {
+        page-break-inside: avoid;
+    }
+</style>
+
+<div id="toReport" class="panel-body" style="margin: auto; text-align:center !important; width:800px; height:100%;">
+    <div class="panel-heading" style="text-align:center">
+        <div class="panel-title">
+            <label style="text-align:center !important; text-decoration: none; font-size:25px; font-weight:bold">@CompInfo.CompName</label><br>
+            <label style="text-align:center !important; text-decoration: none; font-size:23px; font-weight:normal"> @CompanyAddress</label><br>
+            @*<label style="text-align:center !important; text-decoration: none; font-size:23px; font-weight:normal">Phone: @CompInfo.Tel</label>*@<br>
+        </div>
+
+        <div class="panel-title">
+            <text style="text-align:center !important; text-decoration: none; font-size:23px; font-weight:bold">Job Wise Receipt and Payment</text>
+        </div>
+        @if (ViewBag.HasBranch == true)
+        {
+            <div class="panel-title">
+                <text style="text-align:center !important; text-decoration: none; font-size:20px; font-weight:bold">Branch : @ViewBag.Branch</text>
+            </div>
+        }
+        <div class="cashDate">
+            <text style="text-align:center !important; text-decoration: none; font-size:15px; font-weight:bold">From : @ViewBag.fDate &nbsp;&nbsp; To: @ViewBag.tDate</text>
+        </div>
+    </div>
+    <hr />
+    <table cellpadding="0" cellspacing="0" border="0" style="width:800px">
+        <tr>
+            <th style="width:100px; font-size:13px; text-align:left">Voucher No</th>
+            <th style="width:100px; font-size:13px; text-align:left">Date</th>
+            <th style="width:150px; font-size:13px; text-align:left">Account</th>
+            <th style="width:150px; font-size:13px; text-align:left">Subsidiary</th>
+            <th style="width:120px; font-size:13px; text-align:left">Narration</th>
+            <th style="width:80px; font-size:13px; text-align:right">Amount</th>
+        </tr>
+    </table>
+    <hr />
+    <h3 style="text-align:left; height:10px">Receipt</h3>
+    <hr />
+    <table cellpadding="0" cellspacing="0" border="0" style="width:800px">
+
+        @foreach (var item in Model)
+        {
+            if (item.RP == "R")
+            {
+                <tr>                    
+                    <td style="width:100px; text-align:left; font-size:12px">
+                        @Html.DisplayFor(modelItem => item.VchrNo)
+                    </td>
+                    <td style="width:100px; text-align:left; font-size:12px">
+                        @AcclineERP.Models.InWord.GetAbbrMonthNameDate(item.VDate)
+                    </td>
+                    <td style="width:180px; text-align:left; font-size:12px">
+                        @Html.DisplayFor(modelItem => item.AcName)
+                    </td>
+
+                    <td style="width:180px; text-align:left; font-size:12px">
+                        @Html.DisplayFor(modelItem => item.SubName)
+                    </td>
+                    <td style="width:120px; text-align:left; font-size:12px">
+                        @Html.DisplayFor(modelItem => item.Narration)
+                    </td>
+                    <td style="width:80px; text-align:right; font-size:12px">
+                        @Html.DisplayFor(modelItem => item.CrAmount)
+                    </td>
+                </tr>
+                TotCrAmt += item.CrAmount;
+            }
+        }
+        <tr>
+            <td style="border-right: hidden !important; border-left: hidden !important;border-bottom: hidden !important;"></td>
+            <td style="border-right: hidden !important; border-bottom: hidden !important;"></td>
+            <td style="border-right: hidden !important; border-bottom: hidden !important;"></td>
+            <td style="border-right: hidden !important; border-bottom: hidden !important;"></td>
+            <td style="border-right: hidden !important; border-bottom: hidden !important;"></td>
+            <td class="tds" style="text-align: right; font-size: 12px; border-top: 1px solid;border-bottom: hidden !important;border-right: hidden !important;"><b>@TotCrAmt</b><hr style="margin-bottom: 3px !important; margin-top: 0 !important;  margin-left:15px !important" /><hr style="margin-bottom: 0 !important; margin-top: 0 !important;  margin-left:15px !important" /></td>
+                      
+        </tr>
+    </table>
+    <h3 style="text-align:left; height:10px">Payment</h3>
+    <hr />
+    <table cellpadding="0" cellspacing="0" border="0" style="width:800px">
+
+
+        @foreach (var item in Model)
+        {
+            if (item.RP == "P")
+            {
+                <tr>                    
+                    <td style="width:100px; text-align:left; font-size:12px">
+                        @Html.DisplayFor(modelItem => item.VchrNo)
+                    </td>
+                    <td style="width:100px; text-align:left; font-size:12px">
+                        @AcclineERP.Models.InWord.GetAbbrMonthNameDate(item.VDate)
+                    </td>
+                    <td style="width:180px; text-align:left; font-size:12px">
+                        @Html.DisplayFor(modelItem => item.AcName)
+                    </td>
+
+                    <td style="width:180px; text-align:left; font-size:12px">
+                        @Html.DisplayFor(modelItem => item.SubName)
+                    </td>
+                    <td style="width:120px; text-align:left; font-size:12px">
+                        @Html.DisplayFor(modelItem => item.Narration)
+                    </td>
+                    <td style="width:80px; text-align:right; font-size:12px">
+                        @Html.DisplayFor(modelItem => item.DrAmount)
+                    </td>
+                </tr>
+                TotDrAmt += item.DrAmount;
+            }
+        }
+        <tr>
+            <td style="border-right: hidden !important; border-left: hidden !important;border-bottom: hidden !important;"></td>
+            <td style="border-right: hidden !important; border-bottom: hidden !important;"></td>
+            <td style="border-right: hidden !important; border-bottom: hidden !important;"></td>
+            <td style="border-right: hidden !important; border-bottom: hidden !important;"></td>
+            <td style="border-right: hidden !important; border-bottom: hidden !important;"></td>
+            <td class="tds" style="text-align: right; font-size: 12px; border-top: 1px solid;border-bottom: hidden !important;border-right: hidden !important;">
+            <b>@TotDrAmt</b><hr style="margin-bottom: 3px !important; margin-top: 0 !important; margin-left:15px !important" />
+            <hr style="margin-bottom: 0 !important; margin-top: 0 !important; margin-left:15px !important" /></td>
+
+        </tr>
+        @{
+            double ProfitLoss = TotCrAmt - TotDrAmt;
+        }
+        <tr>
+            <td style="border-right: hidden !important; border-left: hidden !important;border-bottom: hidden !important;"></td>
+            <td style="border-right: hidden !important; border-bottom: hidden !important;"></td>
+            <td style="border-right: hidden !important; border-bottom: hidden !important;"></td>
+            <td style="border-right: hidden !important; border-bottom: hidden !important;"></td>
+            <td style="border-right: hidden !important; border-bottom: hidden !important; text-align:right">Profit/Loss :</td>
+            <td class="tds" style="text-align: right; font-size: 12px;"><b>@ProfitLoss</b></td>
+        </tr>
+    </table>
+
+</div>

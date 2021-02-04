@@ -1,0 +1,233 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{ED3978CA-30AC-4F75-BCB3-41A956819A0A}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Application.Services</RootNamespace>
+    <AssemblyName>Application.Services</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Web.Mvc, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.4.0.30506.0\lib\net40\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AcBRAppService.cs" />
+    <Compile Include="AccountsReceivableAppService.cs" />
+    <Compile Include="AppService.cs" />
+    <Compile Include="AdVGivenOPBLAppService.cs" />
+    <Compile Include="BankInfoAppService.cs" />
+    <Compile Include="BankReceiptAppService.cs" />
+    <Compile Include="BalSheetRptAppService.cs" />
+    <Compile Include="CompanyInfoAppService.cs" />
+    <Compile Include="DepartmentAppService.cs" />
+    <Compile Include="DesignationAppService.cs" />
+    <Compile Include="GroupInfoAppService.cs" />
+    <Compile Include="IM_InvACAppService.cs" />
+    <Compile Include="MasterFormAppService.cs" />
+    <Compile Include="MRAgainstAppService.cs" />
+    <Compile Include="PackingListAppService.cs" />
+    <Compile Include="PM_IssRecAppService.cs" />
+    <Compile Include="PurRetDetailAppService.cs" />
+    <Compile Include="PurRetMainAppService.cs" />
+    <Compile Include="RateChartAppService.cs" />
+    <Compile Include="SaleRetMainAppService.cs" />
+    <Compile Include="SaleRetDetailAppService.cs" />
+    <Compile Include="rptJobWiseVMAppService.cs" />
+    <Compile Include="CustAdjustmentAppService.cs" />
+    <Compile Include="CustAdjExtAppService.cs" />
+    <Compile Include="CostLedgerAppService.cs" />
+    <Compile Include="CustWiseSummSaleRptAppService.cs" />
+    <Compile Include="OpeningStockAppService.cs" />
+    <Compile Include="PayInvRecvAppService.cs" />
+    <Compile Include="PurchaseMainAppService.cs" />
+    <Compile Include="SGroupInfoAppService.cs" />
+    <Compile Include="SSGroupInfoAppService.cs" />
+    <Compile Include="tmpPurItemAppService.cs" />
+    <Compile Include="PurchaseDetailAppService.cs" />
+    <Compile Include="ChequeArchiveAppService.cs" />
+    <Compile Include="MoneyReceiptAppService.cs" />
+    <Compile Include="MoneyReceiptExtAppService.cs" />
+    <Compile Include="UnitInfoAppService.cs" />
+    <Compile Include="VchrSetAppService.cs" />
+    <Compile Include="DefACAppService.cs" />
+    <Compile Include="ChequeReceiptExtAppService.cs" />
+    <Compile Include="ChequeReceiptAppService.cs" />
+    <Compile Include="DynaCapAppService.cs" />
+    <Compile Include="PVchrTrackAppService.cs" />
+    <Compile Include="SubsidiaryExtAppService.cs" />
+    <Compile Include="CashBookAppService.cs" />
+    <Compile Include="CommonPVVMAppService.cs" />
+    <Compile Include="GsetAppService.cs" />
+    <Compile Include="ItemWiseDisVatVMAppService.cs" />
+    <Compile Include="JarnalVoucherAppService.cs" />
+    <Compile Include="JTrGrpAppService.cs" />
+    <Compile Include="LedgerCaptionAppService.cs" />
+    <Compile Include="LedgerTypeAppService.cs" />
+    <Compile Include="LevelLenAppService.cs" />
+    <Compile Include="LotDTAppService.cs" />
+    <Compile Include="MinLevAppService.cs" />
+    <Compile Include="OpenBalAppService.cs" />
+    <Compile Include="ItemListAppService.cs" />
+    <Compile Include="OpnBalAppService.cs" />
+    <Compile Include="ProjInfoAppService.cs" />
+    <Compile Include="PVchrDetailAppService.cs" />
+    <Compile Include="PVchrMainAppService.cs" />
+    <Compile Include="PVchrMainExtAppService.cs" />
+    <Compile Include="ReportLedgerAppService.cs" />
+    <Compile Include="SalesDetailAppService.cs" />
+    <Compile Include="SalesMainAppService.cs" />
+    <Compile Include="SecFormListAppService.cs" />
+    <Compile Include="SecFormProcessAppService.cs" />
+    <Compile Include="SecFormRightAppService.cs" />
+    <Compile Include="SecProcessListAppService.cs" />
+    <Compile Include="SecUserGroupAppService.cs" />
+    <Compile Include="SecUserInfoAppService.cs" />
+    <Compile Include="SecUserInGroupAppService.cs" />
+    <Compile Include="SubOpenBalAppService.cs" />
+    <Compile Include="SubsidiaryCtrlAppService.cs" />
+    <Compile Include="CashReceiptSubDetailsAppService.cs" />
+    <Compile Include="ExpenseSubDetailsAppService.cs" />
+    <Compile Include="CashOperationAppService.cs" />
+    <Compile Include="CashReceiptAppService.cs" />
+    <Compile Include="CustomerLedgerAppService.cs" />
+    <Compile Include="BankOperationAppService.cs" />
+    <Compile Include="DepositToBankAppService.cs" />
+    <Compile Include="ExpenseAppService.cs" />
+    <Compile Include="FuncSLAppService.cs" />
+    <Compile Include="EmployeeFuncAppService.cs" />
+    <Compile Include="HORemitAppService.cs" />
+    <Compile Include="IssRecSrcDestAppService.cs" />
+    <Compile Include="BranchAppService.cs" />
+    <Compile Include="CommonAppService.cs" />
+    <Compile Include="CurrentStockAppService.cs" />
+    <Compile Include="EmailConfigAppService.cs" />
+    <Compile Include="EmployeeAppService.cs" />
+    <Compile Include="FYDDAppService.cs" />
+    <Compile Include="IssueDetailsAppService.cs" />
+    <Compile Include="IssueMainAppService.cs" />
+    <Compile Include="ItemInfoAppService.cs" />
+    <Compile Include="ItemTypeAppService.cs" />
+    <Compile Include="LocationAppService.cs" />
+    <Compile Include="NewChartAppService.cs" />
+    <Compile Include="PaymentAppService.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReceiveAppService.cs" />
+    <Compile Include="ReceiveDetailsAppService.cs" />
+    <Compile Include="RecPasswordAppService.cs" />
+    <Compile Include="SubsidiaryInfoAppService.cs" />
+    <Compile Include="SubsidiaryTypeAppService.cs" />
+    <Compile Include="SummaryReportAppService.cs" />
+    <Compile Include="SummaryReportTypeAppService.cs" />
+    <Compile Include="SysSetAppService.cs" />
+    <Compile Include="TransactionLogAppService.cs" />
+    <Compile Include="TVchrDetailAppService.cs" />
+    <Compile Include="TVchrMainAppService.cs" />
+    <Compile Include="UnitAppService.cs" />
+    <Compile Include="UserBranchAppService.cs" />
+    <Compile Include="UserProfileAppService.cs" />
+    <Compile Include="VchrDetailAppService.cs" />
+    <Compile Include="VchrMainAppService.cs" />
+    <Compile Include="VchrPreviewVMAppService.cs" />
+    <Compile Include="VM_BINAppService.cs" />
+    <Compile Include="vuItemInfoAppService.cs" />
+    <Compile Include="WithdrawAppService.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\App.Domain\App.Domain.csproj">
+      <Project>{8c5df764-3858-4c07-9729-ab68c49ae77f}</Project>
+      <Name>App.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Application.Interfaces\Application.Interfaces.csproj">
+      <Project>{e4b39556-0995-444b-9223-daf10a5bdacb}</Project>
+      <Name>Application.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Data.Context\Data.Context.csproj">
+      <Project>{71d04fa7-3424-4c8f-ba0e-018653eeb924}</Project>
+      <Name>Data.Context</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="bin\Debug\App.Domain.dll" />
+    <Content Include="bin\Debug\App.Domain.pdb" />
+    <Content Include="bin\Debug\Application.Interfaces.dll" />
+    <Content Include="bin\Debug\Application.Interfaces.pdb" />
+    <Content Include="bin\Debug\Application.Services.dll" />
+    <Content Include="bin\Debug\Application.Services.pdb" />
+    <Content Include="bin\Debug\Data.Context.dll" />
+    <Content Include="bin\Debug\Data.Context.pdb" />
+    <Content Include="bin\Debug\EntityFramework.dll" />
+    <Content Include="bin\Debug\EntityFramework.SqlServer.dll" />
+    <Content Include="bin\Debug\EntityFramework.SqlServer.xml" />
+    <Content Include="bin\Debug\EntityFramework.xml" />
+    <Content Include="bin\Debug\Microsoft.Practices.ServiceLocation.dll" />
+    <Content Include="bin\Debug\Microsoft.Practices.ServiceLocation.pdb" />
+    <Content Include="bin\Debug\Microsoft.Practices.ServiceLocation.xml" />
+    <Content Include="bin\Debug\System.Web.Mvc.dll" />
+    <Content Include="bin\Debug\System.Web.Mvc.xml" />
+    <Content Include="bin\Release\App.Domain.dll" />
+    <Content Include="bin\Release\App.Domain.pdb" />
+    <Content Include="bin\Release\Application.Interfaces.dll" />
+    <Content Include="bin\Release\Application.Interfaces.pdb" />
+    <Content Include="bin\Release\Application.Services.dll" />
+    <Content Include="bin\Release\Application.Services.pdb" />
+    <Content Include="bin\Release\Data.Context.dll" />
+    <Content Include="bin\Release\Data.Context.pdb" />
+    <Content Include="bin\Release\EntityFramework.dll" />
+    <Content Include="bin\Release\EntityFramework.SqlServer.dll" />
+    <Content Include="bin\Release\EntityFramework.SqlServer.xml" />
+    <Content Include="bin\Release\EntityFramework.xml" />
+    <Content Include="bin\Release\Microsoft.Practices.ServiceLocation.dll" />
+    <Content Include="bin\Release\Microsoft.Practices.ServiceLocation.pdb" />
+    <Content Include="bin\Release\Microsoft.Practices.ServiceLocation.xml" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,0 +1,593 @@
+﻿@model App.Domain.ViewModel.CompanyInfoVM
+
+@{
+    ViewBag.Title = "CompanyInfo";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>    
+
+    .form-control {
+        border: 1px solid #00ffff;
+    }
+
+    fieldset {
+        display: block;
+        margin-left: 2px;
+        margin-right: 13px;
+        padding-top: 0.35em;
+        padding-bottom: 0.625em;
+        padding-left: 0.75em;
+        padding-right: 0.75em;
+        border: 2px groove;
+    }
+
+    legend {
+        display: block;
+        padding-left: 2px;
+        padding-right: 2px;
+        border: none;
+    }
+</style>
+
+@using (Html.BeginForm())
+{
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-color panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <text style="text-align:left !important;text-decoration:none;">Company Information</text>
+                    </h3>
+                </div>
+                <fieldset>
+                    <div class="col-md-12">
+                        <div class="col-md-6">
+                            <label class="col-md-3">Company Code</label>
+                            <div class="input-group form-group col-md-8">
+                                <input type="text" id="CompCode" class="form-control" />
+                                @*@Html.TextBoxFor(x => x.LocCode, new { @class = "form-control" })*@
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="col-md-3">Company Name</label>
+                            <div class="input-group form-group col-md-8">
+                                <input type="text" id="CompName" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="col-md-6">
+                            <label class="col-md-3">Short Name</label>
+                            <div class="input-group form-group col-md-8">
+                                <input type="text" id="ShortName" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="col-md-3">Company Name Bangla</label>
+                            <div class="input-group form-group col-md-8">
+                                <input type="text" id="CompNameBN" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="col-md-6">
+                            <label class="col-md-3">Address One</label>
+                            <div class="input-group form-group col-md-8">
+                                <input type="text" id="Addr1" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="col-md-3">Address Two</label>
+                            <div class="input-group form-group col-md-8">
+                                <input type="text" id="Addr2" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="col-md-6">
+                            <label class="col-md-3">Address Bangla</label>
+                            <div class="input-group form-group col-md-8">
+                                <input type="text" id="AddrBN" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="col-md-3">Telephone</label>
+                            <div class="input-group form-group col-md-8">
+                                <input type="text" id="Tel" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="col-md-6">
+                            <label class="col-md-3">Fax</label>
+                            <div class="input-group form-group col-md-8">
+                                <input type="text" id="Fax" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="col-md-3">Email</label>
+                            <div class="input-group form-group col-md-8">
+                                <input type="text" id="Email" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="col-md-6">
+                            <label class="col-md-3">TIN Number</label>
+                            <div class="input-group form-group col-md-8">
+                                <input type="text" id="TINNo" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="col-md-3">BIN</label>
+                            <div class="input-group form-group col-md-8">
+                                <input type="text" id="BIN" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="col-md-6">
+                            <label class="col-md-3">BIN Bangla</label>
+                            <div class="input-group form-group col-md-8">
+                                <input type="text" id="BINBN" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="col-md-3">VAT Requisition No</label>
+                            <div class="input-group form-group col-md-8">
+                                <input type="text" id="VATRegNo" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12" style="text-align:end">
+                        <input type="button" value="SAVE" class="btn btn-primary" id="btnadd" style="width:100px; margin-right:47px" />
+                        <input type="button" value="UPDATE" class="btn btn-primary" id="btnupdate" style="width:100px; margin-right:47px" />
+                    </div>
+                    <div class="col-sm-12 col-md-12" style="margin-top: 10px; margin-bottom: 10px;">
+                        <div class="row col-sm-12 col-md-12" style="border:1px solid; border-color:#adcceb; width:100%">
+                            <div class="row">
+                                <div class="col-sm-12 col-md-12" style="padding:1px 18px 1px 18px">
+                                    <br />
+                                    <table class="table table-bordered table-responsive" id="Add-datatable" style="width:100%">
+                                        <thead>
+                                            <tr>
+                                                <th width="5%">Id</th>
+                                                <th width="5%">Company&nbsp;Code</th>
+                                                <th width="5%">Company&nbsp;Name</th>
+                                                <th width="5%">Short&nbsp;Name</th>
+                                                <th width="5%">Company&nbsp;Name&nbsp;Bangla</th>
+                                                <th width="5%">Address&nbsp;One</th>
+                                                <th width="5%">Address&nbsp;Two</th>
+                                                <th width="5%">Address&nbsp;Bangla</th>
+                                                <th width="5%">Telephone</th>
+                                                <th width="5%">Fax</th>
+                                                <th width="5%">Email</th>
+                                                <th width="5%">TIN&nbsp;Number</th>
+                                                <th width="5%">BIN</th>
+                                                <th width="5%">BIN&nbsp;Bangla</th>
+                                                <th width="5%">VAT&nbsp;ReqNo</th>
+                                                <th width="5%">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tbodyId"></tbody>
+                                    </table>
+                                    <br />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+    </div>
+}
+
+@section scripts {
+    <script src="~/App_Themes/Theme1/plugins/select2/select2.min.js" type="text/javascript"></script>
+    <script src="~/App_Themes/Theme1/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.bootstrap.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.buttons.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/buttons.bootstrap.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/pdfmake.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/vfs_fonts.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/buttons.html5.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/buttons.print.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.fixedHeader.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.keyTable.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.responsive.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/responsive.bootstrap.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.scroller.min.js"></script>
+    <script type="text/javascript" src="../App_Themes/Theme1/plugins/parsleyjs/dist/parsley.min.js"></script>
+    <script src="../App_Themes/Theme1/blue/assets/pages/datatables.init.js"></script>
+    <script>
+    
+        $(document).ready(function () {
+            var CompanyID;
+            $("#btnupdate").hide();
+            $("#btnadd").show();
+            Addindatatable();
+            function Addindatatable()
+            {
+                var table = $("#Add-datatable").DataTable({
+                    "scrollX": true,
+                    "scrollY": 100,
+                    //"paging": false,
+                    "ordering": false,
+                    //"info": false,
+                    //"searching": false,
+                    "ajax": "../CompanyInfo/GetAllDataForCompanyInfo",
+                    "columns": [
+                               { "data": null, "bSortable": false },
+                               { "data": "CompCode" },
+                               { "data": "CompName" },
+                                { "data": "ShortName" },
+                                { "data": "CompNameBN" },
+                                  { "data": "Addr1" },
+                                 { "data": "Addr2" },
+                                { "data": "AddrBN" },
+                                { "data": "Tel" },
+                               { "data": "Fax" },
+                               { "data": "Email" },
+                                { "data": "TINNo" },
+                                { "data": "BIN" },
+                                { "data": "BINBN" },
+                                { "data": "VATRegNo" },
+
+
+                               {
+                                   mRender: function (data, type, row) {
+                                       return '&ensp;&ensp;&ensp;&ensp;<a href="#" id="edit"  value="' + row.CompanyID + '">'
+                                               + '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span></a>&ensp;'
+                                      
+                                       + '  </a>'
+                                   }
+                               },
+                    ],
+                    "fnCreatedRow": function (row, data, index) {
+                        $('td', row).eq(0).html(index + 1);
+                    }
+
+
+                });
+            }
+
+            function clearItemInfo() {
+
+                $("#CompCode").val("");
+                $("#CompName").val("");
+                $("#ShortName").val("");
+                $("#CompNameBN").val("");
+                $("#Addr1").val("");
+                $("#Addr2").val("");
+                $("#AddrBN").val("");
+                $("#Tel").val("");
+                $("#Fax").val("");
+                $("#Email").val("");
+                $("#TINNo").val("");
+                $("#BIN").val("");
+                $("#BINBN").val("");
+                $("#VATRegNo").val("");
+            }
+            function validateOnSave(validOrder) {
+
+                if (!validOrder.CompCode.trim().length) {
+                    return "Please write a code.";
+                }
+                if (!validOrder.CompName.trim().length) {
+                    return "Please write a Name.";
+                }
+                if (!validOrder.ShortName.trim().length) {
+                    return "Please write a Short Name.";
+                }
+                //if (!validOrder.CompNameBN.trim().length) {
+                //    return "Please write a Company Name.";
+                //}
+                if (!validOrder.Addr1.trim().length) {
+                    return "Please write First  Address.";
+                }
+                //if (!validOrder.Addr2.trim().length) {
+                //    return "Please write Second Address.";
+                //}
+                //if (!validOrder.AddrBN.trim().length) {
+                //    return "Please write a Address BN.";
+                //}
+                if (!validOrder.Tel.trim().length) {
+                    return "Please write a Telephone No.";
+                }
+                //if (!validOrder.Fax.trim().length) {
+                //    return "Please write a Fax No.";
+                //}
+                if (!validOrder.Email.trim().length) {
+                    return "Please write a Email.";
+                }
+                if (!validOrder.TINNo.trim().length) {
+                    return "Please write a TINNo.";
+                }
+                //if (!validOrder.BIN.trim().length) {
+                //    return "Please write a BIN.";
+                //}
+                //if (!validOrder.BINBN.trim().length) {
+                //    return "Please write BINBN.";
+                //}
+                if (!validOrder.VATRegNo.trim().length) {
+                    return "Please write a Post Reg No.";
+                }
+                return "";
+            }
+            ///////////Save data//////////////
+            var loadInfo = {
+                CompCode: "",
+                CompName: "",
+                ShortName: "",
+                CompNameBN: "",
+                Addr1: "",
+                Addr2: "",
+                AddrBN: "",
+                Tel: "",
+                Fax: "",
+                Email: "",
+                TINNo: "",
+                BIN: "",
+                BINBN: "",
+                VATRegNo: ""
+            };
+            function setOrder() {
+                loadInfo.CompCode = $("#CompCode").val();
+                loadInfo.CompName = $("#CompName").val();
+                loadInfo.ShortName = $("#ShortName").val();
+                loadInfo.CompNameBN = $("#CompNameBN").val();
+                loadInfo.Addr1 = $("#Addr1").val();
+                loadInfo.Addr2 = $("#Addr2").val();
+                loadInfo.AddrBN = $("#AddrBN").val();
+                loadInfo.Tel = $("#Tel").val();
+                loadInfo.Fax = $("#Fax").val();
+                loadInfo.Email = $("#Email").val();
+                loadInfo.TINNo = $("#TINNo").val();
+                loadInfo.BIN = $("#BIN").val();
+                loadInfo.ItemSGrp = $("#ItemSGrp").val();
+                loadInfo.BINBN = $("#BINBN").val();
+                loadInfo.VATRegNo = $("#VATRegNo").val();
+            }
+
+            $(document).on("click", "#btnadd", function () {
+                setOrder();
+                var validate = validateOnSave(loadInfo);
+                if (validate != "") {
+                    alert(validate);
+                    return;
+                }
+                //  if (orders != 0) {
+                $.ajax({
+                    url: '@Url.Action("SaveCompanyInfo", "CompanyInfo")',
+                    contentType: "application/json;charset=utf-8",
+                    data: JSON.stringify({ CompanyInfo: loadInfo }),
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function (datas) {
+                        if (datas == 1) {
+                            swal({
+                                title: "Ok",
+                                text: "Successfully Saved!",
+                                type: "success",
+                                closeOnConfirm: true
+                            },
+
+                            function () {
+                                location.reload();
+                                clearItemInfo();
+                            });
+
+                        }
+                        else if (datas == "X") {
+                            swal({
+                                title: "Sorry",
+                                text: "No Save Permission for this User",
+                                type: "warning"
+                            });
+                        }
+                        else if (datas == 0) {
+                            swal(
+                                'Sorry!',
+                                'All (*) field are required. These Fields can not be Empty!!!',
+                                'warning'
+                            );
+                            $("#save").prop("disabled", false);
+                        }
+                        else if (data == 2) {                           //save  data
+                            swal({
+                                title: "Sorry!",
+                                text: "Data Already Exists",
+                                type: "warning"
+                            });
+                        }
+
+                            //});
+
+                            //}
+                        else {
+                            swal(
+                                'Sorry!',
+                                'Please Add item in the Table.!!!',
+                                'warning'
+                                );
+                        }
+                    }//success
+                });//ajax
+                //}//if (orders != 0) {
+
+            });
+            /////////////////////////////delete//////////////////////
+            @*$(document).on("click", "#delete", function () {
+                var value = $(this).attr("value");
+                // GroupTypeId = $("#GroupTypeId option:selected").val()
+                swal({
+                    title: "Are you sure?",
+                    text: "You will not be able to recover this data!",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "Yes, delete it!",
+                    closeOnConfirm: false,
+                    closeOnCancel: true
+                },
+                    function () {
+                        $.ajax({
+                            url: '@Url.Action("DeleteCompanyInfo", "CompanyInfo")',
+                            contentType: "application/json;charset=utf-8",
+                            data: { CompanyID: value },
+                            type: 'GET',
+                            dataType: 'json',
+                            success: function (datas) {
+
+                                if (datas == 0 || datas == 2) {
+                                    swal("Sorry!! Failed to delete this data.", "fail");
+                                }
+                                else if (datas == 1) {
+                                    swal({
+                                        title: "Ok",
+                                        text: "Sucessfully Delete!",
+                                        type: "success",
+                                        closeOnConfirm: true
+
+                                    }, function () {
+                                        //clearReceive();
+                                        // loadGroupWiseData();
+                                        location.reload();
+                                    });
+                                }
+                                else if (datas == "D") {
+
+                                    swal({
+                                        title: "Sorry",
+                                        text: "No Delete Permission for this User",
+                                        type: "warning"
+                                    });
+                                }
+                            },
+                            error: function (datas) {
+                                swal("Sorry!! Failed to delete this data.", "fail")
+                            }
+                        });
+                    });
+            });*@
+            ///////////////////////////Edit//////////////////
+
+            $(document).on('click', "#edit", function () {
+                var value = $(this).attr("value");
+                CompanyID = value;
+                //GroupTypeId = $("#GroupTypeId option:selected").val()
+                //$("#update").show();
+                $.ajax({
+                    url: '@Url.Action("CompanyInfoforEdit", "CompanyInfo")',
+                    contentType: "application/json;charset=utf-8",
+                    data: JSON.stringify({ CompanyID: value }),
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function (datas) {
+                        //GroupTypeId = GroupTypeId;
+
+                        $("#CompCode").val(datas.CompCode);
+                        $("#CompName").val(datas.CompName);
+                        $("#ShortName").val(datas.ShortName);
+                        $("#CompNameBN").val(datas.CompNameBN);
+                        $("#Addr1").val(datas.Addr1);
+                        $("#Addr2").val(datas.Addr2);
+                        $("#AddrBN").val(datas.AddrBN);
+                        $("#Tel").val(datas.Tel);
+                        $("#Fax").val(datas.Fax);
+                        $("#Email").val(datas.Email);
+                        $("#TINNo").val(datas.TINNo);
+                        $("#BIN").val(datas.BIN);
+                        $("#BINBN").val(datas.BINBN);
+                        $("#VATRegNo").val(datas.VATRegNo);
+                       
+                        $("#btnupdate").show();
+                        $("#btnadd").hide();
+                        //$("#Type").val($('#Type option:first-child').val()).trigger('change.select2');
+                    }
+                });
+            });
+            ////////////////////////Update//////////////////////////////////
+            $(document).on("click", "#btnupdate", function () {
+                //  ActionCtrl = $("#AcName").val();         
+                //SrcDestName = $("#SrcDestName").val();  
+                // $("#btnupdate").hide();
+                //$("#btnadd").show();
+
+                setOrder();
+                //var validate = validateOnSave(loadInfo);
+                //if (validate != "") {
+                //    alert(validate);
+                //    return;
+                //}
+                // if (orders != 0) {
+                $.ajax({
+                    url: '@Url.Action("UpdateCompanyInfo", "CompanyInfo")',
+                    contentType: "application/json;charset=utf-8",
+                    data: JSON.stringify({ CompanyInfo: loadInfo, CompanyID: CompanyID }),
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function (datas) {
+                        if (datas == 1) {
+
+
+                            swal({
+                                title: "Ok",
+                                text: "Successfully Updated!",
+                                type: "success",
+                                closeOnConfirm: true
+                            },
+
+                            function () {
+                                location.reload();
+                                clearReceive();
+                                //loadGroupWiseData();
+                            });
+
+                        }
+
+                        else if (datas == "X") {
+                            swal({
+                                title: "Sorry",
+                                text: "No Update Permission for this User",
+                                type: "warning"
+                            });
+                        }
+                        else if (datas == 0) {
+                            swal(
+                                'Sorry!',
+                                'All (*) field are required. These Fields can not be Empty!!!',
+                                'warning'
+                            );
+                            $("#save").prop("disabled", false);
+                        }
+                        else if (datas == 2) {                           //save  data
+                            swal({
+                                title: "Sorry!",
+                                text: "Data Already Exists",
+                                type: "warning"
+                            });
+                        }
+
+                            //});
+
+                            //}
+                        else {
+                            swal(
+                                'Sorry!',
+                                'Please Add item in the Table.!!!',
+                                'warning'
+                                );
+                        }
+                    }//success
+                });//ajax
+                //}//if (orders != 0) {
+
+            });
+        
+        });//ready function
+
+    </script>
+ }

@@ -1,0 +1,1402 @@
+﻿@model App.Domain.ViewModel.GlVoucherVM
+@{
+    ViewBag.Title = "GLVoucher";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    List<App.Domain.ViewModel.TvchrDetailVM> items = (List<App.Domain.ViewModel.TvchrDetailVM>)ViewBag.Items;
+}
+
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/select2/select2.css" rel="stylesheet" type="text/css" />
+<link href="~/Css/FormDesign.css" rel="stylesheet" />
+<style>
+    table.dataTable.select tbody tr,
+    table.dataTable thead th:first-child {
+        cursor: pointer;
+    }
+
+    .form-control {
+        border: 1px solid #00ffff;
+    }
+
+    .col-md-12 {
+        padding: 0 !important;
+    }
+
+    .required:after {
+        content: " *";
+        font-weight: bold;
+        color: red;
+    }
+
+    .checkbox {
+        margin-top: 0 !important;
+    }
+
+    .dataTables_scrollBody > table > thead > tr > th[class*="sort"]::after {
+        display: none;
+    }
+
+    fieldset {
+        border: solid 1px #b9b4b4 !important;
+        padding: 0 10px 10px 10px;
+        margin-bottom: 20px;
+        border-bottom: none;
+        width: inherit;
+    }
+
+    legend {
+        width: auto !important;
+        border: none;
+        font-size: 14px;
+    }
+
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    input[type=number] {
+        -moz-appearance: textfield;
+    }
+</style>
+@using (Html.BeginForm())
+{
+    <div class="row">
+        <div class="col-md-11">
+            <div class="panel panel-color panel-primary">
+
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <text style="text-align: left !important; text-decoration: none;">Jarnal Entry</text>
+                    </h3>
+                </div>
+
+                <div class="panel-body">
+                    <div class="input-group form-group col-md-12">
+                        <div class="col-md-4" style="text-align:right">
+
+                            <label class="control-label">
+                                @Html.ActionLink(
+                                "Journal Voucher waiting for Posting",
+                                "GetJournalVoucher",
+                                "GLVoucher",
+                                new { Date = "blankDate" },
+                                new { id = "glPro", }
+                                )
+                            </label>
+                            <label id="CountGLProvition">(@ViewBag.GLProvition)</label>
+
+                        </div>
+                        <div class="col-md-4" style="text-align:center">
+                            <label class="control-label" target="_blank">
+                                @Html.ActionLink(
+"List of Journal Voucher Voucher",
+                                "GetGLEntries",
+                                "GLVoucher",
+                                new { Date = "blankDate" },
+                                new { id = "GLEntries", }
+                                )
+                            </label>
+                            <label id="CountGLEntries">(@ViewBag.GLEntries)</label>
+                        </div>
+                        @*<div class="col-md-8">
+
+                                <label class="control-label" target="_blank">
+                                    @Html.ActionLink(
+                                    "GL Entries",
+                                    "GetJournalVoucher",
+                                    "GLVoucher",
+                                    new { Date = "blankDate" },
+                                    new { id = "JLV",  }
+                                    )
+                                </label>
+                            </div>*@
+                        <div class="col-md-2">
+                            <div class="checkbox checkbox-primary">
+                                <input type="checkbox" name="vNo" class="vNo" required="required" value="1" id="RecurrVNo" /><label>Recurring Voucher</label>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="checkbox checkbox-primary">
+                                <input type="checkbox" name="vNo" class="vNo" required="required" value="2" id="AdjJournal" /><label>Adjusting No</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="col-md-6">
+                            <label class="col-md-4">Voucher Type</label>
+                            <div class="input-group form-group col-md-7" style="padding-left: 1px;">
+                                @Html.DropDownListFor(x => x.VType, null, new { @class = "form-control select2", @Value = ViewBag.VType })
+
+                            </div>
+                        </div>
+                        @if (ViewBag.MaintJob == true)
+                        {
+                            <div class="col-sm-5">
+                                <label class="col-md-5" style="margin-right:-5px !important">Job No</label>
+                                <div class="col-md-7 input-group form-group">
+                                    @Html.DropDownListFor(x => x.JobNo, null, "---- Select ----", new { @class = "form-control select2", @Value = ViewBag.JobNo })
+                                </div>
+                            </div>
+                            <div class="col-md-1">
+                                <input type="button" class="btn" value="Add Job" id="btnJob" />
+                            </div>
+                        }
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="col-md-6">
+                            <label class="col-md-4">Journal No</label>
+                            <div class="input-group form-group col-md-7" style="padding-left: 1px;">
+                                <input type="text" class="form-control" id="VchrNo" name="VchrNo" value="@ViewBag.VchrNo" , required="required" />
+                                @Html.ValidationMessageFor(x => x.VchrNo)
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="col-md-4 required">Journal Date</label>
+                            <div class="input-group form-group col-md-7">
+
+                                <input type="text" class="form-control datePage" id="@Html.IdFor(x => x.VDate)" value="@DateTime.Today.ToShortDateString()">
+                                <span class="input-group-addon bg-primary b-0 text-white"><i class="ion-calendar"></i></span>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-md-12">
+                        <div class="col-md-6 hidden" id="pnlRecurrNo">
+                            <label class="col-md-4">Recurr Voucher No</label>
+                            <div class="input-group form-group col-md-7" style="padding-left: 1px;">
+                                <input type="text" class="form-control" id="RecurrVchrNo" name="RecurrVchrNo" required="required" />
+
+                            </div>
+                        </div>
+                        <div class="col-md-6 hidden" id="pnlAdjAmt">
+                            <label class="col-md-4">Voucher No</label>
+                            <div class="input-group form-group col-md-7" style="padding-left: 1px;">
+                                <input type="text" class="form-control" id="AdjVchrNo" name="AdjVchrNo" required="required" />
+
+                            </div>
+                        </div>
+                    </div>
+                    @*<div class="col-md-1">
+                            <div class="radio radio-inline">
+                                <input type="radio" name="PayMode" required="required" value="Dr" id="Dr" checked="checked" /><label for="Dr">Debit</label>
+
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="radio radio-inline" style="margin-bottom:10px">
+                                <input type="radio" name="PayMode" required="required" value="Cr" id="Cr" /><label for="Cr">Credit</label>
+                            </div>
+                        </div>*@
+                    <fieldset style="margin-bottom: 10px;">
+                        <legend> </legend>
+                        <div class="col-md-5">
+                            <label class="col-md-3"></label>
+                            <div class="col-md-7">
+                                <div class="radio radio-inline">
+                                    <input type="radio" name="PayMode" required="required" value="Dr" id="Dr" checked="checked" /><label for="Dr">Debit</label>
+                                </div>
+                                <div class="radio radio-inline">
+                                    <input type="radio" name="PayMode" required="required" value="Cr" id="Cr" /><label for="Cr">Credit</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="col-md-6">
+                                <label class="col-md-3 required" style="margin-right:-15px">A/C</label>
+                                <div class="input-group form-group col-md-9">
+                                    @Html.DropDownListFor(x => x.Accode, null, "--- Select ---", new { @class = "form-control select2", @Value = ViewBag.Accode })
+
+                                    @Html.ValidationMessageFor(x => x.Accode)
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="col-md-4">Sub A/C Name</label>
+                                <div class="input-group form-group col-md-8">
+                                    @Html.DropDownListFor(x => x.Sub_Ac, null, new { @class = "form-control select2", @Value = ViewBag.Sub_Ac })
+
+                                    @Html.ValidationMessageFor(x => x.Sub_Ac)
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="col-md-4">
+                                <label class="col-md-4" for="Narration">Description</label>
+                                <div class="input-group form-group col-md-8">
+                                    @Html.TextBoxFor(x => x.Narration, new { @class = "form-control col-md-8 select2", required = "required" })
+                                    @Html.ValidationMessageFor(x => x.Narration)
+                                </div>
+                            </div>
+                            <div class="col-md-4" id="ddfUnitCode">
+                                <label class="col-md-4" for="UnitCode">Unit Code</label>
+                                <div class="input-group form-group col-md-8">
+                                    @Html.DropDownListFor(x => x.UnitCode, null, new { @class = "form-control select2", @Value = ViewBag.UnitCode })
+
+                                    @Html.ValidationMessageFor(x => x.UnitCode)
+                                </div>
+                            </div>
+                            <div class="col-md-4" id="ddfDeptCode">
+                                <label class="col-md-4" for="DeptCode">Dept Code</label>
+                                <div class="input-group form-group col-md-8">
+                                    @Html.DropDownListFor(x => x.DeptCode, null, new { @class = "form-control select2", @Value = ViewBag.DeptCode })
+
+                                    @Html.ValidationMessageFor(x => x.DeptCode)
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="col-md-4">
+                                <label class="col-md-4" for="RefNo">Ref No</label>
+                                <div class="input-group form-group col-md-8">
+                                    @Html.TextBoxFor(x => x.RefNo, new { @class = "form-control col-md-8 select2", required = "required" })
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="col-md-4 required">Amount</label>
+                                <div class="input-group form-group col-md-8">
+                                    @Html.TextBoxFor(x => x.Amount, new { @class = "form-control col-md-8 select2", required = "required", @type = "number" })
+                                    @Html.ValidationMessageFor(x => x.Amount)
+                                </div>
+                            </div>
+                            <div class="col-md-4" style="text-align: left;">
+                                <input type="hidden" id="tmpDetailId" />
+                                <input type="button" class="btn btn-primary" value="Add" id="add" />
+                                <input type="button" class="btn btn-primary hidden" value="Update" id="tmpUpdate" />
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="col-md-12" style="margin: 0 auto; width: 100%">
+                                <div class="row" style="margin-right:15px; margin-left:15px">
+                                    <div class="col-md-12">
+                                        <br />
+                                        <table class="table table-bordered table-responsive" id="datatable-buttonsJV" cellspacing="0" style="width: 100%;">
+                                            <thead>
+                                                <tr>
+                                                    <th>SL</th>
+                                                    <th>A/C Name</th>
+                                                    <th>Subsidiary</th>
+                                                    <th>Description</th>
+                                                    <th>Debit</th>
+                                                    <th>Credit</th>
+                                                    <th id="thDUnit">Unit</th>
+                                                    <th id="thDDepartment">Department</th>
+                                                    <th>Action</th>
+
+                                                </tr>
+                                            </thead>
+
+                                            <tfoot align="right">
+                                                <tr>
+                                                    <th style="border:0 !important"></th>
+                                                    <th style="border:0 !important"></th>
+                                                    <th style="border:0 !important"></th>
+                                                    <th style="border:0 !important"></th>
+                                                    <th style="font-size: 12px; border-top: 1px solid; border-width:1px  0px 0px 0px;"><hr style="margin-bottom: 1px !important; margin-top: 0 !important" /><hr style="margin-bottom: 0 !important; margin-top: 0 !important" /></th>
+                                                    <th style="font-size: 12px; border-top: 1px solid; border-width:1px  0px 0px 0px;"><hr style="margin-bottom: 1px !important; margin-top: 0 !important" /><hr style="margin-bottom: 0 !important; margin-top: 0 !important" /></th>
+                                                    <th style="border:0 !important"></th>
+                                                    <th style="border:0 !important"></th>
+                                                    <th style="border:0 !important"></th>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                        @*<hr style="margin-bottom: 1px !important; margin-top: 0 !important" /><br />*@
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </fieldset>
+                    <div class="col-md-12">
+                        <div class="col-md-6">
+                            <label class="col-md-4">Memo</label>
+                            <div class="input-group form-group col-md-8">
+                                @Html.TextBoxFor(x => x.VDesc, new { @class = "form-control col-md-8 " }) @*// This field VchrSrcRef is ultimately going on the memo*@
+                                @Html.ValidationMessageFor(x => x.VDesc)
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="col-md-4">Attachment</label>
+                            <div class="input-group form-group col-md-8">
+                                <input type="file" id="@Html.IdFor(x => x.VchrAttach)" required="required" style="display: !important; font: inherit !important">
+                                @*<img id="ImgPhoto" src="#" alt="" />
+                                    <label id="lblAttch"></label>*@
+                                <span>
+                                    <b>
+                                        File format Excepted <i>.pdf .jpeg .jpg .png .gif .docx .xls </i>
+                                        and Size doesn't exceed 100 KB.
+                                    </b>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+
+                        @*@if (@ViewBag.ByPassProc != true)
+                            {*@
+                        <div class="col-md-6">
+                            <div class="col-md-12">
+                                <label class="col-md-4 required">Prepared By</label>
+                                <div class="input-group form-group col-md-8">
+                                    @Html.DropDownListFor(x => x.PrepBy, null, new { @class = "form-control select2", required = "required", @Value = ViewBag.PrepBy })
+                                    @Html.ValidationMessageFor(x => x.PrepBy)
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-md-4">Remarks</label>
+                                <div class="input-group form-group col-md-6">
+                                    <input type="text" class="form-control" id="@Html.IdFor(x => x.PrepComment)">
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-md-4">Date</label>
+                                <div class="input-group form-group col-md-6">
+                                    <input type="text" class="form-control datePage" id="@Html.IdFor(x => x.PrepDate)" value="@DateTime.Today.ToShortDateString()">
+                                    <span class="input-group-addon bg-primary b-0 text-white"><i class="ion-calendar"></i></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="col-md-12">
+                                <label class="col-md-4 required">Approved By</label>
+                                <div class="input-group form-group col-md-8">
+                                    @Html.DropDownListFor(x => x.ApprBy, null, new { @class = "form-control col-md-8 select2", required = "required", @Value = ViewBag.AppByCode })
+                                    @Html.ValidationMessageFor(x => x.ApprBy)
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-md-4">Remarks</label>
+                                <div class="input-group form-group col-md-6">
+                                    <input type="text" class="form-control" id="@Html.IdFor(x => x.ApprComment)">
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-md-4">Date</label>
+                                <div class="input-group form-group col-md-6">
+                                    <input type="text" class="form-control datePage" id="@Html.IdFor(x => x.ApprDate)" value="@DateTime.Today.ToShortDateString()">
+                                    <span class="input-group-addon bg-primary b-0 text-white"><i class="ion-calendar"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                        @*}*@
+                    </div>
+
+                    <div class="row col-md-12" style="text-align: end">
+                        <div class="col-md-11" style="text-align: right; overflow: hidden">
+                            <a href="@Url.Action("GLPreviewPdf", "GLVoucher")" target="_blank" class="btn btn-primary">Preview</a>
+                            <input type="button" value="Save" class="btn btn-primary" id="save" style="width: 100px;" />
+                            <input type="button" value="Update" class="btn btn-primary" id="update" style="width: 100px;" />
+                            <input type="button" value="Clear" class="btn btn-primary" id="clear" style="width: 100px;" />
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" id="JobModal" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="panel panel-color panel-primary">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">Job Information</h3>
+
+                            </div>
+                            <div class="panel-body">
+                                <div class="clearfix">
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="col-md-3">Job No</label>
+                                    <div class="input-group form-group col-md-7">
+                                        <input type="text" class="form-control" id="nJobNo" name="nJobNo" />
+                                    </div>
+                                </div>
+                                <div class="col-md-10">
+                                    <div>
+                                        <div class="pull-right">
+                                            <input type="button" id="btnJobOk" value="Save" class="btn btn-primary" />
+                                            <input type="button" id="closeJob" value="Close" class="btn btn-primary" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+}
+
+
+@section scripts{
+    <script src="~/App_Themes/Theme1/plugins/select2/select2.min.js" type="text/javascript"></script>
+    <script src="~/App_Themes/Theme1/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.bootstrap.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.buttons.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/buttons.bootstrap.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/pdfmake.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/vfs_fonts.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/buttons.html5.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/buttons.print.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.fixedHeader.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.keyTable.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.responsive.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/responsive.bootstrap.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.scroller.min.js"></script>
+    <script type="text/javascript" src="../App_Themes/Theme1/plugins/parsleyjs/dist/parsley.min.js"></script>
+    <!-- Datatable init js -->
+    <script src="../App_Themes/Theme1/blue/assets/pages/datatables.init.js"></script>
+    <script>
+    $(document).ready(function () {
+        $("#VchrNo").focus();
+
+        function select2Focus() {
+            var select2 = $(this).data('select2');
+            setTimeout(function () {
+                if (!select2.opened()) {
+                    select2.open();
+                }
+            }, 0);
+        }
+
+        //$("input:text:visible:first").focus();
+        $("#update").hide();
+        //$("#pnlAdjAmt").hide();
+        //$("#pnlRecurrNo").hide();
+        $("#Accode").select2().one('select2-focus', select2Focus).on("select2-blur", function () { $(this).one('select2-focus', select2Focus) });
+        $("#Sub_Ac").select2().one('select2-focus', select2Focus).on("select2-blur", function () { $(this).one('select2-focus', select2Focus) });
+        $("#UnitCode").select2().one('select2-focus', select2Focus).on("select2-blur", function () { $(this).one('select2-focus', select2Focus) });
+        $("#DeptCode").select2().one('select2-focus', select2Focus).on("select2-blur", function () { $(this).one('select2-focus', select2Focus) });
+        $("#PrepBy").select2().one('select2-focus', select2Focus).on("select2-blur", function () { $(this).one('select2-focus', select2Focus) });
+        $("#ApprBy").select2().one('select2-focus', select2Focus).on("select2-blur", function () { $(this).one('select2-focus', select2Focus) });
+        $("#JobNo").select2().one('select2-focus', select2Focus).on("select2-blur", function () { $(this).one('select2-focus', select2Focus) });
+        $("#Amount").val();
+
+
+
+        $("table#datatable-buttonsJV tr:even").css({
+            "background-color": "#e1e4e4"
+        });
+
+        $("#clear").on("click", function () {
+            swal({
+                title: "Do you want to clear recently added data ?",
+                text: "Otherwise click on the cancel button.!",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Yes, Clear it!",
+                closeOnConfirm: true,
+                closeOnCancel: true
+            }, function (inputValue) {
+                if (inputValue === true) {
+                    clearGL();
+                    $.ajax({
+                        url: '@Url.Action("delTVchr", "GLVoucher")',
+                        contentType: "application/json;charset=utf-8",
+                        data: { VchrNo: $("#VchrNo").val() },
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function (datas) {
+                        }
+                    });
+                }
+            });
+        });
+        $('#datatable-buttonsJV').dataTable({
+            "iDisplayLength": 5,
+            "lengthMenu": [5, 10, 15, 25, 50, 100],
+            //"async": false
+
+        });
+
+        //For GLEntries
+        $("#GLEntries").click(function () {
+            //Get the id of the selected item in dropdown
+            var VDate = moment($('#VDate').val(), 'DD/MM/YYYY').format('MM/DD/YYYY').toString();
+
+            var id = VDate + '&pageType=JVE';
+
+            //Replace the predifined QueryString param "xxx" with the "id"
+            this.href = this.href.replace("blankDate", id);
+        });
+
+
+        $("#glPro").click(function () {
+            //Get the id of the selected item in dropdown
+            var VDate = moment($('#VDate').val(), 'DD/MM/YYYY').format('MM/DD/YYYY').toString();
+
+            var id = VDate + '&pageType=JVE';
+
+            //Replace the predifined QueryString param "xxx" with the "id"
+            this.href = this.href.replace("blankDate", id);
+        });
+
+        $(document).on("click", "#btnJob", function () {
+            $("#JobModal").modal("show");
+        });
+        $(document).on("click", "#closeJob", function (e) {
+            e.preventDefault();
+            $('#JobModal').modal('hide');
+        });
+        $(document).on("click", "#btnJobOk", function (e) {
+            if ($("#nJobNo").val() != "") {
+                $.ajax({
+                    url: '@Url.Action("LoadandSaveJob", "Sales")',
+                    contentType: "application/json;charset=utf-8",
+                    data: {
+                        nJobNo: $("#nJobNo").val()
+                    },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        $('#JobNo').empty();
+                        //data.insertBefore('<option>', { Value: "", text: "--- Select ---" });
+                        $.each(data, function (index, value) {
+                            $('#JobNo').append($('<option>',
+                                {
+                                    value: value.Value,
+                                    text: value.Text
+                                })).select2();
+                        });
+                        $('#JobModal').modal('hide');
+                        $("#nJobNo").val("");
+                    }
+                });
+            }
+            else {
+                alert("Job No is required.");
+                return;
+            }
+
+        })
+
+        var loadInfo = {
+            Accode: "",
+            Description: "",
+            VDate: "",
+            Sub_Ac: "",
+            Amount: "",
+            Narration: "",
+            PrepBy: "",
+            JobNo: "",
+            ApprBy: "",
+            PrepDate: "",
+            ApprDate: ""
+        }
+        function setOrder() {
+            loadInfo.JobNo = $("#JobNo").val();
+            loadInfo.Accode = $("#Accode").val();
+            loadInfo.Sub_Ac = $("#Sub_Ac").val();
+            loadInfo.Amount = $("#Amount").val();
+            loadInfo.Narration = $("#Narration").val();
+            loadInfo.VDate = $("#VDate").val();
+            loadInfo.ApprBy = $("#ApprBy").val();
+            loadInfo.PrepBy = $("#PrepBy").val();
+            loadInfo.ApprDate = $("#ApprDate").val();
+            loadInfo.PrepDate = $("#PrepDate").val();
+            @*loadInfo.TotDrAmt = '@TotDrAmt';
+                loadInfo.TotCrAmt = '@TotCrAmt';*@
+        }
+        $(document).on("change", ".vNo", function () {
+            if ($("#RecurrVNo").is(":checked")) {
+                //$("#pnlRecurrNo").show();
+                $('#pnlRecurrNo').attr("class", "col-md-6");
+                //$("#pnlAdjAmt").hide();
+                $('#pnlAdjAmt').attr("class", "col-md-6 hidden");
+
+            }
+            if ($("#AdjJournal").is(":checked")) {
+                //$("#pnlRecurrNo").hide();
+                $('#pnlRecurrNo').attr("class", "col-md-6 hidden");
+                //$("#pnlAdjAmt").show();
+                $('#pnlAdjAmt').attr("class", "col-md-6");
+            }
+            if ($("#AdjJournal").is(":checked") && $("#RecurrVNo").is(":checked")) {
+                //$("#pnlRecurrNo").show();
+                $('#pnlRecurrNo').attr("class", "col-md-6");
+                //$("#pnlAdjAmt").show();
+                $('#pnlAdjAmt').attr("class", "col-md-6");
+            }
+            if (!$("#AdjJournal").is(":checked") && !$("#RecurrVNo").is(":checked")) {
+                //$("#pnlRecurrNo").hide();
+                $('#pnlRecurrNo').attr("class", "col-md-6 hidden");
+                //$("#pnlAdjAmt").hide();
+                $('#pnlAdjAmt').attr("class", "col-md-6 hidden");
+            }
+        });
+        $(document).on("change", "#Cr", function () {
+            $.ajax({
+                url: '@Url.Action("GetCrAmt", "GLVoucher")',
+                contentType: "application/json;charset=utf-8",
+                data: { VchrNo: $("#VchrNo").val() },
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    $("#Amount").val(data);
+                }
+            });
+        });
+        function validateOnAdd(validOrder) {
+            if (validOrder.Accode.trim() == "") {
+                return "Please select A/C.";
+            }
+            if (validOrder.Amount.trim() <= 0) {
+                return "Insufficient Amount";
+            }
+            return "";
+        }
+        function validateOnSave(validOrder) {
+            @*if ('@ViewBag.MaintJob' == 'True') {
+                if (validOrder.JobNo == "") {
+                    return "Job No is required.";
+                }
+            }*@
+            if (!validOrder.PrepBy.trim().length) {
+                return "Prepared By is Required";
+            }
+            if (!validOrder.PrepDate.trim().length) {
+                return "Prepared Date is Required";
+            }
+            if (!validOrder.ApprBy.trim().length) {
+                return "Approved By is Required";
+            }
+            if (!validOrder.ApprDate.trim().length) {
+                return "Approved Date is Required";
+            }
+            if (validOrder.VDate.trim() == "") {
+                return "Journal Date is Required";
+            }
+            if (DrTotal != CrTotal) {
+                return "Debit Credit Amount is Mismatch";
+            }
+            if (DrTotal == 0 || CrTotal == 0) {
+                return "Please added item in the table.";
+            }
+            return "";
+
+        }
+        var isSave = 0;
+        $(document).on("click", "#update", function () {
+            swal({
+                title: "Do you want to Update?",
+                text: "Otherwise click on the cancel button.!",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Yes, Update it!",
+                closeOnConfirm: true,
+                closeOnCancel: true
+            }, function (inputValue) {
+                if (inputValue === true) {
+                    savePvchrTbl();
+                } else {
+                    clearGL();
+                }
+            });
+        });
+        $(document).on("click", "#save", function () {
+            isSave = 1;
+            swal({
+                title: "Do you want to Save?",
+                text: "Otherwise click on the cancel button.!",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Yes, Save it!",
+                closeOnConfirm: true,
+                closeOnCancel: true
+            }, function (inputValue) {
+                if (inputValue === true) {
+                    savePvchrTbl();
+                } else {
+                    clearGL();
+                }
+            });
+        });
+
+        function clearGL() {
+            $("#save").attr("disabled", false);
+            $("#RecurrVchrNo").prop("disabled", false);
+            $("#VchrNo").prop("disabled", false);
+            $("#ApprDate").val("@DateTime.Today.ToShortDateString()");
+            $("#PrepDate").val("@DateTime.Today.ToShortDateString()");
+            $("#VType").val($('#VType option:first-child').val()).trigger('change.select2');
+            $("#ApprBy").val($('#ApprBy option:first-child').val()).trigger('change.select2');
+            $("#PrepBy").val($('#PrepBy option:first-child').val()).trigger('change.select2');
+            $("#Sub_Ac").val($('#Sub_Ac option:first-child').val()).trigger('change.select2');
+            $("#Accode").val($('#Accode option:first-child').val()).trigger('change.select2');
+            $("#UnitCode").val($('#UnitCode option:first-child').val()).trigger('change.select2');
+            $("#DeptCode").val($('#DeptCode option:first-child').val()).trigger('change.select2');
+            $("#VDate").val("@DateTime.Today.ToShortDateString()");
+            $("#Dr").prop("checked", true);
+            $("#ApprComment").val("");
+            $("#PrepComment").val("");
+            $("#VchrSrcRef").val("");
+            $("#VDesc").val("");
+            $("#Amount").val("");
+            $("#UnitCode").val("");
+            $("#DeptCode").val("");
+            $("#Narration").val("");
+            $("#AdjVchrNo").val("");
+            $("#RecurrVchrNo").val("");
+            $("#VchrAttach").val("");
+            $("#JobNo").val($('#JobNo option:first-child').val()).trigger('change.select2');
+            $("#save").show();
+            $("#update").hide();
+            //var table = $('#datatable-buttonsJV').DataTable();
+            //table.search('').draw();
+            //table.clear().draw();
+            $.ajax({
+                url: '@Url.Action("GLVoucherNo", "GLVoucher")',
+                contentType: "application/json;charset=utf-8",
+                data: { caller: $('#VType option:first-child').val() },
+                type: 'GET',
+                dataType: 'json',
+                success: function (datas) {
+                    $("#VchrNo").val(datas);
+                    loadGridByVNo();
+                }
+            });                       
+
+            $.ajax({
+                url: '@Url.Action("GetGlECount", "GLVoucher")',
+                contentType: "application/json;charset=utf-8",
+                data: { VType: 'JVE' },
+                type: 'GET',
+                dataType: 'json',
+                success: function (datas) {
+                    $("#CountGLProvition").html("(" + datas + ")");
+                }
+            });
+
+            $.ajax({
+                url: '@Url.Action("GetGlECountN", "GLVoucher")',
+                contentType: "application/json;charset=utf-8",
+                data: { VType: 'JVE' },
+                type: 'GET',
+                dataType: 'json',
+                success: function (datas) {
+                    $("#CountGLEntries").html("(" + datas + ")");
+                }
+            });
+
+        }
+
+
+        function savePvchrTbl() {
+            setOrder();
+            var validate = validateOnSave(loadInfo);
+            if (validate != "") {
+                alert(validate);
+                return;
+            }
+            var pMainExt = {
+                VchrNo: "", AdjVchrNo: "", PrepBy: "", PrepComment: "", PrepDate: "", ApprBy: "",
+                ApprComment: "", ApprDate: "", RecurrVchrNo: "", VchrSrcRef: "", VchrAttach: "", isSave: "", UnitCode: "", DeptCode: "", JobNo: ""
+            }
+            var pMain = {
+                VchrNo: "", VDate: "", VDesc: "", VType: ""
+            }
+            //addOnTempTbl.Accode = $("#Accode :selected").text();
+            //if ($("#UnitCode :selected").val() == "") {
+            //    pMainExt.UnitCode = "000001";
+            //} else {
+            //    pMainExt.UnitCode = $("#UnitCode :selected").val();
+            //}
+            //if ($("#DeptCode :selected").val() == "") {
+            //    addOnTempTbl.DeptCode = "01";
+            //} else {
+            //    pMainExt.DeptCode = $("#DeptCode :selected").val();
+            //}
+
+            //addOnTempTbl.UnitCode = $("#UnitCode :selected").val();
+            //addOnTempTbl.DeptCode = $("#DeptCode :selected").val();
+            pMainExt.VchrNo = $("#VchrNo").val();
+            pMainExt.AdjVchrNo = $("#AdjVchrNo").val();
+            pMainExt.RecurrVchrNo = $("#RecurrVchrNo").val();
+            pMainExt.PrepBy = $("#PrepBy").val();
+            pMainExt.PrepComment = $("#PrepComment").val();
+            pMainExt.PrepDate = $("#PrepDate").val();
+            pMainExt.ApprBy = $("#ApprBy").val();
+            pMainExt.ApprComment = $("#ApprComment").val();
+            pMainExt.ApprDate = $("#ApprDate").val();
+            pMainExt.VchrAttach = $("#VchrAttach").get(0).files;
+            pMainExt.VchrSrcRef = $("#VchrNo").val();
+            pMainExt.JobNo = $("#JobNo").val();
+            pMainExt.isSave = isSave;
+
+            @*if ('@ViewBag.ByPassProc' == 'True') {
+                    pMainExt.PrepBy = "N/A";
+                    pMainExt.ApprDate = new Date();
+                    pMainExt.ApprBy = "N/A";
+                    pMainExt.PrepDate = new Date();
+                }*@
+            pMain.VchrNo = $("#VchrNo").val();
+            pMain.VDate = $("#VDate").val();
+            pMain.VDesc = $("#VDesc").val();
+            pMain.VType = $("#VType").val();
+
+
+            //get Photo and Signature Here ::::
+            var Photofile = $("#VchrAttach").get(0).files;
+            var data = new FormData();
+            data.append("PhotoFile", Photofile[0]);
+            data.append("pMain", JSON.stringify({ pMain: pMain }));
+            data.append("pMainExt", JSON.stringify({ pMainExt: pMainExt }));
+
+            $.ajax({
+                url: '@Url.Action("SavePVchrTble", "GLVoucher")',
+                contentType: false,
+                data: data,
+                type: 'POST',
+                processData: false,
+                success: function (datas) {
+                    if (datas == 1 && isSave == 1) {
+                        $("#save").attr("disabled", true);
+                        swal({
+                            title: "Saved Successfully. Do you want to print?",
+                            text: "Otherwise click on the cancel button.!",
+                            type: "warning",
+                            showCancelButton: true,
+                            confirmButtonColor: "#DD6B55",
+                            confirmButtonText: "Yes, Print it!",
+                            closeOnConfirm: true,
+                            closeOnCancel: true
+                        }, function (inputValue) {
+                            if (inputValue === true) {
+                                window.open('@Url.Action("GLPreviewPdfAfterSave", "GLVoucher", null)?VType=' + pMain.VType);
+                                clearGL();
+                            } else {
+                                clearGL();
+                            }
+                        });
+                    }
+                    else if (datas.rStatus == "0" && datas.Msg != "") {
+                        swal({
+                            title: "Sorry",
+                            text: datas.Msg,
+                            type: "warning"
+                        });
+                    }
+                    else if (datas == "X") {
+                        swal({
+                            title: "Sorry",
+                            text: "No Save Permission for this User",
+                            type: "warning"
+                        });
+                    }
+                    else if (datas == "U") {
+                        swal({
+                            title: "Sorry",
+                            text: "No Update Permission for this User",
+                            type: "warning"
+                        });
+                    }
+                    else if (datas == 2 && isSave == 0) {
+                        swal({
+                            title: "Updated Successfully. Do you want to print?",
+                            text: "Otherwise click on the cancel button.!",
+                            type: "warning",
+                            showCancelButton: true,
+                            confirmButtonColor: "#DD6B55",
+                            confirmButtonText: "Yes, Print it!",
+                            closeOnConfirm: true,
+                            closeOnCancel: true
+                        }, function (inputValue) {
+                            if (inputValue === true) {
+                                window.open('@Url.Action("GLPreviewPdfAfterSave", "GLVoucher", null)?VType=' + $("#VType").val());
+                                clearGL();
+                            } else {
+                                clearGL();
+                            }
+                        });
+                    }
+                    else {
+                        swal({
+                            title: "Sorry",
+                            text: "An error occurred during the save.!",
+                            type: "warning"
+                        });
+                    }
+                }
+            });
+        }
+
+        ForDatatblLoad($("#VchrNo").val());
+        loadGridByVNo();
+        var DrTotal = 0;
+        var CrTotal = 0;
+        function ForDatatblLoad(vNo) {
+
+            $('#datatable-buttonsJV').dataTable({
+                "scrollX": true,
+                "destroy": true,
+                //"ajax": "/GLVoucher/GelDatatableOnly?VchrNo=" + vNo,
+                "columns": [
+                           { "data": null, "bSortable": false },
+                           { "data": "Accode" },
+                           { "data": "Sub_Ac" },
+                           { "data": "Narration" },
+                           { "data": "DrAmount" },
+                           { "data": "CrAmount" },
+                           { "data": "UnitCode" },
+                           { "data": "DeptCode" },
+                           {
+                               mRender: function (data, type, row) {
+                                   return '<a href="#" class="on-default remove-row deleteSup largeSpace" data-id="1" id="tmpEdit" value="' + row.PVchrDetailId + '">'
+                                       + ' <i class="glyphicon glyphicon-edit"></i> </a>&nbsp; '
+                                       + '<a href="#" class="on-default remove-row deleteSup largeSpace" data-id="1" id="delete" value="' + row.PVchrDetailId + '">'
+                                       + ' <i class="glyphicon glyphicon-trash"></i> </a>'
+                               }
+                           }
+                ],
+                "columnDefs": [
+                                    {
+                                        "targets": 4, // your case first column
+                                        "className": "text-right",
+                                    },
+                                    {
+                                        "targets": 5,
+                                        "className": "text-right",
+                                    },
+                                    {
+                                        "targets": 6,
+                                        "className": "text-left",
+                                        "visible": false,
+                                    },
+                                    {
+                                        "targets": 7,
+                                        "className": "text-left",
+                                        "visible": false,
+                                    }],
+
+
+                "footerCallback": function (row, data, start, end, display) {
+                    var api = this.api(), data;
+
+                    // converting to interger to find total
+                    var intVal = function (i) {
+                        return typeof i === 'string' ?
+                            i.replace(/[\$,]/g, '') * 1 :
+                            typeof i === 'number' ?
+                            i : 0;
+                    };
+                    DrTotal = api
+                         .column(4)
+                         .data()
+                         .reduce(function (a, b) {
+                             return intVal(a) + intVal(b);
+                         }, 0);
+
+                    CrTotal = api
+                           .column(5)
+                           .data()
+                           .reduce(function (a, b) {
+                               return intVal(a) + intVal(b);
+                           }, 0);
+
+
+                    // Update footer by showing the total with the reference of the column index
+
+                    $(api.column(4).footer()).html(DrTotal);
+                    $(api.column(5).footer()).html(CrTotal);
+
+                }, "fnCreatedRow": function (row, data, index) {
+                    $('td', row).eq(0).html(index + 1);
+                }
+            });
+        }
+
+
+        $("#VchrNo").on('keydown', function (e) {
+            if (e.which == 13 || e.which == 9) {
+                $("#save").hide();
+                $("#update").show();
+                $.ajax({
+                    url: '@Url.Action("GetAllByVchrNo", "GLVoucher")',
+                    contentType: "application/json;charset=utf-8",
+                    data: { VchrNo: $("#VchrNo").val() },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (datas) {
+                        if (datas == "0") {
+                            swal("Sorry!! This voucher no doesn't exist!", "fail");
+                        }
+                        else {
+                            $("#VchrNo").prop("disabled", true);
+                            $("#ApprBy").val(datas.pMainExt.ApprBy).trigger('change');
+                            $("#PrepBy").val(datas.pMainExt.PrepBy).trigger('change');
+                            $("#JobNo").val(datas.pMainExt.JobNo).trigger('change');
+                            $("#VDesc").val(datas.pMainExt.VDesc);
+                            $("#ApprComment").val(datas.pMainExt.ApprComment);
+                            $("#PrepComment").val(datas.pMainExt.PrepComment);
+                            $("#VchrSrcRef").val(datas.pMainExt.VchrSrcRef);
+                            if (DateInDMYformat(datas.pMainExt.ApprDate) != moment('01/01/1900').format('DD/MM/YYYY')) {
+                                $("#RefDate").datepicker("setDate", DateInDMYformat(datas.pMainExt.ApprDate));
+                            }
+                            if (DateInDMYformat(datas.pMainExt.PrepDate) != moment('01/01/1900').format('DD/MM/YYYY')) {
+                                $("#RcvdDate").datepicker("setDate", DateInDMYformat(datas.pMainExt.PrepDate));
+                            }
+                            var UrlPhoto = datas.pMainExt.VchrAttach.replace("~", "..");
+                            $("#VchrSrcRef").attr("src", UrlPhoto);
+                            isSave = 0;
+                            loadGridByVNo();
+                        }
+                    },
+                    error: function () {
+                        swal("Sorry!! An error occurred during the get process.", "fail")
+                    }
+                });
+            }
+        });
+
+
+
+        $("#RecurrVchrNo").on('keydown', function (e) {
+            if (e.which == 13 || e.which == 9) {
+                $.ajax({
+                    url: '@Url.Action("GetAllByReccVchrNo", "GLVoucher")',
+                    contentType: "application/json;charset=utf-8",
+                    data: { ReccVchrNo: $("#RecurrVchrNo").val(), VchrNo: $("#VchrNo").val() },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (datas) {
+                        if (datas == "0") {
+                            swal("Sorry!! This voucher no doesn't posting voucher!", "fail");
+                        }
+                        else {
+                            $("#RecurrVchrNo").prop("disabled", true);
+                            $("#ApprBy").val(datas.MainExt.ApprBy).trigger('change');
+                            $("#PrepBy").val(datas.MainExt.PrepBy).trigger('change');
+
+                            $("#UnitCode").val(datas.MainExt.UnitCode).trigger('change');
+                            $("#DeptCode").val(datas.MainExt.DeptCode).trigger('change');
+
+                            $("#VDesc").val(datas.MainExt.VDesc);
+                            $("#ApprComment").val(datas.MainExt.ApprComment);
+                            $("#PrepComment").val(datas.MainExt.PrepComment);
+                            $("#VchrSrcRef").val(datas.MainExt.VchrSrcRef);
+
+                            if (DateInDMYformat(datas.MainExt.ApprDate) != moment('01/01/1900').format('MM/dd/YYYY')) {
+                                $("#RefDate").datepicker("setDate", DateInDMYformat(datas.MainExt.ApprDate));
+
+                            }
+                            if (DateInDMYformat(datas.MainExt.PrepDate) != moment('01/01/1900').format('MM/dd/YYYY')) {
+                                $("#RcvdDate").datepicker("setDate", DateInDMYformat(datas.MainExt.PrepDate));
+                            }
+                            var UrlPhoto = datas.MainExt.VchrAttach.replace("~", "..");
+                            $("#ImgPhoto").attr("src", UrlPhoto);
+                            //document.getElementById('lblAttch').innerHTML = UrlPhoto;
+                            isSave = 1;
+                            loadGridByVNo();
+                        }
+                    },
+                    error: function () {
+                        swal("Sorry!! An error occurred during the get process.", "fail")
+                    }
+                });
+            }
+        });
+
+        function loadDT1() {
+            window.open('@Url.Action("LoadDT", "GLVoucher")');
+        };
+        function loadDT() {
+
+            $.ajax({
+                url: '@Url.Action("LoadDT", "GLVoucher")',
+                contentType: "application/json;charset=utf-8",
+                type: 'GET',
+                dataType: 'json',
+                success: function (datas) { }
+            });
+        }
+
+
+        $(document).on("click", "#add", function () {
+            setOrder();
+            var validate = validateOnAdd(loadInfo);
+            if (validate != "") {
+                alert(validate);
+                return;
+            }
+            var addOnTempTbl = {
+                Accode: "", Sub_Ac: "", DrAmount: "", CrAmount: "", Narration: "", VDate: "", VchrNo: "", UnitCode: "", DeptCode: ""
+            }
+            var tMain = {
+                VchrNo: "", VDate: "", VDesc: "", VType: ""
+            }
+
+            tMain.VchrNo = $("#VchrNo").val();
+            tMain.VDate = $("#VDate").val();
+            tMain.VDesc = $("#VDesc").val();
+            tMain.VType = $("#VType").val();
+
+            //addOnTempTbl.Accode = $("#Accode :selected").text();
+            addOnTempTbl.VchrNo = $("#VchrNo").val();
+            addOnTempTbl.Accode = $("#Accode").val();
+            addOnTempTbl.Sub_Ac = $("#Sub_Ac").val();
+            addOnTempTbl.CrAmount = 0;
+            addOnTempTbl.DrAmount = 0;
+            var payMode = $("#Dr").prop("checked");
+            if (payMode == true) {
+                addOnTempTbl.DrAmount = $("#Amount").val();
+            } else {
+                addOnTempTbl.CrAmount = $("#Amount").val();
+            }
+            addOnTempTbl.Narration = $("#Narration").val();
+            addOnTempTbl.VDate = $("#VDate").val();
+
+            if ($("#UnitCode :selected").val() == "") {
+                addOnTempTbl.UnitCode = "000001";
+            } else {
+                addOnTempTbl.UnitCode = $("#UnitCode :selected").val();
+            }
+            if ($("#DeptCode :selected").val() == "") {
+                addOnTempTbl.DeptCode = "01";
+            } else {
+                addOnTempTbl.DeptCode = $("#DeptCode :selected").val();
+            }
+
+
+            $.ajax({
+                url: '@Url.Action("SaveTempTbl", "GLVoucher")',
+                contentType: "application/json;charset=utf-8",
+                data: JSON.stringify({ tDetail: addOnTempTbl, tMain: tMain }),
+                type: 'POST',
+                dataType: 'json',
+                success: function (datas) {
+                    if (datas == 1) {
+                        loadGridByVNo();
+                        clearItemInfo();
+                    } else if (datas == 0) {
+                        swal({
+                            title: "Sorry!",
+                            text: "An Error Occured During Save",
+                            type: "warning"
+                        });
+
+                    } else if (datas == "A") {
+                        swal({
+                            title: "Sorry",
+                            text: "No Add Permission for this User",
+                            type: "warning"
+                        });
+                    }
+                }
+            });
+
+        });
+
+        function clearItemInfo() {
+            $("#Amount").val("");
+            $("#Narration").val("");
+            //$("#Sub_Ac").val("").trigger('change.select2');
+            //$("#Accode").trigger('change');
+        }
+
+
+        $(document).on("change", "#VType", function () {
+
+            $.ajax({
+                url: '@Url.Action("GLVoucherNo", "GLVoucher")',
+                contentType: "application/json;charset=utf-8",
+                data: { caller: $('#VType option:selected').val() },
+                type: 'GET',
+                dataType: 'json',
+                success: function (datas) {
+                    $("#VchrNo").val(datas);
+                    loadGridByVNo();
+                }
+            });
+
+        });
+
+
+        function loadGridByVNo() { //"/GLVoucher/GelDatatableOnly?VchrNo=" + vNo,
+            $.ajax({
+                url: '@Url.Action("GelDatatableOnly", "GLVoucher")',
+                contentType: "application/json;charset=utf-8",
+                data: JSON.stringify({ VchrNo: $("#VchrNo").val() }),
+                type: 'POST',
+                dataType: 'json',
+                success: function (data) {
+
+                    if (data.data.length >= 0) {
+                        var table = $('#datatable-buttonsJV').DataTable();
+                        table.clear();
+                        table.rows.add(data.data).draw();
+
+
+                    }
+
+                }
+            });
+        }
+
+
+        $(document).on("click", "#tmpEdit", function () {
+            var value = $(this).attr("value");
+
+            $.ajax({
+                url: '@Url.Action("GetTempVchr", "GLVoucher")',
+                contentType: "application/json;charset=utf-8",
+                data: { tVchrDetailId: value },
+                type: 'GET',
+                dataType: 'json',
+                success: function (datas) {
+                    if (datas.Accode == "undefined") {
+                        alert("error")
+                    }
+                    else {
+                        $("#tmpDetailId").val(datas.PVchrDetailId);
+                        $("#Accode").val(datas.Accode).trigger('change');
+                        if (datas.Sub_Ac != null && datas.Sub_Ac != "0") {
+                            $("#Sub_Ac").val(datas.Sub_Ac).trigger('change');
+                        } else {
+                            $("#Sub_Ac").val("0").trigger('change');
+                        }
+                        //EditSubAcCode = datas.Sub_Ac;
+                        if (datas.CrAmount == 0) {
+                            $("#Amount").val(datas.DrAmount);
+                        } else {
+                            $("#Amount").val(datas.CrAmount);
+                        }
+                        if (datas.CrAmount == 0) {
+                            $("#Dr").prop("checked", true);
+                        } else {
+                            $("#Cr").prop("checked", true);
+                        }
+                        $("#Narration").val(datas.Narration);
+                        $("#add").hide();
+                        $('#tmpUpdate').attr("class", "btn btn-primary");
+                    }
+                },
+                error: function () {
+                    swal("Sorry!! This order no does not exist.", "fail")
+                }
+            });
+        });
+
+
+        $(document).on("click", "#tmpUpdate", function () {
+            setOrder();
+            var validate = validateOnAdd(loadInfo);
+            if (validate != "") {
+                alert(validate);
+                return;
+            }
+            var addOnTempTbl = {
+                PVchrDetailId: "", Accode: "", Sub_Ac: "", DrAmount: "", CrAmount: "", Narration: "", VDate: "", VchrNo: "", UnitCode: "", DeptCode: ""
+            }
+            addOnTempTbl.PVchrDetailId = $("#tmpDetailId").val();
+            addOnTempTbl.Accode = $("#Accode").val();
+            addOnTempTbl.Sub_Ac = $("#Sub_Ac").val();
+            addOnTempTbl.CrAmount = 0;
+            addOnTempTbl.DrAmount = 0;
+            var payMode = $("#Dr").prop("checked");
+            if (payMode == true) {
+                addOnTempTbl.DrAmount = $("#Amount").val();
+            } else {
+                addOnTempTbl.CrAmount = $("#Amount").val();
+            }
+            addOnTempTbl.Narration = $("#Narration").val();
+            var uCode = $("#UnitCode").val();
+            var deptCode = $("#DeptCode").val();
+            if (uCode == "") {
+                addOnTempTbl.UnitCode = "000001";
+            } else {
+                addOnTempTbl.UnitCode = $("#UnitCode").val();
+            }
+            if (deptCode == "") {
+                addOnTempTbl.DeptCode = "01";
+            } else {
+                addOnTempTbl.DeptCode = $("#DeptCode").val();
+            }
+
+            $.ajax({
+                url: '@Url.Action("UpdateTempTbl", "GLVoucher")',
+                contentType: "application/json;charset=utf-8",
+                data: JSON.stringify({ tDetail: addOnTempTbl }),
+                type: 'POST',
+                dataType: 'json',
+                success: function (datas) {
+                    if (datas == 1) {
+                        //var table = $('#datatable-buttons').DataTable();
+                        //table.ajax.reload();
+                        loadGridByVNo();
+                        clearItemInfo();
+                        $("#add").show();
+                        $('#tmpUpdate').attr("class", "btn btn-primary hidden");
+                    }
+                }
+            });
+
+        });
+
+
+        $(document).on("click", "#delete", function () {
+            var value = $(this).attr("value");
+            swal({
+                title: "Are you sure?",
+                text: "You will not be able to recover this voucher data!",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Yes, delete it!",
+                closeOnConfirm: true,
+                closeOnCancel: true
+            },
+             function () {
+                 $.ajax({
+                     url: '@Url.Action("DelTempTbl", "GLVoucher")',
+                     contentType: "application/json;charset=utf-8",
+                     data: { PVchrDetailId: value },
+                     type: 'GET',
+                     dataType: 'json',
+                     success: function (datas) {
+
+                         if (datas == 0 && datas.length != 0) {
+                             swal("Sorry!! Failed to delete this voucher data.", "fail");
+                         }
+                         else if (datas == 1) {
+                             loadGridByVNo();
+                         }
+                         else if (datas == "D") {
+                             swal({
+                                 title: "Sorry",
+                                 text: "No Delete Permission for this User",
+                                 type: "warning"
+                             });
+                         }
+                     },
+                     error: function (datas) {
+                         swal("Sorry!! Failed to delete this voucher data.", "fail")
+                     }
+                 });
+             });
+        });
+
+    });//End
+
+    </script>
+}

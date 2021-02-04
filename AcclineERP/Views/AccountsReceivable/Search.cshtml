@@ -1,0 +1,93 @@
+﻿@model App.Domain.ViewModel.RPSearchVModel
+
+@{
+    ViewBag.Title = "Search";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using (Html.BeginForm("GetAccReceivable", "AccountsReceivable", FormMethod.Post, new {  }))
+{
+    <div class="row">
+        <div class="col-md-10">
+            <div class="panel panel-color panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <text style="text-align:left !important; text-decoration: none;">Searh</text>
+                        <text style="color:#1E3B2D;font-size:12px;margin-right:100px;" class="pull-right">@ViewBag.Status</text>
+                    </h3>
+                </div>
+                <div class="panel-body">
+                    <div class="col-md-12" style="margin-left:110px; margin-top:20px">
+                        <label class="col-md-2" for="fDate">From Date</label>
+                        <div class="input-group form-group col-md-4">
+                            @Html.TextBoxFor(x => x.fDate, new { @class = "form-control", placeholder = "mm/dd/yyyy" })
+
+                            <span class="input-group-addon bg-primary b-0 text-white" data-valmsg-for="Search.fDate" data-valmsg-replace="true"><i class="ion-calendar"></i></span>
+                        </div>
+                    </div>
+                    <div class="col-md-12" style="margin-left:110px; margin-top:20px">
+                        <label class="col-md-2" for="tDate">To Date</label>
+                        <div class="input-group form-group col-md-4">
+                            @Html.TextBoxFor(x => x.tDate, new { @class = "form-control", placeholder = "mm/dd/yyyy" })
+
+                            <span class="input-group-addon bg-primary b-0 text-white" data-valmsg-for="Search.tDate" data-valmsg-replace="true"><i class="ion-calendar"></i></span>
+                        </div>
+                    </div>
+                    <div class="col-md-12" style="margin-left:150px; margin-top:20px">
+                        <div class="col-xs-12">
+                            <div class="input-group">
+
+                                <p style="color:red">
+                                    @ViewBag.Message
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-10">
+                        <br />
+                    </div>
+                    <div class="row col-md-12" style="text-align:end">
+                        <div class="col-md-8" style=" text-align:right">
+                            <input type="submit" value="Submit" class="btn btn-primary" id="submit" style="width:100px;" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+
+
+@section Scripts{
+
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script src="/App_Themes/Theme1/plugins/select2/select2.min.js"></script>
+    <script src="~/App_Themes/Theme1/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+
+    <script type="text/javascript">
+
+    $(document).ready(function () {
+
+        jQuery("#fDate").datepicker({
+            autoclose: true,
+            todayHighlight: true
+        });
+
+        jQuery("#tDate").datepicker({
+            autoclose: true,
+            todayHighlight: true
+        });
+
+
+    });
+
+    </script>
+
+
+}
+
+
+
+

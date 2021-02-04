@@ -1,0 +1,660 @@
+﻿@model App.Domain.VMMasterForm
+@{
+    ViewBag.Title = "MasterInformation";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/Css/FormDesign.css" rel="stylesheet" />
+
+<style>
+    .dataTables_scrollBody > table > thead > tr > th[class*="sort"]::after {
+        display: none;
+    }
+
+    .hideme {
+        display: none;
+    }
+
+    .button {
+        height: 35px;
+        color: white;
+        font-weight: bold;
+    }
+
+        .button:hover {
+            /*background-image:url('tiny_.gif');*/
+        }
+</style>
+
+<div class="container">
+    <div class="row">
+
+
+        <div class="panel panel-color panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    <text style="text-align:left !important; text-decoration: none;">Master Information</text>
+                    <text style="color:#1E3B2D;font-size:12px;margin-right:100px;" class="pull-right">@ViewBag.Status</text>
+                </h3>
+            </div>
+            <div class="panel-body">
+                <div class="col-md-12">
+                    <div class="col-md-7">
+                        <div class="row col-md-12">
+                            <div class="col-md-12">
+                                @Html.LabelFor(x => x.FormCode, new { @class = "col-md-4" })
+                                <div class="form-group col-md-6">
+                                    @Html.DropDownListFor(x => x.FormCode, null, new { @class = "form-control select2", required = "required" })
+                                    @Html.ValidationMessageFor(x => x.FormCode)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row col-md-12">
+                            <div class="col-md-12">
+                                @Html.LabelFor(x => x.Code, new { @class = "col-md-4" })
+                                <div class="form-group col-md-4">
+                                    @Html.TextBoxFor(x => x.Code, null, new { @class = "form-control", required = "required" })
+                                    @Html.ValidationMessageFor(x => x.Code)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row col-md-12">
+                            <div class="col-md-12">
+                                @Html.LabelFor(x => x.Name, new { @class = "col-md-4" })
+                                <div class="form-group col-md-8">
+                                    @Html.TextBoxFor(x => x.Name, null, new { @class = "form-control", required = "required", maxlength = "50" })
+                                    @Html.ValidationMessageFor(x => x.Name)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row col-md-12">
+                            <div class="col-md-12">
+                                @Html.LabelFor(x => x.LocalName, new { @class = "col-md-4" })
+                                <div class="form-group col-md-8">
+                                    @Html.TextBoxFor(x => x.LocalName, null, new { @class = "form-control", required = "required", maxlength = "50" })
+                                    @Html.ValidationMessageFor(x => x.LocalName)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row col-md-12">
+                            <div class="col-md-12">
+                                @Html.LabelFor(x => x.Descr, new { @class = "col-md-4" })
+                                <div class="form-group col-md-8">
+                                    @Html.TextBoxFor(x => x.Descr, null, new { @class = "form-control", maxlength = "50" })
+                                    @Html.ValidationMessageFor(x => x.Descr)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+
+                    </div>
+                    <div class="row col-md-12">
+                        <div class="col-md-12" style="text-align:center">
+                            <input type="submit" class="btn btn-primary" value="Save" id="btnsaveMstrInf" />
+                            <input type="button" class="btn btn-primary" value="Update" id="btnupdateMstrInf" />
+                            <input type="button" class="btn btn-primary" value="Clear" id="btnclearMstrInf" />
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        @*<br />
+                            <br />*@
+                        <table class="table table-bordered table-responsive" id="datatable">
+                            <thead>
+                                <tr>
+                                    <th>Sl.</th>
+                                    <th class="hideme">ID</th>
+                                    <th class="hideme">FormCode</th>
+                                    <th>Code</th>
+                                    <th>Name</th>
+                                    <th>LocalName</th>
+                                    <th>Description</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                        </table>
+
+                        <br />
+                        <br />
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        @*</div>*@
+
+    </div>
+
+</div>
+
+@section Scripts{
+    <script src="~/App_Themes/Theme1/plugins/select2/select2.min.js" type="text/javascript"></script>
+    <script src="~/App_Themes/Theme1/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.bootstrap.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.buttons.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/buttons.bootstrap.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/pdfmake.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/vfs_fonts.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/buttons.html5.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/buttons.print.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.fixedHeader.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.keyTable.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.responsive.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/responsive.bootstrap.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.scroller.min.js"></script>
+    <script type="text/javascript" src="../App_Themes/Theme1/plugins/parsleyjs/dist/parsley.min.js"></script>
+    <!-- Datatable init js -->
+    <script src="../App_Themes/Theme1/blue/assets/pages/datatables.init.js"></script>
+
+    <script>
+
+        $(document).keypress(function (e) {
+            if (e.which == 13) {
+                e.preventDefault();
+            }
+
+        })
+
+        $(".select2").select2({
+            allowClear: true
+        });
+
+        $("#btnupdateMstrInf").hide();
+
+
+        var MstrInf = {
+            FormCode: "",
+            //FormName: "",
+            ID: "",
+            Code: "",
+            Name: "",
+            LocalName: "",
+            Descr: ""
+        };
+
+
+        var table = $("#datatable").DataTable({
+            "scrollX": true,
+            "columns": [
+                       { "data": null, "bSortable": false },
+                       { "data": "ID", "class": "hideme" },
+                       { "data": "FormCode", "class": "hideme" },
+                       { "data": "Code" },
+                       { "data": "Name" },
+                       { "data": "LocalName" },
+                       { "data": "Descr" },
+                       {
+
+                           targets: [1, 2],
+                           mRender: function (data, type, row) {
+                               return '<a href="#" id="edit" class="btn btn-default">'
+                                       + '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span></a>&ensp;&ensp;'
+                               + '<a href="#" class="on-default remove-row deleteSup largeSpace" data-id="1" id="delete" value="' + row.MemberId + '">'
+                               + ' <i class="glyphicon glyphicon-trash"></i> </a>'
+                           }
+                       },
+            ],
+            "fnCreatedRow": function (row, data, index) {
+                $('td', row).eq(0).html(index + 1);
+            }
+
+
+        });
+
+
+        $('body').on('click', '#edit', function () {
+
+            var data = table.row($(this).closest('tr')).data();
+            
+            var ID = data.ID;
+            var FormCode = data.FormCode;
+
+            $.ajax({
+                url: '@Url.Action("GetMasterFormInfoByFormCodeNID", "MasterInformation")',
+                contentType: "application/json;charset=utf-8",
+                data: { ID: ID, FormCode: FormCode },
+                type: "GET",
+                dataType: 'json',
+                success: function (data) {
+
+
+                    if (data == 0) {
+
+                        swal({
+                            title: "Sorry!",
+                            text: "An Error Occured During Load!",
+                            type: "warning"
+                        });
+
+                        $("#btnsaveMstrInf").show();
+                        $("#btnupdateMstrInf").hide();
+                    }
+                    else {
+                        setMstrInfObj(data);
+                        setMstrInfFieldData(data);
+                    }
+
+                }
+            });
+
+        });
+
+
+        $(document).on("click", "#delete", function () {
+
+            var data = table.row($(this).closest('tr')).data();
+
+            var ID = data.Code;
+            var FormCode = data.FormCode;
+
+            //var value = $(this).attr("value");
+
+            swal({
+                title: "Are you sure?",
+                text: "You will not be able to recover this data!",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Yes, delete it!",
+                closeOnConfirm: false,
+                closeOnCancel: true
+            },
+             function () {
+                 $.ajax({
+                     url: '@Url.Action("DeleteMasterRecord", "MasterInformation")',
+                     contentType: "application/json;charset=utf-8",
+                     data: { DeleteID: ID, Type: FormCode },
+                     type: 'GET',
+                     dataType: 'json',
+                     success: function (datas) {
+
+                         if (datas == 0 && datas.length != 0) {
+                             swal("Sorry!! Failed to delete this data.", "fail");
+                         }
+                         else if (datas == 1) {
+                             swal({
+                                 title: "Ok",
+                                 text: "Sucessfully Delete!",
+                                 type: "success"
+                             }, function () {
+                                 //var table = $('#datatable').DataTable();
+                                 //table.ajax.reload();
+
+                                 var e = jQuery.Event("change");
+                                 $("#FormCode").trigger(e);
+
+                                 clearMstrInf();
+                                 clearInfoControls();
+
+                             });
+                         }
+                         else if (datas == 2) {
+
+                             swal("Sorry!! This Rcord Has Data Related to Transactions!", "fail");
+                         }
+                         else if (datas == "D") {
+
+                             swal({
+                                 title: "Sorry",
+                                 text: "No Delete Permission for this User",
+                                 type: "warning"
+                             });
+
+                         }
+                     },
+                     error: function (datas) {
+                         swal("Sorry!! Failed to delete this data.", "fail")
+                     }
+                 });
+             });
+        });
+
+
+        function validateMstrOnSave(validMstrInf) {
+
+            if (!validMstrInf.FormCode.trim().length) {
+                return "Type is required.";
+            }
+            if (!validMstrInf.Code.trim().length) {
+                return "Code is required.";
+            }
+            else {
+                if (validMstrInf.FormCode.trim().length > 0) {
+
+                    var FormName = $("#FormCode").val();
+                    var Code = $("#Code").val();
+                    var CodeLen = Code.length;
+                    var ErrMsg = "";
+
+                    switch (FormName) {
+                        case "Proj":
+                            if (CodeLen != 2)
+                                ErrMsg = "Code Should be of 2 Characters.";
+                            break;
+                        case "Branch":
+                            if (CodeLen != 3)
+                                ErrMsg = "Code Should be of 3 Characters.";
+                            break;
+                        case "Unit":
+                            if (CodeLen != 6)
+                                ErrMsg = "Code Should be of 6 Characters.";
+                            break;
+                        case "Dept":
+                            if (CodeLen != 2)
+                                ErrMsg = "Code Should be of 2 Characters.";
+                            break;
+                        case "Desig":
+                            if (CodeLen != 3)
+                                ErrMsg = "Code Should be of 3 Characters.";
+                            break;
+                        default:
+                            break;
+                    }
+
+                    if (ErrMsg.length > 0)
+                        return ErrMsg;
+                }
+
+            }
+            if (!validMstrInf.Name.trim().length) {
+                return "Name is Required";
+            }
+
+
+
+
+            return "";
+        }
+
+        function setMstrInf() {
+
+            MstrInf.FormCode = $("#FormCode").val();
+            MstrInf.Code = $("#Code").val();
+            MstrInf.Name = $("#Name").val();
+            MstrInf.LocalName = $("#LocalName").val();
+            MstrInf.Descr = $("#Descr").val();
+            
+        }
+
+        function setMstrInfObj(objMInfo) {
+
+            MstrInf.FormCode = objMInfo.FormCode;
+            MstrInf.ID = objMInfo.ID;
+            MstrInf.Code = objMInfo.Code;
+            MstrInf.Name = objMInfo.Name;
+            MstrInf.LocalName = objMInfo.LocalName;
+            MstrInf.Descr = objMInfo.Descr;
+        }
+
+        $(document).on("click",
+        "#btnsaveMstrInf",
+        function () {
+
+            setMstrInf();
+
+            var validate = validateMstrOnSave(MstrInf);
+            if (validate != "") {
+                alert(validate);
+                return;
+            }
+
+
+            $.ajax({
+                url: '@Url.Action("SaveMasterFormInfo", "MasterInformation")',
+                contentType: "application/json;charset=utf-8",
+                data: JSON.stringify({ MstrInf: MstrInf }),
+                type: 'POST',
+                dataType: 'json',
+                success: function (data) {
+
+                    if (data == 1) {
+
+                        swal({
+                            title: "Ok",
+                            text: "All Information Saved Sucessfully!",
+                            type: "success"
+                        });
+
+                        var e = jQuery.Event("change");
+                        $("#FormCode").trigger(e);
+
+                        clearMstrInf();
+                        clearInfoControls();
+
+
+                    }
+                    else if (data == 0) {
+
+                        swal({
+                            title: "Sorry!",
+                            text: "An Error Occured During Save!",
+                            type: "warning"
+                        });
+
+                        //$("#saveMstrInf").prop("disabled", false);
+                    }
+                    else if (data == 2) {
+
+                        swal({
+                            title: "Sorry!",
+                            text: "Code Already Exists!",
+                            type: "warning"
+                        });
+
+                        //$("#saveMstrInf").prop("disabled", false);
+                    }
+                    else if (data.length > 1) {
+
+                        swal({
+                            title: "Sorry!",
+                            text: data,
+                            type: "warning"
+                        });
+
+                        //$("#saveMstrInf").prop("disabled", false);
+                    }
+
+                }
+            });
+        });
+
+
+        $("#FormCode").change(function () {
+            var FormName = this.value;
+
+            if (FormName.length > 0) {
+
+                $.ajax({
+                    url: '@Url.Action("GetAllDataForMasterFormType", "MasterInformation")',
+                    contentType: "application/json;charset=utf-8",
+                    data: JSON.stringify({ FormName: FormName }),
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function (data) {
+
+                        if (data == 0) {
+                            swal({
+                                title: "Sorry!",
+                                text: "An Error Occured During Get Data!",
+                                type: "warning"
+                            });
+                            $("#btnsaveMstrInf").prop("disabled", false);
+                        }
+                        else {
+                            if ($.isArray(data) || data.length) {
+
+
+                                table.clear();
+                                table.search('').draw();
+                                table.rows.add(data).draw();
+
+                                clearMstrInf();
+                                clearInfoControls();
+                            }
+                            else if (!$.isArray(data) || !data.length) {
+                                swal({
+                                    title: "Sorry!",
+                                    text: "No Data Found!",
+                                    type: "warning"
+                                });
+
+                                clearInfoControls();
+
+                                table.clear();
+                                table.search('').draw();
+                            }
+                        }
+                    }
+                });
+            }
+            else
+            {
+                clearMstrInf();
+                clearMstrInfControls();
+            }
+
+
+
+        });
+
+
+        $(document).on("click",
+       "#btnupdateMstrInf",
+       function () {
+
+           setMstrInf();
+
+           var validate = validateMstrOnSave(MstrInf);
+           if (validate != "") {
+               alert(validate);
+               return;
+           }
+
+
+           $.ajax({
+               url: '@Url.Action("UpdateMasterFormInfo", "MasterInformation")',
+               contentType: "application/json;charset=utf-8",
+               data: JSON.stringify({ MstrInf: MstrInf }),
+               type: 'POST',
+               dataType: 'json',
+               success: function (data) {
+
+                   if (data == 1) {
+
+                       swal({
+                           title: "Ok",
+                           text: "All Information Updated Sucessfully!",
+                           type: "success"
+                       });
+
+                       var e = jQuery.Event("change");
+                       $("#FormCode").trigger(e);
+
+                       clearMstrInf();
+                       clearInfoControls();
+                   }
+                   else if (data == 0) {
+
+                       swal({
+                           title: "Sorry!",
+                           text: "An Error Occured During Update!",
+                           type: "warning"
+                       });
+
+                   }
+                   else if (data == 2) {
+
+                       swal({
+                           title: "Sorry!",
+                           text: "No Available Data to Update!",
+                           type: "warning"
+                       });
+
+                   }
+                   else if (data == 3) {
+
+                       swal({
+                           title: "Sorry!",
+                           text: "Code Already Exists!",
+                           type: "warning"
+                       });
+
+                   }
+                   else if (data.length > 1) {
+
+                       swal({
+                           title: "Sorry!",
+                           text: data,
+                           type: "warning"
+                       });
+
+                   }
+
+               }
+           });
+       });
+
+        function clearMstrInf() {
+
+            MstrInf.FormCode = "";
+            MstrInf.Code = "";
+            MstrInf.Name = "";
+            MstrInf.LocalName = "";
+            MstrInf.Descr = "";
+            MstrInf.ID = "";
+        }
+
+        function clearMstrInfControls() {
+
+            $("#FormCode").val("").trigger('change.select2');
+            $("#Code").val("");
+            $("#Name").val("");
+            $("#LocalName").val("");
+            $("#Descr").val("");
+
+            $("#btnsaveMstrInf").show();
+            $("#btnupdateMstrInf").hide();
+
+            table.search('').draw();
+            table.clear().draw();
+
+        }
+
+        function clearInfoControls() {
+
+            $("#Code").val("");
+            $("#Name").val("");
+            $("#LocalName").val("");
+            $("#Descr").val("");
+
+            $("#btnsaveMstrInf").show();
+            $("#btnupdateMstrInf").hide();
+
+        }
+
+        function setMstrInfFieldData(MstrInf) {
+
+            $("#FormCode").val(MstrInf.FormCode).trigger('change.select2');
+            $("#Code").val(MstrInf.Code);
+            $("#Name").val(MstrInf.Name);
+            $("#LocalName").val(MstrInf.LocalName);
+            $("#Descr").val(MstrInf.Descr);
+
+            $("#btnsaveMstrInf").hide();
+            $("#btnupdateMstrInf").show();
+        }
+
+
+        $("#btnclearMstrInf").on("click", function () {
+
+            clearMstrInfControls();
+        });
+
+
+    </script>
+}

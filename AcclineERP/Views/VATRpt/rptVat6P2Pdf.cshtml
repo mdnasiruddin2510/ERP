@@ -1,0 +1,216 @@
+﻿@model IEnumerable<App.Domain.ViewModel.VatStatementVM>
+@{
+    ViewBag.Title = "rptVat6P2Pdf";
+    Layout = null;
+    var CompInfo = AcclineERP.Models.GetCompanyInfo.GetComInfo();
+    string CompanyAddress = ((CompInfo.Addr1 == null ? string.Empty : CompInfo.Addr1) + (CompInfo.Addr2 == null ? string.Empty : CompInfo.Addr2));
+}
+
+
+
+<script src="~/Scripts/jquery-1.9.1.min.js"></script>
+<script src="~/Scripts/Export.js"></script>
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/select2/select2.css" rel="stylesheet" type="text/css" />
+<link href="~/Css/FormDesign.css" rel="stylesheet" />
+
+<style>
+    tr {
+        page-break-inside: avoid;
+    }
+
+    body {
+        padding-right: 0px;
+        font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+    }
+
+    .border {
+        color: #335; /* Lighten up font color */
+        font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+        font-weight: 300;
+        border-collapse: collapse;
+        border-spacing: 0;
+    }
+
+    .tds {
+        /*border: 1px solid black;*/
+        font-weight: 500;
+        font-family: Arial;
+        border-right: hidden !important;
+    }
+    /* Make cells a bit taller */
+    .ths {
+        /*border: 1px solid black;*/
+        font-weight: 500;
+        font-family: Arial;
+    }
+
+    .th {
+        background: #F3F3F3; /* Light grey background */
+        font-weight: bold; /* Make sure they're bold */
+    }
+
+    .td {
+        background: #FAFAFA; /* Lighter grey background */
+        text-align: center; /* Center our text */
+    }
+
+    .breakhere {
+        page-break-after: always;
+    }
+</style>
+
+<div id="toReport" class="panel-body" style=" text-align: center !important; width: 100%; height: 100%; ">
+
+    <div class="panel-body">
+        <table border="1" cellpadding="0" cellspacing="0" rules=all style="margin: 0px;padding: 0">
+            <thead style=" overflow: visible !important;">
+                <tr>
+                    <th style="font-size: 13px; border-bottom: 0; border-top: 0; text-align: right; " colspan="27">মূসক-৬.২ </th>
+                </tr>
+                <tr>
+                    <th style="font-family: Tahoma, Arial, Helvetica, sans-serif; border-bottom: 0; border-top: 0; font-size: 13px; text-align: center; " colspan="27">@CompInfo.CompName, @CompInfo.Addr1, @CompInfo.BINBN </th>
+                </tr>
+                <tr>
+                    <th style="font-size: 13px; border-bottom: 0; border-top: 0; text-align: center; " colspan="27">বিক্রয় হিসাব পুস্তক <br />(পণ্য বা সেবা প্রক্রিয়াকরণে সম্পৃক্ত এমন নিবন্ধিত বা তালিকাভুক্ত ব্যাক্তির জন্য প্রযোজ্য)<br />[বিধি ৪০এর উপ-বিধি (১) এর দফা (খ) এবং বিধি ৪১ এর দফা (ক) দৃষ্টব্য] </th>
+                </tr>
+                <tr>
+                    <th style=" font-size: 13px; text-align: center" colspan="27">পণ্য/সেবার বিক্রয়  </th>
+                </tr>
+                <tr>
+                    <th style=" width: 25px; font-size: 13px; vertical-align: top; text-align: center" rowspan="3">ক্রমিক সংখ্যা</th>
+                    <th style=" width: 80px; font-size: 13px; vertical-align: top; text-align: center" rowspan="3">তারিখ</th>
+                    <th style=" width: 90px; font-size: 13px; vertical-align: top; text-align: center" colspan="2">উৎপাদিত পণ্য/সেবার প্রারম্ভিক জের</th>
+                    <th style=" width: 90px; font-size: 13px; vertical-align: top; text-align: center" colspan="2">উৎপাদন</th>
+                    <th style=" width: 90px; font-size: 13px; vertical-align: top; text-align: center" colspan="2">মোট উৎপাদিত পণ্য/সেবা</th>
+                    <th style=" width: 200px; font-size: 13px; vertical-align: top; text-align: center" colspan="3">ক্রেতা/সরবরাহগ্রহীতা</th>
+                    <th style=" width: 140px; font-size: 13px; vertical-align: top; text-align: center" colspan="2">চালানপত্রের বিবরণ</th>
+                    <th style=" width: 200px; font-size: 13px; vertical-align: top; text-align: center" colspan="5">বিক্রিত/সরবরাহকৃত পণ্যের বিবরণ</th>
+                    <th style=" width: 140px; font-size: 13px; vertical-align: top; text-align: center" colspan="2">পণ্যের প্রান্তিক জের</th>
+                    <th style=" width: 120px; font-size: 13px; vertical-align: top; text-align: center" rowspan="3">মন্তব্য </th>
+                </tr>
+                <tr>
+                    <th style="  width: 45px; font-size: 13px; vertical-align: top; text-align: center" rowspan="2">পরিমান (একক)</th>
+                    <th style="  width: 65px; font-size: 13px; vertical-align: top; text-align: center" rowspan="2">মূল্য (সকল প্রকার কর ব্যাতীত)</th>
+                    <th style="  width: 45px; font-size: 13px; vertical-align: top; text-align: center" rowspan="2">পরিমান (একক)</th>
+                    <th style="  width: 65px; font-size: 13px; vertical-align: top; text-align: center" rowspan="2">মূল্য (সকল প্রকার কর ব্যাতীত)</th>
+                    <th style="  width: 45px; font-size: 13px; vertical-align: top; text-align: center" rowspan="2">পরিমান (একক)</th>
+                    <th style="  width: 65px; font-size: 13px; vertical-align: top; text-align: center" rowspan="2">মূল্য (সকল প্রকার কর ব্যাতীত)</th>
+                    <th style=" width: 140px; font-size: 13px; vertical-align: top; text-align: center" rowspan="2">নাম</th>
+                    <th style=" width: 220px; font-size: 13px; vertical-align: top; text-align: center" rowspan="2">ঠিকানা</th>
+                    <th style=" width: 60px; font-size: 13px; vertical-align: top; text-align: center" rowspan="2">নিবন্ধন/তালিকাভুক্ত/জাতীয় পরিচয়পত্র নং</th>
+                    <th style=" font-size: 13px; vertical-align: top; text-align: center" rowspan="2">নম্বর</th>
+                    <th style=" width: 80px; font-size: 13px; vertical-align: top; text-align: center" rowspan="2">তারিখ</th>
+                    <th style=" font-size: 13px; vertical-align: top; text-align: center" rowspan="2">বিবরণ</th>
+                    <th style=" font-size: 13px; vertical-align: top; text-align: center" rowspan="2">পরিমান</th>
+                    <th style=" font-size: 13px; vertical-align: top; text-align: center" rowspan="2">করযোগ্য মূল্য</th>
+                    <th style=" font-size: 13px; vertical-align: top; text-align: center" rowspan="2">সম্পূরকশুল্ক (যদি থাকে)</th>
+                    <th style=" font-size: 13px; vertical-align: top; text-align: center" rowspan="2">মূসক</th>
+                    <th style="  width: 45px; font-size: 13px; vertical-align: top; text-align: center" rowspan="2">পরিমান (একক)</th>
+                    <th style="  width: 65px; font-size: 13px; vertical-align: top; text-align: center" rowspan="2">মূল্য (সকল প্রকার কর ব্যাতীত)</th>
+                </tr>
+                <tr></tr>
+                <tr>
+                    <th style=" font-size:13px; text-align:center">(১)</th>
+                    <th style=" font-size:13px; text-align:center">(২)</th>
+                    <th style=" font-size:13px; text-align:center">(৩)</th>
+                    <th style=" font-size:13px; text-align:center">(৪)</th>
+                    <th style=" font-size:13px; text-align:center">(৫)</th>
+                    <th style=" font-size:13px; text-align:center">(৬)</th>
+                    <th style=" font-size:13px; text-align:center">(৭) =৩+৫</th>
+                    <th style=" font-size:13px; text-align:center">(৮) =৪+৬</th>
+                    <th style=" font-size:13px; text-align:center">(৯)</th>
+                    <th style=" font-size:13px; text-align:center">(১০)</th>
+                    <th style=" font-size:13px; text-align:center">(১১)</th>
+                    <th style=" font-size:13px; text-align:center">(১২)</th>
+                    <th style=" font-size:13px; text-align:center">(১৩)</th>
+                    <th style=" font-size:13px; text-align:center">(১৪) </th>
+                    <th style=" font-size:13px; text-align:center">(১৫)</th>
+                    <th style=" font-size:13px; text-align:center">(১৬)</th>
+                    <th style=" font-size:13px; text-align:center">(১৭)</th>
+                    <th style=" font-size:13px; text-align:center">(১৮)</th>
+                    <th style=" font-size:13px; text-align:center">(১৯) =৭-১৫</th>
+                    <th style=" font-size:13px; text-align:center">(২০) =৮-১৬</th>
+                    <th style=" font-size:13px; text-align:center">(২১)</th>
+                </tr>
+            </thead>
+            <tbody id="tbodyId">
+                @foreach (var item in Model)
+                {                                  
+                    <tr>
+                        <td style=" text-align:left; font-size:12px">
+                            @Html.DisplayFor(modelItem => item.SerialNo)
+                        </td>
+                        <td style=" text-align:left; font-size:12px">
+                            @item.PurDate.ToString("dd-MMM-yyyy")
+                        </td>
+                        <td style=" text-align:left; font-size:12px;">
+                            @Html.DisplayFor(modelItem => item.OBQty)
+                        </td>
+                        <td style=" text-align:right; font-size:12px">
+                            @Html.DisplayFor(modelItem => item.OBValue)
+                        </td>
+                        <td style="text-align:right; font-size:12px">
+                           @*@Html.DisplayFor(modelItem => item.IssueQty)*@
+                        </td>
+                        <td style=" text-align:right; font-size:12px;">
+                            @*@Html.DisplayFor(modelItem => item.IssueValue)*@
+                        </td>
+                        <td style=" text-align:right; font-size:12px;">
+                            @Html.DisplayFor(modelItem => item.TotalQty)
+                        </td>
+                        <td style=" text-align:right; font-size:12px;">
+                            @Html.DisplayFor(modelItem => item.TotalValue)
+                        </td>
+                        <td style=" text-align:right; font-size:12px;">
+                            @Html.DisplayFor(modelItem => item.CustName)
+                        </td>
+                        <td style=" text-align:right; font-size:12px;">
+                            @Html.DisplayFor(modelItem => item.CustAddr)
+                        </td>
+                        <td style=" text-align:right; font-size:12px;">
+                            @Html.DisplayFor(modelItem => item.R_E_N_No)
+                        </td>
+                        <td style=" text-align:right; font-size:12px;">
+                            @Html.DisplayFor(modelItem => item.Ch_BENO)
+                        </td>
+                        <td style=" text-align:right; font-size:12px;">
+                            @Convert.ToDateTime(item.Ch_BEDate).ToString("dd-MMM-yyyy")
+                        </td>
+                        <td style=" text-align:right; font-size:12px;">
+                            @Html.DisplayFor(modelItem => item.ItemName)
+                        </td>
+                        <td style=" text-align:right; font-size:12px;">
+                            @Html.DisplayFor(modelItem => item.ProdQty)
+                        </td>
+                        <td style=" text-align:right; font-size:12px;">
+                            @Html.DisplayFor(modelItem => item.ProdValue)
+                        </td>
+                        <td style=" text-align:right; font-size:12px;">
+                            @Html.DisplayFor(modelItem => item.ProdValue)
+                        </td>
+                        <td style=" text-align:right; font-size:12px;">
+                            @Html.DisplayFor(modelItem => item.VATAmt)
+                        </td>
+                        <td style=" text-align:right; font-size:12px;">
+                            @Html.DisplayFor(modelItem => item.CloseQty)
+                        </td>
+                        <td style=" text-align:right; font-size:12px;">
+                            @Html.DisplayFor(modelItem => item.CloseValue)
+                        </td>
+                        <td style=" text-align:right; font-size:12px;">
+                            @Html.DisplayFor(modelItem => item.Remarks)
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <p></p>
+</div>
+
+
+
+

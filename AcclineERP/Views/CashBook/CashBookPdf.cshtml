@@ -1,0 +1,326 @@
+﻿@model IEnumerable<App.Domain.CashBook>
+@{
+    ViewBag.Title = "CashBookPdf";
+    Layout = null;
+    decimal tRecCash = 0.0m;
+    decimal tRecBank = 0.0m;
+    decimal cPayCash = 0.0m;
+    decimal cPayBank = 0.0m;
+    decimal cBank = 0.0m;
+    decimal cCash = 0.0m;
+    decimal TcBank = 0.0m;
+    decimal TcCash = 0.0m;
+
+    var CompInfo = AcclineERP.Models.GetCompanyInfo.GetComInfo();
+    string CompanyAddress = ((CompInfo.Addr1 == null ? string.Empty : CompInfo.Addr1) + (CompInfo.Addr2 == null ? string.Empty : CompInfo.Addr2));
+    
+}
+
+<script src="~/Scripts/jquery-1.9.1.min.js"></script>
+<script src="~/Scripts/Export.js"></script>
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/select2/select2.css" rel="stylesheet" type="text/css" />
+<link href="~/Css/FormDesign.css" rel="stylesheet" />
+
+<style>
+    hr {
+        background-color: black;
+        height: 0.5px;
+    }
+
+    tr {
+        page-break-inside: avoid;
+    }
+</style>
+
+<div id="toReport" class="panel-body" style="margin: auto; text-align:center !important; width:820px; height:1150px; padding:40px">
+    <div class="panel-heading" style="text-align:center">
+        <div class="panel-title">
+            <label style="text-align:center !important; text-decoration: none; font-size:25px; font-weight:bold">@CompInfo.CompName</label><br>
+            <label style="text-align:center !important; text-decoration: none; font-size:23px; font-weight:normal"> @CompanyAddress</label><br>
+            @*<label style="text-align:center !important; text-decoration: none; font-size:23px; font-weight:normal">Phone: @CompInfo.Tel</label>*@<br>
+        </div>
+        <div class="panel-title">
+            <text style="text-align:center !important; text-decoration: none; font-size:20px; font-weight:bold">Cash & Bank Book</text>
+        </div>
+        @if (ViewBag.HasBranch == true)
+        {
+            <div class="panel-title" id="ddfBrCode">
+                <label style="text-align:center !important; text-decoration: none; font-size:20px;font-family:'Arial Narrow'; font-weight:bold" for="BrCode">Branch : @ViewBag.Branch</label>
+            </div>
+        }
+        <div class="cashDate">
+            <text style="text-align:center !important; text-decoration: none; font-size:15px; font-weight:bold">From : @ViewBag.Datef &nbsp;&nbsp; To: @ViewBag.Datet</text>
+        </div>
+
+    </div>
+    <hr />
+    <br /><br />
+    <table cellpadding="0" cellspacing="0" border="0" style="width:820px">
+        <tr>
+            <th style="text-align:left;font-size:18px;font-family:'Arial Narrow';font-family:'Arial Narrow'">Opening Balance </th>
+
+            <th style="text-align:right;font-size:16px;font-family:'Arial Narrow';font-family:'Arial Narrow'">Cash O/B:</th>
+
+            <th style="text-align:right;font-size:14px;font-family:'Arial Narrow';font-family:'Arial Narrow'">@Convert.ToDecimal(Model.ToList().FirstOrDefault().Cash).ToString("#,##0.00")</th>
+            <th style="text-align:right;font-size:16px;font-family:'Arial Narrow'">Bank O/B :</th>
+            <th style="text-align:right;font-size:14px;font-family:'Arial Narrow'">@Convert.ToDecimal(Model.ToList().FirstOrDefault().Bank).ToString("#,##0.00")</th>
+
+
+
+
+            @*<th></th>
+                <th></th>
+                <th style="text-align:right;">Opening Balance :</th>
+                <th style="text-align:right;font:Arial-Narrow;font-size:9px">@Model.ToList().FirstOrDefault().Cash</th>
+                <th style="text-align:right;font:Arial;font-size:9px">@Model.ToList().FirstOrDefault().Bank</th>*@
+        </tr>
+    </table>
+    <br />
+    <hr />
+    <h3 style="text-align:left; height:15px;font-size:18px;font-family:'Arial Narrow'">Receipt</h3>
+    <hr />
+    <table cellpadding="0" cellspacing="0" border="0" style="width:820px">
+
+        <tr>
+            <th style="text-align:left; text-decoration-line:underline;  height:30px;font-size:12px;font-family:'Arial Narrow'">Date</th>
+            <th style="text-align:left; text-decoration-line:underline; padding-left:5px; height:30px;font-size:12px;font-family:'Arial Narrow'">Voucher No</th>
+            <th style="text-align:left; text-decoration-line:underline; padding-left:5px; height:30px;font-size:12px;font-family:'Arial Narrow'">Head</th>
+            <th style="text-align:left; text-decoration-line:underline;  height:30px;font-size:12px;font-family:'Arial Narrow'">Narration</th>
+            <th style="text-align:right; text-decoration-line:underline; padding-right:30px; height:30px;font-size:12px;font-family:'Arial Narrow'">Cash</th>
+            <th style="text-align:right; text-decoration-line:underline; height:30px;font-size:12px;font-family:'Arial Narrow'">Bank</th>
+
+            @*<th style="font-size:13px; text-align:left">Date</th>
+                <th style="font-size:13px; text-align:left">Voucher No</th>
+                <th style="font-size:13px; text-align:left">Head</th>
+                <th style="font-size:13px; text-align:left">Narration</th>
+                <th style="font-size:13px; text-align:right">Cash</th>
+                <th style="font-size:13px; text-align:right">Bank</th>*@
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            if (item.TrGroup == "1")
+            {
+                tRecCash += Convert.ToDecimal(item.Cash);
+                tRecBank += Convert.ToDecimal(item.Bank);
+                <tr>
+                    <td style="text-align:left;  height:30px;font-size:12px;font-family:'Arial Narrow'">
+                        @item.TrDate.ToShortDateString()
+                    </td>
+                    <td style="text-align:left; padding-left:5px; height:30px;font-size:12px;font-family:'Arial Narrow'">
+                        @Html.DisplayFor(modelItem => item.TrNo)
+                    </td>
+                    <td style="text-align:left; padding-left:5px; height:30px;font-size:12px;font-family:'Arial Narrow';font-family:'Arial Narrow'">
+                        @Html.DisplayFor(modelItem => item.ca_bk_op)
+                    </td>
+                    <td style="text-align:left; height:10px;font-size:12px;font-family:'Arial Narrow'">
+                        @Html.DisplayFor(modelItem => item.Narration)
+                    </td>
+                    <td style="text-align:right; padding-right:30px; height:30px;font-size:12px;font-family:'Arial Narrow'">
+                        @Convert.ToDecimal(item.Cash).ToString("#,##0.00")
+                    </td>
+                    <td style="text-align:right; height:30px;font-size:12px;font-family:'Arial Narrow'">
+                        @Convert.ToDecimal(item.Bank).ToString("#,##0.00")
+                    </td>
+                </tr>
+
+            }
+
+        }
+
+
+
+
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <th style="text-align:right;  padding-right:30px; height:30px;font-size:16px;font-family:'Arial Narrow';font-family:'Arial Narrow'">Total Receipt: </th>
+            <th style="text-align:right; padding-right:30px;font-size:14px;font-family:'Arial Narrow'"><hr />@Convert.ToDecimal(tRecCash).ToString("#,##0.00")</th>
+            <th style="text-align:right;font-size:14px;font-family:'Arial Narrow'"><hr />@Convert.ToDecimal(tRecBank).ToString("#,##0.00")</th>
+        </tr>
+        <tr>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th style="text-align:right; height:30px;font-size:16px;font-family:'Arial Narrow'">Total : </th>
+            <th style="text-align:right;padding-right:30px;font-size:14px;font-family:'Arial Narrow'"><hr />@Convert.ToDecimal(@tRecCash + @Model.ToList().FirstOrDefault().Cash).ToString("#,##0.00")<hr style="margin-bottom: 3px !important; margin-top: 0 !important" /><hr style="margin-bottom: 3px !important; margin-top: 0 !important" /></th>
+            <th style="text-align:right;font-size:14px;font-family:'Arial Narrow'"><hr />@Convert.ToDecimal(@tRecBank + @Model.ToList().FirstOrDefault().Bank).ToString("#,##0.00")<hr style="margin-bottom: 3px !important; margin-top: 0 !important" /><hr style="margin-bottom: 3px !important; margin-top: 0 !important" /></th>
+        </tr>
+    </table>
+    <br /><br /><br />
+    <hr />
+    <h3 style="text-align:left; height:15px;font-size:18px;font-family:'Arial Narrow'">Payment</h3>
+    <hr />
+    <table cellpadding="0" cellspacing="0" border="0" style="width:820px">
+
+        <tr>
+            <th style="text-align:left; text-decoration-line:underline;  height:30px;font-size:12px;font-family:'Arial Narrow'">Date</th>
+            <th style="text-align:left; text-decoration-line:underline;  padding-left:5px; height:30px;font-size:12px;font-family:'Arial Narrow'">Voucher No</th>
+            <th style="text-align:left; text-decoration-line:underline;  padding-left:5px; height:30px;font-size:12px;font-family:'Arial Narrow'">Head</th>
+            <th style="text-align:left; text-decoration-line:underline;  height:10px;font-size:12px;font-family:'Arial Narrow'">Narration</th>
+            <th style="text-align:right; text-decoration-line:underline;padding-right:30px; height:30px;font-size:12px;font-family:'Arial Narrow'">Cash</th>
+            <th style="text-align:right; text-decoration-line:underline; height:30px;font-size:12px;font-family:'Arial Narrow'">Bank</th>
+
+            @*<th style="font-size:13px; text-align:left">Date</th>
+                <th style="font-size:13px; text-align:left">Voucher No</th>
+                <th style="font-size:13px; text-align:left">Head</th>
+                <th style="font-size:13px; text-align:left">Narration</th>
+                <th style="font-size:13px; text-align:right">Cash</th>
+                <th style="font-size:13px; text-align:right">Bank</th>*@
+        </tr>
+        @foreach (var item in Model)
+        {
+            if (item.TrGroup == "2")
+            {
+                cPayCash += Convert.ToDecimal(item.Cash);
+                cPayBank += Convert.ToDecimal(item.Bank);
+                <tr>
+                    <td style="text-align:left; height:30px;font-size:12px;font-family:'Arial Narrow'">
+                        @item.TrDate.ToShortDateString()
+                    </td>
+                    <td style="text-align:left; padding-left:5px;  height:30px;font-size:12px;font-family:'Arial Narrow'">
+                        @Html.DisplayFor(modelItem => item.TrNo)
+                    </td>
+                    <td style="text-align:left; padding-left:5px;  height:30px;font-size:12px;font-family:'Arial Narrow'">
+                        @Html.DisplayFor(modelItem => item.ca_bk_op)
+                    </td>
+                    <td style="text-align:left; height:30px;font-size:12px;font-family:'Arial Narrow'">
+                        @Html.DisplayFor(modelItem => item.Narration)
+                    </td>
+                    <td style="text-align:right;padding-right:30px; height:30px;font-size:12px;font-family:'Arial Narrow'">
+                        @Convert.ToDecimal(item.Cash).ToString("#,##0.00")
+                    </td>
+                    <td style="text-align:right; height:30px;font-size:12px;font-family:'Arial Narrow'">
+                        @Convert.ToDecimal(item.Bank).ToString("#,##0.00")
+                    </td>
+                </tr>
+
+            }
+
+        }
+
+
+
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <th style="text-align:right; height:50px;font-size:16px;font-family:'Arial Narrow'">Total Payment :</th>
+            <th style="text-align:right; padding-right:30px; height:30px;font-size:14px;font-family:'Arial Narrow'"><hr />@Convert.ToDecimal(cPayCash).ToString("#,##0.00")<hr style="margin-bottom: 3px !important; margin-top: 0 !important" /></th>
+            <th style="text-align:right; height:30px;font-size:14px;font-family:'Arial Narrow'"><hr />@Convert.ToDecimal(cPayBank).ToString("#,##0.00")<hr style="margin-bottom: 3px !important; margin-top: 0 !important" /></th>
+        </tr>
+        @*<tr>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th style="text-align:right; height:30px">Total : </th>
+                <th style="text-align:right;padding-right:30px"><hr/>@Convert.ToDecimal(@tPayCash + @Model.ToList().FirstOrDefault().Cash).ToString("#,##0.00")<hr style="margin-bottom: 3px !important; margin-top: 0 !important" /><hr style="margin-bottom: 3px !important; margin-top: 0 !important" /></th>
+                <th style="text-align:right"><hr />@Convert.ToDecimal(@tPayBank + @Model.ToList().FirstOrDefault().Bank).ToString("#,##0.00")<hr style="margin-bottom: 3px !important; margin-top: 0 !important" /><hr style="margin-bottom: 3px !important; margin-top: 0 !important" /></th>
+            </tr>*@
+    </table>
+    <hr />
+    <h3 style="text-align:left; height:15px;font-size:18px;font-family:'Arial Narrow'">Closing</h3>
+    <hr />
+    <table cellpadding="0" cellspacing="0" border="0" style="width:820px">
+        @foreach (var item in Model)
+        {
+            if (item.TrGroup == "3")
+            {
+                cCash += Convert.ToDecimal(item.Cash);
+                cBank += Convert.ToDecimal(item.Bank);
+                <tr>
+                    <td style="text-align:right; height:30px;font-size:12px;font-family:'Arial Narrow'"></td>
+                    <td style="text-align:right; height:30px;font-size:12px;font-family:'Arial Narrow'"></td>
+                    <td style="text-align:right; height:30px;font-size:12px;font-family:'Arial Narrow'"></td>
+                    <td style="text-align:right; height:30px;font-size:12px;font-family:'Arial Narrow'">
+                        @Html.DisplayFor(modelItem => item.Narration)
+                    </td>
+                    @*<td style="text-align:right; height:30px">
+                            @Html.DisplayFor(modelItem => item.Cash)
+                        </td>*@
+                    <td style="text-align:right; height:30px; padding-left:40px;font-size:12px;font-family:'Arial Narrow'"></td>
+                    <td style="text-align:right; height:30px;font-size:12px;font-family:'Arial Narrow'">
+                        @Convert.ToDecimal(item.Bank).ToString("#,##0.00")
+                    </td>
+                </tr>
+
+            }
+
+        }
+
+        @foreach (var item in Model)
+        {
+            if (item.TrGroup == "4")
+            {
+                TcCash += Convert.ToDecimal(item.Cash);
+                TcBank += Convert.ToDecimal(item.Bank);
+                <tr style="height:45px">
+
+                    <td style="text-align:right;height:30px;font-size:12px;font-family:'Arial Narrow'"></td>
+                    <td style="text-align:right;height:30px;font-size:12px;font-family:'Arial Narrow'"></td>
+                    <td style="text-align:right;height:30px;font-size:12px;font-family:'Arial Narrow'"></td>
+                    <th style="text-align:right; height:30px;font-size:16px;font-family:'Arial Narrow'">@Html.DisplayFor(modelItem => item.Narration):</th>
+                    <th style="text-align:right; padding-left:40px;font-size:14px;font-family:'Arial Narrow'">
+                        <hr style="margin-bottom: 3px !important; margin-top: 0 !important; " />
+                        @Convert.ToDecimal(item.Cash).ToString("#,##0.00")
+                    </th>
+                    <th style="text-align:right;font-size:14px;font-family:'Arial Narrow'">
+                        <hr style="margin-bottom: 3px !important;  margin-top: 0 !important;" />
+                        @Convert.ToDecimal(item.Bank).ToString("#,##0.00")
+                    </th>
+                    @*<td style="text-align:right;padding-left:140px;height:30px"><hr style="margin-bottom: 3px !important;padding-left:60px; margin-top: 0 !important" />@Convert.ToDecimal(item.Cash).ToString("#,##0.00")<hr style="margin-bottom: 3px !important; margin-top: 0 !important" /></td>
+                        <td style="text-align:right;height:30px"><hr style="margin-bottom: 3px !important; margin-top: 0 !important" />@Convert.ToDecimal(item.Bank).ToString("#,##0.00")<hr style="margin-bottom: 3px !important; margin-top: 0 !important" /></td>*@
+
+                </tr>
+
+
+            }
+
+        }
+
+
+        @*<tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td style="text-align:right; height:30px">Closing Balance:</td>
+                <td style="text-align:right; padding-left:40px">
+                    <hr style="margin-bottom: 3px !important;   margin-top: 0 !important;" />
+                    @Convert.ToDecimal(@TcCash + @cPayCash).ToString("#,##0.00")
+                    <hr style="margin-bottom: 3px !important;  margin-top: 0 !important;" />
+                    <hr style="margin-bottom: 3px !important;  margin-top: 0 !important;" />
+                </td>
+
+                <td style="text-align:right;">
+                    <hr style="margin-bottom: 3px !important; margin-top: 0 !important" />
+                    @Convert.ToDecimal(@TcBank + @cPayBank).ToString("#,##0.00")
+                    <hr style="margin-bottom: 3px !important;   margin-top: 0 !important;" />
+                    <hr style="margin-bottom: 3px !important;  margin-top: 0 !important;" />
+                </td>
+            </tr>*@
+
+
+        <tr>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th style="text-align:right; height:30px;font-size:16px;font-family:'Arial Narrow'">Closing Balance:</th>
+            <th style="text-align:right;padding-left:150px;font-size:14px;font-family:'Arial Narrow'"><hr style="margin-bottom: 3px !important;padding-left:50px; margin-top: 0 !important" />@Convert.ToDecimal(@TcCash + @cPayCash).ToString("#,##0.00")<hr style="margin-bottom: 3px !important; margin-top: 0 !important" /><hr style="margin-bottom: 3px !important; margin-top: 0 !important" /></th>
+            <th style="text-align:right;font-size:14px;font-family:'Arial Narrow'"><hr style="margin-bottom: 3px !important;padding-left:50px; margin-top: 0 !important" />@Convert.ToDecimal(@TcBank + @cPayBank).ToString("#,##0.00")<hr style="margin-bottom: 3px !important; margin-top: 0 !important" /><hr style="margin-bottom: 3px !important; margin-top: 0 !important" /></th>
+        </tr>
+    </table>
+
+
+</div>
+<div class="col-sm-10">
+    <br />
+    <br /><br />
+</div>
+@*<div class="panel-footer" style="text-align:right; width:850px">
+        <label style="font-size:13px">Print Date : @ViewBag.PrintDate</label>
+    </div>*@
+

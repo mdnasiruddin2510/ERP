@@ -1,0 +1,105 @@
+﻿@model IEnumerable<App.Domain.OpenBal>
+
+@{
+    ViewBag.Title = "Open Balance List";
+    Layout = null;
+    int sl = 0;
+
+    var CompInfo = AcclineERP.Models.GetCompanyInfo.GetComInfo();
+    string CompanyAddress = ((CompInfo.Addr1 == null ? string.Empty : CompInfo.Addr1) + (CompInfo.Addr2 == null ? string.Empty : CompInfo.Addr2));
+}
+
+<script src="~/Scripts/jquery-1.9.1.min.js"></script>
+<script src="~/Scripts/Export.js"></script>
+@*<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/App_Themes/Theme1/plugins/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+    <link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/App_Themes/Theme1/plugins/select2/select2.css" rel="stylesheet" type="text/css" />
+    <link href="~/Css/FormDesign.css" rel="stylesheet" />*@
+
+<style>
+   hr {
+        border: 1px solid #000000;
+        border-style: none none solid;
+        color: black;
+    }
+
+    tr {
+        page-break-inside: avoid;
+    }
+</style>
+
+<div id="toReport" class="panel-body" style="margin: auto; text-align:center !important; width:800px; height:1150px; padding:60px">
+    <div class="panel-heading" style="text-align:center">
+        <div class="panel-title">
+            <label style="text-align:center !important; text-decoration: none; font-size:25px; font-weight:bold">@CompInfo.CompName</label><br>
+            <label style="text-align:center !important; text-decoration: none; font-size:23px; font-weight:normal">@CompanyAddress</label><br>
+            @*<label style="text-align:center !important; text-decoration: none; font-size:23px; font-weight:normal">Phone:@CompInfo.Tel</label>*@<br>
+        </div>
+        <br />
+        <div class="panel-title">
+            <text style="text-align:center !important; text-decoration: none; font-size:20px; font-weight:bold">@ViewBag.Title</text>
+        </div>
+
+    </div>
+    <hr />
+    <br />
+
+    <div class="panel-body" style="text-align:center">
+        <table cellpadding="5" cellspacing="1" border="1" frame="box" rules="all" style="width:800px">
+            <thead style="height:300px">
+                <tr>
+                    <th style="width:80px; text-align:center">SL</th>
+                    <th style="width:200px; text-align:center">Account Name</th>
+                    <th style="width:200px; text-align:center">Account Code</th>
+                    <th style="width:150px; text-align:center">Debit</th>
+                    <th style="width:150px; text-align:center">Credit</th>
+
+                </tr>
+            </thead>
+            <tbody id="tbodyId">
+
+                @{
+                    double totaldr = 0, totalcr = 0;
+                }
+
+                @foreach (var item in Model)
+                {
+                    var dr = "";
+                    var cr = "";
+                    if (item.YrDrBal != 0) { dr = Convert.ToString(item.YrDrBal); totaldr = totaldr + item.YrDrBal; }
+                    if (item.YrCrBal != 0) { cr = Convert.ToString(item.YrCrBal); totalcr = totalcr + item.YrCrBal; }
+
+                    sl++;
+                    <tr>
+                        <td style="width:40px; text-align:center; font-size:12px">
+                            @sl
+                        </td>
+                        <td style="width:100px; text-align:center; font-size:12px">
+                            @Html.DisplayFor(modelItem => item.AccName)
+                        </td>
+                        <td style="width:100px; text-align:center; font-size:12px">
+                            @Html.DisplayFor(modelItem => item.Accode)
+                        </td>
+
+                        <td style="width:120px; text-align:right; font-size:12px">
+                            @Html.DisplayFor(modelItem => dr)
+                        </td>
+                        <td style="width:120px; text-align:right; font-size:12px">
+                            @Html.DisplayFor(modelItem => cr)
+                        </td>
+                    </tr>
+                }                
+                <tr>
+                    <td style="border-right: hidden !important; border-left: hidden !important;border-bottom: hidden !important;"></td>
+                    <td style="border-right: hidden !important; border-bottom: hidden !important;"></td>
+                    <td style="border-right: hidden !important; border-bottom: hidden !important;">Total:</td>
+                    <td class="tds" style="text-align: right; font-size: 12px; border-top: 1px solid;border-bottom: hidden !important;border-right: hidden !important;"><b>@totaldr</b><hr style="margin-bottom: 3px !important; margin-top: 0 !important" /><hr style="margin-bottom: 3px !important; margin-top: 0 !important" /></td>
+                    <td class="tds" style="text-align: right; font-size: 12px; border-top: 1px solid;border-bottom: hidden !important;border-right: hidden !important;"><b>@totalcr</b><hr style="margin-bottom: 3px !important; margin-top: 0 !important" /><hr style="margin-bottom: 3px !important; margin-top: 0 !important" /></td>
+                </tr>
+            </tbody>
+
+        </table>
+    </div>
+
+</div>

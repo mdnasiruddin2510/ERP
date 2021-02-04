@@ -1,0 +1,334 @@
+﻿@model App.Domain.ViewModel.SignatoryManagementVM
+
+@{
+    ViewBag.Title = "SignatoryManagement";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="~/Css/FormDesign.css" rel="stylesheet" />
+<style>
+    
+    .form-control {
+        border: 1px solid #00ffff;
+    }
+
+    .hideme {
+        display: none;
+    }
+
+    fieldset {
+        display: block;
+        margin-left: 2px;
+        margin-right: 13px;
+        padding-top: 0.35em;
+        padding-bottom: 0.625em;
+        padding-left: 0.75em;
+        padding-right: 0.75em;
+        border: 2px groove;
+    }
+
+    legend {
+        display: block;
+        padding-left: 2px;
+        padding-right: 2px;
+        border: none;
+    }
+</style>
+
+@using (Html.BeginForm(@*"LocationPreview", "LocationAdd", FormMethod.Post, new { }*@))
+{
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-color panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <text style="text-align:left !important;text-decoration:none;">Signatory Management</text>
+                    </h3>
+                </div>
+
+                <div class="col-md-12" style="margin-top: 10px !important;">
+                    <div class="col-md-6">
+                        <label class="col-md-3">User</label>
+                        <div class="input-group form-group col-md-8">
+                            <input type="text" id="UserName" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+                @*<div class="col-md-6" style="text-align:end">
+                        <input type="button" value="CHECK" class="btn btn-primary" id="btncheck" style="width:100px; margin-right:42px" />
+                    </div>*@
+                <div class="col-sm-12 col-md-12" style="margin-top: 10px; margin-bottom: 10px;" id="pnlDT">
+                    <div class="row col-sm-12 col-md-12" style="border:1px solid; border-color:#adcceb; width:100%">
+                        <div class="row">
+                            <div class="col-sm-12 col-md-12" style="padding:1px 18px 1px 18px">
+                                <br />
+                                <table class="table table-bordered table-responsive" id="Add-datatable" style="width:100%">
+                                    <thead>
+                                        <tr>
+                                            <th width="10%">Id</th>
+                                            <th width="5%" class="hideme">Func&nbsp;SlID</th>
+                                            <th width="10%">Form&nbsp;Name</th>
+                                            <th width="5%">Function&nbsp;Name</th>
+                                            <th width="5%" class="hideme">Function&nbsp;SL</th>
+                                            <th width="5%"><input type="checkbox" name="Check" value="Check" id="chkSelectAll" /> Check All</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tbodyId"></tbody>
+                                </table>
+                                <br />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12" style="text-align:end">
+                    @*<div class="col-md-11" style=" text-align:right;overflow:hidden">
+                    *@
+                    <input type="button" value="SAVE" class="btn btn-primary" id="btnsave" style="width:100px; margin-right:9px" />
+                    @*<input type="button" value="CLEAR" class="btn btn-primary" id="btnclear" style="width:100px; margin-right:9px" />*@
+                    @*
+                        </div>*@
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+}
+
+@section scripts{
+    <script src="~/App_Themes/Theme1/plugins/select2/select2.min.js" type="text/javascript"></script>
+    <script src="~/App_Themes/Theme1/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.bootstrap.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.buttons.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/buttons.bootstrap.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/pdfmake.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/vfs_fonts.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/buttons.html5.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/buttons.print.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.fixedHeader.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.keyTable.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.responsive.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/responsive.bootstrap.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.scroller.min.js"></script>
+    <script type="text/javascript" src="../App_Themes/Theme1/plugins/parsleyjs/dist/parsley.min.js"></script>
+    <script src="../App_Themes/Theme1/blue/assets/pages/datatables.init.js"></script>
+
+    <script>
+
+        /////////////datatableshow////////////
+        //  $(document).ready(function () {
+        //$("#hideme").hide();
+        //function loadGridByVNo() {
+        var table = $("#Add-datatable").DataTable({
+            "scrollX": true,
+            "scrollY": 300,
+            "ordering": false,
+            "ajax": "../SignatoryManagement/GetAllDataForSignatoryManagement",
+            "rowId": 'id',
+            "columns": [
+                       { "data": null, "bSortable": false },
+                       { "data": "FuncId", "class": "hideme" },
+                       { "data": "FormName" },
+                       { "data": "FuncName" },
+                       { "data": "FuncSl", "class": "hideme" },
+                       {
+                           render: function (data, type, row) {
+                               //if column data is 1 then set attr to checked, use row id as input id (plus prefix)
+                               return '<input type="checkbox" ' + ((data == 1) ? 'checked' : '') + ' id="input' + row.id + '" class="filter-ck" />';
+                               return data;
+                           }
+
+                       },
+            ],
+            "fnCreatedRow": function (row, data, index) {
+                $('td', row).eq(0).html(index + 1);
+            }
+
+
+        });
+
+        var loadInfo = {
+            UserName: "",
+            FullName: "",
+            FuncSl: "",
+            Check: ""
+        };
+        function setOrder() {
+            loadInfo.UserName = $("#UserName").val();
+            loadInfo.FullName = $("#UserName").val();
+            loadInfo.FuncSl = $("#FuncSl").val();
+
+
+        }
+
+        function clearReceive() {
+            $("#UserName").val("");
+            //$("#AcCode").val("");
+            //$("#MRAgainstType").val("");
+            //$("#BranchType").val($('#BranchType option:first-child').val()).trigger('change.select2');
+        }
+
+
+        ///////////////////////////GetAllData for Selected User from EmployeeFunc////////////////////
+        $(document).on("change", "#UserName", function () {
+            UserName = $("#UserName").val()
+            var Check = [];
+            var dtable = $('#Add-datatable').dataTable();
+            var rowCount = $('#Add-datatable >tbody >tr').length;
+
+            var rows = $(dtable.$('input[type="checkbox"]').map(function () {
+                return $(this).closest('tr');
+            }));
+
+            $('#chkSelectAll').prop('checked', false);
+            $('input[type="checkbox"]', table.cells().nodes()).prop('checked', false);
+
+            $.ajax({
+                url: '@Url.Action("GetDataForSelectedUserName", "SignatoryManagement")',
+                contentType: "application/json;charset=utf-8",
+                data: JSON.stringify({ UserName: UserName }),
+                type: 'POST',
+                dataType: 'json',
+                success: function (datas) {
+
+                    $.each(datas, function (index, values) {
+
+
+                        rows.each(function (i, value) {
+
+                            var item = { FuncId: "", FormName: "", FuncName: "", FuncSl: "" }
+                            var rowId = value[0].cells[0].innerText;
+                            item.FuncId = value[0].cells[1].innerText;
+                            item.FormName = value[0].cells[2].innerText;
+                            item.FuncName = value[0].cells[3].innerText;
+                            item.FuncSl = value[0].cells[4].innerText;
+                            // Determine whether row ID is in the list of selected row IDs
+                            var index = $.inArray(item.FuncId, Check);
+                            var cln = value[0].lastChild.cellIndex;
+                            var Chkbox = value[0].childNodes[cln].childNodes[0];
+                            // If checkbox is checked and row ID is not in list of selected row IDs
+                            if (item.FormName == values.FormName && item.FuncName == values.FuncName && item.FuncSl == values.FuncSL) {
+                                value[0].childNodes[cln].childNodes[0].checked = true;
+                            }
+                        });
+
+
+                    });
+
+                }
+            });
+
+        });
+
+
+        /////////////////save for SM Selected User/////////////////
+
+        // Handle click on "Select all" control
+        $('#chkSelectAll').on('click', function () {
+            // Get all rows with search applied
+            var table = $('#Add-datatable').DataTable();
+            var rows = table.rows({ 'search': 'applied' }).nodes();
+            // Check/uncheck checkboxes for all rows in the table
+            $('input[type="checkbox"]', rows).prop('checked', this.checked);
+        });
+
+
+        $(document).on("click", "#btnsave", function () {
+            //setOrder();
+            var UserName = $("#UserName").val();
+            if (UserName == "") {
+                alert("Please add User Name.");
+            } else {
+                var Check = [];
+                var dtable = $('#Add-datatable').dataTable();
+                var rowCount = $('#Add-datatable >tbody >tr').length;
+
+                var rows = $(dtable.$('input[type="checkbox"]').map(function () {
+                    return $(this).closest('tr');
+                }));
+
+
+                rows.each(function (i, value) {
+                    var item = { FormName: "", FuncName: "", FuncSl: "" }
+                    var rowId = value[0].cells[0].innerText;
+                    item.FuncId = value[0].cells[1].innerText;
+                    item.FormName = value[0].cells[2].innerText;
+                    item.FuncName = value[0].cells[3].innerText;
+                    item.FuncSl = value[0].cells[4].innerText;
+                    //item.AccType = value[0].cells[4].innerText;
+                    // Determine whether row ID is in the list of selected row IDs
+                    var index = $.inArray(item.FormName, Check);
+                    var cln = value[0].lastChild.cellIndex;
+                    var Chkbox = value[0].childNodes[cln].childNodes[0];
+                    // If checkbox is checked and row ID is not in list of selected row IDs
+                    if (Chkbox.checked && index === -1) {
+                        Check.push(item);
+
+                    }
+                });
+
+                $.ajax({
+                    url: '@Url.Action("SaveSignatoryManagement", "SignatoryManagement")',
+                    contentType: "application/json;charset=utf-8",
+                    data: JSON.stringify({ UserName: UserName, Check: Check }),
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function (datas) {
+                        if (datas == 1) {
+                            swal({
+                                title: "Ok",
+                                text: "Successfully Saved!",
+                                type: "success",
+                                closeOnConfirm: true
+                            },
+
+                            function () {
+                                // location.reload();
+                                // clearReceive();
+                            });
+                            //$("#btnadd").prop("disabled", false);
+                            //orders = [];
+                            //$('#tbodyId').empty();
+
+
+                        }
+                        else if (datas == "X") {
+                            swal({
+                                title: "Sorry",
+                                text: "No Save Permission for this User",
+                                type: "warning"
+                            });
+                        }
+                        else if (datas == 0) {
+                            swal(
+                                'Sorry!',
+                                'All (*) field are required. These Fields can not be empty!!!',
+                                'warning'
+                            );
+                            $("#save").prop("disabled", false);
+                        }
+                        else if (datas == 3) {                           //save  data
+                            swal({
+                                title: "Sorry!",
+                                text: "Data Already Exists",
+                                type: "warning"
+                            });
+                        }
+
+                            //});
+
+                            //}
+                        else {
+                            swal(
+                                'Sorry!',
+                                'Please Add item in the Table.!!!',
+                                'warning'
+                                );
+                        }
+                    }//success
+                });//ajax
+            }
+        });
+
+    </script>
+}

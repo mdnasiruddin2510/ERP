@@ -1,0 +1,207 @@
+﻿@model PoIpaWeb.Models.RegisterModel
+@{
+    Layout = "~/Views/Shared/_LoginLayout.cshtml";
+}
+
+<div class="text-center" style="margin-top: 50px;">
+    <a href="index.html" class="logo-lg"><i class="md md-equalizer"></i> <span></span><font size="4">Post-Office E-Commerce Service</font></a>
+</div>
+
+@using (Html.BeginForm("Register", "Account", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    
+    <div class="row centered-form" style="margin-top: 20px;">
+        <div class="col-xs-12 col-sm-8 col-md-6 col-sm-offset-3 col-md-offset-3">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Registraion</h3>
+                </div>
+                <div class="panel-body">
+                    <form role="form">
+                        <div class="row">
+                            <div class="col-xs-6 col-sm-6 col-md-6">
+                                @Html.AntiForgeryToken()
+                                <p style="color:red;">@Html.ValidationSummary(true)</p>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="glyphicon glyphicon-user"></i>
+                                        </div>
+                                        @Html.TextAreaFor(m => m.CustomerName, new { @class = "form-control", placeholder = "Customer/Company Name",@required="required" })
+                                        @Html.ValidationMessageFor(m => m.CustomerName)
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-6 col-sm-6 col-md-6">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="glyphicon glyphicon-inbox"></i>
+                                        </div>
+                                        @Html.TextBoxFor(m => m.Address, new { @class = "form-control", placeholder = "Address", @required = "required" })
+                                        @Html.ValidationMessageFor(m => m.Address)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6 col-sm-6 col-md-6">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="glyphicon glyphicon-flag"></i>
+                                        </div>
+                                        @Html.DropDownListFor(m => m.DistrictId, null, "Select District", new { @class = "form-control", placeholder = "District", @required = "required" })
+                                        @Html.ValidationMessageFor(m => m.DistrictId)
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-6 col-sm-6 col-md-6">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="glyphicon glyphicon-flag"></i>
+                                        </div>
+                                        @Html.DropDownListFor(m => m.ThanaId, null, "Select Thana", new { @class = "form-control", placeholder = "Thana", @required = "required" })
+                                        @Html.ValidationMessageFor(m => m.ThanaId)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6 col-sm-6 col-md-6">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="glyphicon glyphicon-send"></i>
+                                        </div>
+                                        @Html.TextBoxFor(m => m.PostCode, new { @class = "form-control", placeholder = "Post Code", @required = "required" })
+                                        @Html.ValidationMessageFor(m => m.PostCode)
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-6 col-sm-6 col-md-6">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="glyphicon glyphicon-phone"></i>
+                                        </div>
+                                        @Html.TextBoxFor(m => m.MobileNo, new { @class = "form-control", placeholder = "Mobile No", @required = "required", type = "tel" })
+                                        @Html.ValidationMessageFor(m => m.MobileNo)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6 col-sm-6 col-md-6">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="glyphicon glyphicon-envelope"></i>
+                                        </div>
+                                        @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = "Email", @required = "required",type="email" })
+                                        @Html.ValidationMessageFor(m => m.Email)
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-6 col-sm-6 col-md-6">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="md md-vpn-key  l-h-32"></i>
+                                        </div>
+                                        @Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder = "Password", @required = "required" })
+                                        @Html.ValidationMessageFor(m => m.Password)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6 col-sm-6 col-md-6">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="md md-vpn-key  l-h-32"></i>
+                                        </div>
+                                        @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control", placeholder = "Confirm Password", @required = "required" })
+                                        @Html.ValidationMessageFor(m => m.ConfirmPassword)
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-6 col-sm-6 col-md-6">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="glyphicon glyphicon-hdd"></i>
+                                        </div>
+                                        <label for="ProfilePicture">Profile Picture</label>
+                                        <input type="file" class="" id="ProfilePicture" name="@Html.NameFor(x=>x.ProfilePicture)" required  />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-6 col-sm-6 col-md-6">
+                            <div class="form-group" style="padding-top: 10px; float: right;">
+                                @Html.ActionLink("Already have account?", "Login", new { @class = "text-muted" })
+                            </div>
+                        </div>
+                        <div class="col-xs-6 col-sm-6 col-md-6">
+                            <div class="form-group">
+                                <button class="btn btn-primary btn-custom w-md waves-effect waves-light " type="submit">
+                                    Register
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+@section scripts{
+
+    <script>
+
+        $(document).ready(function () {
+            $('form').parsley();
+            $("#ThanaId").prop("disabled", true);
+            $(document).on('change', '#DistrictId', function () {
+               
+                $.ajax({
+                    url: '@Url.Action("GetThanaByDisId", "Account")',
+                    contentType: "application/json;charset=utf-8",
+                    data: { disId: $('#DistrictId').val() },
+                    type: 'Get',
+                    dataType: 'json',
+                    success: function (datas) {
+                        $("#ThanaId").empty();
+                        $('#ThanaId').append($('<option />', {
+                            text: "Select Thana",
+                            value: 0
+                        }));
+                        if (datas.length < 1) {
+                            $("#ThanaId").prop("disabled", true);
+                        }
+                        else {
+                            $("#ThanaId").prop("disabled", false);
+                            $.each(datas, function (index, value) {
+
+                                $('#ThanaId').append($('<option />', {
+                                    text: value.ThanaName,
+                                    value: value.Id
+                                }));
+                            });
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+}
+

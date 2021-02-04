@@ -1,0 +1,387 @@
+﻿@model App.Domain.ItemInfo
+@{
+    ViewBag.Title = "SearchItem";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    //double  = 0.0;
+}
+
+
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+<link href="~/App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/App_Themes/Theme1/plugins/select2/select2.css" rel="stylesheet" type="text/css" />
+<link href="~/Css/FormDesign.css" rel="stylesheet" />
+
+<style>
+    table.dataTable.select tbody tr,
+    table.dataTable thead th:first-child {
+        cursor: pointer;
+        text-align: center;
+    }
+
+    .dataTables_scrollBody > table > thead > tr > th[class*="sort"]::after {
+        display: none;
+    }
+
+    .form-control {
+        border: 1px solid #00ffff;
+    }
+
+    .required:after {
+        content: " *";
+        font-weight: bold;
+        color: red;
+    }
+</style>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-color panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    <text style="text-align:left !important; text-decoration: none;">Find Item Result</text>
+                    <text style="color:#1E3B2D;font-size:12px;margin-right:100px;" class="pull-right">@ViewBag.Status</text>
+                </h3>
+            </div>
+            <div class="panel-body" style="margin-top:20px">
+                <div class="col-md-12">
+                    @*<div class="col-md-6">
+                            @Html.LabelFor(x => x.ItemCode, new { @class = "col-md-4" })
+                            <div class="form-group col-md-6">
+                                <input type="text" class="form-control" id="@Html.IdFor(x => x.ItemCode)" required="required" value="@ViewBag.ItemCode">
+                                @Html.ValidationMessageFor(x => x.ItemCode)
+                            </div>
+                        </div>*@
+                    <div class="col-md-6">
+                        <label class="col-md-4 required">Item</label>
+                        <div class="input-group form-group col-md-8">
+                            @Html.DropDownListFor(x => x.ItemCode, null, "---- Select ----", new { @class = "form-control select2", @Value = ViewBag.ItemCode })
+
+                            @Html.ValidationMessageFor(x => x.ItemCode)
+                        </div>
+
+                    </div>
+                    @*<div class="col-md-6">
+                            <label class="col-md-4">Item Type</label>
+                            <div class="input-group form-group col-md-8">
+                                @Html.DropDownListFor(x => x.ItemType, null, "---- Select ----", new { @class = "form-control select2", @Value = ViewBag.ItemType })
+
+                                @Html.ValidationMessageFor(x => x.ItemType)
+                            </div>
+                        </div>*@
+                    <div class="col-md-6">
+                        <input type="submit" value="Search" class="btn btn-primary" id="submit" style="width:100px;" />
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-color panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Search Result</h3>
+
+
+                </div>
+                <div class="panel-body">
+                    <div class="row col-md-12">
+                        <div class="col-md-10">
+                            <br />
+                            <br />
+                            <table class="table table-bordered table-responsive" id="atable">
+                                <thead>
+                                    <tr>
+                                        <th>Item Code</th>
+                                        <th>Name</th>
+                                        <th>Branch</th>
+                                        <th>Location</th>
+                                        <th>Quantity</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+@section Scripts{
+    <script src="/App_Themes/Theme1/plugins/select2/select2.min.js"></script>
+    <script src="~/App_Themes/Theme1/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+    <script>
+        $(document).ready(function () {
+
+            $('#ItemCode').select2();
+            $('#ItemType').select2();
+            $('#UnitCode').select2();
+            $('#DetUnitCode').select2();
+            $('#PackItemCode').select2();
+            $('#AltItemCode').select2();
+            $("#update").hide();
+
+            $(document).on("click", "#save", function () {
+                $("#save").prop("disabled", false);
+                var item = { ItemType: "", ItemCode: "", ItemName: "", UnitCode: "", PartNo: "", UnitCode: "", DeUnitCode: "", Price: "", Ratio: "", PackSize: "", PackItemCode: "", AltItemCode: "" };
+                setOrder();
+                var validate = validateOnSave(loadInfo);
+                if (validate != undefined) {
+                    alert(validate);
+                    return;
+                }
+
+
+                item.ItemType = $("#ItemType").val();
+                item.ItemCode = $("#ItemCode").val();
+                item.ItemName = $("#ItemName").val();
+
+                if ($("#PartNo").val() == "") {
+                    item.PartNo = $("#ItemCode").val();
+                }
+
+                else {
+                    item.PartNo = $("#PartNo").val();
+
+                }
+
+                item.UnitCode = $("#UnitCode").val();
+                item.DetUnitCode = $("#UnitCode").val();
+                item.Price = $("#Price").val();
+                item.Ratio = $("#Ratio").val();
+                item.PackSize = $("#PackSize").val();
+                item.PackItemCode = $("#PackItemCode").val();
+                item.AltItemCode = $("#AltItemCode").val();
+
+                $.ajax({
+                    url: '@Url.Action("SaveItem", "Item")',
+                    contentType: "application/json;charset=utf-8",
+                    data: JSON.stringify({ item: item }),
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function (datas) {
+                        if (datas == 1) {
+                            swal("Sucessfully Saved!", "success")
+                            $("#save").prop("disabled", false);
+                            location.reload();
+                            clearItemForm();
+
+                        }
+                        else if (datas == 0) {
+                            swal(
+                                'Sorry!',
+                                'Something went wrong please try again!',
+                                'warning'
+                            );
+                            $("#save").prop("disabled", false);
+                        }
+                        else {
+                            swal("This item already exists!!! Please enter another item!!!", "fail")
+                        }
+
+                    }
+                });
+            });
+
+            function validateOnSave(validOrder) {
+
+                if (!validOrder.ItemType.trim().length) {
+                    return "Please select Item Type.";
+                }
+                if (!validOrder.UnitCode.trim().length) {
+                    return "Please select Unit Code.";
+                }
+                if (!validOrder.ItemName.trim().length) {
+                    return "Item Name is Required";
+                }
+            }
+
+            //For GLEntries
+            $("#GLEntries").click(function () {
+                //Get the id of the selected item in dropdown
+                var id = $('#ItemCode').val();
+
+                //Replace the predifined QueryString param "xxx" with the "id"
+                this.href = this.href.replace(id);
+            });
+
+
+            $(document).on("click", "#submit", function () {
+                var table = $('#atable').DataTable();
+                table.ajax.reload();
+
+            });
+
+
+
+            $('#atable').dataTable({
+                "scrollX": true,
+                "processing": true,
+                "ajax": {
+                    "url": "../Item/GetSearchItem",
+                    "type": "GET",
+                    "datatype": "json",
+                    "data": function (d) {
+                        d.itemCode = GetItemCode();
+                    }
+                },
+                "columns": [
+                                { "data": "ItemCode" },
+                                { "data": "ItemName" },
+                                { "data": "BranchName" },
+                                { "data": "LocName" },
+                                { "data": "CurrQty" }
+                ]
+
+
+            });
+
+
+            function GetItemCode() {
+                var ItemCode = $("#ItemCode").val();
+                return ItemCode;
+            }
+
+
+            $(document).on('click', "#edit", function () {
+                var id = $(this).attr("value");
+                $("#update").show();
+                $.ajax({
+                    url: '@Url.Action("GetItemById", "Item")',
+                    contentType: "application/json;charset=utf-8",
+                    data: JSON.stringify({ ItemCode: id }),
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function (datas) {
+
+                        $("#ItemType").val(datas.ItemType).trigger('change.select2');
+                        $("#ItemName").val(datas.ItemName);
+
+                        if (datas.PartNo == datas.ItemCode) {
+                            $("#PartNo").val(null);
+
+                        }
+                        else {
+                            $("#PartNo").val(datas.PartNo);
+                        }
+                        $("#ItemCode").val(datas.ItemCode);
+                        $("#UnitCode").val(datas.UnitCode).trigger('change.select2');
+                        $("#DetUnitCode").val(datas.DetUnitCode).trigger('change.select2');
+                        $("#Price").val(datas.Price);
+                        $("#PackSize").val(datas.PackSize);
+                        $("#Ratio").val(datas.Ratio);
+                        $("#PackItemCode").val(datas.PackItemCode).trigger('change.select2');
+                        $("#AltItemCode").val(datas.AltItemCode).trigger('change.select2');
+                        $("#ItemCode").prop("disabled", true);
+                        $("#save").hide();
+
+                    }
+                });
+                //$('#editModal').modal('show');
+                $("#save").hide();
+
+            });
+
+            $(document).on("click", "#update", function () {
+                $("#save").prop("disabled", false);
+                var item = { ItemType: "", ItemCode: "", ItemName: "", UnitCode: "", PackSize: "" }
+
+                
+                //item.ItemType = $(".ItemType:checked").val();
+                item.ItemType = $("#ItemType").val();
+
+                item.ItemName = $("#ItemName").val();
+                item.ItemCode = $("#ItemCode").val();
+                item.PartNo = $("#PartNo").val();
+                item.UnitCode = $("#UnitCode").val();
+                item.DetUnitCode = $("#UnitCode").val();
+                item.Price = $("#Price").val();
+                item.Ratio = $("#Ratio").val();
+                item.PackSize = $("#PackSize").val();
+                //item.PackSize = $("#PackSize").val();
+                item.PackItemCode = $("#PackItemCode").val();
+                item.AltItemCode = $("#AltItemCode").val();
+
+
+                $.ajax({
+                    url: '@Url.Action("UpdateItem", "Item")',
+                    contentType: "application/json;charset=utf-8",
+                    data: JSON.stringify({ item: item }),
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function (datas) {
+                        if (datas == 1) {
+                            swal("Sucessfully Updated!", "success");
+                            $("#save").prop("enable", false);
+                            //clearItemForm();
+                            location.reload();
+                        }
+                        else if (datas == 0) {
+                            swal(
+                                'Sorry!',
+                                'Something went wrong please try again!',
+                                'warning'
+                            );
+                            $("#save").prop("disabled", false);
+                        }
+
+                    }
+                });
+            });
+
+
+
+
+            $(document).on("click", "#clear", function () {
+                clearItemForm();
+            });
+
+            function clearItemForm() {
+                // $(".ItemType").prop("checked", false);
+                $("#ItemType").val("").trigger('change.select2');
+
+                $("#ItemName").val("");
+                $("#PartNo").val("");
+                $("#UnitCode").val("").trigger('change.select2');
+                $("#DetUnitCode").val("").trigger('change.select2');
+                $("#Price").val("");
+                $("#Ratio").val("");
+                $("#PackSize").val("");
+                $("#PackItemCode").val("").trigger('change.select2');
+                $("#AltItemCode").val("").trigger('change.select2');
+
+                $("#ItemCode").prop("disabled", false);
+                $.ajax({
+                    url: '@Url.Action("GetItemCode", "Item")',
+                    contentType: "application/json;charset=utf-8",
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (datas) {
+
+                        $("#ItemCode").val(datas);
+                    }
+                });
+                $("#update").hide();
+                $("#save").show();
+            }
+
+        });
+
+
+
+    </script>
+}
+
+

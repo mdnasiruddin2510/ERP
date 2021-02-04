@@ -1,0 +1,116 @@
+﻿@model PoIpaWeb.Models.RegisterModel
+@{
+    ViewBag.Title = "Profile";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@using (Html.BeginForm("Profile", "Account", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{ 
+    <div class="row form-horizontal">
+        <div class="col-lg-1"></div>
+        <div class="col-sm-10">
+            <div class="card-box">
+                <h4 class="m-t-0 header-title" style="color:black;"><b>@Model.CustomerName
+ Profile</b></h4>
+                <br />
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="form-group">
+                            @Html.LabelFor(x => x.CustomerName, new { @class = "col-md-5 control-label" })
+                            <div class="col-md-7">
+                                @Html.TextAreaFor(x => x.CustomerName, new { @class = "form-control", required = "required" })
+                                @Html.ValidationMessageFor(x => x.CustomerName)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="form-group">
+                            @Html.LabelFor(x => x.Address, new { @class = "col-md-5 control-label" })
+                            <div class="col-md-7">
+                                @Html.TextAreaFor(x => x.Address, new { @class = "form-control", required = "required" })
+                                @Html.ValidationMessageFor(x => x.Address)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="form-group">
+                            @Html.LabelFor(x => x.DistrictId, new { @class = "col-md-5 control-label" })
+                            <div class="col-md-7">
+                                @Html.DropDownListFor(x => x.DistrictId, null, "Select District", new { @class = "form-control", required = "required" })
+                                @Html.ValidationMessageFor(x => x.DistrictId)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="form-group">
+                            @Html.LabelFor(x => x.ThanaId, new { @class = "col-md-5 control-label" })
+                            <div class="col-md-7">
+                                @Html.DropDownListFor(x => x.ThanaId, null, "Select Thana", new { @class = "form-control", required = "required" })
+                                @Html.ValidationMessageFor(x => x.ThanaId)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="form-group">
+                            @Html.LabelFor(x => x.PostCode, new { @class = "col-md-5 control-label" })
+                            <div class="col-md-7">
+                                @Html.TextBoxFor(x => x.PostCode, new { @class = "form-control", required = "required" })
+                                @Html.ValidationMessageFor(x => x.PostCode)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="form-group">
+                            @Html.LabelFor(x => x.MobileNo, new { @class = "col-md-5 control-label" })
+                            <div class="col-md-7">
+                                @Html.TextBoxFor(x => x.MobileNo, new { @class = "form-control", required = "required",type="tel" })
+                                @Html.ValidationMessageFor(x => x.MobileNo)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6" style="text-align:center;">
+                        <div class="form-group">
+                           
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="profile" class="col-md-5 control-label">Profile Picture</label>
+                        <div class="form-group">
+                            <img src="~/Images/ProfilePicture/@Model.FilePath" style="height:100px;width:200px;" id="profile"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="form-group">
+                            <label for="ProfilePicture" class="col-md-5 control-label">Change Profile Picture</label>
+                            <div class="col-md-7">
+                                <input type="file" name="ProfilePicture" id="ProfilePicture" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6" style="text-align:center;">
+                        <div class="form-group">
+                            <input type="submit" value="Update Profile" class="btn btn-primary"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

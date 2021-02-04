@@ -1,0 +1,93 @@
+﻿@model App.Domain.ViewModel.RptSearchVModel
+@{
+    ViewBag.Title = "Sample_GiftRptSearch";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+
+
+
+@using (Html.BeginForm("Sample_GiftRptPdf", "Sample_Gift", FormMethod.Post, new { target = "_blank" }))
+{
+    <div class="row">
+        <div class="col-md-10">
+            <div class="panel panel-color panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <text style="text-align:left !important; text-decoration: none;">Sample Gift Searh</text>
+                        <text style="color:#1E3B2D;font-size:12px;margin-right:100px;" class="pull-right">@ViewBag.Status</text>
+                    </h3>
+                </div>
+                <div class="panel-body">
+
+                    <div class="col-md-12" style="margin-left:110px; margin-top:20px">
+                        <label class="col-md-2">Location</label>
+                        <div class="input-group form-group col-md-4">
+                            @Html.DropDownListFor(x => x.LocCode,  null, "ALL", new { @class = "form-control select2" })
+
+                        </div>
+                    </div>
+
+                    <div class="col-md-12" style="margin-left:110px; margin-top:20px">
+                        <label class="col-md-2" for="fDate">From Date</label>
+                        <div class="input-group form-group col-md-4">
+                            <input type="text" class="form-control datePage" id="fDate" name="fDate" value="@ViewBag.FyddFDate.ToShortDateString()">
+                            <span class="input-group-addon bg-primary b-0 text-white"><i class="ion-calendar"></i></span>
+                        </div>
+                    </div>
+                    <div class="col-md-12" style="margin-left:110px; margin-top:20px">
+                        <label class="col-md-2" for="tDate">To Date</label>
+                        <div class="input-group form-group col-md-4">
+                            <input type="text" class="form-control datePage" id="tDate" name="tDate" value="@ViewBag.FyddTDate.ToShortDateString()">
+                            <span class="input-group-addon bg-primary b-0 text-white"><i class="ion-calendar"></i></span>
+                        </div>
+                    </div>
+
+                    <div class="row col-md-12">
+                        <div class="col-md-9" style="text-align:center">
+                            <input type="submit" class="btn btn-primary" value="Preview" id="btnPreview" />
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+
+
+@section Scripts{
+
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script src="/App_Themes/Theme1/plugins/select2/select2.min.js"></script>
+    <script src="~/App_Themes/Theme1/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            $('#BranchCode').select2();
+
+            jQuery("#fDate").datepicker({
+                autoclose: true,
+                todayHighlight: true
+            });
+
+            jQuery("#tDate").datepicker({
+                autoclose: true,
+                todayHighlight: true
+            });
+
+
+        });
+
+    </script>
+}
+
+
+
+

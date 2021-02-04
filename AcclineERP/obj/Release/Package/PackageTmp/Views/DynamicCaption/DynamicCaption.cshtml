@@ -1,0 +1,604 @@
+﻿@model App.Domain.ViewModel.DynamicCaptionVM
+@{
+    ViewBag.Title = "DynamicCaption";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+   
+    .form-control {
+        border: 1px solid #00ffff;
+    }
+
+    fieldset {
+        display: block;
+        margin-left: 2px;
+        margin-right: 13px;
+        padding-top: 0.35em;
+        padding-bottom: 0.625em;
+        padding-left: 0.75em;
+        padding-right: 0.75em;
+        border: 2px groove;
+    }
+
+    legend {
+        display: block;
+        padding-left: 2px;
+        padding-right: 2px;
+        border: none;
+    }
+</style>
+
+@using (Html.BeginForm())
+{
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-color panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <text style="text-align:left !important;text-decoration:none;">Dynamic Caption</text>
+                    </h3>
+                </div>
+                <fieldset>
+                    <div class="col-md-12" style="margin-top: 10px !important;">
+                        <div class="col-md-6">
+                            <label class="col-md-3">Name</label>
+                            <div class="input-group form-group col-md-8">
+                                <input type="text" id="Emp" class="form-control" />
+                                @*@Html.TextBoxFor(x => x.LocCode, new { @class = "form-control" })*@
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="col-md-3">Code</label>
+                            <div class="input-group form-group col-md-8">
+                                <input type="text" id="Code" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="col-md-6">
+                            <label class="col-md-3">Project</label>
+                            <div class="input-group form-group col-md-8">
+                                <input type="text" id="Proj" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="col-md-3">Branch</label>
+                            <div class="input-group form-group col-md-8">
+                                <input type="text" id="Branch" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="col-md-6">
+                            <label class="col-md-3">Unit</label>
+                            <div class="input-group form-group col-md-8">
+                                <input type="text" id="Unit" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="col-md-3">Department</label>
+                            <div class="input-group form-group col-md-8">
+                                <input type="text" id="Dept" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="col-md-6">
+                            <label class="col-md-3">Designation</label>
+                            <div class="input-group form-group col-md-8">
+                                <input type="text" id="Desig" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="col-md-3">District</label>
+                            <div class="input-group form-group col-md-8">
+                                <input type="text" id="Dist" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="col-md-6">
+                            <label class="col-md-3">Division</label>
+                            <div class="input-group form-group col-md-8">
+                                <input type="text" id="Division" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="col-md-3">Post Office</label>
+                            <div class="input-group form-group col-md-8">
+                                <input type="text" id="Post" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="col-md-6">
+                            <label class="col-md-3">Location</label>
+                            <div class="input-group form-group col-md-8">
+                                <input type="text" id="Loc" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="col-md-3">Item Group</label>
+                            <div class="input-group form-group col-md-8">
+                                <input type="text" id="ItemGrp" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="col-md-6">
+                            <label class="col-md-3">Item SubGroup</label>
+                            <div class="input-group form-group col-md-8">
+                                <input type="text" id="ItemSGrp" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="col-md-3">Item SubSubGroup</label>
+                            <div class="input-group form-group col-md-8">
+                                <input type="text" id="ItemSSGrp" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12" style="text-align:end">
+                        <input type="button" value="SAVE" class="btn btn-primary" id="btnadd" style="width:100px; margin-right:47px" />
+                        <input type="button" value="UPDATE" class="btn btn-primary" id="btnupdate" style="width:100px; margin-right:47px" />
+                    </div>
+                    <div class="col-sm-12 col-md-12" style="margin-top: 10px; margin-bottom: 10px;">
+                        <div class="row col-sm-12 col-md-12" style="border:1px solid; border-color:#adcceb; width:100%">
+                            <div class="row">
+                                <div class="col-sm-12 col-md-12" style="padding:1px 18px 1px 18px">
+                                    <br />
+                                    <table class="table table-bordered table-responsive" id="Add-datatable" style="width:100%">
+                                        <thead>
+                                            <tr>
+                                                <th width="5%">Id</th>
+                                                <th width="5%">Name</th>
+                                                <th width="5%">Code</th>
+                                                <th width="5%">Project</th>
+                                                <th width="5%">Branch</th>
+                                                <th width="5%">Unit</th>
+                                                <th width="5%">Department</th>
+                                                <th width="5%">Designation</th>
+                                                <th width="5%">District</th>
+                                                <th width="5%">Division</th>
+                                                <th width="5%">Post&nbsp;Office</th>
+                                                <th width="5%">Location</th>
+                                                <th width="5%">Item&nbsp;Group</th>
+                                                <th width="5%">Item&nbsp;SubGroup</th>
+                                                <th width="5%">Item&nbsp;SubsubGroup</th>
+                                                <th width="5%">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tbodyId"></tbody>
+                                    </table>
+                                    <br />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+    </div>
+}
+
+@section scripts{
+    <script src="~/App_Themes/Theme1/plugins/select2/select2.min.js" type="text/javascript"></script>
+    <script src="~/App_Themes/Theme1/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.bootstrap.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.buttons.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/buttons.bootstrap.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/pdfmake.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/vfs_fonts.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/buttons.html5.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/buttons.print.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.fixedHeader.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.keyTable.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.responsive.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/responsive.bootstrap.min.js"></script>
+    <script src="../App_Themes/Theme1/plugins/datatables/dataTables.scroller.min.js"></script>
+    <script type="text/javascript" src="../App_Themes/Theme1/plugins/parsleyjs/dist/parsley.min.js"></script>
+    <script src="../App_Themes/Theme1/blue/assets/pages/datatables.init.js"></script>
+
+    <script>
+        /////////////datatableshow////////////
+        //$(document).ready(function () {
+        var Id;
+        $("#btnupdate").hide();
+        $("#btnadd").show();
+
+        var table = $("#Add-datatable").DataTable({
+            "scrollX": true,
+            "scrollY": 200,
+            //"paging": false,
+            "ordering": false,
+            //"info": false,
+            //"searching": false,
+            "ajax": "../DynamicCaption/GetAllDataForDynamicCaption",
+            "columns": [
+                       { "data": null, "bSortable": false },
+                       { "data": "Emp" },
+                       { "data": "Code" },
+                       { "data": "Proj" },
+                       { "data": "Branch" },
+                       { "data": "Unit" },
+                       { "data": "Dept" },
+                       { "data": "Desig" },
+                       { "data": "Dist" },
+                       { "data": "Division" },
+                       { "data": "Post" },
+                       { "data": "Loc" },
+                       { "data": "ItemGrp" },
+                       { "data": "ItemSGrp" },
+                       { "data": "ItemSSGrp" },
+
+                       {
+                           mRender: function (data, type, row) {
+                               return '<a href="#" id="edit"  value="' + row.Id + '">'
+                                       + '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span></a>&ensp;'
+                               + '<a href="#" class="on-default remove-row deleteSup largeSpace" data-id="1" id="delete" value="' + row.Id + '">'
+                               + ' <i class="glyphicon glyphicon-trash"></i> </a>'
+                           }
+                       },
+            ],
+            "fnCreatedRow": function (row, data, index) {
+                $('td', row).eq(0).html(index + 1);
+            }
+        });
+        //////////////////validation/////////////////
+        function validateOnSave(validOrder) {
+
+            if (!validOrder.Emp.trim().length) {
+                return "Please write a Name.";
+            }
+            if (!validOrder.Code.trim().length) {
+                return "Please write a code.";
+            }
+            if (!validOrder.Proj.trim().length) {
+                return "Please write a Project.";
+            }
+            if (!validOrder.Branch.trim().length) {
+                return "Please write a Branch.";
+            }
+            if (!validOrder.Unit.trim().length) {
+                return "Please write a Unit.";
+            }
+            if (!validOrder.Dept.trim().length) {
+                return "Please write a Deptartment.";
+            }
+            if (!validOrder.Desig.trim().length) {
+                return "Please write a Designation.";
+            }
+            if (!validOrder.Dist.trim().length) {
+                return "Please write a District.";
+            }
+            if (!validOrder.Division.trim().length) {
+                return "Please write a Division.";
+            }
+            if (!validOrder.Post.trim().length) {
+                return "Please write a Post Office.";
+            }
+            if (!validOrder.Loc.trim().length) {
+                return "Please write a Location.";
+            }
+            if (!validOrder.ItemGrp.trim().length) {
+                return "Please write a Item Group.";
+            }
+            if (!validOrder.ItemSGrp.trim().length) {
+                return "Please write a Item Sub Group.";
+            }
+            if (!validOrder.ItemSSGrp.trim().length) {
+                return "Please write a Post Item Sub Sub Group.";
+            }
+            return "";            
+        }
+        //var orders = [];
+        //var delQtyOrder = [];
+        //$("#btnadd").click(function () {
+        //    var Id=$("#Id").val();
+        //    var SrcDestName=$("#SrcDestName").val();
+        //    var Type= $("#Type").val();
+        //    var ActionSub=$("#ActionSub").val();
+        //    var AcName=$("#AcName").val();
+
+
+
+        //    addOnList();
+        //    $("tbody#tbodyId tr:even").css({
+        //        "background-color": "#e6e8e8"
+
+        //    });
+
+        //clearItemInfo();
+        // });
+        function clearItemInfo() {
+
+            $("#Emp").val("");
+            $("#Code").val("");
+            $("#Proj").val("");
+            $("#Branch").val("");
+            $("#Unit").val("");
+            $("#Dept").val("");
+            $("#Desig").val("");
+            $("#Dist").val("");
+            $("#Division").val("");
+            $("#Post").val("");
+            $("#Loc").val("");
+            $("#ItemGrp").val("");
+            $("#ItemSGrp").val("");
+            $("#ItemSSGrp").val("");
+        }
+        ///////////Save data//////////////
+        var loadInfo = {
+            Emp: "",
+            Code: "",
+            Proj: "",
+            Branch: "",
+            Unit: "",
+            Dept: "",
+            Desig: "",
+            Dist: "",
+            Division: "",
+            Post: "",
+            Loc: "",
+            ItemGrp: "",
+            ItemSGrp: "",
+            ItemSSGrp: ""
+        };
+        function setOrder() {
+            loadInfo.Emp = $("#Emp").val();
+            loadInfo.Code = $("#Code").val();
+            loadInfo.Proj = $("#Proj").val();
+            loadInfo.Branch = $("#Branch").val();
+            loadInfo.Unit = $("#Unit").val();
+            loadInfo.Dept = $("#Dept").val();
+            loadInfo.Desig = $("#Desig").val();
+            loadInfo.Dist = $("#Dist").val();
+            loadInfo.Division = $("#Division").val();
+            loadInfo.Post = $("#Post").val();
+            loadInfo.Loc = $("#Loc").val();
+            loadInfo.ItemGrp = $("#ItemGrp").val();
+            loadInfo.ItemSGrp = $("#ItemSGrp").val();
+            loadInfo.ItemSSGrp = $("#ItemSSGrp").val();
+        }
+
+        $(document).on("click", "#btnadd", function () {
+            setOrder();
+            var validate = validateOnSave(loadInfo);
+            if (validate != "") {
+                alert(validate);
+                return;
+            }
+            //  if (orders != 0) {
+            $.ajax({
+                url: '@Url.Action("SaveDynamicCaption", "DynamicCaption")',
+                contentType: "application/json;charset=utf-8",
+                data: JSON.stringify({ DynamicCaption: loadInfo }),
+                type: 'POST',
+                dataType: 'json',
+                success: function (datas) {
+                    if (datas == 1) {
+                        swal({
+                            title: "Ok",
+                            text: "Successfully Saved!",
+                            type: "success",
+                            closeOnConfirm: true
+                        },
+
+                        function () {
+                            location.reload();
+                            clearItemInfo();
+                        });
+
+                    }
+                    else if (datas == "X") {
+                        swal({
+                            title: "Sorry",
+                            text: "No Save Permission for this User",
+                            type: "warning"
+                        });
+                    }
+                    else if (datas == 0) {
+                        swal(
+                            'Sorry!',
+                            'All (*) field are required. These Fields can not be empty!!!',
+                            'warning'
+                        );
+                        $("#save").prop("disabled", false);
+                    }
+                    else if (data == 2) {                           //save  data
+                        swal({
+                            title: "Sorry!",
+                            text: "Data Already Exists",
+                            type: "warning"
+                        });
+                    }
+
+                        //});
+
+                        //}
+                    else {
+                        swal(
+                            'Sorry!',
+                            'Please Add item in the Table.!!!',
+                            'warning'
+                            );
+                    }
+                }//success
+            });//ajax
+            //}//if (orders != 0) {
+
+        });
+        /////////////////////////////delete//////////////////////
+        $(document).on("click", "#delete", function () {
+            var value = $(this).attr("value");
+            // GroupTypeId = $("#GroupTypeId option:selected").val()
+            swal({
+                title: "Are you sure?",
+                text: "You will not be able to recover this data!",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Yes, delete it!",
+                closeOnConfirm: false,
+                closeOnCancel: true
+            },
+                function () {
+                    $.ajax({
+                        url: '@Url.Action("DeleteDynamicCaption", "DynamicCaption")',
+                        contentType: "application/json;charset=utf-8",
+                        data: { Id: value },
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function (datas) {
+
+                            if (datas == 0 || datas == 2) {
+                                swal("Sorry!! Failed to delete this data.", "fail");
+                            }
+                            else if (datas == 1) {
+                                swal({
+                                    title: "Ok",
+                                    text: "Sucessfully Delete!",
+                                    type: "success",
+                                    closeOnConfirm: true
+
+                                }, function () {
+                                    //clearReceive();
+                                    // loadGroupWiseData();
+                                    location.reload();
+                                });
+                            }
+                            else if (datas == "D") {
+
+                                swal({
+                                    title: "Sorry",
+                                    text: "No Delete Permission for this User",
+                                    type: "warning"
+                                });
+                            }
+                        },
+                        error: function (datas) {
+                            swal("Sorry!! Failed to delete this data.", "fail")
+                        }
+                    });
+                });
+        });
+        ///////////////////////////Edit//////////////////
+
+        $(document).on('click', "#edit", function () {
+            var value = $(this).attr("value");
+            Id = value;
+            //GroupTypeId = $("#GroupTypeId option:selected").val()
+            //$("#update").show();
+            $.ajax({
+                url: '@Url.Action("DynamicCaptionforEdit", "DynamicCaption")',
+                contentType: "application/json;charset=utf-8",
+                data: JSON.stringify({ Id: value }),
+                type: 'POST',
+                dataType: 'json',
+                success: function (datas) {
+                    //GroupTypeId = GroupTypeId;
+
+                    $("#Emp").val(datas.Emp);
+                    $("#Code").val(datas.Emp);
+                    $("#Proj").val(datas.Proj);
+                    $("#Branch").val(datas.Branch);
+                    $("#Unit").val(datas.Unit);
+                    $("#Dept").val(datas.Dept);
+                    $("#Desig").val(datas.Desig);
+                    $("#Dist").val(datas.Dist);
+                    $("#Division").val(datas.Division);
+                    $("#Post").val(datas.Post);
+                    $("#Loc").val(datas.Loc);
+                    $("#ItemGrp").val(datas.ItemGrp);
+                    $("#ItemSGrp").val(datas.ItemSGrp);
+                    $("#ItemSSGrp").val(datas.ItemSSGrp);
+
+                    $("#btnupdate").show();
+                    $("#btnadd").hide();
+                    //$("#Type").val($('#Type option:first-child').val()).trigger('change.select2');
+                }
+            });
+        });
+        ////////////////////////Update//////////////////////////////////
+        $(document).on("click", "#btnupdate", function () {
+            //  ActionCtrl = $("#AcName").val();         
+            //SrcDestName = $("#SrcDestName").val();  
+            // $("#btnupdate").hide();
+            //$("#btnadd").show();
+
+            setOrder();
+            //var validate = validateOnSave(loadInfo);
+            //if (validate != "") {
+            //    alert(validate);
+            //    return;
+            //}
+            // if (orders != 0) {
+            $.ajax({
+                url: '@Url.Action("UpdateDynamicCaption", "DynamicCaption")',
+                contentType: "application/json;charset=utf-8",
+                data: JSON.stringify({ DynamicCaption: loadInfo, Id: Id }),
+                type: 'POST',
+                dataType: 'json',
+                success: function (datas) {
+                    if (datas == 1) {
+
+
+                        swal({
+                            title: "Ok",
+                            text: "Successfully Updated!",
+                            type: "success",
+                            closeOnConfirm: true
+                        },
+
+                        function () {
+                            location.reload();
+                            clearReceive();
+                            //loadGroupWiseData();
+                        });
+
+                    }
+
+                    else if (datas == "X") {
+                        swal({
+                            title: "Sorry",
+                            text: "No Save Permission for this User",
+                            type: "warning"
+                        });
+                    }
+                    else if (datas == 0) {
+                        swal(
+                            'Sorry!',
+                            'All (*) field are required. These Fields can not be empty!!!',
+                            'warning'
+                        );
+                        $("#save").prop("disabled", false);
+                    }
+                    else if (datas == 2) {                           //save  data
+                        swal({
+                            title: "Sorry!",
+                            text: "Data Already Exists",
+                            type: "warning"
+                        });
+                    }
+
+                        //});
+
+                        //}
+                    else {
+                        swal(
+                            'Sorry!',
+                            'Please Add item in the Table.!!!',
+                            'warning'
+                            );
+                    }
+                }//success
+            });//ajax
+            //}//if (orders != 0) {
+
+        });
+
+        //});//ready function
+    </script>
+}
